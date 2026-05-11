@@ -1,0 +1,37 @@
+---
+import type { SiteContent } from '../data/siteContent';
+import CoreIsland from './CoreIsland';
+
+interface Props {
+  content: SiteContent['hero'];
+}
+
+const { content } = Astro.props;
+---
+
+<section class="hero-section" id="top" aria-labelledby="hero-title">
+  <div class="hero-copy">
+    {content.meta.length > 0 && <div class="meta-row" aria-label={content.metaAria}>{content.meta.map((item) => <span>{item}</span>)}</div>}
+    <h1 id="hero-title">{content.title}</h1>
+    {content.lead && <p>{content.lead}</p>}
+    <div class="hero-actions" aria-label={content.actionsAria} data-cat-platform="hero-actions">
+      {
+        content.actions.map((action) => (
+          <a class={action.variant === 'primary' ? 'button-primary' : 'button-secondary'} href={action.href}>
+            {action.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="core-panel" aria-label={content.coreAria} data-cat-platform="hero-core">
+    <div class="core-fallback" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <CoreIsland copy={content.core} client:load />
+    {content.coreCaption && <p class="core-caption">{content.coreCaption}</p>}
+  </div>
+</section>

@@ -1,0 +1,27 @@
+---
+import type { SiteContent } from '../data/siteContent';
+
+interface Props {
+  content: SiteContent['header'];
+  alternatePath: string;
+  alternateLabel: string;
+}
+
+const { content, alternatePath, alternateLabel } = Astro.props;
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const alternateHref = `${basePath}${alternatePath}`;
+---
+
+<header class="command-header" aria-label={content.ariaLabel}>
+  <a class="brand-mark" href="#top" aria-label={content.brandAria}>
+    <span class="brand-pulse" aria-hidden="true"></span>
+    <span>Radeq.cz</span>
+  </a>
+  <nav class="command-nav" aria-label={content.navAria}>
+    {content.navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+  </nav>
+  <div class="header-actions">
+    <a class="language-link" href={alternateHref}>{alternateLabel}</a>
+    <a class="header-cta" href="#terminal">{content.cta}</a>
+  </div>
+</header>

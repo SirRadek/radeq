@@ -1,0 +1,9 @@
+# wrangler.example.toml
+name = "radeq-static"
+pages_build_output_dir = "./dist"
+compatibility_date = "2026-05-10"
+
+[[d1_databases]]
+binding = "LEADS_DB"
+database_name = "radeq-leads"
+database_id = "replace-with-d1-database-id"

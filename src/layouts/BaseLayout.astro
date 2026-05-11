@@ -1,0 +1,33 @@
+---
+import type { Locale } from '../data/locales';
+import MotionOrchestrator from '../components/MotionOrchestrator';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Locale;
+  alternatePath: string;
+  alternateLang: Locale;
+}
+
+const { title, description, lang, alternatePath, alternateLang } = Astro.props;
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const alternateHref = `${basePath}${alternatePath}`;
+---
+
+<!doctype html>
+<html lang={lang} data-style="industrial">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="alternate" hreflang={alternateLang} href={alternateHref} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <MotionOrchestrator client:load />
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,20 @@
+---
+import type { SiteContent } from '../data/siteContent';
+
+interface Props {
+  content: SiteContent['handoff'];
+}
+
+const { content } = Astro.props;
+---
+
+<section class="handoff-section" id="handoff" aria-labelledby="handoff-title">
+  <div>
+    {content.sectionCode && <p class="section-code">{content.sectionCode}</p>}
+    <h2 id="handoff-title">{content.title}</h2>
+    <p>{content.lead}</p>
+  </div>
+  <ul class="handoff-list" data-cat-platform="handoff-list">
+    {content.items.map((item) => <li>{item}</li>)}
+  </ul>
+</section>

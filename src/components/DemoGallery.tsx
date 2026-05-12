@@ -33,11 +33,11 @@ export default function DemoGallery({ content }: Props) {
     setActiveDemoId(id);
   }
 
-  function moveSelection(direction: -1 | 1) {
-    const nextIndex = (activeIndex + direction + content.items.length) % content.items.length;
-    const nextDemo = content.items[nextIndex]!;
-    setActiveDemoId(nextDemo.id);
-    requestAnimationFrame(() => tabRefs.current[nextIndex]?.focus());
+  function moveFocus(direction: -1 | 1) {
+    const focusedIndex = tabRefs.current.findIndex((node) => node === document.activeElement);
+    const currentIndex = focusedIndex >= 0 ? focusedIndex : activeIndex;
+    const nextIndex = (currentIndex + direction + content.items.length) % content.items.length;
+    tabRefs.current[nextIndex]?.focus();
   }
 
   return (
@@ -54,7 +54,7 @@ export default function DemoGallery({ content }: Props) {
       </div>
 
       <div className="demo-gallery">
-        <div className="demo-selector-list" role="tablist" aria-label={content.title}>
+        <div className="demo-selector-list" role="tablist" aria-label={content.title} aria-orientation="vertical">
           {content.items.map((demo, index) => (
             <DemoCard
               key={demo.id}
@@ -67,7 +67,7 @@ export default function DemoGallery({ content }: Props) {
                 tabRefs.current[index] = node;
               }}
               onActivate={activateDemo}
-              onMove={moveSelection}
+              onMoveFocus={moveFocus}
             />
           ))}
         </div>

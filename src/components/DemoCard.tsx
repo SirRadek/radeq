@@ -11,19 +11,33 @@ interface Props {
   panelId: string;
   buttonRef: (node: HTMLButtonElement | null) => void;
   onActivate: (id: DemoItem['id']) => void;
-  onMove: (direction: -1 | 1) => void;
+  onMoveFocus: (direction: -1 | 1) => void;
 }
 
-export default function DemoCard({ demo, index, isActive, controls, panelId, buttonRef, onActivate, onMove }: Props) {
+export default function DemoCard({
+  demo,
+  index,
+  isActive,
+  controls,
+  panelId,
+  buttonRef,
+  onActivate,
+  onMoveFocus,
+}: Props) {
   function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
     if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
       event.preventDefault();
-      onMove(1);
+      onMoveFocus(1);
     }
 
     if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
       event.preventDefault();
-      onMove(-1);
+      onMoveFocus(-1);
+    }
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      onActivate(demo.id);
     }
   }
 

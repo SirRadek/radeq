@@ -142,6 +142,20 @@ test('interactive project gallery is keyboard operable', async ({ page }) => {
   await expect(gallery.locator('[data-demo-workbench]')).toHaveAttribute('data-active-demo', 'workflow-prototype');
 });
 
+test('static demo routes render shareable proof pages', async ({ page }) => {
+  await page.goto('/demos/seo-audit');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'cs');
+  await expect(page.getByRole('heading', { name: /SEO_AUDIT_REPORT_V1/ })).toBeVisible();
+  await expect(page.getByText('BASELINE')).toBeVisible();
+  await expect(page.getByText('OPTIMIZED')).toBeVisible();
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+
+  await page.goto('/demos/workflow-prototype');
+  await expect(page.getByRole('heading', { name: /WORKFLOW_PIPELINE_V1/ })).toBeVisible();
+  await expect(page.getByText('Brief intake')).toBeVisible();
+  await expect(page.getByText('Delivery')).toBeVisible();
+});
+
 test('3D cat launch is hydrated for an immediate first-viewport click', async ({ page }) => {
   await page.goto('/');
 

@@ -1,0 +1,16 @@
+---
+import WorkflowPrototypePreview from '../../components/demo-previews/WorkflowPrototypePreview';
+import DemoRouteLayout from '../../layouts/DemoRouteLayout.astro';
+---
+
+<DemoRouteLayout
+  title="Workflow prototype demo"
+  description="Synthetic Radeq.cz proof demo showing a safe brief-to-handoff workflow prototype."
+>
+  <section class="demo-route-panel" aria-labelledby="workflow-demo-title">
+    <p class="section-code">PROOF 02</p>
+    <h1 id="workflow-demo-title">WORKFLOW_PIPELINE_V1</h1>
+    <p>Static synthetic demo. It shows the shape of the process without exposing private source material.</p>
+    <WorkflowPrototypePreview />
+  </section>
+</DemoRouteLayout>

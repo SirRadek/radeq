@@ -99,9 +99,33 @@ describe('terminal brief parser', () => {
       },
     );
 
-    expect(payload.source_path).toBe('/en/?utm_source=test');
-    expect(payload.referrer).toBe('https://referrer.example/path');
+    expect(payload.source_path).toBe('/en/');
+    expect(payload.referrer).toBe('https://referrer.example');
     expect(payload.locale).toBe('en');
+  });
+
+  it('drops malformed referrers from lead metadata', () => {
+    const payload = createLeadPayload(
+      {
+        name: 'Radek',
+        email: 'radek@example.com',
+        company: 'Radeq.cz',
+        project_type: 'Request Flow',
+        audience: 'Marketing architects',
+        deadline: 'Q3',
+        current_url: 'https://example.com',
+        budget_range: '50k-100k CZK',
+        message: 'Need reliable lead routing.',
+      },
+      {
+        href: 'https://radeq.cz/?token=private#brief',
+        locale: 'cs',
+        referrer: 'not a url',
+      },
+    );
+
+    expect(payload.source_path).toBe('/');
+    expect(payload.referrer).toBe('');
   });
 
   it('rejects incomplete or suspicious lead payloads', () => {

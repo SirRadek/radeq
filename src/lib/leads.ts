@@ -89,11 +89,28 @@ export function createLeadPayload(brief: LeadBriefInput, context: LeadPayloadCon
 
   return {
     ...brief,
-    source_path: `${url.pathname}${url.search}`,
-    referrer: context.referrer ?? '',
+    source_path: normalizeSourcePath(url),
+    referrer: normalizeReferrer(context.referrer),
     locale: context.locale,
     honeypot: '',
   };
+}
+
+function normalizeSourcePath(url: URL): string {
+  return url.pathname || '/';
+}
+
+function normalizeReferrer(referrer?: string): string {
+  if (!referrer) {
+    return '';
+  }
+
+  try {
+    const url = new URL(referrer);
+    return url.protocol === 'http:' || url.protocol === 'https:' ? url.origin : '';
+  } catch {
+    return '';
+  }
 }
 
 export function normalizeLeadSubmission(input: unknown): LeadSubmission {

@@ -2,7 +2,7 @@
 import AudienceBand from '../components/AudienceBand.astro';
 import CommandHeader from '../components/CommandHeader.astro';
 import ContactTerminal from '../components/ContactTerminal';
-import DemoBlocks from '../components/DemoBlocks.astro';
+import DemoGallery from '../components/DemoGallery';
 import HandoffStandard from '../components/HandoffStandard.astro';
 import HeroSection from '../components/HeroSection.astro';
 import SelectedSystems from '../components/SelectedSystems.astro';
@@ -29,7 +29,7 @@ const content = siteContent.cs;
     <HeroSection content={content.hero} />
     <StyleMatrixSimulator locale={content.layout.lang} content={content.matrix} client:load />
     <AudienceBand content={content.audience} />
-    <DemoBlocks content={content.demos} />
+    <DemoGallery content={content.demos} client:visible={{ rootMargin: '200px' }} />
     <HandoffStandard content={content.handoff} />
     <SelectedSystems content={content.systems} />
     <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load />

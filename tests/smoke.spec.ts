@@ -94,6 +94,54 @@ test('core panel keeps decorative fallback clipped on tablet', async ({ page }) 
   await expect(page.locator('.core-panel')).toHaveCSS('overflow', 'hidden');
 });
 
+test('interactive project gallery switches one shared working preview', async ({ page }) => {
+  await page.goto('/');
+
+  const gallery = page.locator('#demos');
+  await gallery.scrollIntoViewIfNeeded();
+  await expect(gallery).toHaveAttribute('data-hydrated', 'true');
+  await expect(gallery.getByRole('heading', { name: /projekt/ })).toBeVisible();
+
+  const seoTab = gallery.getByRole('tab', { name: /SEO oprava/ });
+  const workflowTab = gallery.getByRole('tab', { name: /workflow prototyp/ });
+
+  await expect(seoTab).toHaveAttribute('aria-selected', 'true');
+  await expect(gallery.locator('[data-demo-workbench]')).toHaveAttribute('data-active-demo', 'seo-audit');
+  await expect(gallery.getByText('SEO_AUDIT_REPORT_V1')).toBeVisible();
+  await expect(gallery.getByText('BASELINE')).toBeVisible();
+  await expect(gallery.getByText('OPTIMIZED')).toBeVisible();
+
+  await workflowTab.click();
+  await expect(workflowTab).toHaveAttribute('aria-selected', 'true');
+  await expect(gallery.locator('[data-demo-workbench]')).toHaveAttribute('data-active-demo', 'workflow-prototype');
+  await expect(gallery.getByText('WORKFLOW_PIPELINE_V1')).toBeVisible();
+  await expect(gallery.getByText('Brief intake')).toBeVisible();
+  await expect(gallery.locator('[data-demo-preview]')).toHaveCount(1);
+
+  await gallery.getByRole('button', { name: 'Mobil' }).click();
+  await expect(gallery.locator('[data-demo-workbench]')).toHaveAttribute('data-viewport', 'mobile');
+
+  await gallery.getByRole('link', { name: /demo/ }).click();
+  await expect(page).toHaveURL(/\/demos\/workflow-prototype$/);
+});
+
+test('interactive project gallery is keyboard operable', async ({ page }) => {
+  await page.goto('/');
+
+  const gallery = page.locator('#demos');
+  await gallery.scrollIntoViewIfNeeded();
+  await expect(gallery).toHaveAttribute('data-hydrated', 'true');
+  await gallery.getByRole('tab', { name: /SEO oprava/ }).focus();
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+
+  await expect(gallery.getByRole('tab', { name: /workflow prototyp/ })).toHaveAttribute(
+    'aria-selected',
+    'true',
+  );
+  await expect(gallery.locator('[data-demo-workbench]')).toHaveAttribute('data-active-demo', 'workflow-prototype');
+});
+
 test('3D cat launch is hydrated for an immediate first-viewport click', async ({ page }) => {
   await page.goto('/');
 

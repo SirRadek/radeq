@@ -156,6 +156,26 @@ test('static demo routes render shareable proof pages', async ({ page }) => {
   await expect(page.getByText('Delivery')).toBeVisible();
 });
 
+test('interactive demo gallery remains usable on mobile and reduced motion', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.locator('#demos').scrollIntoViewIfNeeded();
+
+  const gallery = page.locator('#demos');
+  await expect(gallery).toHaveAttribute('data-hydrated', 'true');
+
+  const workbenchBox = await gallery.locator('.demo-workbench').boundingBox();
+  expect(workbenchBox).not.toBeNull();
+  expect(workbenchBox!.width).toBeLessThanOrEqual(390);
+  await expect(gallery.locator('.demo-viewport')).toHaveCSS('transition-property', 'none');
+
+  await gallery.getByRole('tab', { name: /workflow prototyp/ }).click();
+  await gallery.getByRole('button', { name: 'Mobil' }).click();
+  await expect(gallery.locator('[data-demo-workbench]')).toHaveAttribute('data-viewport', 'mobile');
+  await expect(gallery.getByText('WORKFLOW_PIPELINE_V1')).toBeVisible();
+});
+
 test('3D cat launch is hydrated for an immediate first-viewport click', async ({ page }) => {
   await page.goto('/');
 

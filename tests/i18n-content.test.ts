@@ -1,4 +1,11 @@
 import { describe, expect, it } from 'vitest';
+import {
+  demoPreviewFeatures,
+  demoPreviewIds,
+  demoPreviewRoutes,
+  type DemoPreviewFeature,
+  type DemoPreviewId,
+} from '../src/data/demoPreviews';
 import { siteContent, supportedLocales, type Locale, type SiteContent } from '../src/data/siteContent';
 
 describe('localized site content', () => {
@@ -56,7 +63,92 @@ describe('localized site content', () => {
       const items = siteContent[locale as Locale].demos.items as SiteContent['demos']['items'];
 
       for (const item of items) {
-        publicDemoTextParts.push(item.name, item.metric, item.summary, ...item.events);
+        publicDemoTextParts.push(
+          item.id,
+          item.name,
+          item.metric,
+          item.summary,
+          item.result,
+          item.preview.urlLabel,
+          item.route ?? '',
+          ...item.events,
+          ...item.preview.features,
+        );
+      }
+    }
+
+    const publicDemoText = publicDemoTextParts.join('\n').toLowerCase();
+
+    for (const forbidden of forbiddenPublicStrings) {
+      expect(publicDemoText).not.toContain(forbidden.toLowerCase());
+    }
+  });
+
+  it('uses allowlisted interactive demo preview metadata', () => {
+    const expectedIds = [...demoPreviewIds];
+
+    for (const locale of supportedLocales) {
+      const items = siteContent[locale as Locale].demos.items as SiteContent['demos']['items'];
+      const ids = items.map((item) => item.id);
+
+      expect(ids).toEqual(expectedIds);
+      expect(new Set(ids).size).toBe(items.length);
+
+      for (const item of items) {
+        expect(demoPreviewIds).toContain(item.id as DemoPreviewId);
+        expect(item.preview.id).toBe(item.id);
+        expect(item.preview.urlLabel).toMatch(/^radeq\.cz\//);
+        expect(item.result.length).toBeGreaterThan(12);
+
+        for (const feature of item.preview.features) {
+          expect(demoPreviewFeatures).toContain(feature as DemoPreviewFeature);
+        }
+
+        if (item.route) {
+          expect(demoPreviewRoutes).toContain(item.route);
+          expect(item.route).toMatch(/^\/demos\/[a-z0-9-]+$/);
+        }
+      }
+    }
+  });
+
+  it('keeps demo ids and route availability aligned across locales', () => {
+    const csItems = siteContent.cs.demos.items as SiteContent['demos']['items'];
+    const enItems = siteContent.en.demos.items as SiteContent['demos']['items'];
+
+    expect(enItems.map((item) => item.id)).toEqual(csItems.map((item) => item.id));
+    expect(enItems.map((item) => item.route ?? null)).toEqual(csItems.map((item) => item.route ?? null));
+  });
+
+  it('includes interactive demo metadata in the private-string scan', () => {
+    const forbiddenPublicStrings = [
+      'SirRadek',
+      '.codex-run',
+      'seo-fix-pack',
+      'archviz-workbench',
+      'webhook-gateway',
+      'scrapeflow',
+      'autopilot-orchestration',
+      'radeq-website',
+    ];
+
+    const publicDemoTextParts: string[] = [];
+
+    for (const locale of supportedLocales) {
+      const items = siteContent[locale as Locale].demos.items as SiteContent['demos']['items'];
+
+      for (const item of items) {
+        publicDemoTextParts.push(
+          item.id,
+          item.name,
+          item.metric,
+          item.summary,
+          item.result,
+          item.preview.urlLabel,
+          item.route ?? '',
+          ...item.events,
+          ...item.preview.features,
+        );
       }
     }
 

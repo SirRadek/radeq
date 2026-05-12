@@ -1,4 +1,5 @@
 import { supportedLocales, type Locale } from './locales';
+import type { DemoPreviewFeature, DemoPreviewId, DemoPreviewRoute } from './demoPreviews';
 
 export { supportedLocales, type Locale };
 
@@ -53,11 +54,28 @@ export interface SiteContent {
     sectionCode: string;
     title: string;
     lead: string;
+    controls: {
+      desktopLabel: string;
+      mobileLabel: string;
+      openRouteLabel: string;
+      resultLabel: string;
+      eventsLabel: string;
+      activatePrefix: string;
+      selectedLabel: string;
+    };
     items: {
+      id: DemoPreviewId;
       name: string;
       metric: string;
       summary: string;
+      result: string;
       events: string[];
+      preview: {
+        id: DemoPreviewId;
+        urlLabel: string;
+        features: DemoPreviewFeature[];
+      };
+      route?: DemoPreviewRoute;
     }[];
   };
   handoff: {
@@ -184,48 +202,103 @@ export const siteContent = {
       title: 'Důkazy z projektů, ne jen seznam služeb.',
       lead:
         'První bloky jsou veřejně bezpečné archetypy z hotových demo projektů. Popisují typ výsledku a kontrolu kvality, ne soukromé repozitáře ani klientský obsah.',
+      controls: {
+        desktopLabel: 'Desktop',
+        mobileLabel: 'Mobil',
+        openRouteLabel: 'Otevřít celé demo',
+        resultLabel: 'Výsledek',
+        eventsLabel: 'Kontrolní kroky',
+        activatePrefix: 'Zobrazit projekt',
+        selectedLabel: 'Vybraný projekt',
+      },
       items: [
         {
+          id: 'seo-audit',
           name: 'SEO oprava před a po',
           metric: 'PROOF 01',
           summary:
             'Statická stránka porovnává základní a opravenou verzi: metadata, sitemapu, strukturovaná data a měřitelné HTML kontroly.',
           events: ['Staticky audit', 'Úprava metadat', 'Sitemap / JSON-LD', 'HTML kontrola'],
+          result: 'Přehled ukazuje rozdíl před a po zásahu a co přesně se kontrolovalo.',
+          preview: {
+            id: 'seo-audit',
+            urlLabel: 'radeq.cz/demos/seo-audit',
+            features: ['mobile-toggle', 'checks', 'before-after'],
+          },
+          route: '/demos/seo-audit',
         },
         {
+          id: 'workflow-prototype',
           name: 'Specializovaný workflow prototyp',
           metric: 'PROOF 02',
           summary:
             'Soukromé zadání se převádí do plánovacích kroků, prompt packu a kontrolních výstupů bez klientských dat a citlivých podkladů.',
           events: ['Mapa workflow', 'Bezpečný brief', 'Kontrolní výstupy', 'Demo artefakty'],
+          result: 'Brief se mění na jasný pracovní postup, kontrolní log a předatelný výstup.',
+          preview: {
+            id: 'workflow-prototype',
+            urlLabel: 'radeq.cz/demos/workflow-prototype',
+            features: ['mobile-toggle', 'logs', 'checks'],
+          },
+          route: '/demos/workflow-prototype',
         },
         {
+          id: 'maintenance',
           name: 'Správa a technická podpora',
           metric: '',
           summary:
             'Údržba webu, menší změny, opravy chyb, kontrola rychlosti, zálohy a bezpečnostní minimum bez složitého procesu.',
           events: ['Rychlá oprava', 'Aktualizace obsahu', 'Kontrola rychlosti', 'Základ bezpečnosti'],
+          result:
+            'Ukázka simuluje péči o web: rychlá oprava, kontrola zdraví a stručný předávací záznam.',
+          preview: {
+            id: 'maintenance',
+            urlLabel: 'radeq.cz/support/check',
+            features: ['mobile-toggle', 'checks', 'logs'],
+          },
         },
         {
+          id: 'ai-assistant',
           name: 'Lehká AI a chatboti',
           metric: '',
           summary:
             'Cloudový chatbot, jednoduchý asistent, třídění dotazů nebo interní pomocník nad schválenými texty a daty.',
           events: ['Návrh dialogu', 'Napojení zdrojů', 'Ochrana vstupů', 'Test odpovědí'],
+          result:
+            'Bezpečný statický rozhovor ukazuje, jak může asistent třídit dotazy bez živého LLM volání.',
+          preview: {
+            id: 'ai-assistant',
+            urlLabel: 'radeq.cz/ai/assistant',
+            features: ['logs'],
+          },
         },
         {
+          id: 'data-processing',
           name: 'Data a databáze',
           metric: '',
           summary:
             'Sběr, čištění a filtrování dat z formulářů, tabulek nebo jednoduchých databází. Výstupem je přehled, ne chaos.',
           events: ['Sběr dat', 'Kontrola polí', 'Filtrování', 'Přehled výstupů'],
+          result: 'Data projdou vstupem, kontrolou polí, filtrem a výstupem, který je čitelný pro rozhodnutí.',
+          preview: {
+            id: 'data-processing',
+            urlLabel: 'radeq.cz/data/filter',
+            features: ['mobile-toggle', 'checks'],
+          },
         },
         {
+          id: 'document-conversion',
           name: 'Dokumenty a převody',
           metric: '',
           summary:
             'Převod dokumentů, tabulek a podkladů do webu, databáze, PDF, prezentace nebo přehledného interního výstupu.',
           events: ['Vstupní podklady', 'Čištění obsahu', 'Nový formát', 'Kontrola výsledku'],
+          result: 'Ukázka převádí neuspořádaný podklad na čistý výstup s kontrolou výsledku.',
+          preview: {
+            id: 'document-conversion',
+            urlLabel: 'radeq.cz/tools/convert',
+            features: ['mobile-toggle', 'checks'],
+          },
         },
       ],
     },
@@ -439,48 +512,101 @@ export const siteContent = {
       title: 'Project proof, not just a service list.',
       lead:
         'The first blocks are public-safe archetypes from completed demo projects. They describe the result type and quality checks, not private repositories or client material.',
+      controls: {
+        desktopLabel: 'Desktop',
+        mobileLabel: 'Mobile',
+        openRouteLabel: 'Open full demo',
+        resultLabel: 'Result',
+        eventsLabel: 'Verification steps',
+        activatePrefix: 'Show project',
+        selectedLabel: 'Selected project',
+      },
       items: [
         {
+          id: 'seo-audit',
           name: 'SEO repair: before and after',
           metric: 'PROOF 01',
           summary:
             'A static page compares baseline and repaired versions: metadata, sitemap, structured data, and measurable HTML checks.',
           events: ['Static audit', 'Metadata cleanup', 'Sitemap / JSON-LD', 'HTML checks'],
+          result: 'The view shows the before/after gap and the exact checks that changed the page.',
+          preview: {
+            id: 'seo-audit',
+            urlLabel: 'radeq.cz/demos/seo-audit',
+            features: ['mobile-toggle', 'checks', 'before-after'],
+          },
+          route: '/demos/seo-audit',
         },
         {
+          id: 'workflow-prototype',
           name: 'Specialist workflow prototype',
           metric: 'PROOF 02',
           summary:
             'A private brief is converted into planning steps, a prompt pack, and verification outputs without client data or sensitive source material.',
           events: ['Workflow map', 'Safe brief', 'Verification outputs', 'Demo artifacts'],
+          result: 'The brief becomes a clear working sequence, verification log, and handoff output.',
+          preview: {
+            id: 'workflow-prototype',
+            urlLabel: 'radeq.cz/demos/workflow-prototype',
+            features: ['mobile-toggle', 'logs', 'checks'],
+          },
+          route: '/demos/workflow-prototype',
         },
         {
+          id: 'maintenance',
           name: 'Maintenance and support',
           metric: '',
           summary:
             'Website maintenance, small changes, bug fixes, speed checks, backups, and security basics without a heavy process.',
           events: ['Quick fix', 'Content update', 'Speed check', 'Security basics'],
+          result: 'The demo simulates website care: a quick fix, health check, and short handoff note.',
+          preview: {
+            id: 'maintenance',
+            urlLabel: 'radeq.cz/support/check',
+            features: ['mobile-toggle', 'checks', 'logs'],
+          },
         },
         {
+          id: 'ai-assistant',
           name: 'Light AI and chatbots',
           metric: '',
           summary:
             'A cloud chatbot, simple assistant, request classifier, or internal helper working with approved text and data.',
           events: ['Dialog design', 'Source connection', 'Input guardrails', 'Answer testing'],
+          result: 'A safe static conversation shows how an assistant can triage requests without a live LLM call.',
+          preview: {
+            id: 'ai-assistant',
+            urlLabel: 'radeq.cz/ai/assistant',
+            features: ['logs'],
+          },
         },
         {
+          id: 'data-processing',
           name: 'Data and databases',
           metric: '',
           summary:
             'Collection, cleanup, and filtering of data from forms, sheets, or small databases. The result is a clear overview, not clutter.',
           events: ['Data intake', 'Field checks', 'Filtering', 'Output overview'],
+          result: 'Data moves through intake, field checks, filtering, and an output that is ready to read.',
+          preview: {
+            id: 'data-processing',
+            urlLabel: 'radeq.cz/data/filter',
+            features: ['mobile-toggle', 'checks'],
+          },
         },
         {
+          id: 'document-conversion',
           name: 'Documents and conversion',
           metric: '',
           summary:
             'Convert documents, sheets, and source material into a website, database, PDF, presentation, or clean internal output.',
           events: ['Source material', 'Content cleanup', 'New format', 'Result check'],
+          result: 'The demo turns messy source material into a clean output with visible result checks.',
+          preview: {
+            id: 'document-conversion',
+            urlLabel: 'radeq.cz/tools/convert',
+            features: ['mobile-toggle', 'checks'],
+          },
         },
       ],
     },

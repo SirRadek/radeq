@@ -269,7 +269,7 @@ export const siteContent = {
           preview: {
             id: 'ai-assistant',
             urlLabel: 'radeq.cz/ai/assistant',
-            features: ['logs'],
+            features: ['mobile-toggle', 'logs'],
           },
         },
         {
@@ -577,7 +577,7 @@ export const siteContent = {
           preview: {
             id: 'ai-assistant',
             urlLabel: 'radeq.cz/ai/assistant',
-            features: ['logs'],
+            features: ['mobile-toggle', 'logs'],
           },
         },
         {

@@ -106,7 +106,7 @@ describe('localized site content', () => {
 
         if (item.route) {
           expect(demoPreviewRoutes).toContain(item.route);
-          expect(item.route).toMatch(/^\/demos\/[a-z0-9-]+$/);
+          expect(item.route).toMatch(/^\/(?:en\/)?demos\/[a-z0-9-]+$/);
         }
       }
     }
@@ -117,7 +117,15 @@ describe('localized site content', () => {
     const enItems = siteContent.en.demos.items as SiteContent['demos']['items'];
 
     expect(enItems.map((item) => item.id)).toEqual(csItems.map((item) => item.id));
-    expect(enItems.map((item) => item.route ?? null)).toEqual(csItems.map((item) => item.route ?? null));
+    expect(csItems.map((item) => item.route ?? null)).toEqual(['/demos/seo-audit', '/demos/workflow-prototype', null, null, null, null]);
+    expect(enItems.map((item) => item.route ?? null)).toEqual([
+      '/en/demos/seo-audit',
+      '/en/demos/workflow-prototype',
+      null,
+      null,
+      null,
+      null,
+    ]);
   });
 
   it('includes interactive demo metadata in the private-string scan', () => {

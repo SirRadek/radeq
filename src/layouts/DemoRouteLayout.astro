@@ -5,9 +5,11 @@ interface Props {
   title: string;
   description: string;
   lang?: 'cs' | 'en';
+  backHref?: string;
+  backLabel?: string;
 }
 
-const { title, description, lang = 'cs' } = Astro.props;
+const { title, description, lang = 'en', backHref = '/#demos', backLabel = 'Back to projects' } = Astro.props;
 ---
 
 <!doctype html>
@@ -21,7 +23,7 @@ const { title, description, lang = 'cs' } = Astro.props;
   </head>
   <body>
     <main class="demo-route-shell">
-      <a class="demo-route-back" href="/#demos">Zpet na projekty</a>
+      <a class="demo-route-back" href={backHref}>{backLabel}</a>
       <slot />
     </main>
   </body>

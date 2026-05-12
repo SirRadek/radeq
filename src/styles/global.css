@@ -1230,7 +1230,11 @@ html[data-motion-scene="matrix"] .matrix-preview {
 .demo-selector:focus-visible,
 .demo-selector.is-active {
   border-color: var(--accent);
-  outline: none;
+}
+
+.demo-selector:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 3px;
 }
 
 .demo-selector.is-active {
@@ -1341,7 +1345,12 @@ html[data-motion-scene="matrix"] .matrix-preview {
   border-color: var(--accent);
   color: #081000;
   background: var(--accent);
-  outline: none;
+}
+
+.demo-browser-bar__actions button:focus-visible,
+.demo-browser-bar__actions a:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 2px;
 }
 
 .demo-viewport-shell {

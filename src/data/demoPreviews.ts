@@ -13,7 +13,12 @@ export const demoPreviewFeatures = ['mobile-toggle', 'logs', 'checks', 'before-a
 
 export type DemoPreviewFeature = (typeof demoPreviewFeatures)[number];
 
-export const demoPreviewRoutes = ['/demos/seo-audit', '/demos/workflow-prototype'] as const;
+export const demoPreviewRoutes = [
+  '/demos/seo-audit',
+  '/demos/workflow-prototype',
+  '/en/demos/seo-audit',
+  '/en/demos/workflow-prototype',
+] as const;
 
 export type DemoPreviewRoute = (typeof demoPreviewRoutes)[number];
 

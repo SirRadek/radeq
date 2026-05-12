@@ -144,16 +144,21 @@ test('interactive project gallery is keyboard operable', async ({ page }) => {
 
 test('static demo routes render shareable proof pages', async ({ page }) => {
   await page.goto('/demos/seo-audit');
-  await expect(page.locator('html')).toHaveAttribute('lang', 'cs');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await expect(page.getByRole('heading', { name: /SEO_AUDIT_REPORT_V1/ })).toBeVisible();
   await expect(page.getByText('BASELINE')).toBeVisible();
   await expect(page.getByText('OPTIMIZED')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Back to projects' })).toHaveAttribute('href', '/#demos');
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
 
   await page.goto('/demos/workflow-prototype');
   await expect(page.getByRole('heading', { name: /WORKFLOW_PIPELINE_V1/ })).toBeVisible();
   await expect(page.getByText('Brief intake')).toBeVisible();
   await expect(page.getByText('Delivery')).toBeVisible();
+
+  await page.goto('/en/demos/workflow-prototype');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await expect(page.getByRole('link', { name: 'Back to projects' })).toHaveAttribute('href', '/en/#demos');
 });
 
 test('interactive demo gallery remains usable on mobile and reduced motion', async ({ page }) => {

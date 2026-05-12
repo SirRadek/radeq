@@ -535,7 +535,7 @@ export const siteContent = {
             urlLabel: 'radeq.cz/demos/seo-audit',
             features: ['mobile-toggle', 'checks', 'before-after'],
           },
-          route: '/demos/seo-audit',
+          route: '/en/demos/seo-audit',
         },
         {
           id: 'workflow-prototype',
@@ -550,7 +550,7 @@ export const siteContent = {
             urlLabel: 'radeq.cz/demos/workflow-prototype',
             features: ['mobile-toggle', 'logs', 'checks'],
           },
-          route: '/demos/workflow-prototype',
+          route: '/en/demos/workflow-prototype',
         },
         {
           id: 'maintenance',

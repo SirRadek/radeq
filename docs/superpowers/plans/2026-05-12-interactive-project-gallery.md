@@ -123,14 +123,10 @@ it('keeps demo ids and route availability aligned across locales', () => {
 
 it('includes interactive demo metadata in the private-string scan', () => {
   const forbiddenPublicStrings = [
-    'SirRadek',
-    '.codex-run',
-    'seo-fix-pack',
-    'archviz-workbench',
-    'webhook-gateway',
-    'scrapeflow',
-    'autopilot-orchestration',
-    'radeq-website',
+    '<private-owner>',
+    '<private-local-path>',
+    '<private-project-slug>',
+    '<private-repository-name>',
   ];
 
   const publicDemoTextParts: string[] = [];
@@ -1650,7 +1646,7 @@ Expected: all Playwright tests pass.
 Run:
 
 ```powershell
-$patterns = @('SirRadek', '.codex-run', 'seo-fix-pack', 'archviz-workbench', 'webhook-gateway', 'scrapeflow', 'autopilot-orchestration', 'radeq-website')
+$patterns = @('<private-owner>', '<private-local-path>', '<private-project-slug>', '<private-repository-name>')
 $files = Get-ChildItem -Path dist -Recurse -File
 $matches = foreach ($pattern in $patterns) {
   Select-String -Path $files.FullName -Pattern $pattern -SimpleMatch -ErrorAction SilentlyContinue
@@ -1683,7 +1679,7 @@ Run:
 git push origin v2
 ```
 
-Expected: branch `v2` updated on `SirRadek/radeq`.
+Expected: branch `v2` updated on the target GitHub repository.
 
 - [ ] **Step 8: Deploy preview after push**
 

@@ -1301,9 +1301,8 @@ html[data-motion-scene="matrix"] .matrix-preview {
   flex: 0 0 auto;
   width: 0.52rem;
   height: 0.52rem;
-  border-radius: 999px;
+  border-radius: 4px;
   background: var(--accent);
-  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 44%, transparent);
 }
 
 .demo-browser-bar__url strong {

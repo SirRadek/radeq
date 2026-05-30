@@ -17,12 +17,16 @@ export interface SiteContent {
     navAria: string;
     navItems: { href: string; label: string }[];
     cta: string;
+    themeLabel: string;
+    lightTheme: string;
+    darkTheme: string;
   };
   hero: {
     metaAria: string;
     meta: string[];
     title: string;
     lead: string;
+    proof: { label: string; value: string }[];
     actionsAria: string;
     actions: { href: string; label: string; variant: 'primary' | 'secondary' }[];
     coreAria: string;
@@ -126,19 +130,28 @@ export const siteContent = {
         { href: '#terminal', label: 'Kontakt' },
       ],
       cta: 'Nezávazná poptávka',
+      themeLabel: 'Přepnout barevný režim',
+      lightTheme: 'Světlý',
+      darkTheme: 'Tmavý',
     },
     hero: {
       metaAria: 'Cíle projektu',
       meta: [],
-      title: 'Weby, které vypadají dobře, rychle se hýbou a pomáhají prodávat.',
-      lead: '',
+      title: 'Web, kterému zákazník rozumí na první scroll.',
+      lead:
+        'Navrhnu jasnou strukturu, texty, rychlost, SEO základ a pohybové detaily tak, aby web působil profesionálně, hravě a vedl k poptávce.',
+      proof: [
+        { label: 'Návrhy', value: 'A / B / C / D směr před vývojem' },
+        { label: 'Pohyb', value: 'cursor a scroll bez ztráty čitelnosti' },
+        { label: 'Cíl', value: 'víc kvalitních poptávek' },
+      ],
       actionsAria: 'Hlavní akce',
       actions: [
         { href: '#matrix', label: 'Vyzkoušet typ webu', variant: 'primary' },
         { href: '#terminal', label: 'Poslat poptávku', variant: 'secondary' },
       ],
       coreAria: 'Interaktivní 3D náhled zrzavé kočičky',
-      coreCaption: '',
+      coreCaption: 'Pohyb je doplněk. Hlavní obsah a kontakt fungují i bez něj.',
       core: {
         enableLabel: 'Spustit kočičku',
         loadingLabel: 'Načítám kočičku...',
@@ -148,13 +161,13 @@ export const siteContent = {
     },
     matrix: {
       sectionCode: '',
-      title: 'Vyberte, co potřebujete. Hned uvidíte, jak může vypadat výsledek.',
+      title: 'Vyberte typ projektu a porovnejte návrhy A, B, C, D.',
       lead:
-        'Klikněte na typ projektu a styl. Ukázka hned ukáže hlavní sdělení, obsahové bloky a cestu k poptávce.',
+        'Každá verze má vlastní rozložení, grafiku, rytmus i světelný režim. Cíl zůstává stejný: zákazník má rychle pochopit nabídku a vědět, co udělat dál.',
       moduleLabel: 'Jakou ukázku chcete vidět',
       moduleAria: 'Typ webu nebo systému',
-      epochLabel: 'Vizuální styl ukázky',
-      epochAria: 'Vizuální styl webu',
+      epochLabel: 'Návrh A/B/C/D',
+      epochAria: 'Návrhová varianta webu',
       previewAria: 'Aktuální ukázka webu',
     },
     audience: {
@@ -381,19 +394,28 @@ export const siteContent = {
         { href: '#terminal', label: 'Contact' },
       ],
       cta: 'Request a quote',
+      themeLabel: 'Switch color mode',
+      lightTheme: 'Light',
+      darkTheme: 'Dark',
     },
     hero: {
       metaAria: 'Project targets',
       meta: [],
-      title: 'Websites that look sharp, move smoothly, and help sell.',
-      lead: '',
+      title: 'A website buyers understand on the first scroll.',
+      lead:
+        'I shape the structure, copy, speed, SEO basics, and motion details so the website feels professional, playful, and focused on qualified requests.',
+      proof: [
+        { label: 'Variants', value: 'A / B / C / D direction before build' },
+        { label: 'Motion', value: 'cursor and scroll without losing clarity' },
+        { label: 'Goal', value: 'more qualified requests' },
+      ],
       actionsAria: 'Primary actions',
       actions: [
         { href: '#matrix', label: 'Try a website type', variant: 'primary' },
         { href: '#terminal', label: 'Send a request', variant: 'secondary' },
       ],
       coreAria: 'Interactive 3D ginger cat preview',
-      coreCaption: '',
+      coreCaption: 'Motion is an enhancement. The main content and contact path work without it.',
       core: {
         enableLabel: 'Launch cat',
         loadingLabel: 'Loading cat...',
@@ -403,13 +425,13 @@ export const siteContent = {
     },
     matrix: {
       sectionCode: '',
-      title: 'Choose what you need. See what the result could look like.',
+      title: 'Choose a project type and compare A, B, C, D proposals.',
       lead:
-        'Click a project type and a visual style. The preview shows the main message, content blocks, and path to the request form.',
+        'Each version has its own layout, graphic treatment, rhythm, and light mode. The goal stays the same: people understand the offer quickly and know what to do next.',
       moduleLabel: 'Choose a preview type',
       moduleAria: 'Website or system type',
-      epochLabel: 'Choose a visual style',
-      epochAria: 'Website visual style',
+      epochLabel: 'A/B/C/D proposal',
+      epochAria: 'Website proposal variant',
       previewAria: 'Current website preview',
     },
     audience: {

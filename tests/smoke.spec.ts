@@ -4,7 +4,7 @@ test('homepage core flow works', async ({ page }) => {
   await page.goto('/');
 
   await expect(
-    page.getByRole('heading', { name: 'Weby, které vypadají dobře, rychle se hýbou a pomáhají prodávat.' }),
+    page.getByRole('heading', { name: 'Web, kterému zákazník rozumí na první scroll.' }),
   ).toBeVisible();
   await expect(page.getByRole('link', { name: 'Vyzkoušet web' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Co dostanete' })).toBeVisible();
@@ -16,35 +16,52 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.locator('#matrix')).toHaveAttribute('data-hydrated', 'true');
   await expect(page.getByText('Co chcete postavit')).toHaveCount(0);
   await expect(page.getByText(/Jakou .* chcete vid/)).toBeVisible();
-  await expect(page.getByText(/Vizu.* styl uk/)).toBeVisible();
+  await expect(page.getByText('Návrh A/B/C/D')).toBeVisible();
   await expect(page.locator('.matrix-control-group--styles')).toHaveCount(0);
   await expect(page.locator('.module-style-picker')).toHaveCount(1);
   await expect(page.locator('.module-style-picker .style-chip')).toHaveCount(4);
-  await expect(page.locator('.preview-mockup')).toHaveClass(/preview-mockup--service-landing/);
+  await expect(page.locator('.matrix-preview')).toHaveClass(/matrix-preview--motion/);
+  await expect(page.locator('.motion-flow-field')).toBeVisible();
+  await expect(page.locator('.motion-route li')).toHaveCount(3);
+  await expect(page.getByRole('button', { name: 'Světlý' })).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('button', { name: 'Tmavý' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await page.getByRole('button', { name: 'Světlý' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   await expect(page.locator('html')).toHaveAttribute('data-motion-ready', /true|reduced/);
   await expect(page.locator('html')).toHaveAttribute('data-motion-scene', /top|matrix|section|audience|demo|handoff|systems|terminal/);
 
+  await page.getByRole('button', { name: 'A / Důvěra' }).click();
+  await expect(page.locator('.matrix-preview')).toHaveAttribute('data-style', 'variant-a');
+  await expect(page.locator('.matrix-preview')).toHaveClass(/matrix-preview--trust/);
+  await expect(page.locator('.trust-page-sheet')).toBeVisible();
+
   await page.getByRole('button', { name: /Přehled pro tým/ }).click();
-  await page.getByRole('button', { name: 'Futuristický' }).click();
+  await page.getByRole('button', { name: 'C / Důkaz' }).click();
   await expect(
     page.getByRole('heading', {
       name: 'Interní rozhraní, které ukáže stav práce dřív, než se z něj stane problém.',
     }),
   ).toBeVisible();
   await expect(page.getByText('Co jde sledovat')).toBeVisible();
-  await expect(page.getByText('Stav záznamů, chyby automatizace a reakční časy.')).toBeVisible();
   await expect(page.locator('.matrix-preview')).toHaveAttribute('data-module', 'admin-dashboard');
-  await expect(page.locator('.matrix-preview')).toHaveAttribute('data-style', 'cyber-2036');
-  await expect(page.locator('.preview-mockup')).toHaveClass(/preview-mockup--admin-dashboard/);
-  await expect(page.locator('.preview-mockup .mockup-chart')).toHaveCount(1);
-  await expect(page.locator('.preview-mockup .mockup-queue')).toHaveCount(1);
+  await expect(page.locator('.matrix-preview')).toHaveAttribute('data-style', 'variant-c');
+  await expect(page.locator('.matrix-preview')).toHaveClass(/matrix-preview--proof/);
+  await expect(page.locator('.proof-metrics div')).toHaveCount(3);
+  await expect(page.locator('.proof-timeline li')).toHaveCount(5);
   await expect(page.locator('.module-style-picker')).toHaveCount(1);
   await expect(page.locator('.module-style-picker .style-chip')).toHaveCount(4);
 
   await page.getByRole('button', { name: /E-shop/ }).click();
   await expect(page.locator('.matrix-preview')).toHaveAttribute('data-module', 'eshop-offers');
-  await expect(page.locator('.preview-mockup')).toHaveClass(/preview-mockup--eshop-offers/);
-  await expect(page.locator('.preview-mockup .mockup-product')).toHaveCount(4);
+  await expect(page.locator('.proof-board')).toBeVisible();
+  await expect(page.locator('.proof-check')).toHaveCount(3);
+
+  await page.getByRole('button', { name: 'D / Studio' }).click();
+  await expect(page.locator('.matrix-preview')).toHaveAttribute('data-style', 'variant-d');
+  await expect(page.locator('.matrix-preview')).toHaveClass(/matrix-preview--studio/);
+  await expect(page.locator('.studio-configurator')).toBeVisible();
+  await expect(page.locator('.studio-outcome-map')).toBeVisible();
 
   await page.getByRole('textbox', { name: 'Jméno' }).fill('Jan Siroky');
   await page.getByRole('textbox', { name: 'E-mail' }).fill('jan@example.com');

@@ -14,6 +14,16 @@ const { content } = Astro.props;
     {content.meta.length > 0 && <div class="meta-row" aria-label={content.metaAria}>{content.meta.map((item) => <span>{item}</span>)}</div>}
     <h1 id="hero-title">{content.title}</h1>
     {content.lead && <p>{content.lead}</p>}
+    <dl class="hero-proof-rail">
+      {
+        content.proof.map((item) => (
+          <div>
+            <dt>{item.label}</dt>
+            <dd>{item.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
     <div class="hero-actions" aria-label={content.actionsAria} data-cat-platform="hero-actions">
       {
         content.actions.map((action) => (

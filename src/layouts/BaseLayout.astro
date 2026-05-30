@@ -17,14 +17,25 @@ const alternateHref = `${basePath}${alternatePath}`;
 ---
 
 <!doctype html>
-<html lang={lang} data-style="industrial">
+<html lang={lang} data-style="variant-b" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
     <link rel="alternate" hreflang={alternateLang} href={alternateHref} />
     <title>{title}</title>
+    <script is:inline>
+      (() => {
+        try {
+          const stored = localStorage.getItem('radeq-theme-mode');
+          document.documentElement.dataset.theme = stored === 'dark' || stored === 'light' ? stored : 'light';
+        } catch {
+          document.documentElement.dataset.theme = 'light';
+        }
+      })();
+    </script>
   </head>
   <body>
     <MotionOrchestrator client:load />

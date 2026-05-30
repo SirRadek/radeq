@@ -1,5 +1,6 @@
 ---
 import type { SiteContent } from '../data/siteContent';
+import ThemeModeToggle from './ThemeModeToggle';
 
 interface Props {
   content: SiteContent['header'];
@@ -21,6 +22,12 @@ const alternateHref = `${basePath}${alternatePath}`;
     {content.navItems.map((item) => <a href={item.href}>{item.label}</a>)}
   </nav>
   <div class="header-actions">
+    <ThemeModeToggle
+      label={content.themeLabel}
+      lightLabel={content.lightTheme}
+      darkLabel={content.darkTheme}
+      client:load
+    />
     <a class="language-link" href={alternateHref}>{alternateLabel}</a>
     <a class="header-cta" href="#terminal">{content.cta}</a>
   </div>

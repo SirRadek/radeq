@@ -20,9 +20,10 @@ describe('localized site content', () => {
   });
 
   it('keeps the Czech route Czech and the English route English', () => {
-    expect(siteContent.cs.hero.title).toContain('Weby');
+    expect(siteContent.cs.hero.title).toContain('první scroll');
+    expect(siteContent.cs.hero.proof.map((item) => item.label)).toEqual(['Návrhy', 'Pohyb', 'Cíl']);
     expect(siteContent.cs.header.cta).toBe('Nezávazná poptávka');
-    expect(siteContent.en.hero.title).toContain('Websites');
+    expect(siteContent.en.hero.title).toContain('first scroll');
     expect(siteContent.en.header.cta).toBe('Request a quote');
   });
   it('surfaces sanitized project proof before generic service offers', () => {

@@ -1,7 +1,7 @@
 import { defaultLocale, type Locale } from './locales';
 
 export type ModuleId = 'blog-docs' | 'service-landing' | 'admin-dashboard' | 'eshop-offers';
-export type EpochId = 'retro-1996' | 'modern' | 'cyber-2036' | 'industrial';
+export type EpochId = 'variant-a' | 'variant-b' | 'variant-c' | 'variant-d';
 export type Complexity = 'lean' | 'balanced' | 'advanced';
 
 export interface MatrixSelection {
@@ -25,7 +25,7 @@ export interface MatrixPreset {
   }[];
   design: {
     name: string;
-    layout: 'directory' | 'editorial' | 'hud' | 'workboard';
+    layout: 'directory' | 'editorial' | 'hud' | 'workboard' | 'studio';
     rhythm: string;
     details: string[];
   };
@@ -193,118 +193,118 @@ const moduleCopy: Record<Locale, Record<ModuleId, ModuleCopy>> = {
 };
 
 const epochTokens: Record<EpochId, MatrixPreset['tokens']> = {
-  'retro-1996': {
-    accent: '#39ff14',
-    accent2: '#f4f1de',
-    surface: '#050505',
-    border: '#39ff14',
-    fontMode: 'mono',
-    motion: 'terminal-snap',
-    density: 'compact',
-  },
-  modern: {
-    accent: '#d7ff44',
+  'variant-a': {
+    accent: '#d7ff35',
     accent2: '#8ee8ff',
-    surface: '#101214',
-    border: '#303840',
-    fontMode: 'sans',
-    motion: 'soft-shift',
+    surface: '#101414',
+    border: '#344035',
+    fontMode: 'trust',
+    motion: 'calm-proof',
     density: 'balanced',
   },
-  'cyber-2036': {
+  'variant-b': {
     accent: '#00e5ff',
-    accent2: '#b6ff3d',
-    surface: '#081016',
-    border: '#174957',
-    fontMode: 'tech',
-    motion: 'holo-shift',
+    accent2: '#d7ff35',
+    surface: '#071115',
+    border: '#164c58',
+    fontMode: 'motion',
+    motion: 'cursor-flow',
+    density: 'balanced',
+  },
+  'variant-c': {
+    accent: '#ffb020',
+    accent2: '#d7ff35',
+    surface: '#0d0e0b',
+    border: '#41351f',
+    fontMode: 'proof',
+    motion: 'workflow-pulse',
     density: 'dense',
   },
-  industrial: {
-    accent: '#d7ff35',
-    accent2: '#ffb020',
-    surface: '#0a0b0c',
-    border: '#2b332c',
-    fontMode: 'industrial',
-    motion: 'servo-lock',
-    density: 'dense',
+  'variant-d': {
+    accent: '#009c95',
+    accent2: '#ff5a48',
+    surface: '#f8fbf6',
+    border: '#c8ddd7',
+    fontMode: 'studio',
+    motion: 'decision-map',
+    density: 'balanced',
   },
 };
 
 const epochDesign: Record<Locale, Record<EpochId, MatrixPreset['design']>> = {
   cs: {
-    'retro-1996': {
-      name: 'Adresářový web s výraznou navigací',
-      layout: 'directory',
-      rhythm: 'Hodně jasných odkazů, tabulkové bloky, jednoduché sekce a rychlé rozhodování.',
-      details: ['viditelná navigace', 'hranaté bloky', 'kontrastní výzva', 'minimum efektů'],
-    },
-    modern: {
-      name: 'Vzdušná prezentační stránka',
+    'variant-a': {
+      name: 'A / Klidná důvěra',
       layout: 'editorial',
-      rhythm: 'Velký prostor, silný úvod, klidné ukázky a obsah, který se dá pohodlně číst.',
-      details: ['velká fotka nebo ukázka', 'krátké bloky', 'jemné přechody', 'čistý formulář'],
+      rhythm: 'Čitelná nabídka, silná první obrazovka, méně technických slov a jasná cesta ke kontaktu.',
+      details: ['jasný claim', 'větší text', 'klidné přechody', 'důvěryhodný formulář'],
     },
-    'cyber-2036': {
-      name: 'Interaktivní systémová ukázka',
+    'variant-b': {
+      name: 'B / Hravý pohyb',
       layout: 'hud',
-      rhythm: 'Web působí jako živý nástroj: linky, stavy, panely a pohyb, který něco vysvětluje.',
-      details: ['živé linky', 'stavové panely', 'rychlé volby', 'animovaný průchod'],
+      rhythm: 'Cursor, scroll a jemné linky vysvětlují strukturu webu, ale hlavní sdělení zůstává vždy čitelné.',
+      details: ['cursor reakce', 'scroll signály', 'živé linky', 'pohyb bez chaosu'],
     },
-    industrial: {
-      name: 'Pracovní provozní deska',
+    'variant-c': {
+      name: 'C / Technický důkaz',
       layout: 'workboard',
-      rhythm: 'Hutnější rozložení pro služby, data, procesy a nabídku, která má být čitelná i opakovaně.',
-      details: ['procesní kroky', 'checklisty', 'přehled stavu', 'robustní kontrast'],
+      rhythm: 'Více důkazů, postup práce a převzetí projektu na jedné pracovní ploše pro zákazníky, kteří chtějí jistotu.',
+      details: ['procesní kroky', 'proof bloky', 'přehled stavu', 'předání práce'],
+    },
+    'variant-d': {
+      name: 'D / Studio konfigurátor',
+      layout: 'studio',
+      rhythm: 'Netechnický výběr potřeb, mapa výsledků a přepínání světlého i tmavého dojmu přímo v návrhu.',
+      details: ['výběr potřeby', 'mapa výsledků', 'přátelský jazyk', 'světlý i tmavý režim'],
     },
   },
   en: {
-    'retro-1996': {
-      name: 'Directory-style website with bold navigation',
-      layout: 'directory',
-      rhythm: 'Clear links, table-like blocks, simple sections, and quick decisions.',
-      details: ['visible navigation', 'square blocks', 'strong call to action', 'minimal effects'],
-    },
-    modern: {
-      name: 'Airy presentation page',
+    'variant-a': {
+      name: 'A / Calm trust',
       layout: 'editorial',
-      rhythm: 'Generous space, strong opening, calm examples, and content that is easy to read.',
-      details: ['large image or preview', 'short blocks', 'soft transitions', 'clean form'],
+      rhythm: 'Readable offer, strong first viewport, fewer technical words, and a clear route to contact.',
+      details: ['clear claim', 'larger text', 'calm transitions', 'trustworthy form'],
     },
-    'cyber-2036': {
-      name: 'Interactive systems demo',
+    'variant-b': {
+      name: 'B / Playful motion',
       layout: 'hud',
-      rhythm: 'The website feels like a live tool: routes, states, panels, and motion that explains meaning.',
-      details: ['live routes', 'status panels', 'quick choices', 'animated walkthrough'],
+      rhythm: 'Cursor, scroll, and fine lines explain structure while the core offer stays readable.',
+      details: ['cursor response', 'scroll signals', 'live routes', 'motion without clutter'],
     },
-    industrial: {
-      name: 'Operational workboard',
+    'variant-c': {
+      name: 'C / Technical proof',
       layout: 'workboard',
-      rhythm: 'Denser layout for services, data, process, and an offer people can scan repeatedly.',
-      details: ['process steps', 'checklists', 'status overview', 'robust contrast'],
+      rhythm: 'Proof, process, and project handoff are visible in one work-focused surface for buyers who need certainty.',
+      details: ['process steps', 'proof blocks', 'status overview', 'handoff rules'],
+    },
+    'variant-d': {
+      name: 'D / Studio configurator',
+      layout: 'studio',
+      rhythm: 'A non-technical needs picker, outcome map, and light/dark mood switch inside the proposal.',
+      details: ['needs picker', 'outcome map', 'friendly language', 'light and dark mode'],
     },
   },
 };
 
 const complexityByEpoch: Record<EpochId, Complexity> = {
-  'retro-1996': 'lean',
-  modern: 'balanced',
-  'cyber-2036': 'advanced',
-  industrial: 'balanced',
+  'variant-a': 'lean',
+  'variant-b': 'balanced',
+  'variant-c': 'advanced',
+  'variant-d': 'balanced',
 };
 
 const epochCopy: Record<Locale, EpochOption[]> = {
   cs: [
-    { id: 'retro-1996', label: 'Hravě retro', benefit: 'Jako rychlý katalog s výraznými odkazy.' },
-    { id: 'modern', label: 'Čistý moderní', benefit: 'Vzdušný web s velkým prostorem pro značku.' },
-    { id: 'cyber-2036', label: 'Futuristický', benefit: 'Interaktivní ukázka s panely a pohybem.' },
-    { id: 'industrial', label: 'Robustní pracovní', benefit: 'Hutnější rozložení pro procesy a data.' },
+    { id: 'variant-a', label: 'A / Důvěra', benefit: 'Nejčitelnější verze pro netechnické zákazníky.' },
+    { id: 'variant-b', label: 'B / Pohyb', benefit: 'Hravější web s cursor a scroll reakcemi.' },
+    { id: 'variant-c', label: 'C / Důkaz', benefit: 'Proces, proof bloky a předání práce.' },
+    { id: 'variant-d', label: 'D / Studio', benefit: 'Konfigurátor potřeb, výsledků a přepínače vzhledu.' },
   ],
   en: [
-    { id: 'retro-1996', label: 'Playful retro', benefit: 'A fast catalogue with bold links.' },
-    { id: 'modern', label: 'Clean modern', benefit: 'An airy website with room for the brand.' },
-    { id: 'cyber-2036', label: 'Future-facing', benefit: 'An interactive preview with panels and motion.' },
-    { id: 'industrial', label: 'Robust work-focused', benefit: 'A denser layout for process and data.' },
+    { id: 'variant-a', label: 'A / Trust', benefit: 'The clearest version for non-technical buyers.' },
+    { id: 'variant-b', label: 'B / Motion', benefit: 'A more playful site with cursor and scroll response.' },
+    { id: 'variant-c', label: 'C / Proof', benefit: 'Process, proof blocks, and handoff clarity.' },
+    { id: 'variant-d', label: 'D / Studio', benefit: 'Needs configurator, outcome map, and theme switching.' },
   ],
 };
 

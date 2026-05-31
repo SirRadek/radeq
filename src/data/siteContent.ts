@@ -1,4 +1,5 @@
 import { supportedLocales, type Locale } from './locales';
+import type { ModuleId } from './styleMatrix';
 
 export { supportedLocales, type Locale };
 
@@ -17,6 +18,7 @@ export interface SiteContent {
     navAria: string;
     navItems: { href: string; label: string }[];
     cta: string;
+    styleLabel: string;
     themeLabel: string;
     lightTheme: string;
     darkTheme: string;
@@ -73,10 +75,14 @@ export interface SiteContent {
   systems: {
     sectionCode: string;
     title: string;
+    lead: string;
+    demoLabel: string;
+    requestLabel: string;
     items: {
       problem: string;
       system: string;
       output: string;
+      demoModule?: ModuleId;
     }[];
   };
   terminal: {
@@ -124,12 +130,13 @@ export const siteContent = {
       brandAria: 'Radeq.cz úvod',
       navAria: 'Hlavní menu',
       navItems: [
-        { href: '#matrix', label: 'Vyzkoušet web' },
-        { href: '#demos', label: 'Co dostanete' },
-        { href: '#handoff', label: 'Průběh práce' },
-        { href: '#terminal', label: 'Kontakt' },
+        { href: '#services', label: 'Co umíme' },
+        { href: '/demo/service-landing/', label: 'Demo' },
+        { href: '#handoff', label: 'Průběh' },
+        { href: '#terminal', label: 'Poptávka' },
       ],
       cta: 'Nezávazná poptávka',
+      styleLabel: 'Přepnout styl webu',
       themeLabel: 'Přepnout barevný režim',
       lightTheme: 'Světlý',
       darkTheme: 'Tmavý',
@@ -147,7 +154,7 @@ export const siteContent = {
       ],
       actionsAria: 'Hlavní akce',
       actions: [
-        { href: '#matrix', label: 'Vyzkoušet typ webu', variant: 'primary' },
+        { href: '#services', label: 'Prohlédnout služby', variant: 'primary' },
         { href: '#terminal', label: 'Poslat poptávku', variant: 'secondary' },
       ],
       coreAria: 'Interaktivní 3D náhled zrzavé kočičky',
@@ -161,12 +168,12 @@ export const siteContent = {
     },
     matrix: {
       sectionCode: '',
-      title: 'Vyberte typ projektu a porovnejte návrhy A, B, C, D.',
+      title: 'Interaktivní demo je mimo hlavní stránku.',
       lead:
-        'Každá verze má vlastní rozložení, grafiku, rytmus i světelný režim. Cíl zůstává stejný: zákazník má rychle pochopit nabídku a vědět, co udělat dál.',
+        'Vlevo přepnete typ ukázky. Styl A, B, C nebo D řídí celý web z horní lišty vedle světlého a tmavého režimu.',
       moduleLabel: 'Jakou ukázku chcete vidět',
       moduleAria: 'Typ webu nebo systému',
-      epochLabel: 'Návrh A/B/C/D',
+      epochLabel: 'Styl webu v horním přepínači',
       epochAria: 'Návrhová varianta webu',
       previewAria: 'Aktuální ukázka webu',
     },
@@ -257,27 +264,35 @@ export const siteContent = {
     },
     systems: {
       sectionCode: '',
-      title: 'Služby, které dávají smysl rozvíjet společně.',
+      title: 'Co umíme postavit a vylepšit.',
+      lead:
+        'Hlavní stránka má zůstat srozumitelná: krátký popis služby, co z ní vznikne, a odkaz na samostatnou ukázku tam, kde dává demo smysl.',
+      demoLabel: 'Otevřít demo',
+      requestLabel: 'Probrat v poptávce',
       items: [
         {
           problem: 'Potřebujete nový nebo lepší web',
           system: 'Firemní web, portfolio, blog nebo landing page',
           output: 'Jasná struktura, dobrý mobil a jednoduchá cesta ke kontaktu.',
+          demoModule: 'service-landing',
         },
         {
           problem: 'Web má být dohledatelný a měřitelný',
           system: 'Základy SEO, marketingu a měření',
           output: 'Poctivé titulky, popisy, interní odkazy, měření akcí a první mailing.',
+          demoModule: 'blog-docs',
         },
         {
           problem: 'Chcete méně ruční práce',
           system: 'Poptávkové formuláře, sběr a filtrování dat',
           output: 'Poptávky se ukládají, třídí a posílají tam, kde je tým opravdu řeší.',
+          demoModule: 'admin-dashboard',
         },
         {
           problem: 'Máte dokumenty a tabulky všude možně',
           system: 'Převod dokumentů, dat a podkladů',
           output: 'Čistší obsah, použitelné tabulky, PDF, prezentace nebo webový přehled.',
+          demoModule: 'blog-docs',
         },
         {
           problem: 'Zákazníci se ptají pořád na stejné věci',
@@ -293,11 +308,13 @@ export const siteContent = {
           problem: 'Potřebujete aplikaci bez App Storu',
           system: 'Mobilní webová aplikace',
           output: 'Použitelný nástroj v prohlížeči, který funguje dobře i na telefonu.',
+          demoModule: 'admin-dashboard',
         },
         {
           problem: 'Projekt potřebuje vypadat důvěryhodně',
           system: 'Copy, vizuální detail a prezentační stránka',
           output: 'Srozumitelná nabídka, dobré ukázky a méně slov, kterým zákazník nerozumí.',
+          demoModule: 'eshop-offers',
         },
       ],
     },
@@ -388,12 +405,13 @@ export const siteContent = {
       brandAria: 'Radeq.cz home',
       navAria: 'Main menu',
       navItems: [
-        { href: '#matrix', label: 'Try a website type' },
-        { href: '#demos', label: 'What you get' },
-        { href: '#handoff', label: 'How work runs' },
-        { href: '#terminal', label: 'Contact' },
+        { href: '#services', label: 'Services' },
+        { href: '/en/demo/service-landing/', label: 'Demo' },
+        { href: '#handoff', label: 'Workflow' },
+        { href: '#terminal', label: 'Request' },
       ],
       cta: 'Request a quote',
+      styleLabel: 'Switch website style',
       themeLabel: 'Switch color mode',
       lightTheme: 'Light',
       darkTheme: 'Dark',
@@ -411,7 +429,7 @@ export const siteContent = {
       ],
       actionsAria: 'Primary actions',
       actions: [
-        { href: '#matrix', label: 'Try a website type', variant: 'primary' },
+        { href: '#services', label: 'Browse services', variant: 'primary' },
         { href: '#terminal', label: 'Send a request', variant: 'secondary' },
       ],
       coreAria: 'Interactive 3D ginger cat preview',
@@ -425,12 +443,12 @@ export const siteContent = {
     },
     matrix: {
       sectionCode: '',
-      title: 'Choose a project type and compare A, B, C, D proposals.',
+      title: 'The interactive demo lives outside the main page.',
       lead:
-        'Each version has its own layout, graphic treatment, rhythm, and light mode. The goal stays the same: people understand the offer quickly and know what to do next.',
+        'Switch the preview type on the left. Style A, B, C, or D controls the whole website from the top bar next to light and dark mode.',
       moduleLabel: 'Choose a preview type',
       moduleAria: 'Website or system type',
-      epochLabel: 'A/B/C/D proposal',
+      epochLabel: 'Website style in the top switcher',
       epochAria: 'Website proposal variant',
       previewAria: 'Current website preview',
     },
@@ -521,27 +539,35 @@ export const siteContent = {
     },
     systems: {
       sectionCode: '',
-      title: 'Services that make sense to grow together.',
+      title: 'What we can build and improve.',
+      lead:
+        'The main page stays easy to scan: a short service description, the expected output, and a link to a separate demo when an interactive example helps.',
+      demoLabel: 'Open demo',
+      requestLabel: 'Discuss in request',
       items: [
         {
           problem: 'You need a new or better website',
           system: 'Company website, portfolio, blog, or landing page',
           output: 'Clear structure, good mobile behavior, and a simple path to contact.',
+          demoModule: 'service-landing',
         },
         {
           problem: 'The website should be findable and measurable',
           system: 'SEO, marketing, and measurement basics',
           output: 'Honest titles, descriptions, internal links, action tracking, and first mailing.',
+          demoModule: 'blog-docs',
         },
         {
           problem: 'You want less manual work',
           system: 'Request forms, data collection, and filtering',
           output: 'Requests are stored, sorted, and sent where the team actually handles them.',
+          demoModule: 'admin-dashboard',
         },
         {
           problem: 'Your documents and sheets are scattered',
           system: 'Document, data, and source-material conversion',
           output: 'Cleaner content, usable tables, PDFs, presentations, or a web overview.',
+          demoModule: 'blog-docs',
         },
         {
           problem: 'Customers ask the same questions repeatedly',
@@ -557,11 +583,13 @@ export const siteContent = {
           problem: 'You need an app without the App Store',
           system: 'Mobile web application',
           output: 'A useful browser-based tool that works well on phones.',
+          demoModule: 'admin-dashboard',
         },
         {
           problem: 'The project needs to feel trustworthy',
           system: 'Copy, visual detail, and presentation page',
           output: 'Clearer offer, better examples, and fewer words customers do not understand.',
+          demoModule: 'eshop-offers',
         },
       ],
     },

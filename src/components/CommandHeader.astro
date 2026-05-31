@@ -1,16 +1,29 @@
 ---
 import type { SiteContent } from '../data/siteContent';
+import type { Locale } from '../data/locales';
+import { getEpochOptions } from '../data/styleMatrix';
+import StyleVariantToggle from './StyleVariantToggle';
 import ThemeModeToggle from './ThemeModeToggle';
 
 interface Props {
   content: SiteContent['header'];
   alternatePath: string;
   alternateLabel: string;
+  locale: Locale;
+  homePath?: string;
 }
 
-const { content, alternatePath, alternateLabel } = Astro.props;
+const { content, alternatePath, alternateLabel, locale, homePath } = Astro.props;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 const alternateHref = `${basePath}${alternatePath}`;
+const styleOptions = getEpochOptions(locale);
+const resolveHref = (href: string) => {
+  if (homePath && href.startsWith('#')) {
+    return `${basePath}${homePath}${href}`;
+  }
+
+  return href.startsWith('/') ? `${basePath}${href}` : href;
+};
 ---
 
 <header class="command-header" aria-label={content.ariaLabel}>
@@ -19,9 +32,10 @@ const alternateHref = `${basePath}${alternatePath}`;
     <span>Radeq.cz</span>
   </a>
   <nav class="command-nav" aria-label={content.navAria}>
-    {content.navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+    {content.navItems.map((item) => <a href={resolveHref(item.href)}>{item.label}</a>)}
   </nav>
   <div class="header-actions">
+    <StyleVariantToggle label={content.styleLabel} options={styleOptions} client:load />
     <ThemeModeToggle
       label={content.themeLabel}
       lightLabel={content.lightTheme}

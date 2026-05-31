@@ -75,6 +75,104 @@ html[data-theme="dark"] {
   --shadow-hard: 0 18px 80px rgb(0 0 0 / 0.46);
 }
 
+html[data-theme="light"][data-style="variant-a"] {
+  --page-bg: #f7f9f4;
+  --text-main: #10170f;
+  --text-muted: #536056;
+  --panel-bg: #ffffff;
+  --panel-strong: #eef4ea;
+  --line: #d6e0d3;
+  --line-strong: #9cab95;
+  --accent: #257a3e;
+  --accent-2: #007b83;
+  --warning: #8a6200;
+}
+
+html[data-theme="dark"][data-style="variant-a"] {
+  --page-bg: #07100d;
+  --text-main: #f4f8ed;
+  --text-muted: #a9b5a8;
+  --panel-bg: #0d1512;
+  --panel-strong: #142017;
+  --line: #26382b;
+  --line-strong: #48604a;
+  --accent: #d7ff35;
+  --accent-2: #8ee8ff;
+}
+
+html[data-theme="light"][data-style="variant-b"] {
+  --page-bg: #edf8fb;
+  --text-main: #06151b;
+  --text-muted: #49636d;
+  --panel-bg: #f9fdff;
+  --panel-strong: #dff3f7;
+  --line: #b9dce4;
+  --line-strong: #6aaebc;
+  --accent: #007b83;
+  --accent-2: #3f7f00;
+}
+
+html[data-theme="dark"][data-style="variant-b"] {
+  --page-bg: #041015;
+  --text-main: #effcff;
+  --text-muted: #9fbac2;
+  --panel-bg: #071820;
+  --panel-strong: #0c2630;
+  --line: #164452;
+  --line-strong: #276b7d;
+  --accent: #00e5ff;
+  --accent-2: #d7ff35;
+}
+
+html[data-theme="light"][data-style="variant-c"] {
+  --page-bg: #fbf7ec;
+  --text-main: #1a1710;
+  --text-muted: #645a45;
+  --panel-bg: #fffdf7;
+  --panel-strong: #efe4cc;
+  --line: #decfae;
+  --line-strong: #a8894d;
+  --accent: #a76500;
+  --accent-2: #3b6f37;
+  --warning: #b65318;
+}
+
+html[data-theme="dark"][data-style="variant-c"] {
+  --page-bg: #0d0e0b;
+  --text-main: #fff8e7;
+  --text-muted: #b8aa8b;
+  --panel-bg: #15140f;
+  --panel-strong: #221d12;
+  --line: #41351f;
+  --line-strong: #725a2f;
+  --accent: #ffb020;
+  --accent-2: #d7ff35;
+}
+
+html[data-theme="light"][data-style="variant-d"] {
+  --page-bg: #f8fbf6;
+  --text-main: #101714;
+  --text-muted: #52645e;
+  --panel-bg: #ffffff;
+  --panel-strong: #e7f3ef;
+  --line: #c8ddd7;
+  --line-strong: #87aaa1;
+  --accent: #009c95;
+  --accent-2: #d14535;
+}
+
+html[data-theme="dark"][data-style="variant-d"] {
+  --page-bg: #071210;
+  --text-main: #f5fbf8;
+  --text-muted: #a3b6af;
+  --panel-bg: #0c1b18;
+  --panel-strong: #132923;
+  --line: #21453f;
+  --line-strong: #3e756a;
+  --accent: #40d8cb;
+  --accent-2: #ff7465;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -132,6 +230,66 @@ html[data-theme="light"] body::before {
   opacity: 0.5;
 }
 
+html[data-style="variant-a"] body {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(180deg, color-mix(in srgb, var(--accent-2) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(135deg, color-mix(in srgb, var(--accent) 11%, transparent), transparent 38rem),
+    var(--page-bg);
+  background-size: 112px 112px, 112px 112px, auto, auto;
+}
+
+html[data-style="variant-a"] body::before {
+  background:
+    linear-gradient(112deg, transparent 12%, color-mix(in srgb, var(--accent) 10%, transparent) 12% 13%, transparent 13% 62%, color-mix(in srgb, var(--accent-2) 9%, transparent) 62% 63%, transparent 63%),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--text-main) 3%, transparent) 0 1px, transparent 1px 14px);
+  opacity: 0.48;
+}
+
+html[data-style="variant-b"] body {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 8%, transparent) 1px, transparent 1px),
+    linear-gradient(180deg, color-mix(in srgb, var(--accent) 6%, transparent) 1px, transparent 1px),
+    radial-gradient(circle at calc(78% + var(--motion-mid-x)) 4%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 28rem),
+    var(--page-bg);
+  background-size: 58px 58px, 58px 58px, auto, auto;
+}
+
+html[data-style="variant-b"] body::before {
+  background:
+    repeating-linear-gradient(115deg, transparent 0 16px, color-mix(in srgb, var(--accent) 8%, transparent) 16px 17px),
+    linear-gradient(90deg, transparent 18%, color-mix(in srgb, var(--accent-2) 10%, transparent) 18% 19%, transparent 19% 76%, color-mix(in srgb, var(--accent) 12%, transparent) 76% 77%, transparent 77%);
+  opacity: 0.5;
+}
+
+html[data-style="variant-c"] body {
+  background:
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--text-main) 4%, transparent) 0 1px, transparent 1px 18px),
+    linear-gradient(180deg, color-mix(in srgb, var(--accent) 7%, transparent), transparent 20rem),
+    var(--page-bg);
+}
+
+html[data-style="variant-c"] body::before {
+  background:
+    linear-gradient(90deg, transparent 0 18%, color-mix(in srgb, var(--accent) 12%, transparent) 18% 18.4%, transparent 18.4% 82%, color-mix(in srgb, var(--accent) 10%, transparent) 82% 82.4%, transparent 82.4%),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--text-main) 4%, transparent) 0 1px, transparent 1px 11px);
+  opacity: 0.38;
+}
+
+html[data-style="variant-d"] body {
+  background:
+    linear-gradient(130deg, color-mix(in srgb, var(--accent) 11%, transparent), transparent 30rem),
+    linear-gradient(50deg, transparent 0 58%, color-mix(in srgb, var(--accent-2) 9%, transparent) 58% 59%, transparent 59%),
+    var(--page-bg);
+}
+
+html[data-style="variant-d"] body::before {
+  background:
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--accent) 4%, transparent) 0 1px, transparent 1px 20px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--accent-2) 4%, transparent) 0 1px, transparent 1px 28px);
+  opacity: 0.4;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -166,7 +324,8 @@ input {
 .language-link,
 .header-cta,
 .command-nav,
-.theme-toggle {
+.theme-toggle,
+.style-toggle {
   border: 1px solid rgb(255 255 255 / 0.09);
   background: rgb(2 3 3 / 0.76);
   box-shadow: var(--shadow-hard);
@@ -181,7 +340,8 @@ html[data-theme="light"] .brand-mark,
 html[data-theme="light"] .language-link,
 html[data-theme="light"] .header-cta,
 html[data-theme="light"] .command-nav,
-html[data-theme="light"] .theme-toggle {
+html[data-theme="light"] .theme-toggle,
+html[data-theme="light"] .style-toggle {
   border-color: rgb(17 23 17 / 0.1);
   background: rgb(255 255 255 / 0.82);
 }
@@ -241,7 +401,8 @@ html[data-theme="light"] .theme-toggle {
   justify-self: end;
 }
 
-.theme-toggle {
+.theme-toggle,
+.style-toggle {
   display: inline-flex;
   gap: 0.2rem;
   align-items: center;
@@ -249,7 +410,8 @@ html[data-theme="light"] .theme-toggle {
   padding: 0.25rem;
 }
 
-.theme-toggle button {
+.theme-toggle button,
+.style-toggle button {
   display: inline-flex;
   gap: 0.38rem;
   align-items: center;
@@ -270,13 +432,21 @@ html[data-theme="light"] .theme-toggle {
 }
 
 .theme-toggle button:hover,
-.theme-toggle button.is-active {
+.theme-toggle button.is-active,
+.style-toggle button:hover,
+.style-toggle button.is-active {
   color: var(--text-main);
   background: color-mix(in srgb, var(--accent) 12%, transparent);
 }
 
-.theme-toggle button:active {
+.theme-toggle button:active,
+.style-toggle button:active {
   transform: translateY(1px);
+}
+
+.style-toggle button {
+  min-width: 32px;
+  padding-inline: 0.52rem;
 }
 
 .theme-toggle__icon {
@@ -316,6 +486,8 @@ main {
 .demo-section,
 .handoff-section,
 .systems-section,
+.service-catalog,
+.demo-route-hero,
 .terminal-section,
 .matrix-section {
   position: relative;
@@ -656,6 +828,7 @@ html[data-motion-ready="true"] .terminal-window::before {
 .demo-section,
 .handoff-section,
 .systems-section,
+.service-catalog,
 .terminal-section {
   padding: clamp(3rem, 7vw, 6rem) 0;
 }
@@ -1968,6 +2141,188 @@ html[data-theme="dark"] .studio-map-core {
     #f4f7ee;
 }
 
+.service-catalog {
+  display: grid;
+  gap: clamp(1.2rem, 3vw, 2rem);
+}
+
+.section-heading--services {
+  margin-bottom: 0;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.service-card {
+  position: relative;
+  display: grid;
+  gap: 0.8rem;
+  align-content: start;
+  min-height: 310px;
+  border: 1px solid var(--line);
+  padding: 1rem;
+  background: color-mix(in srgb, var(--panel-bg) 92%, transparent);
+  box-shadow: 0 18px 54px color-mix(in srgb, #000000 14%, transparent);
+}
+
+.service-card::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  content: "";
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0.82;
+}
+
+.service-card > span {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.service-card h3,
+.service-card p {
+  margin: 0;
+}
+
+.service-card h3 {
+  font-size: clamp(1.08rem, 1.6vw, 1.35rem);
+  line-height: 1.15;
+}
+
+.service-card p {
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.service-card p:first-of-type {
+  color: color-mix(in srgb, var(--text-main) 78%, var(--accent));
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.service-card a {
+  align-self: end;
+  width: fit-content;
+  border: 1px solid var(--accent);
+  padding: 0.62rem 0.75rem;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.service-card a:hover {
+  color: var(--page-bg);
+  background: var(--accent);
+  transform: translateY(-1px);
+}
+
+.demo-route-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(280px, 0.48fr);
+  gap: clamp(1.4rem, 4vw, 3rem);
+  align-items: end;
+  padding: clamp(3rem, 8vw, 6rem) 0 clamp(1rem, 3vw, 2rem);
+}
+
+.demo-route-hero h1 {
+  max-width: 13ch;
+  margin: 0;
+  font-size: clamp(2.3rem, 6vw, 5rem);
+  line-height: 0.95;
+}
+
+.demo-route-hero p:not(.section-code) {
+  max-width: 34rem;
+  margin: 0 0 1rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+html[data-style="variant-a"] .service-card {
+  border-left: 3px solid var(--accent);
+  box-shadow: 0 18px 50px color-mix(in srgb, #000000 10%, transparent);
+}
+
+html[data-style="variant-a"] .hero-proof-rail {
+  border-left: 3px solid var(--accent);
+  padding-left: 1rem;
+}
+
+html[data-style="variant-b"] .brand-mark,
+html[data-style="variant-b"] .language-link,
+html[data-style="variant-b"] .header-cta,
+html[data-style="variant-b"] .command-nav,
+html[data-style="variant-b"] .theme-toggle,
+html[data-style="variant-b"] .style-toggle,
+html[data-style="variant-b"] .service-card {
+  box-shadow: 0 16px 70px color-mix(in srgb, var(--accent) 12%, #000000 18%);
+}
+
+html[data-style="variant-b"] .service-card {
+  overflow: hidden;
+}
+
+html[data-style="variant-b"] .service-card::after {
+  position: absolute;
+  inset: auto -20% 18% 32%;
+  height: 1px;
+  content: "";
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.55;
+  transform: rotate(-12deg);
+}
+
+html[data-style="variant-c"] .brand-mark,
+html[data-style="variant-c"] .language-link,
+html[data-style="variant-c"] .header-cta,
+html[data-style="variant-c"] .command-nav,
+html[data-style="variant-c"] .theme-toggle,
+html[data-style="variant-c"] .style-toggle,
+html[data-style="variant-c"] .service-card,
+html[data-style="variant-c"] .matrix-controls,
+html[data-style="variant-c"] .matrix-preview {
+  box-shadow: none;
+}
+
+html[data-style="variant-c"] .service-card {
+  min-height: 270px;
+  background:
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--text-main) 3%, transparent) 0 1px, transparent 1px 12px),
+    var(--panel-bg);
+}
+
+html[data-style="variant-c"] .service-card h3,
+html[data-style="variant-c"] .demo-route-hero h1 {
+  font-family: var(--font-mono);
+}
+
+html[data-style="variant-d"] .hero-section {
+  grid-template-columns: minmax(0, 0.85fr) minmax(300px, 0.55fr);
+}
+
+html[data-style="variant-d"] .service-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+html[data-style="variant-d"] .service-card {
+  min-height: 280px;
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 52%),
+    var(--panel-bg);
+}
+
 .audience-band {
   grid-template-columns: minmax(0, 0.55fr) minmax(0, 1fr);
   align-items: start;
@@ -2226,6 +2581,7 @@ html[data-theme="dark"] .studio-map-core {
   .matrix-workbench,
   .matrix-preview,
   .audience-band,
+  .demo-route-hero,
   .handoff-section,
   .terminal-grid {
     grid-template-columns: 1fr;
@@ -2262,18 +2618,21 @@ html[data-theme="dark"] .studio-map-core {
 
   .header-actions {
     justify-content: stretch;
+    flex-wrap: wrap;
   }
 
   .header-actions a {
-    flex: 1;
+    flex: 1 1 7rem;
   }
 
-  .theme-toggle {
-    flex: 1;
+  .theme-toggle,
+  .style-toggle {
+    flex: 1 1 11rem;
     justify-content: center;
   }
 
-  .theme-toggle button {
+  .theme-toggle button,
+  .style-toggle button {
     flex: 1;
   }
 
@@ -2318,6 +2677,18 @@ html[data-theme="dark"] .studio-map-core {
   .audience-grid,
   .demo-grid,
   .systems-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .service-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  html[data-style="variant-d"] .service-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  html[data-style="variant-d"] .hero-section {
     grid-template-columns: 1fr;
   }
 }
@@ -2368,6 +2739,15 @@ html[data-theme="dark"] .studio-map-core {
   }
 
   .proof-board {
+    grid-template-columns: 1fr;
+  }
+
+  .service-grid {
+    grid-template-columns: 1fr;
+  }
+
+  html[data-style="variant-d"] .hero-section,
+  html[data-style="variant-d"] .service-grid {
     grid-template-columns: 1fr;
   }
 

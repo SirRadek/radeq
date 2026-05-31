@@ -3,7 +3,7 @@ import { buildMatrixPresets, type MatrixPreset, type MatrixSelection } from '../
 
 export const DEFAULT_MATRIX_SELECTION: MatrixSelection = {
   moduleId: 'service-landing',
-  epochId: 'variant-b',
+  epochId: 'variant-a',
 };
 
 export type RuntimeStyle = Record<

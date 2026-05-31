@@ -1,0 +1,40 @@
+---
+import type { Locale, SiteContent } from '../data/siteContent';
+
+interface Props {
+  content: SiteContent['systems'];
+  locale: Locale;
+}
+
+const { content, locale } = Astro.props;
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const demoRoot = locale === 'en' ? '/en/demo' : '/demo';
+const getDemoHref = (moduleId: string) => `${basePath}${demoRoot}/${moduleId}/`;
+---
+
+<section class="service-catalog" id="services" aria-labelledby="services-title">
+  <div class="section-heading section-heading--services">
+    {content.sectionCode && <p class="section-code">{content.sectionCode}</p>}
+    <h2 id="services-title">{content.title}</h2>
+    <p>{content.lead}</p>
+  </div>
+  <div class="service-grid" data-cat-platform="service-grid">
+    {
+      content.items.map((item, index) => (
+        <article class="service-card" data-cat-platform={`service-card-${index + 1}`}>
+          <span>{String(index + 1).padStart(2, '0')}</span>
+          <p>{item.problem}</p>
+          <h3>{item.system}</h3>
+          <p>{item.output}</p>
+          {
+            item.demoModule ? (
+              <a href={getDemoHref(item.demoModule)}>{content.demoLabel}</a>
+            ) : (
+              <a href="#terminal">{content.requestLabel}</a>
+            )
+          }
+        </article>
+      ))
+    }
+  </div>
+</section>

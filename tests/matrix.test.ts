@@ -7,12 +7,12 @@ import {
 } from '../src/lib/matrix';
 
 describe('style matrix logic', () => {
-  it('defaults to the B proposal service landing recommendation', () => {
+  it('defaults to the A proposal service landing recommendation', () => {
     const preset = getMatrixPreset(DEFAULT_MATRIX_SELECTION);
 
     expect(preset.selection).toEqual({
       moduleId: 'service-landing',
-      epochId: 'variant-b',
+      epochId: 'variant-a',
     });
     expect(preset.cta).toContain('poptávku');
     expect(preset.proofTag).toBe('Request path');

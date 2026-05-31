@@ -17,7 +17,7 @@ const alternateHref = `${basePath}${alternatePath}`;
 ---
 
 <!doctype html>
-<html lang={lang} data-style="variant-b" data-theme="light">
+<html lang={lang} data-style="variant-a" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -33,6 +33,14 @@ const alternateHref = `${basePath}${alternatePath}`;
           document.documentElement.dataset.theme = stored === 'dark' || stored === 'light' ? stored : 'light';
         } catch {
           document.documentElement.dataset.theme = 'light';
+        }
+
+        try {
+          const storedStyle = localStorage.getItem('radeq-style-variant');
+          const allowedStyles = ['variant-a', 'variant-b', 'variant-c', 'variant-d'];
+          document.documentElement.dataset.style = allowedStyles.includes(storedStyle) ? storedStyle : 'variant-a';
+        } catch {
+          document.documentElement.dataset.style = 'variant-a';
         }
       })();
     </script>

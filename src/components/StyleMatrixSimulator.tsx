@@ -1,28 +1,65 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import type { Locale } from '../data/locales';
 import type { SiteContent } from '../data/siteContent';
-import { getEpochOptions, getModuleOptions, type EpochId, type MatrixPreset, type ModuleId } from '../data/styleMatrix';
+import { getModuleOptions, type EpochId, type MatrixPreset, type ModuleId } from '../data/styleMatrix';
 import { DEFAULT_MATRIX_SELECTION, getMatrixPreset, getRuntimeStyle } from '../lib/matrix';
 
 interface Props {
   locale: Locale;
   content: SiteContent['matrix'];
+  initialModuleId?: ModuleId;
 }
 
-export default function StyleMatrixSimulator({ locale, content }: Props) {
-  const [moduleId, setModuleId] = useState<ModuleId>(DEFAULT_MATRIX_SELECTION.moduleId);
+function isEpochId(value: string | null | undefined): value is EpochId {
+  return value === 'variant-a' || value === 'variant-b' || value === 'variant-c' || value === 'variant-d';
+}
+
+function getDocumentStyle(): EpochId {
+  if (typeof document === 'undefined') {
+    return DEFAULT_MATRIX_SELECTION.epochId;
+  }
+
+  const style = document.documentElement.dataset.style;
+  return isEpochId(style) ? style : DEFAULT_MATRIX_SELECTION.epochId;
+}
+
+export default function StyleMatrixSimulator({ locale, content, initialModuleId }: Props) {
+  const [moduleId, setModuleId] = useState<ModuleId>(initialModuleId ?? DEFAULT_MATRIX_SELECTION.moduleId);
   const [epochId, setEpochId] = useState<EpochId>(DEFAULT_MATRIX_SELECTION.epochId);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
+    setEpochId(getDocumentStyle());
     setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    const handleStyleChange = (event: Event) => {
+      const detail = (event as CustomEvent<{ styleId?: EpochId }>).detail;
+      if (isEpochId(detail?.styleId)) {
+        setEpochId(detail.styleId);
+      }
+    };
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === 'radeq-style-variant' && isEpochId(event.newValue)) {
+        setEpochId(event.newValue);
+      }
+    };
+
+    window.addEventListener('radeq:style-change', handleStyleChange);
+    window.addEventListener('storage', handleStorage);
+
+    return () => {
+      window.removeEventListener('radeq:style-change', handleStyleChange);
+      window.removeEventListener('storage', handleStorage);
+    };
   }, []);
 
   const selection = useMemo(() => ({ moduleId, epochId }), [moduleId, epochId]);
   const preset = getMatrixPreset(selection, locale);
   const runtimeStyle = getRuntimeStyle(selection, locale) as CSSProperties;
   const moduleOptions = getModuleOptions(locale);
-  const epochOptions = getEpochOptions(locale);
 
   return (
     <section
@@ -48,8 +85,6 @@ export default function StyleMatrixSimulator({ locale, content }: Props) {
             <h3>{content.moduleLabel}</h3>
             {moduleOptions.map((option) => {
               const isActiveModule = moduleId === option.id;
-              const pickerId = `style-picker-${option.id}`;
-
               return (
                 <div key={option.id} className={`module-choice${isActiveModule ? ' is-active' : ''}`}>
                   <button
@@ -57,37 +92,11 @@ export default function StyleMatrixSimulator({ locale, content }: Props) {
                     className={`module-card${isActiveModule ? ' is-active' : ''}`}
                     onClick={() => setModuleId(option.id)}
                     disabled={!hydrated}
-                    aria-expanded={isActiveModule}
-                    aria-controls={isActiveModule ? pickerId : undefined}
+                    aria-pressed={isActiveModule}
                   >
                     <span className="module-card__title">{option.label}</span>
                     <span className="module-card__benefit">{option.benefit}</span>
                   </button>
-
-                  {isActiveModule ? (
-                    <div
-                      id={pickerId}
-                      className="module-style-picker"
-                      role="group"
-                      aria-label={`${content.epochLabel}: ${option.label}`}
-                    >
-                      <span className="module-style-picker__label">{content.epochLabel}</span>
-                      <div className="style-chip-grid">
-                        {epochOptions.map((styleOption) => (
-                          <button
-                            key={styleOption.id}
-                            type="button"
-                            className={`style-chip${epochId === styleOption.id ? ' is-active' : ''}`}
-                            onClick={() => setEpochId(styleOption.id)}
-                            disabled={!hydrated}
-                            title={styleOption.benefit}
-                          >
-                            <span>{styleOption.label}</span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ) : null}
                 </div>
               );
             })}

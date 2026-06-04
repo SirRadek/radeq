@@ -138,6 +138,8 @@ export default function ContactTerminal({ locale, content }: Props) {
             <label className="brief-field">
               <span>{fieldLabel('project_type', content)}</span>
               <select
+                id="brief-project_type"
+                name="project_type"
                 value={brief.project_type}
                 onChange={(event) => updateField('project_type', event.target.value)}
                 disabled={isSubmitting}
@@ -154,6 +156,8 @@ export default function ContactTerminal({ locale, content }: Props) {
             <label className="brief-field brief-field--wide">
               <span>{fieldLabel('message', content)}</span>
               <textarea
+                id="brief-message"
+                name="message"
                 value={brief.message}
                 onChange={(event) => updateField('message', event.target.value)}
                 placeholder={content.placeholders.message}
@@ -210,10 +214,14 @@ interface TextFieldProps {
 }
 
 function TextField({ field, value, content, type = 'text', autoComplete, required, onChange }: TextFieldProps) {
+  const fieldId = `brief-${field}`;
+
   return (
     <label className="brief-field">
       <span>{fieldLabel(field, content)}</span>
       <input
+        id={fieldId}
+        name={field}
         type={type}
         value={value}
         onChange={(event) => onChange(field, event.target.value)}

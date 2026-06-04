@@ -18,23 +18,42 @@ const getDemoHref = (moduleId: string) => `${basePath}${demoRoot}/${moduleId}/`;
     <h2 id="services-title">{content.title}</h2>
     <p>{content.lead}</p>
   </div>
-  <div class="service-grid" data-cat-platform="service-grid">
-    {
-      content.items.map((item, index) => (
-        <article class="service-card" data-cat-platform={`service-card-${index + 1}`}>
-          <span>{String(index + 1).padStart(2, '0')}</span>
-          <p>{item.problem}</p>
-          <h3>{item.system}</h3>
-          <p>{item.output}</p>
-          {
-            item.demoModule ? (
-              <a href={getDemoHref(item.demoModule)}>{content.demoLabel}</a>
-            ) : (
-              <a href="#terminal">{content.requestLabel}</a>
-            )
-          }
-        </article>
-      ))
-    }
+  <div class="offer-map" aria-label={content.mapAria} data-cat-platform="service-grid">
+    <aside class="offer-map-guide">
+      <p class="section-code">{content.guide.eyebrow}</p>
+      <h3>{content.guide.title}</h3>
+      <p>{content.guide.text}</p>
+      <ol>
+        {
+          content.guide.steps.map((step) => (
+            <li>
+              <span>{step.label}</span>
+              <strong>{step.value}</strong>
+            </li>
+          ))
+        }
+      </ol>
+    </aside>
+    <div class="service-path">
+      {
+        content.items.map((item, index) => (
+          <article class="service-card" data-cat-platform={`service-card-${index + 1}`}>
+            <div class="service-card__marker">
+              <span>{String(index + 1).padStart(2, '0')}</span>
+            </div>
+            <p>{item.problem}</p>
+            <h3>{item.system}</h3>
+            <p>{item.output}</p>
+            {
+              item.demoModule ? (
+                <a href={getDemoHref(item.demoModule)}>{content.demoLabel}</a>
+              ) : (
+                <a href="#terminal">{content.requestLabel}</a>
+              )
+            }
+          </article>
+        ))
+      }
+    </div>
   </div>
 </section>

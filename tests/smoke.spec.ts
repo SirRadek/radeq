@@ -4,7 +4,7 @@ test('homepage core flow works', async ({ page }) => {
   await page.goto('/');
 
   await expect(
-    page.getByRole('heading', { name: 'Web, kterému zákazník rozumí na první scroll.' }),
+    page.getByRole('heading', { name: 'Nabídka, kterou si zákazník projde na první scroll bez slovníku.' }),
   ).toBeVisible();
   await expect(page.getByRole('link', { name: 'Co umíme' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Demo', exact: true })).toBeVisible();
@@ -15,8 +15,10 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.getByText('servo-lock')).toHaveCount(0);
   await expect(page.locator('#matrix')).toHaveCount(0);
   await expect(page.locator('#services')).toBeVisible();
+  await expect(page.locator('.offer-map')).toBeVisible();
+  await expect(page.getByText('Nejdřív problém. Potom výstup. Nakonec další krok.')).toBeVisible();
   await expect(page.locator('.service-card')).toHaveCount(8);
-  await expect(page.getByRole('heading', { name: 'Co umíme postavit a vylepšit.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Vyberte, kde se zákazník ztrácí.' })).toBeVisible();
   await expect(page.locator('.service-card a').first()).toHaveAttribute('href', /\/demo\/service-landing\/$/);
   await expect(page.getByText('Co chcete postavit')).toHaveCount(0);
   await expect(page.getByText(/Jakou .* chcete vid/)).toHaveCount(0);
@@ -75,6 +77,11 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.locator('.studio-configurator')).toBeVisible();
   await expect(page.locator('.studio-outcome-map')).toBeVisible();
 
+  await expect(page.locator('#brief-name[name="name"]')).toHaveCount(1);
+  await expect(page.locator('#brief-email[name="email"]')).toHaveCount(1);
+  await expect(page.locator('#brief-project_type[name="project_type"]')).toHaveCount(1);
+  await expect(page.locator('#brief-message[name="message"]')).toHaveCount(1);
+
   await page.getByRole('textbox', { name: 'Jméno' }).fill('Jan Siroky');
   await page.getByRole('textbox', { name: 'E-mail' }).fill('jan@example.com');
   await page.getByRole('combobox', { name: 'Typ projektu' }).selectOption('Data, databáze a formuláře');
@@ -88,6 +95,11 @@ test('homepage core flow works', async ({ page }) => {
   const mascot = page.locator('.core-canvas');
   await expect(page.locator('.core-canvas canvas')).toBeVisible();
   await expect(mascot).toHaveAttribute('data-model-source', /local:\/\/radeq-ginger-ghost/);
+  await expect(mascot).toHaveAttribute('data-model-provenance', 'project-owned-generated');
+  await expect(mascot).toHaveAttribute('data-model-loading-strategy', 'user-activated-progressive-enhancement');
+  await expect(mascot).toHaveAttribute('data-model-seo-role', 'decorative-helper');
+  await expect(mascot).toHaveAttribute('data-model-bytes', '775080');
+  await expect(mascot).toHaveAttribute('data-model-budget-bytes', '1200000');
   await expect(mascot).toHaveAttribute('data-cat-rig-version', /custom-contract-v1|legacy-quaternius-v1/);
   await expect(mascot).toHaveAttribute('data-cat-rig-quality', /contract|legacy|partial/);
   await expect(mascot).toHaveAttribute('data-cat-texture', 'procedural-tabby-v1');
@@ -115,6 +127,37 @@ test('homepage core flow works', async ({ page }) => {
   await page.mouse.down();
   await expect(mascot).toHaveAttribute('data-mascot-state', 'petting');
   await page.mouse.up();
+});
+
+test('seo metadata and indexability endpoints are exposed', async ({ page, request }) => {
+  await page.goto('/');
+
+  await expect(page.locator('head link[rel="canonical"]')).toHaveAttribute('href', 'https://radeq.cz/');
+  await expect(page.locator('head meta[property="og:url"]')).toHaveAttribute('content', 'https://radeq.cz/');
+
+  const robots = await request.get('/robots.txt');
+  expect(robots.ok()).toBe(true);
+  expect(await robots.text()).toContain('Sitemap: https://radeq.cz/sitemap.xml');
+
+  const sitemap = await request.get('/sitemap.xml');
+  expect(sitemap.ok()).toBe(true);
+  const sitemapText = await sitemap.text();
+  expect(sitemapText).toContain('<loc>https://radeq.cz/</loc>');
+  expect(sitemapText).toContain('<loc>https://radeq.cz/en/</loc>');
+  expect(sitemapText).toContain('<loc>https://radeq.cz/demo/service-landing/</loc>');
+});
+
+test('mobile header keeps controls compact without horizontal overflow', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 920 });
+  await page.goto('/');
+
+  await expect(page.locator('.command-nav')).toBeHidden();
+  await expect(page.locator('.header-cta')).toBeHidden();
+  await expect(page.locator('.style-toggle')).toBeVisible();
+  await expect(page.locator('.theme-toggle')).toBeVisible();
+
+  const hasOverflow = await page.evaluate(() => document.body.scrollWidth > window.innerWidth + 1);
+  expect(hasOverflow).toBe(false);
 });
 
 test('core panel keeps decorative fallback clipped on tablet', async ({ page }) => {

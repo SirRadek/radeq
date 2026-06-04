@@ -3,22 +3,34 @@ import { expect, test } from '@playwright/test';
 test('Czech and English routes expose localized first viewport and matrix copy', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('html')).toHaveAttribute('lang', 'cs');
+  await expect(page.locator('head link[rel="canonical"]')).toHaveAttribute('href', 'https://radeq.cz/');
+  await expect(page.locator('head link[rel="alternate"][hreflang="en"]')).toHaveAttribute('href', 'https://radeq.cz/en/');
   await expect(
-    page.getByRole('heading', { name: 'Web, kterému zákazník rozumí na první scroll.' }),
+    page.getByRole('heading', { name: 'Nabídka, kterou si zákazník projde na první scroll bez slovníku.' }),
   ).toBeVisible();
   await expect(page.getByRole('link', { name: 'EN', exact: true })).toHaveAttribute('href', '/en/');
-  await expect(page.getByRole('heading', { name: 'Co umíme postavit a vylepšit.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Vyberte, kde se zákazník ztrácí.' })).toBeVisible();
 
   await page.goto('/en/');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await expect(page.locator('head link[rel="canonical"]')).toHaveAttribute('href', 'https://radeq.cz/en/');
+  await expect(page.locator('head link[rel="alternate"][hreflang="cs"]')).toHaveAttribute('href', 'https://radeq.cz/');
   await expect(
-    page.getByRole('heading', { name: 'A website buyers understand on the first scroll.' }),
+    page.getByRole('heading', { name: 'An offer buyers understand on the first scroll without a glossary.' }),
   ).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'What we can build and improve.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Choose where the buyer gets stuck.' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'CZ', exact: true })).toHaveAttribute('href', '/');
 
   await page.goto('/en/demo/admin-dashboard/');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await expect(page.locator('head link[rel="canonical"]')).toHaveAttribute(
+    'href',
+    'https://radeq.cz/en/demo/admin-dashboard/',
+  );
+  await expect(page.locator('head link[rel="alternate"][hreflang="cs"]')).toHaveAttribute(
+    'href',
+    'https://radeq.cz/demo/admin-dashboard/',
+  );
   await expect(page.getByRole('heading', { name: 'Team overview' })).toBeVisible();
   await expect(page.getByRole('button', { name: /Team overview/ })).toBeVisible();
   await expect(page.getByRole('link', { name: 'CZ', exact: true })).toHaveAttribute('href', '/demo/admin-dashboard/');

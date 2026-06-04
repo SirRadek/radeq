@@ -9,7 +9,7 @@ interface Props {
 const { content } = Astro.props;
 ---
 
-<section class="hero-section" id="top" aria-labelledby="hero-title">
+<section class="hero-section" id="top" aria-labelledby="hero-title" data-direction="guided-offer-map">
   <div class="hero-copy">
     {content.meta.length > 0 && <div class="meta-row" aria-label={content.metaAria}>{content.meta.map((item) => <span>{item}</span>)}</div>}
     <h1 id="hero-title">{content.title}</h1>

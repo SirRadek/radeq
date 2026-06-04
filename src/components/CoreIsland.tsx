@@ -76,6 +76,11 @@ export default function CoreIsland({ copy }: Props) {
         host.dataset.mascotState = 'loading';
         host.dataset.modelSource = mascotAsset.sourceUrl;
         host.dataset.modelLicense = mascotAsset.license;
+        host.dataset.modelProvenance = mascotAsset.provenance;
+        host.dataset.modelBytes = String(mascotAsset.bytes);
+        host.dataset.modelBudgetBytes = String(mascotAsset.budgetBytes);
+        host.dataset.modelLoadingStrategy = mascotAsset.loadingStrategy;
+        host.dataset.modelSeoRole = mascotAsset.seoRole;
         host.dataset.catTexture = 'procedural-tabby-v1';
         host.replaceChildren();
 
@@ -775,6 +780,11 @@ export default function CoreIsland({ copy }: Props) {
         data-mascot-state={mascotState}
         data-model-source={CAT_MASCOT_ASSET.sourceUrl}
         data-model-license={CAT_MASCOT_ASSET.license}
+        data-model-provenance={CAT_MASCOT_ASSET.provenance}
+        data-model-bytes={String(CAT_MASCOT_ASSET.bytes)}
+        data-model-budget-bytes={String(CAT_MASCOT_ASSET.budgetBytes)}
+        data-model-loading-strategy={CAT_MASCOT_ASSET.loadingStrategy}
+        data-model-seo-role={CAT_MASCOT_ASSET.seoRole}
         data-cat-texture="procedural-tabby-v1"
         data-cat-facing="left"
         data-cat-facing-source="motion"

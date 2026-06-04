@@ -22,10 +22,16 @@ describe('cat mascot controls', () => {
   it('keeps the selected GLB within the static-site asset budget', () => {
     expect(CAT_MASCOT_ASSET.path).toBe('/models/cat/radeq-ginger-ghost.glb');
     expect(CAT_MASCOT_ASSET.license).toBe('Project-owned local generated asset');
-    expect(CAT_MASCOT_ASSET.bytes).toBeLessThanOrEqual(1_200_000);
-    expect(CAT_MASCOT_ASSET.triangles).toBeLessThanOrEqual(18_000);
+    expect(CAT_MASCOT_ASSET.provenance).toBe('project-owned-generated');
+    expect(CAT_MASCOT_ASSET.loadingStrategy).toBe('user-activated-progressive-enhancement');
+    expect(CAT_MASCOT_ASSET.seoRole).toBe('decorative-helper');
+    expect(CAT_MASCOT_ASSET.bytes).toBe(775_080);
+    expect(CAT_MASCOT_ASSET.bytes).toBeLessThanOrEqual(CAT_MASCOT_ASSET.budgetBytes);
+    expect(CAT_MASCOT_ASSET.triangles).toBeLessThanOrEqual(CAT_MASCOT_ASSET.budgetTriangles);
     expect(CAT_MASCOT_ASSET.requiredExtensions).toEqual([]);
     expect(CAT_MASCOT_ASSETS.quaternius.path).toBe('/models/cat/quaternius-cat.glb');
+    expect(CAT_MASCOT_ASSETS.quaternius.provenance).toBe('third-party-cc0');
+    expect(CAT_MASCOT_ASSETS.quaternius.bytes).toBeLessThanOrEqual(CAT_MASCOT_ASSETS.quaternius.budgetBytes);
     expect(resolveCatMascotAsset('?cat=quaternius').path).toBe('/models/cat/quaternius-cat.glb');
     expect(resolveCatMascotAsset('?cat=ghost').path).toBe('/models/cat/radeq-ginger-ghost.glb');
   });

@@ -133,8 +133,13 @@ export interface CatMascotAsset {
   author: string;
   license: string;
   bytes: number;
+  budgetBytes: number;
   triangles: number;
+  budgetTriangles: number;
   requiredExtensions: string[];
+  provenance: 'project-owned-generated' | 'third-party-cc0';
+  loadingStrategy: 'user-activated-progressive-enhancement';
+  seoRole: 'decorative-helper';
 }
 
 export interface CatHuntPose {
@@ -160,9 +165,14 @@ export const CAT_MASCOT_ASSETS = {
     sourceUrl: 'local://radeq-ginger-ghost',
     author: 'Radeq.cz generated asset pipeline',
     license: 'Project-owned local generated asset',
-    bytes: 1_200_000,
+    bytes: 775_080,
+    budgetBytes: 1_200_000,
     triangles: 12_000,
+    budgetTriangles: 18_000,
     requiredExtensions: [] as string[],
+    provenance: 'project-owned-generated',
+    loadingStrategy: 'user-activated-progressive-enhancement',
+    seoRole: 'decorative-helper',
   },
   quaternius: {
     path: withAssetBase('/models/cat/quaternius-cat.glb'),
@@ -170,8 +180,13 @@ export const CAT_MASCOT_ASSETS = {
     author: 'Quaternius',
     license: 'CC0-1.0',
     bytes: 229_676,
+    budgetBytes: 300_000,
     triangles: 2_448,
+    budgetTriangles: 3_000,
     requiredExtensions: [] as string[],
+    provenance: 'third-party-cc0',
+    loadingStrategy: 'user-activated-progressive-enhancement',
+    seoRole: 'decorative-helper',
   },
 } as const satisfies Record<string, CatMascotAsset>;
 

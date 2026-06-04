@@ -76,6 +76,13 @@ export interface SiteContent {
     sectionCode: string;
     title: string;
     lead: string;
+    mapAria: string;
+    guide: {
+      eyebrow: string;
+      title: string;
+      text: string;
+      steps: { label: string; value: string }[];
+    };
     demoLabel: string;
     requestLabel: string;
     items: {
@@ -142,19 +149,19 @@ export const siteContent = {
       darkTheme: 'Tmavý',
     },
     hero: {
-      metaAria: 'Cíle projektu',
-      meta: [],
-      title: 'Web, kterému zákazník rozumí na první scroll.',
+      metaAria: 'Směr návrhu',
+      meta: ['Guided Offer Map', 'statický náhled', 'bez nových assetů'],
+      title: 'Nabídka, kterou si zákazník projde na první scroll bez slovníku.',
       lead:
-        'Navrhnu jasnou strukturu, texty, rychlost, SEO základ a pohybové detaily tak, aby web působil profesionálně, hravě a vedl k poptávce.',
+        'První směr vede návštěvníka jako mapou: co řeší, co z toho vznikne, kde si může prohlédnout ukázku a kdy má poslat poptávku.',
       proof: [
-        { label: 'Návrhy', value: 'A / B / C / D směr před vývojem' },
-        { label: 'Pohyb', value: 'cursor a scroll bez ztráty čitelnosti' },
-        { label: 'Cíl', value: 'víc kvalitních poptávek' },
+        { label: 'Návrhy', value: 'netechničtí kupující rychle najdou svůj problém' },
+        { label: 'Pohyb', value: 'služby jsou řazené podle rozhodnutí, ne podle interního názvosloví' },
+        { label: 'Cíl', value: 'jasnější cesta k demu nebo poptávce' },
       ],
       actionsAria: 'Hlavní akce',
       actions: [
-        { href: '#services', label: 'Prohlédnout služby', variant: 'primary' },
+        { href: '#services', label: 'Projít mapu nabídky', variant: 'primary' },
         { href: '#terminal', label: 'Poslat poptávku', variant: 'secondary' },
       ],
       coreAria: 'Interaktivní 3D náhled zrzavé kočičky',
@@ -264,9 +271,21 @@ export const siteContent = {
     },
     systems: {
       sectionCode: '',
-      title: 'Co umíme postavit a vylepšit.',
+      title: 'Vyberte, kde se zákazník ztrácí.',
       lead:
-        'Hlavní stránka má zůstat srozumitelná: krátký popis služby, co z ní vznikne, a odkaz na samostatnou ukázku tam, kde dává demo smysl.',
+        'Mapa nezačíná technologiemi. Začíná situací, kterou kupující pozná, a vede ho k ukázce nebo poptávce bez obchodní omáčky.',
+      mapAria: 'Mapa nabídky podle zákaznické situace',
+      guide: {
+        eyebrow: 'Guided Offer Map',
+        title: 'Nejdřív problém. Potom výstup. Nakonec další krok.',
+        text:
+          'Každý uzel vysvětluje jednu běžnou nákupní situaci lidsky: proč na ní záleží, co z práce vznikne a kam pokračovat.',
+        steps: [
+          { label: '01', value: 'návštěvník pozná vlastní situaci' },
+          { label: '02', value: 'vidí konkrétní výstup, ne jen název služby' },
+          { label: '03', value: 'klikne na demo nebo pošle stručnou poptávku' },
+        ],
+      },
       demoLabel: 'Otevřít demo',
       requestLabel: 'Probrat v poptávce',
       items: [
@@ -417,19 +436,19 @@ export const siteContent = {
       darkTheme: 'Dark',
     },
     hero: {
-      metaAria: 'Project targets',
-      meta: [],
-      title: 'A website buyers understand on the first scroll.',
+      metaAria: 'Design direction',
+      meta: ['Guided Offer Map', 'static preview', 'no new assets'],
+      title: 'An offer buyers understand on the first scroll without a glossary.',
       lead:
-        'I shape the structure, copy, speed, SEO basics, and motion details so the website feels professional, playful, and focused on qualified requests.',
+        'The first direction guides visitors like a map: what they need, what the work produces, where to inspect a demo, and when to send a request.',
       proof: [
-        { label: 'Variants', value: 'A / B / C / D direction before build' },
-        { label: 'Motion', value: 'cursor and scroll without losing clarity' },
-        { label: 'Goal', value: 'more qualified requests' },
+        { label: 'Start', value: 'non-technical buyers quickly recognize their problem' },
+        { label: 'Map', value: 'services are ordered by decision, not internal vocabulary' },
+        { label: 'Goal', value: 'a clearer path to a demo or request' },
       ],
       actionsAria: 'Primary actions',
       actions: [
-        { href: '#services', label: 'Browse services', variant: 'primary' },
+        { href: '#services', label: 'Follow the offer map', variant: 'primary' },
         { href: '#terminal', label: 'Send a request', variant: 'secondary' },
       ],
       coreAria: 'Interactive 3D ginger cat preview',
@@ -539,9 +558,21 @@ export const siteContent = {
     },
     systems: {
       sectionCode: '',
-      title: 'What we can build and improve.',
+      title: 'Choose where the buyer gets stuck.',
       lead:
-        'The main page stays easy to scan: a short service description, the expected output, and a link to a separate demo when an interactive example helps.',
+        'The map does not start with technologies. It starts with a situation the buyer recognizes and points to a demo or request without sales padding.',
+      mapAria: 'Offer map by buyer situation',
+      guide: {
+        eyebrow: 'Guided Offer Map',
+        title: 'Problem first. Output second. Next step last.',
+        text:
+          'Each node explains one common buying situation in plain language: why it matters, what the work creates, and where to continue.',
+        steps: [
+          { label: '01', value: 'the visitor recognizes their situation' },
+          { label: '02', value: 'they see a concrete output, not just a service label' },
+          { label: '03', value: 'they open a demo or send a short request' },
+        ],
+      },
       demoLabel: 'Open demo',
       requestLabel: 'Discuss in request',
       items: [

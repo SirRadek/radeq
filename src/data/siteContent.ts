@@ -92,6 +92,19 @@ export interface SiteContent {
       demoModule?: ModuleId;
     }[];
   };
+  about: {
+    sectionCode: string;
+    title: string;
+    lead: string;
+    profileTitle: string;
+    profileText: string;
+    items: {
+      label: string;
+      title: string;
+      text: string;
+    }[];
+    note: string;
+  };
   terminal: {
     sectionCode: string;
     title: string;
@@ -296,9 +309,9 @@ export const siteContent = {
           demoModule: 'service-landing',
         },
         {
-          problem: 'Web má být dohledatelný a měřitelný',
-          system: 'Základy SEO, marketingu a měření',
-          output: 'Poctivé titulky, popisy, interní odkazy, měření akcí a první mailing.',
+          problem: 'Web je pomalý, starý nebo špatně dohledatelný',
+          system: 'Optimalizace rychlosti, SEO a měření',
+          output: 'Rychlejší načítání, lepší struktura, titulky, interní odkazy a měření akcí.',
           demoModule: 'blog-docs',
         },
         {
@@ -308,34 +321,65 @@ export const siteContent = {
           demoModule: 'admin-dashboard',
         },
         {
+          problem: 'Prodáváte produkty, balíčky nebo služby',
+          system: 'E-shop, nabídka a porovnání variant',
+          output: 'Přehlednější nabídka, kratší rozhodování a měřitelný zájem o koupi.',
+          demoModule: 'eshop-offers',
+        },
+        {
+          problem: 'Web potřebuje nový nádech bez velkého restartu',
+          system: 'Update webu, textů a vizuálního detailu',
+          output: 'Rychlejší úprava vzhledu, lepší texty, čistší sekce a jasnější cesta ke kontaktu.',
+        },
+        {
+          problem: 'Potřebujete stabilní počítač pro práci',
+          system: 'Stavba, výběr a nastavení PC',
+          output: 'Sestava podle práce, rozpočtu a softwaru, včetně základního nastavení a doporučení.',
+        },
+        {
+          problem: 'Chcete používat PC, AI nebo software jistěji',
+          system: 'Konzultace, zaučení a základní digitální pomoc',
+          output: 'Praktické vysvětlení, nastavení nástrojů a postupy, které můžete používat hned.',
+        },
+        {
           problem: 'Máte dokumenty a tabulky všude možně',
           system: 'Převod dokumentů, dat a podkladů',
           output: 'Čistší obsah, použitelné tabulky, PDF, prezentace nebo webový přehled.',
           demoModule: 'blog-docs',
         },
+      ],
+    },
+    about: {
+      sectionCode: 'O mně / další pomoc',
+      title: 'Nejen nový web. I klidnější technika kolem něj.',
+      lead:
+        'RadeQ není jen výroba stránek. Smysl dává všechno, co vám ušetří čas, zpřehlední práci a pomůže techniku používat bez zbytečného stresu.',
+      profileTitle: 'Kdo za tím stojí',
+      profileText:
+        'Pracuji prakticky: nejdřív zjistit, co vás brzdí, potom navrhnout nejmenší užitečný krok a teprve pak stavět, opravovat nebo vysvětlovat.',
+      items: [
         {
-          problem: 'Zákazníci se ptají pořád na stejné věci',
-          system: 'Lehký cloudový chatbot nebo asistent',
-          output: 'Asistent odpovídá z ověřených podkladů a umí předat složitější dotaz člověku.',
+          label: 'Optimalizace',
+          title: 'Rychlost, SEO a měření',
+          text: 'Zrychlení webu, základní dohledatelnost, titulky, odkazy, měření akcí a oprava slabých míst.',
         },
         {
-          problem: 'Web potřebuje dlouhodobou péči',
-          system: 'Správa, údržba a technická podpora',
-          output: 'Menší úpravy, opravy, kontrola rychlosti, bezpečnostní základ a klidnější provoz.',
+          label: 'Web update',
+          title: 'Nový nádech bez nového chaosu',
+          text: 'Úpravy staršího webu, nové sekce, texty, vizuální detail, lepší mobil a jasnější kontakt.',
         },
         {
-          problem: 'Potřebujete aplikaci bez App Storu',
-          system: 'Mobilní webová aplikace',
-          output: 'Použitelný nástroj v prohlížeči, který funguje dobře i na telefonu.',
-          demoModule: 'admin-dashboard',
+          label: 'PC',
+          title: 'Stavba a výběr počítače',
+          text: 'Doporučení sestavy, upgrade, základní nastavení a sladění počítače s tím, co opravdu děláte.',
         },
         {
-          problem: 'Projekt potřebuje vypadat důvěryhodně',
-          system: 'Copy, vizuální detail a prezentační stránka',
-          output: 'Srozumitelná nabídka, dobré ukázky a méně slov, kterým zákazník nerozumí.',
-          demoModule: 'eshop-offers',
+          label: 'Konzultace',
+          title: 'PC, AI a základní software',
+          text: 'Praktické zaučení, nastavení nástrojů, pořádek v účtech, souborech, AI asistentech a každodenní práci.',
         },
       ],
+      note: 'Když je potřeba větší systém, držíme web, data i ruční práci pohromadě. Když stačí malá oprava, neděláme z ní velký projekt.',
     },
     terminal: {
       sectionCode: '',
@@ -583,9 +627,9 @@ export const siteContent = {
           demoModule: 'service-landing',
         },
         {
-          problem: 'The website should be findable and measurable',
-          system: 'SEO, marketing, and measurement basics',
-          output: 'Honest titles, descriptions, internal links, action tracking, and first mailing.',
+          problem: 'The site is slow, stale, or hard to find',
+          system: 'Speed, SEO, and measurement optimization',
+          output: 'Faster loading, clearer structure, titles, internal links, and action tracking.',
           demoModule: 'blog-docs',
         },
         {
@@ -595,34 +639,66 @@ export const siteContent = {
           demoModule: 'admin-dashboard',
         },
         {
+          problem: 'You sell products, packages, or services',
+          system: 'Shop, offer, and variant comparison',
+          output: 'A clearer offer, shorter decision path, and measurable buying interest.',
+          demoModule: 'eshop-offers',
+        },
+        {
+          problem: 'The site needs a refresh without a full restart',
+          system: 'Website update, copy, and visual polish',
+          output: 'A faster visual refresh, better copy, cleaner sections, and clearer contact path.',
+        },
+        {
+          problem: 'You need a stable computer for work',
+          system: 'PC build, selection, and setup',
+          output: 'A setup matched to your work, budget, and software, including basic configuration.',
+        },
+        {
+          problem: 'You want to use PC, AI, or software with more confidence',
+          system: 'Consultation, onboarding, and basic digital help',
+          output: 'Practical explanation, tool setup, and workflows you can use immediately.',
+        },
+        {
           problem: 'Your documents and sheets are scattered',
           system: 'Document, data, and source-material conversion',
           output: 'Cleaner content, usable tables, PDFs, presentations, or a web overview.',
           demoModule: 'blog-docs',
         },
+      ],
+    },
+    about: {
+      sectionCode: 'About / extra help',
+      title: 'Not just a new website. Calmer technology around it.',
+      lead:
+        'RadeQ is not only website production. The useful work is anything that saves time, clarifies work, and helps you use technology without unnecessary stress.',
+      profileTitle: 'Who is behind it',
+      profileText:
+        'The process is practical: first find what slows you down, then choose the smallest useful step, and only then build, fix, or explain.',
+      items: [
         {
-          problem: 'Customers ask the same questions repeatedly',
-          system: 'Light cloud chatbot or assistant',
-          output: 'The assistant answers from approved material and escalates harder questions to a human.',
+          label: 'Optimization',
+          title: 'Speed, SEO, and measurement',
+          text: 'Site speed, findability basics, titles, links, action tracking, and weak-spot cleanup.',
         },
         {
-          problem: 'The website needs long-term care',
-          system: 'Maintenance, upkeep, and technical support',
-          output: 'Small edits, fixes, speed checks, security basics, and calmer operation.',
+          label: 'Web update',
+          title: 'A fresh feel without new chaos',
+          text: 'Older site updates, new sections, copy, visual polish, better mobile behavior, and clearer contact.',
         },
         {
-          problem: 'You need an app without the App Store',
-          system: 'Mobile web application',
-          output: 'A useful browser-based tool that works well on phones.',
-          demoModule: 'admin-dashboard',
+          label: 'PC',
+          title: 'Computer builds and selection',
+          text: 'Hardware recommendations, upgrades, basic setup, and matching the machine to the work you actually do.',
         },
         {
-          problem: 'The project needs to feel trustworthy',
-          system: 'Copy, visual detail, and presentation page',
-          output: 'Clearer offer, better examples, and fewer words customers do not understand.',
-          demoModule: 'eshop-offers',
+          label: 'Consulting',
+          title: 'PC, AI, and everyday software',
+          text: 'Practical onboarding, tool setup, cleaner accounts and files, AI assistants, and daily workflows.',
         },
       ],
+      note:
+        'When a larger system is useful, the website, data, and manual work stay connected. When a small fix is enough, it stays small.',
     },
     terminal: {
       sectionCode: '',

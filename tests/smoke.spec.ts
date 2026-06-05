@@ -82,6 +82,14 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.locator('.studio-configurator')).toBeVisible();
   await expect(page.locator('.studio-outcome-map')).toBeVisible();
 
+  await page.goto('/');
+  await expect(page.locator('#about')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Nejen nový web. I klidnější technika kolem něj.' })).toBeVisible();
+  await expect(page.getByText('Stavba a výběr počítače')).toBeVisible();
+  await expect(page.getByText('PC, AI a základní software')).toBeVisible();
+  await page.getByRole('button', { name: /^D \// }).click();
+  await expect(page.getByRole('heading', { name: 'E-shop / nabídka' })).toBeVisible();
+
   await expect(page.locator('#brief-name[name="name"]')).toHaveCount(1);
   await expect(page.locator('#brief-email[name="email"]')).toHaveCount(1);
   await expect(page.locator('#brief-project_type[name="project_type"]')).toHaveCount(1);
@@ -216,6 +224,76 @@ test('homepage A/B/C/D variants use distinct composition skeletons', async ({ pa
   expect(new Set(signatures.map((signature) => signature.h1)).size).toBe(4);
   expect(new Set(signatures.map((signature) => signature.root)).size).toBe(4);
   expect(new Set(signatures.map((signature) => signature.sections)).size).toBe(4);
+});
+
+test('variant B cards do not overlap across desktop, tablet, and mobile', async ({ page }) => {
+  const viewports = [
+    { width: 1440, height: 920 },
+    { width: 900, height: 1000 },
+    { width: 390, height: 920 },
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize(viewport);
+    await page.goto('/');
+    await page.getByRole('button', { name: /^B \// }).click();
+    await page.locator('.cat-guide__problems').scrollIntoViewIfNeeded();
+
+    const cards = await page.locator('.cat-bubble').evaluateAll((elements) =>
+      elements.map((element) => {
+        const rect = element.getBoundingClientRect();
+        return {
+          left: rect.left,
+          top: rect.top,
+          right: rect.right,
+          bottom: rect.bottom,
+        };
+      }),
+    );
+
+    expect(cards).toHaveLength(5);
+
+    for (let i = 0; i < cards.length; i += 1) {
+      for (let j = i + 1; j < cards.length; j += 1) {
+        const first = cards[i];
+        const second = cards[j];
+        const overlaps =
+          first.left < second.right &&
+          first.right > second.left &&
+          first.top < second.bottom &&
+          first.bottom > second.top;
+
+        expect(overlaps, `viewport ${viewport.width}x${viewport.height}, cards ${i + 1}/${j + 1}`).toBe(false);
+      }
+    }
+
+    const hasOverflow = await page.evaluate(() => document.body.scrollWidth > window.innerWidth + 1);
+    expect(hasOverflow).toBe(false);
+  }
+});
+
+test('variant backgrounds use distinct visual languages', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('.style-toggle')).toHaveAttribute('data-hydrated', 'true');
+
+  const variants = [
+    { button: /^A \//, style: 'variant-a', expected: 'linear-gradient' },
+    { button: /^B \//, style: 'variant-b', expected: 'radial-gradient' },
+    { button: /^C \//, style: 'variant-c', expected: 'linear-gradient' },
+    { button: /^D \//, style: 'variant-d', expected: 'repeating' },
+  ];
+
+  const backgrounds: string[] = [];
+
+  for (const variant of variants) {
+    await page.getByRole('button', { name: variant.button }).click();
+    await expect(page.locator('html')).toHaveAttribute('data-style', variant.style);
+    const background = await page.evaluate(() => getComputedStyle(document.body).backgroundImage);
+    expect(background).toContain(variant.expected);
+    backgrounds.push(background);
+  }
+
+  expect(new Set(backgrounds).size).toBe(4);
 });
 
 test('seo metadata and indexability endpoints are exposed', async ({ page, request }) => {

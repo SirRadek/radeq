@@ -34,6 +34,29 @@ const content = siteContent.en;
       <StudioProof locale={content.layout.lang} systems={content.systems} />
       <DemoWorlds locale={content.layout.lang} systems={content.systems} />
     </div>
+    <section class="about-services" id="about" aria-labelledby="about-title" data-section-signature="about-services">
+      <div class="about-services__intro">
+        <p class="section-code">{content.about.sectionCode}</p>
+        <h2 id="about-title">{content.about.title}</h2>
+        <p>{content.about.lead}</p>
+      </div>
+      <div class="about-services__profile">
+        <p class="section-code">{content.about.profileTitle}</p>
+        <p>{content.about.profileText}</p>
+      </div>
+      <div class="about-services__grid" aria-label={content.about.title}>
+        {
+          content.about.items.map((item) => (
+            <article>
+              <span>{item.label}</span>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </article>
+          ))
+        }
+      </div>
+      <p class="about-services__note">{content.about.note}</p>
+    </section>
     <HandoffStandard content={content.handoff} />
     <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load />
   </main>

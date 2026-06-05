@@ -10,6 +10,21 @@ const { content, locale } = Astro.props;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 const demoRoot = locale === 'en' ? '/en/demo' : '/demo';
 const getDemoHref = (moduleId: string) => `${basePath}${demoRoot}/${moduleId}/`;
+
+const routeCopy = {
+  cs: {
+    label: 'Doporučený start',
+    title: 'Nejdřív vyberte jednu ztrátu na webu.',
+    text: 'Mapa neprodává všechno najednou. Vede od rozpoznaného problému přes ukázku k poptávce.',
+    action: 'Poslat krátký brief',
+  },
+  en: {
+    label: 'Recommended start',
+    title: 'Pick one place where the site leaks trust.',
+    text: 'The map does not sell everything at once. It moves from a recognized problem to a preview and then to a request.',
+    action: 'Send a short brief',
+  },
+}[locale];
 ---
 
 <section class="service-catalog" id="services-guided" aria-labelledby="services-title" data-direction="guided-offer-map">
@@ -23,6 +38,12 @@ const getDemoHref = (moduleId: string) => `${basePath}${demoRoot}/${moduleId}/`;
       <p class="section-code">{content.guide.eyebrow}</p>
       <h3>{content.guide.title}</h3>
       <p>{content.guide.text}</p>
+      <div class="offer-map-guide__recommendation">
+        <span>{routeCopy.label}</span>
+        <strong>{routeCopy.title}</strong>
+        <p>{routeCopy.text}</p>
+        <a href="#terminal">{routeCopy.action}</a>
+      </div>
       <ol>
         {
           content.guide.steps.map((step) => (

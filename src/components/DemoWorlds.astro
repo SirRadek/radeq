@@ -94,6 +94,21 @@ const copy = {
     ] satisfies { id: ModuleId; label: string; problem: string; promise: string }[],
   },
 }[locale];
+
+const finderCopy = {
+  cs: {
+    title: 'Rychlý výběr bez technických slov',
+    lead: 'Na mobilu má člověk poznat svou situaci do pár sekund a přejít rovnou do ukázky.',
+    steps: ['Poznám problém', 'Otevřu demo', 'Pošlu konkrétní brief'],
+    tags: ['Nejrychlejší start', 'Orientace', 'Pořádek v poptávkách', 'Rozhodování'],
+  },
+  en: {
+    title: 'Fast choice without technical words',
+    lead: 'On mobile, visitors should recognize their situation in seconds and move straight into a preview.',
+    steps: ['Recognize the problem', 'Open a demo', 'Send a specific brief'],
+    tags: ['Fastest start', 'Orientation', 'Request order', 'Decision flow'],
+  },
+}[locale];
 ---
 
 <div class="demo-worlds variant-composition" role="region" data-variant-root="demo-worlds" aria-labelledby="demo-worlds-title">
@@ -104,12 +119,24 @@ const copy = {
     <a class="button-primary" href={getDemoHref(copy.worlds[0].id)}>{copy.primary}</a>
   </div>
 
+  <div class="demo-worlds__finder" data-section-signature="demo-world-finder">
+    <div>
+      <p class="section-code">{copy.eyebrow}</p>
+      <h2>{finderCopy.title}</h2>
+      <p>{finderCopy.lead}</p>
+    </div>
+    <ol>
+      {finderCopy.steps.map((item) => <li>{item}</li>)}
+    </ol>
+  </div>
+
   <div class="demo-world-map" aria-labelledby="demo-worlds-list-title" data-section-signature="demo-world-map">
     <h2 id="demo-worlds-list-title">{copy.worldsTitle}</h2>
     {
       copy.worlds.map((world, index) => (
-        <article class={`demo-world demo-world--${index + 1}`}>
+        <article class={`demo-world demo-world--${index + 1}`} aria-current={index === 0 ? 'true' : undefined}>
           <span>{String(index + 1).padStart(2, '0')}</span>
+          <small>{finderCopy.tags[index]}</small>
           <h3>{world.label}</h3>
           <p>{world.problem}</p>
           <strong>{world.promise}</strong>

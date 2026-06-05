@@ -53,6 +53,28 @@ const copy = {
 }[locale];
 
 const ledgerItems = systems.items.filter((item) => item.demoModule).slice(0, 4);
+const artifactCopy = {
+  cs: {
+    title: 'Artefakty, které nejsou jen slib',
+    lead: 'Každý projekt má po polishi ukázat, co přesně vznikne a jak se to ověří.',
+    items: [
+      { label: 'Mapa webu', text: 'Stránky, sekce a hlavní CTA cesta před stavbou.' },
+      { label: 'SEO sanity check', text: 'Titulky, canonical, sitemap, nadpisy a indexovatelný obsah.' },
+      { label: 'Demo screenshot', text: 'Náhled konkrétní obrazovky, ne obecná dekorace.' },
+      { label: 'Předání', text: 'Checklist, kde se mění texty, odkazy, měření a formulář.' },
+    ],
+  },
+  en: {
+    title: 'Artifacts instead of a vague promise',
+    lead: 'After polish, each project should show what will exist and how it will be checked.',
+    items: [
+      { label: 'Site map', text: 'Pages, sections, and the main CTA route before the build.' },
+      { label: 'SEO sanity check', text: 'Titles, canonical, sitemap, headings, and indexable content.' },
+      { label: 'Demo screenshot', text: 'A concrete screen preview, not a generic decoration.' },
+      { label: 'Handoff', text: 'Checklist for copy, links, measurement, and form ownership.' },
+    ],
+  },
+}[locale];
 ---
 
 <div class="studio-proof variant-composition" role="region" data-variant-root="studio-proof" aria-labelledby="studio-proof-title">
@@ -72,6 +94,25 @@ const ledgerItems = systems.items.filter((item) => item.demoModule).slice(0, 4);
         {copy.stack.map((item) => <li>{item}</li>)}
       </ol>
     </aside>
+  </div>
+
+  <div class="studio-proof__artifacts" data-section-signature="proof-artifact-cards">
+    <div>
+      <p class="section-code">{copy.eyebrow}</p>
+      <h2>{artifactCopy.title}</h2>
+      <p>{artifactCopy.lead}</p>
+    </div>
+    <div class="studio-proof__artifact-grid">
+      {
+        artifactCopy.items.map((artifact, index) => (
+          <article>
+            <span>{String(index + 1).padStart(2, '0')}</span>
+            <strong>{artifact.label}</strong>
+            <p>{artifact.text}</p>
+          </article>
+        ))
+      }
+    </div>
   </div>
 
   <div class="proof-ledger" data-section-signature="proof-ledger-table">

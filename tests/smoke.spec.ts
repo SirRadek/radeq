@@ -139,24 +139,28 @@ test('homepage A/B/C/D variants use distinct composition skeletons', async ({ pa
       root: 'guided-offer-map',
       h1: 'Nabídka, kterou si zákazník projde na první scroll bez slovníku.',
       visible: '.offer-map',
+      marker: 'Doporučený start',
     },
     {
       button: /^B \//,
       root: 'cat-concierge',
       h1: 'Řekněte, kde se web zasekl. Průvodce vás dovede k dalšímu kroku.',
       visible: '.cat-guide',
+      marker: 'Co doporučí průvodce',
     },
     {
       button: /^C \//,
       root: 'studio-proof',
       h1: 'Uvidíte přesně, co dostanete, ještě před stavbou.',
       visible: '.studio-proof',
+      marker: 'Artefakty, které nejsou jen slib',
     },
     {
       button: /^D \//,
       root: 'demo-worlds',
       h1: 'Vyberte ukázku podle toho, kde se váš web zasekl.',
       visible: '.demo-worlds',
+      marker: 'Rychlý výběr bez technických slov',
     },
   ];
 
@@ -166,6 +170,7 @@ test('homepage A/B/C/D variants use distinct composition skeletons', async ({ pa
     await page.getByRole('button', { name: variant.button }).click();
     await expect(page.locator('html')).toHaveAttribute('data-style', /variant-[abcd]/);
     await expect(page.locator(variant.visible)).toBeVisible();
+    await expect(page.getByText(variant.marker)).toBeVisible();
 
     const signature = await page.evaluate(() => {
       const isVisible = (element: Element) => {

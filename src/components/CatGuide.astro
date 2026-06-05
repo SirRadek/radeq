@@ -1,0 +1,119 @@
+---
+import type { Locale, SiteContent } from '../data/siteContent';
+import CoreIsland from './CoreIsland';
+
+interface Props {
+  hero: SiteContent['hero'];
+  locale: Locale;
+  systems: SiteContent['systems'];
+}
+
+const { hero, locale, systems } = Astro.props;
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const demoRoot = locale === 'en' ? '/en/demo' : '/demo';
+const getDemoHref = (moduleId: string) => `${basePath}${demoRoot}/${moduleId}/`;
+
+const copy = {
+  cs: {
+    eyebrow: 'B / Cat Concierge',
+    title: 'Řekněte, kde se web zasekl. Průvodce vás dovede k dalšímu kroku.',
+    lead:
+      'Tahle varianta staví značku na hravém průvodci. Návštěvník nečte seznam služeb, ale vybírá situaci, kterou právě řeší.',
+    primary: 'Vybrat problém',
+    secondary: 'Poslat stručný brief',
+    mascotCaption: 'Maskot je průvodce a reakce na pohyb. Obsah, odkazy a poptávka zůstávají normální HTML.',
+    bubbleLabel: 'Rychlé vstupní problémy',
+    routeTitle: 'Jak průvodce vede návštěvníka',
+    routeLead: 'Každá bublina překládá problém do výstupu a dalšího kroku.',
+    routes: [
+      { label: 'Ptá se', text: 'Co se teď na webu zaseklo?' },
+      { label: 'Třídí', text: 'Rozpozná, jestli jde o web, obsah, data nebo aplikaci.' },
+      { label: 'Ukazuje', text: 'Pošle člověka na demo nebo rovnou do briefu.' },
+    ],
+    demoPrefix: 'Ukázka',
+  },
+  en: {
+    eyebrow: 'B / Cat Concierge',
+    title: 'Tell the guide where the site gets stuck. It leads you to the next step.',
+    lead:
+      'This direction turns the brand into a playful guide. Visitors do not read a service list; they choose the situation they are trying to solve.',
+    primary: 'Choose a problem',
+    secondary: 'Send a short brief',
+    mascotCaption: 'The mascot is a guide and motion layer. Content, links, and the request path stay normal HTML.',
+    bubbleLabel: 'Fast entry problems',
+    routeTitle: 'How the guide leads the visitor',
+    routeLead: 'Each bubble translates one problem into an output and a next step.',
+    routes: [
+      { label: 'Asks', text: 'Where is the website stuck right now?' },
+      { label: 'Sorts', text: 'It recognizes website, content, data, or app work.' },
+      { label: 'Shows', text: 'It sends the visitor to a demo or into the brief.' },
+    ],
+    demoPrefix: 'Preview',
+  },
+}[locale];
+
+const bubbles = systems.items.slice(0, 5);
+const featured = systems.items.filter((item) => item.demoModule).slice(0, 4);
+---
+
+<div class="cat-guide variant-composition" role="region" data-variant-root="cat-concierge" aria-labelledby="cat-guide-title">
+  <div class="cat-guide__hero" data-section-signature="cat-concierge-hero">
+    <div class="cat-guide__copy">
+      <p class="section-code">{copy.eyebrow}</p>
+      <h1 id="cat-guide-title">{copy.title}</h1>
+      <p>{copy.lead}</p>
+      <div class="cat-guide__actions">
+        <a class="button-primary" href="#cat-guide-problems">{copy.primary}</a>
+        <a class="button-secondary" href="#terminal">{copy.secondary}</a>
+      </div>
+    </div>
+
+    <div class="cat-guide__mascot" aria-label={hero.coreAria} data-cat-platform="cat-concierge-hero">
+      <div class="cat-guide__face" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <i></i>
+      </div>
+      <CoreIsland copy={hero.core} client:load />
+      <p>{copy.mascotCaption}</p>
+    </div>
+  </div>
+
+  <div class="cat-guide__problems" id="cat-guide-problems" aria-label={copy.bubbleLabel} data-section-signature="cat-problem-bubbles">
+    {
+      bubbles.map((item, index) => (
+        <article class={`cat-bubble cat-bubble--${index + 1}`}>
+          <span>{String(index + 1).padStart(2, '0')}</span>
+          <h2>{item.problem}</h2>
+          <p>{item.output}</p>
+          {item.demoModule && <a href={getDemoHref(item.demoModule)}>{copy.demoPrefix}</a>}
+        </article>
+      ))
+    }
+  </div>
+
+  <div class="cat-guide__routes" data-section-signature="cat-route-lanes">
+    <div>
+      <p class="section-code">{copy.eyebrow}</p>
+      <h2>{copy.routeTitle}</h2>
+      <p>{copy.routeLead}</p>
+    </div>
+    <ol>
+      {
+        copy.routes.map((route) => (
+          <li>
+            <strong>{route.label}</strong>
+            <span>{route.text}</span>
+          </li>
+        ))
+      }
+    </ol>
+    <div class="cat-guide__demo-strip" aria-label={systems.mapAria}>
+      {
+        featured.map((item) => (
+          <a href={getDemoHref(item.demoModule!)}>{item.system}</a>
+        ))
+      }
+    </div>
+  </div>
+</div>

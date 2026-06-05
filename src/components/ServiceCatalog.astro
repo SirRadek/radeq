@@ -12,7 +12,7 @@ const demoRoot = locale === 'en' ? '/en/demo' : '/demo';
 const getDemoHref = (moduleId: string) => `${basePath}${demoRoot}/${moduleId}/`;
 ---
 
-<section class="service-catalog" id="services" aria-labelledby="services-title">
+<section class="service-catalog" id="services-guided" aria-labelledby="services-title" data-direction="guided-offer-map">
   <div class="section-heading section-heading--services">
     {content.sectionCode && <p class="section-code">{content.sectionCode}</p>}
     <h2 id="services-title">{content.title}</h2>

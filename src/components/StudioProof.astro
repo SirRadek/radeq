@@ -1,0 +1,106 @@
+---
+import type { Locale, SiteContent } from '../data/siteContent';
+
+interface Props {
+  locale: Locale;
+  systems: SiteContent['systems'];
+}
+
+const { locale, systems } = Astro.props;
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const demoRoot = locale === 'en' ? '/en/demo' : '/demo';
+const getDemoHref = (moduleId: string) => `${basePath}${demoRoot}/${moduleId}/`;
+
+const copy = {
+  cs: {
+    eyebrow: 'C / Studio Proof',
+    title: 'Uvidíte přesně, co dostanete, ještě před stavbou.',
+    lead:
+      'Tahle varianta je blíž proof-first agenturnímu webu. Méně efektu, víc artefaktů, předání a důkazů, že projekt půjde převzít.',
+    pillars: ['Web', 'Obsah', 'Data'],
+    stackTitle: 'Výstupy na stole',
+    stack: ['Mapa webu', 'Demo obrazovky', 'SEO kontrola', 'Předávací checklist', 'Měření akcí'],
+    ledgerTitle: 'Důkazová vrstva místo slibu',
+    ledgerLead: 'Každý typ práce má problém, výstup, ověření a ukázku.',
+    cols: ['Problém', 'Výstup', 'Ověření', 'Ukázka'],
+    proofLabel: 'Zobrazit důkaz',
+    handoffTitle: 'Předání je součást návrhu',
+    handoff: [
+      'Co je hotové a co je záměrně mimo rozsah',
+      'Kde se upravují texty, odkazy a měření',
+      'Jak poznáte, že změna nerozbila SEO nebo formulář',
+    ],
+  },
+  en: {
+    eyebrow: 'C / Studio Proof',
+    title: 'You see exactly what you get before the build starts.',
+    lead:
+      'This direction is closer to a proof-first agency site. Less gimmick, more artifacts, handoff clarity, and evidence the project can be maintained.',
+    pillars: ['Web', 'Content', 'Data'],
+    stackTitle: 'Outputs on the table',
+    stack: ['Site map', 'Demo screens', 'SEO check', 'Handoff checklist', 'Action tracking'],
+    ledgerTitle: 'Proof layer instead of a promise',
+    ledgerLead: 'Every work type has a problem, output, verification method, and preview.',
+    cols: ['Problem', 'Output', 'Check', 'Preview'],
+    proofLabel: 'View proof',
+    handoffTitle: 'Handoff is part of the design',
+    handoff: [
+      'What is finished and what is intentionally out of scope',
+      'Where copy, links, and measurement are maintained',
+      'How to know a change did not break SEO or the form',
+    ],
+  },
+}[locale];
+
+const ledgerItems = systems.items.filter((item) => item.demoModule).slice(0, 4);
+---
+
+<div class="studio-proof variant-composition" role="region" data-variant-root="studio-proof" aria-labelledby="studio-proof-title">
+  <div class="studio-proof__hero" data-section-signature="proof-agency-hero">
+    <div>
+      <p class="section-code">{copy.eyebrow}</p>
+      <h1 id="studio-proof-title">{copy.title}</h1>
+      <p>{copy.lead}</p>
+      <div class="studio-proof__pillars" aria-label={copy.eyebrow}>
+        {copy.pillars.map((pillar) => <span>{pillar}</span>)}
+      </div>
+    </div>
+
+    <aside class="studio-proof__stack" aria-labelledby="studio-proof-stack">
+      <h2 id="studio-proof-stack">{copy.stackTitle}</h2>
+      <ol>
+        {copy.stack.map((item) => <li>{item}</li>)}
+      </ol>
+    </aside>
+  </div>
+
+  <div class="proof-ledger" data-section-signature="proof-ledger-table">
+    <div class="proof-ledger__intro">
+      <p class="section-code">{copy.eyebrow}</p>
+      <h2>{copy.ledgerTitle}</h2>
+      <p>{copy.ledgerLead}</p>
+    </div>
+    <div class="proof-ledger__header" aria-hidden="true">
+      {copy.cols.map((col) => <span>{col}</span>)}
+    </div>
+    <div class="proof-ledger__rows">
+      {
+        ledgerItems.map((item) => (
+          <article>
+            <strong>{item.problem}</strong>
+            <span>{item.system}</span>
+            <span>{item.output}</span>
+            <a href={getDemoHref(item.demoModule!)}>{copy.proofLabel}</a>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="studio-proof__handoff" data-section-signature="proof-handoff-strip">
+    <h2>{copy.handoffTitle}</h2>
+    <ul>
+      {copy.handoff.map((item) => <li>{item}</li>)}
+    </ul>
+  </div>
+</div>

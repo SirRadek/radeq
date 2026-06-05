@@ -1,0 +1,128 @@
+---
+import type { Locale, SiteContent } from '../data/siteContent';
+import type { ModuleId } from '../data/styleMatrix';
+
+interface Props {
+  locale: Locale;
+  systems: SiteContent['systems'];
+}
+
+const { locale } = Astro.props;
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const demoRoot = locale === 'en' ? '/en/demo' : '/demo';
+const getDemoHref = (moduleId: ModuleId) => `${basePath}${demoRoot}/${moduleId}/`;
+
+const copy = {
+  cs: {
+    eyebrow: 'D / Demo Worlds',
+    title: 'Vyberte ukázku podle toho, kde se váš web zasekl.',
+    lead:
+      'Tahle varianta je demo hub. Návštěvník nezačíná službou, ale situací. Každý svět ukazuje jednu cestu a další doporučený krok.',
+    primary: 'Otevřít první svět',
+    worldsTitle: 'Čtyři světy podle rozhodnutí kupujícího',
+    nextTitle: 'Jak se návštěva skládá do poptávky',
+    next: [
+      'Vybere situaci, kterou poznává.',
+      'Otevře krátké demo bez formuláře.',
+      'Vrátí se s konkrétní otázkou nebo pošle brief.',
+    ],
+    worlds: [
+      {
+        id: 'service-landing',
+        label: 'Web / landing',
+        problem: 'Nabídka je nejasná nebo web nepůsobí důvěryhodně.',
+        promise: 'Ukázka první obrazovky, CTA cesty a sekcí pro rozhodnutí.',
+      },
+      {
+        id: 'blog-docs',
+        label: 'Obsah / SEO',
+        problem: 'Obsah existuje, ale lidé ani vyhledávače se v něm neorientují.',
+        promise: 'Ukázka struktury článků, odkazů, metadat a témat.',
+      },
+      {
+        id: 'admin-dashboard',
+        label: 'Data / formuláře',
+        problem: 'Poptávky a ruční práce mizí v e-mailu, tabulkách nebo chatu.',
+        promise: 'Ukázka sběru, třídění a přehledu pro tým.',
+      },
+      {
+        id: 'eshop-offers',
+        label: 'Demo / app',
+        problem: 'Potřebujete ukázat produkt, balíček nebo lehký nástroj.',
+        promise: 'Ukázka nabídky, porovnání a rozhodovacího toku.',
+      },
+    ] satisfies { id: ModuleId; label: string; problem: string; promise: string }[],
+  },
+  en: {
+    eyebrow: 'D / Demo Worlds',
+    title: 'Choose a preview by where your website gets stuck.',
+    lead:
+      'This direction is a demo hub. Visitors do not start with a service; they start with a situation. Each world shows one path and the next recommended step.',
+    primary: 'Open the first world',
+    worldsTitle: 'Four worlds by buyer decision',
+    nextTitle: 'How a visit turns into a request',
+    next: [
+      'They choose a situation they recognize.',
+      'They open a short ungated demo.',
+      'They return with a specific question or send a brief.',
+    ],
+    worlds: [
+      {
+        id: 'service-landing',
+        label: 'Web / landing',
+        problem: 'The offer is unclear or the site does not feel trustworthy.',
+        promise: 'A preview of the first viewport, CTA route, and decision sections.',
+      },
+      {
+        id: 'blog-docs',
+        label: 'Content / SEO',
+        problem: 'The content exists, but people and search engines cannot navigate it.',
+        promise: 'A preview of articles, links, metadata, and topic structure.',
+      },
+      {
+        id: 'admin-dashboard',
+        label: 'Data / forms',
+        problem: 'Requests and manual work disappear in email, sheets, or chat.',
+        promise: 'A preview of collection, sorting, and team overview.',
+      },
+      {
+        id: 'eshop-offers',
+        label: 'Demo / app',
+        problem: 'You need to show a product, package, or lightweight tool.',
+        promise: 'A preview of the offer, comparison, and decision flow.',
+      },
+    ] satisfies { id: ModuleId; label: string; problem: string; promise: string }[],
+  },
+}[locale];
+---
+
+<div class="demo-worlds variant-composition" role="region" data-variant-root="demo-worlds" aria-labelledby="demo-worlds-title">
+  <div class="demo-worlds__hero" data-section-signature="demo-worlds-hero">
+    <p class="section-code">{copy.eyebrow}</p>
+    <h1 id="demo-worlds-title">{copy.title}</h1>
+    <p>{copy.lead}</p>
+    <a class="button-primary" href={getDemoHref(copy.worlds[0].id)}>{copy.primary}</a>
+  </div>
+
+  <div class="demo-world-map" aria-labelledby="demo-worlds-list-title" data-section-signature="demo-world-map">
+    <h2 id="demo-worlds-list-title">{copy.worldsTitle}</h2>
+    {
+      copy.worlds.map((world, index) => (
+        <article class={`demo-world demo-world--${index + 1}`}>
+          <span>{String(index + 1).padStart(2, '0')}</span>
+          <h3>{world.label}</h3>
+          <p>{world.problem}</p>
+          <strong>{world.promise}</strong>
+          <a href={getDemoHref(world.id)}>{world.label}</a>
+        </article>
+      ))
+    }
+  </div>
+
+  <div class="demo-worlds__next" data-section-signature="demo-world-sequence">
+    <h2>{copy.nextTitle}</h2>
+    <ol>
+      {copy.next.map((item) => <li>{item}</li>)}
+    </ol>
+  </div>
+</div>

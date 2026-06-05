@@ -90,6 +90,7 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.getByText('Zpráva: Potřebuji zjednodušit poptávkovou cestu.')).toBeVisible();
 
   await page.goto('/');
+  await page.getByRole('button', { name: /^A \// }).click();
   await page.getByRole('button', { name: 'Spustit kočičku' }).click();
   await expect(page.getByRole('button', { name: 'Spustit kočičku' })).toHaveCount(0);
   const mascot = page.locator('.core-canvas');
@@ -127,6 +128,84 @@ test('homepage core flow works', async ({ page }) => {
   await page.mouse.down();
   await expect(mascot).toHaveAttribute('data-mascot-state', 'petting');
   await page.mouse.up();
+});
+
+test('homepage A/B/C/D variants use distinct composition skeletons', async ({ page }) => {
+  await page.goto('/');
+
+  const variants = [
+    {
+      button: /^A \//,
+      root: 'guided-offer-map',
+      h1: 'Nabídka, kterou si zákazník projde na první scroll bez slovníku.',
+      visible: '.offer-map',
+    },
+    {
+      button: /^B \//,
+      root: 'cat-concierge',
+      h1: 'Řekněte, kde se web zasekl. Průvodce vás dovede k dalšímu kroku.',
+      visible: '.cat-guide',
+    },
+    {
+      button: /^C \//,
+      root: 'studio-proof',
+      h1: 'Uvidíte přesně, co dostanete, ještě před stavbou.',
+      visible: '.studio-proof',
+    },
+    {
+      button: /^D \//,
+      root: 'demo-worlds',
+      h1: 'Vyberte ukázku podle toho, kde se váš web zasekl.',
+      visible: '.demo-worlds',
+    },
+  ];
+
+  const signatures: { h1: string; root: string; sections: string }[] = [];
+
+  for (const variant of variants) {
+    await page.getByRole('button', { name: variant.button }).click();
+    await expect(page.locator('html')).toHaveAttribute('data-style', /variant-[abcd]/);
+    await expect(page.locator(variant.visible)).toBeVisible();
+
+    const signature = await page.evaluate(() => {
+      const isVisible = (element: Element) => {
+        const style = window.getComputedStyle(element);
+        return style.display !== 'none' && style.visibility !== 'hidden' && element.getClientRects().length > 0;
+      };
+
+      const h1 =
+        [...document.querySelectorAll('main h1')]
+          .find(isVisible)
+          ?.textContent?.replace(/\s+/g, ' ')
+          .trim() ?? '';
+      const visibleRoot =
+        [...document.querySelectorAll('[data-variant-root]')]
+          .find(isVisible)
+          ?.getAttribute('data-variant-root') ??
+        (isVisible(document.querySelector('.service-catalog')!) ? 'guided-offer-map' : 'missing');
+      const sections = [
+        ...document.querySelectorAll(
+          '.hero-section, .service-catalog, [data-section-signature], .handoff-section, .terminal-section',
+        ),
+      ]
+        .filter(isVisible)
+        .map((element) => {
+          const heading = element.querySelector('h1, h2')?.textContent?.replace(/\s+/g, ' ').trim() ?? '';
+          return `${element.getAttribute('data-section-signature') ?? element.className}|${heading}`;
+        })
+        .join('>');
+
+      return { h1, root: visibleRoot, sections };
+    });
+
+    expect(signature.h1).toBe(variant.h1);
+    expect(signature.root).toBe(variant.root);
+    signatures.push(signature);
+  }
+
+  expect(new Set(signatures.map((signature) => signature.h1)).size).toBe(4);
+  expect(new Set(signatures.map((signature) => signature.root)).size).toBe(4);
+  expect(new Set(signatures.map((signature) => signature.sections)).size).toBe(4);
 });
 
 test('seo metadata and indexability endpoints are exposed', async ({ page, request }) => {

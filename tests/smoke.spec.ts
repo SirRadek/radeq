@@ -32,10 +32,15 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.locator('html')).toHaveAttribute('data-style', 'variant-b');
   await page.getByRole('button', { name: /^A \/ Důvěra/ }).click();
   await expect(page.locator('html')).toHaveAttribute('data-style', 'variant-a');
-  await expect(page.getByRole('button', { name: 'Světlý' })).toHaveAttribute('aria-pressed', 'true');
-  await page.getByRole('button', { name: 'Tmavý' }).click();
+  await expect(page.locator('.theme-toggle__coin')).toBeVisible();
+  await expect(page.locator('.theme-toggle__face--light')).toHaveCount(1);
+  await expect(page.locator('.theme-toggle__face--dark')).toHaveCount(1);
+  await expect(page.locator('.theme-toggle__star')).toHaveCount(3);
+  await expect(page.getByRole('switch', { name: /Světlý/ })).toHaveAttribute('aria-checked', 'false');
+  await page.getByRole('switch', { name: /Světlý/ }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-  await page.getByRole('button', { name: 'Světlý' }).click();
+  await expect(page.getByRole('switch', { name: /Tmavý/ })).toHaveAttribute('aria-checked', 'true');
+  await page.getByRole('switch', { name: /Tmavý/ }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   await expect(page.locator('html')).toHaveAttribute('data-motion-ready', /true|reduced/);
   await expect(page.locator('html')).toHaveAttribute('data-motion-scene', /top|services|handoff|terminal/);

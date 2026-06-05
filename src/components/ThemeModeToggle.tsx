@@ -50,25 +50,37 @@ export default function ThemeModeToggle({ label, lightLabel, darkLabel }: Props)
     applyThemeMode(nextMode);
   }
 
+  function toggleMode() {
+    selectMode(mode === 'light' ? 'dark' : 'light');
+  }
+
+  const currentLabel = mode === 'light' ? lightLabel : darkLabel;
+  const isDark = mode === 'dark';
+
   return (
-    <div className="theme-toggle" role="group" aria-label={label}>
+    <div className="theme-toggle" data-mode={mode}>
       <button
         type="button"
-        className={mode === 'light' ? 'is-active' : ''}
-        onClick={() => selectMode('light')}
-        aria-pressed={mode === 'light'}
+        className="theme-toggle__button"
+        role="switch"
+        aria-checked={isDark}
+        aria-label={`${label}: ${currentLabel}`}
+        onClick={toggleMode}
       >
-        <span className="theme-toggle__icon theme-toggle__icon--light" aria-hidden="true"></span>
-        <span>{lightLabel}</span>
-      </button>
-      <button
-        type="button"
-        className={mode === 'dark' ? 'is-active' : ''}
-        onClick={() => selectMode('dark')}
-        aria-pressed={mode === 'dark'}
-      >
-        <span className="theme-toggle__icon theme-toggle__icon--dark" aria-hidden="true"></span>
-        <span>{darkLabel}</span>
+        <span className="theme-toggle__coin" aria-hidden="true">
+          <span className="theme-toggle__coin-inner">
+            <span className="theme-toggle__face theme-toggle__face--light">
+              <span className="theme-toggle__sun"></span>
+            </span>
+            <span className="theme-toggle__face theme-toggle__face--dark">
+              <span className="theme-toggle__moon"></span>
+              <span className="theme-toggle__star theme-toggle__star--one"></span>
+              <span className="theme-toggle__star theme-toggle__star--two"></span>
+              <span className="theme-toggle__star theme-toggle__star--three"></span>
+            </span>
+          </span>
+        </span>
+        <span className="theme-toggle__status">{currentLabel}</span>
       </button>
     </div>
   );

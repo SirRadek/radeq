@@ -73,9 +73,19 @@ test('homepage core flow works', async ({ page }) => {
 
   await page.getByRole('button', { name: /E-shop/ }).click();
   await expect(page.locator('.matrix-preview')).toHaveAttribute('data-module', 'eshop-offers');
-  await expect(page.locator('.proof-board')).toBeVisible();
-  await expect(page.locator('.proof-check')).toHaveCount(3);
+  await expect(page.locator('.matrix-preview')).toHaveClass(/matrix-preview--shop/);
+  await expect(page.locator('.shop-product')).toHaveCount(3);
+  await expect(page.locator('.shop-product__price')).toHaveCount(3);
+  await expect(page.locator('.shop-compare__items > div')).toHaveCount(2);
+  await expect(page.locator('.shop-cart')).toHaveAttribute('aria-live', 'polite');
+  await page.locator('.shop-action--primary').first().click();
+  await expect(page.locator('.matrix-preview')).toHaveAttribute('data-cart-state', 'selected');
+  await expect(page.locator('.shop-cart h4')).toHaveText('Focus Mini');
+  await expect(page.getByRole('link', { name: 'Nezávazně poptat sestavu' })).toBeVisible();
+  await page.locator('.shop-product').nth(2).getByRole('button', { name: 'Porovnat' }).click();
+  await expect(page.locator('.shop-compare__items')).toContainText('Upgrade Kit');
 
+  await page.getByRole('button', { name: /Poptávková stránka/ }).click();
   await page.getByRole('button', { name: /^D \/ Studio/ }).click();
   await expect(page.locator('.matrix-preview')).toHaveAttribute('data-style', 'variant-d');
   await expect(page.locator('.matrix-preview')).toHaveClass(/matrix-preview--studio/);

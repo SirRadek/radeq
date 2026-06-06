@@ -3486,6 +3486,44 @@ html[data-style="variant-d"] .demo-worlds {
   margin: 0;
 }
 
+.about-services__profile dl {
+  display: grid;
+  gap: 0;
+  margin: 0.45rem 0 0;
+}
+
+.about-services__profile dl div {
+  display: grid;
+  grid-template-columns: minmax(7.5rem, 0.34fr) minmax(0, 1fr);
+  gap: 0.8rem;
+  border-top: 1px solid color-mix(in srgb, var(--accent) 20%, var(--line));
+  padding: 0.75rem 0;
+}
+
+.about-services__profile dt {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.about-services__profile dd {
+  margin: 0;
+  color: color-mix(in srgb, var(--text-main) 82%, var(--text-muted));
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.about-services__services {
+  grid-column: 1 / -1;
+  border-top: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line));
+  padding-top: 1.25rem;
+}
+
+.about-services__services p {
+  margin: 0;
+}
+
 .about-services__grid {
   grid-column: 1 / -1;
   display: grid;
@@ -4363,6 +4401,7 @@ html[data-style="variant-d"] .service-card {
   }
 
   .about-services__profile,
+  .about-services__services,
   .about-services__grid,
   .about-services__note {
     grid-column: 1;
@@ -4506,7 +4545,23 @@ html[data-style="variant-d"] .service-card {
   }
 
   .command-nav {
+    order: 4;
+    display: flex;
+    grid-column: 1 / -1;
+    width: 100%;
+    justify-self: stretch;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .command-nav::-webkit-scrollbar {
     display: none;
+  }
+
+  .command-nav a {
+    flex: 1 0 auto;
+    min-height: 38px;
+    padding-inline: 0.7rem;
   }
 
   .brand-mark {
@@ -4717,6 +4772,11 @@ html[data-style="variant-d"] .service-card {
   }
 
   .preview-proof div {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+
+  .about-services__profile dl div {
     grid-template-columns: 1fr;
     gap: 0.25rem;
   }

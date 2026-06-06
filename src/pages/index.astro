@@ -43,8 +43,21 @@ const content = siteContent.cs;
       <div class="about-services__profile">
         <p class="section-code">{content.about.profileTitle}</p>
         <p>{content.about.profileText}</p>
+        <dl>
+          {
+            content.about.principles.map((principle) => (
+              <div>
+                <dt>{principle.label}</dt>
+                <dd>{principle.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
       </div>
-      <div class="about-services__grid" aria-label={content.about.title}>
+      <div class="about-services__services">
+        <p class="section-code">{content.about.servicesTitle}</p>
+      </div>
+      <div class="about-services__grid" aria-label={content.about.servicesTitle}>
         {
           content.about.items.map((item) => (
             <article>

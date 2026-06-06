@@ -19,6 +19,11 @@ test('Czech and English routes expose localized first viewport and matrix copy',
     page.getByRole('heading', { name: 'An offer buyers understand on the first scroll without a glossary.' }),
   ).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Choose where the buyer gets stuck.' })).toBeVisible();
+  await expect(page.locator('.command-nav').getByRole('link', { name: 'About' })).toHaveAttribute('href', '#about');
+  await expect(
+    page.getByRole('heading', { name: 'A small studio. Direct communication. Work you understand.' }),
+  ).toBeVisible();
+  await expect(page.locator('.about-services__profile dl > div')).toHaveCount(3);
   await expect(page.getByRole('link', { name: 'CZ', exact: true })).toHaveAttribute('href', '/');
 
   await page.goto('/en/demo/admin-dashboard/');

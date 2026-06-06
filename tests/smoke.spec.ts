@@ -94,7 +94,13 @@ test('homepage core flow works', async ({ page }) => {
 
   await page.goto('/');
   await expect(page.locator('#about')).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Nejen nový web. I klidnější technika kolem něj.' })).toBeVisible();
+  await expect(page.locator('.command-nav').getByRole('link', { name: 'O nás' })).toHaveAttribute('href', '#about');
+  await expect(
+    page.getByRole('heading', { name: 'Malé studio. Přímá domluva. Řešení, kterému rozumíte.' }),
+  ).toBeVisible();
+  await expect(page.locator('.about-services__profile dl > div')).toHaveCount(3);
+  await expect(page.getByText('Jeden kontakt')).toBeVisible();
+  await expect(page.getByText('S čím pomohu kromě nového webu')).toBeVisible();
   await expect(page.getByText('Stavba a výběr počítače')).toBeVisible();
   await expect(page.getByText('PC, AI a základní software')).toBeVisible();
   await page.getByRole('button', { name: /^D \// }).click();
@@ -328,7 +334,8 @@ test('mobile header keeps controls compact without horizontal overflow', async (
   await page.setViewportSize({ width: 390, height: 920 });
   await page.goto('/');
 
-  await expect(page.locator('.command-nav')).toBeHidden();
+  await expect(page.locator('.command-nav')).toBeVisible();
+  await expect(page.locator('.command-nav').getByRole('link', { name: 'O nás' })).toBeVisible();
   await expect(page.locator('.header-cta')).toBeHidden();
   await expect(page.locator('.style-toggle')).toBeVisible();
   await expect(page.locator('.theme-toggle')).toBeVisible();

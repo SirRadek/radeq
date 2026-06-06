@@ -98,6 +98,11 @@ export interface SiteContent {
     lead: string;
     profileTitle: string;
     profileText: string;
+    principles: {
+      label: string;
+      value: string;
+    }[];
+    servicesTitle: string;
     items: {
       label: string;
       title: string;
@@ -152,7 +157,7 @@ export const siteContent = {
       navItems: [
         { href: '#services', label: 'Co umíme' },
         { href: '/demo/service-landing/', label: 'Demo' },
-        { href: '#handoff', label: 'Průběh' },
+        { href: '#about', label: 'O nás' },
         { href: '#terminal', label: 'Poptávka' },
       ],
       cta: 'Nezávazná poptávka',
@@ -350,13 +355,28 @@ export const siteContent = {
       ],
     },
     about: {
-      sectionCode: 'O mně / další pomoc',
-      title: 'Nejen nový web. I klidnější technika kolem něj.',
+      sectionCode: 'O RadeQ',
+      title: 'Malé studio. Přímá domluva. Řešení, kterému rozumíte.',
       lead:
-        'RadeQ není jen výroba stránek. Smysl dává všechno, co vám ušetří čas, zpřehlední práci a pomůže techniku používat bez zbytečného stresu.',
-      profileTitle: 'Kdo za tím stojí',
+        'Za RadeQ stojí jeden člověk, se kterým řešíte zadání, návrh i předání. Bez přehazování mezi obchodem a vývojem a bez zbytečné technické mlhy.',
+      profileTitle: 'Jak spolupráce vypadá',
       profileText:
-        'Pracuji prakticky: nejdřív zjistit, co vás brzdí, potom navrhnout nejmenší užitečný krok a teprve pak stavět, opravovat nebo vysvětlovat.',
+        'Nejdřív zjistíme, co vás skutečně brzdí. Potom vybereme nejmenší užitečný krok a teprve pak stavíme, opravujeme nebo vysvětlujeme.',
+      principles: [
+        {
+          label: 'Jeden kontakt',
+          value: 'Od prvního rozhovoru po předání víte, s kým mluvíte.',
+        },
+        {
+          label: 'Srozumitelně',
+          value: 'Rozhodnutí vysvětlím lidsky, ne seznamem technických zkratek.',
+        },
+        {
+          label: 'Přiměřený rozsah',
+          value: 'Malá oprava zůstane malá. Větší systém dostane jasné etapy.',
+        },
+      ],
+      servicesTitle: 'S čím pomohu kromě nového webu',
       items: [
         {
           label: 'Optimalizace',
@@ -379,7 +399,7 @@ export const siteContent = {
           text: 'Praktické zaučení, nastavení nástrojů, pořádek v účtech, souborech, AI asistentech a každodenní práci.',
         },
       ],
-      note: 'Když je potřeba větší systém, držíme web, data i ruční práci pohromadě. Když stačí malá oprava, neděláme z ní velký projekt.',
+      note: 'Cílem není dodat co nejvíc techniky. Cílem je, aby web, počítač nebo nástroj přestal překážet a začal vám pomáhat.',
     },
     terminal: {
       sectionCode: '',
@@ -470,7 +490,7 @@ export const siteContent = {
       navItems: [
         { href: '#services', label: 'Services' },
         { href: '/en/demo/service-landing/', label: 'Demo' },
-        { href: '#handoff', label: 'Workflow' },
+        { href: '#about', label: 'About' },
         { href: '#terminal', label: 'Request' },
       ],
       cta: 'Request a quote',
@@ -668,13 +688,28 @@ export const siteContent = {
       ],
     },
     about: {
-      sectionCode: 'About / extra help',
-      title: 'Not just a new website. Calmer technology around it.',
+      sectionCode: 'About RadeQ',
+      title: 'A small studio. Direct communication. Work you understand.',
       lead:
-        'RadeQ is not only website production. The useful work is anything that saves time, clarifies work, and helps you use technology without unnecessary stress.',
-      profileTitle: 'Who is behind it',
+        'RadeQ is one person you speak with from the first brief through design and handoff. No bouncing between sales and development, and no unnecessary technical fog.',
+      profileTitle: 'How the collaboration works',
       profileText:
-        'The process is practical: first find what slows you down, then choose the smallest useful step, and only then build, fix, or explain.',
+        'First we identify what actually slows you down. Then we choose the smallest useful step and only then build, repair, or explain.',
+      principles: [
+        {
+          label: 'One contact',
+          value: 'From the first conversation to handoff, you know who you are speaking with.',
+        },
+        {
+          label: 'Plain language',
+          value: 'Decisions are explained clearly, not hidden behind technical abbreviations.',
+        },
+        {
+          label: 'Right-sized scope',
+          value: 'A small repair stays small. A larger system gets clear stages.',
+        },
+      ],
+      servicesTitle: 'What I can help with beyond a new website',
       items: [
         {
           label: 'Optimization',
@@ -698,7 +733,7 @@ export const siteContent = {
         },
       ],
       note:
-        'When a larger system is useful, the website, data, and manual work stay connected. When a small fix is enough, it stays small.',
+        'The goal is not to deliver the most technology. The goal is for the website, computer, or tool to stop getting in the way and start helping.',
     },
     terminal: {
       sectionCode: '',

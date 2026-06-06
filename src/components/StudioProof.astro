@@ -19,11 +19,12 @@ const copy = {
       'Tahle varianta je blíž proof-first agenturnímu webu. Méně efektu, víc artefaktů, předání a důkazů, že projekt půjde převzít.',
     pillars: ['Web', 'Obsah', 'Data'],
     stackTitle: 'Výstupy na stole',
-    stack: ['Mapa webu', 'Demo obrazovky', 'SEO kontrola', 'Předávací checklist', 'Měření akcí'],
+    stack: ['Mapa webu', 'Náhled klíčové obrazovky', 'SEO kontrola', 'Předávací checklist', 'Měření akcí'],
     ledgerTitle: 'Důkazová vrstva místo slibu',
-    ledgerLead: 'Každý typ práce má problém, výstup, ověření a ukázku.',
-    cols: ['Problém', 'Výstup', 'Ověření', 'Ukázka'],
-    proofLabel: 'Zobrazit důkaz',
+    ledgerLead: 'Každý typ práce má problém, konkrétní výstup, způsob ověření a jasný další krok.',
+    cols: ['Problém', 'Výstup', 'Ověření', 'Další krok'],
+    proofLabel: 'Otevřít e-shop demo',
+    requestLabel: 'Probrat postup',
     handoffTitle: 'Předání je součást návrhu',
     handoff: [
       'Co je hotové a co je záměrně mimo rozsah',
@@ -38,11 +39,12 @@ const copy = {
       'This direction is closer to a proof-first agency site. Less gimmick, more artifacts, handoff clarity, and evidence the project can be maintained.',
     pillars: ['Web', 'Content', 'Data'],
     stackTitle: 'Outputs on the table',
-    stack: ['Site map', 'Demo screens', 'SEO check', 'Handoff checklist', 'Action tracking'],
+    stack: ['Site map', 'Key screen preview', 'SEO check', 'Handoff checklist', 'Action tracking'],
     ledgerTitle: 'Proof layer instead of a promise',
-    ledgerLead: 'Every work type has a problem, output, verification method, and preview.',
-    cols: ['Problem', 'Output', 'Check', 'Preview'],
-    proofLabel: 'View proof',
+    ledgerLead: 'Every work type has a problem, a concrete output, a verification method, and a clear next step.',
+    cols: ['Problem', 'Output', 'Check', 'Next step'],
+    proofLabel: 'Open shop demo',
+    requestLabel: 'Discuss the approach',
     handoffTitle: 'Handoff is part of the design',
     handoff: [
       'What is finished and what is intentionally out of scope',
@@ -52,7 +54,7 @@ const copy = {
   },
 }[locale];
 
-const ledgerItems = systems.items.filter((item) => item.demoModule).slice(0, 4);
+const ledgerItems = systems.items.slice(0, 4);
 const artifactCopy = {
   cs: {
     title: 'Artefakty, které nejsou jen slib',
@@ -60,7 +62,7 @@ const artifactCopy = {
     items: [
       { label: 'Mapa webu', text: 'Stránky, sekce a hlavní CTA cesta před stavbou.' },
       { label: 'SEO sanity check', text: 'Titulky, canonical, sitemap, nadpisy a indexovatelný obsah.' },
-      { label: 'Demo screenshot', text: 'Náhled konkrétní obrazovky, ne obecná dekorace.' },
+      { label: 'Náhled obrazovky', text: 'Konkrétní obrazovka nebo stav, ne obecná dekorace.' },
       { label: 'Předání', text: 'Checklist, kde se mění texty, odkazy, měření a formulář.' },
     ],
   },
@@ -70,7 +72,7 @@ const artifactCopy = {
     items: [
       { label: 'Site map', text: 'Pages, sections, and the main CTA route before the build.' },
       { label: 'SEO sanity check', text: 'Titles, canonical, sitemap, headings, and indexable content.' },
-      { label: 'Demo screenshot', text: 'A concrete screen preview, not a generic decoration.' },
+      { label: 'Screen preview', text: 'A concrete screen or state, not a generic decoration.' },
       { label: 'Handoff', text: 'Checklist for copy, links, measurement, and form ownership.' },
     ],
   },
@@ -131,7 +133,9 @@ const artifactCopy = {
             <strong>{item.problem}</strong>
             <span>{item.system}</span>
             <span>{item.output}</span>
-            <a href={getDemoHref(item.demoModule!)}>{copy.proofLabel}</a>
+            <a href={item.demoModule ? getDemoHref(item.demoModule) : '#terminal'}>
+              {item.demoModule ? copy.proofLabel : copy.requestLabel}
+            </a>
           </article>
         ))
       }

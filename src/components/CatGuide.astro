@@ -28,9 +28,9 @@ const copy = {
     routes: [
       { label: 'Ptá se', text: 'Co se teď na webu zaseklo?' },
       { label: 'Třídí', text: 'Rozpozná, jestli jde o web, obsah, data nebo aplikaci.' },
-      { label: 'Ukazuje', text: 'Pošle člověka na demo nebo rovnou do briefu.' },
+      { label: 'Doporučí', text: 'Pošle člověka do briefu; u e-shopu nabídne konkrétní demo.' },
     ],
-    demoPrefix: 'Ukázka',
+    demoPrefix: 'E-shop demo',
   },
   en: {
     eyebrow: 'B / Cat Concierge',
@@ -46,9 +46,9 @@ const copy = {
     routes: [
       { label: 'Asks', text: 'Where is the website stuck right now?' },
       { label: 'Sorts', text: 'It recognizes website, content, data, or app work.' },
-      { label: 'Shows', text: 'It sends the visitor to a demo or into the brief.' },
+      { label: 'Recommends', text: 'It sends the visitor into the brief; shop work includes a concrete demo.' },
     ],
-    demoPrefix: 'Preview',
+    demoPrefix: 'Shop demo',
   },
 }[locale];
 
@@ -59,7 +59,7 @@ const adviceCopy = {
     label: 'Co doporučí průvodce',
     tip: 'Další krok',
     items: [
-      { label: 'Málo poptávek', text: 'Začnete landing ukázkou a zkrátíme cestu k formuláři.' },
+      { label: 'Málo poptávek', text: 'Začneme kontrolou nabídky a zkrátíme cestu k formuláři.' },
       { label: 'Chaos v obsahu', text: 'Nejdřív srovnáme strukturu, nadpisy a vnitřní odkazy.' },
       { label: 'Ruční evidence', text: 'Ukážeme, kam mají dotazy padat a kdo je má řešit.' },
     ],
@@ -68,7 +68,7 @@ const adviceCopy = {
     label: 'What the guide recommends',
     tip: 'Next step',
     items: [
-      { label: 'Few requests', text: 'Start with the landing preview and shorten the route to the form.' },
+      { label: 'Few requests', text: 'Start with an offer review and shorten the route to the form.' },
       { label: 'Content chaos', text: 'First clean up structure, headings, and internal links.' },
       { label: 'Manual tracking', text: 'Show where requests should land and who should handle them.' },
     ],
@@ -122,7 +122,11 @@ const adviceCopy = {
           <strong class="cat-bubble__tip">
             {adviceCopy.tip}: {item.demoModule ? copy.demoPrefix : copy.secondary}
           </strong>
-          {item.demoModule && <a href={getDemoHref(item.demoModule)}>{copy.demoPrefix}</a>}
+          {item.demoModule ? (
+            <a href={getDemoHref(item.demoModule)}>{copy.demoPrefix}</a>
+          ) : (
+            <a href="#terminal">{copy.secondary}</a>
+          )}
         </article>
       ))
     }

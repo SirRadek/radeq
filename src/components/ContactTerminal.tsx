@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { Locale } from '../data/locales';
 import type { SiteContent } from '../data/siteContent';
-import { createLeadPayload, getMissingLeadFields, validateLeadSubmission } from '../lib/leads';
+import { createLeadPayload, getMissingLeadFields, leadFieldLimits, validateLeadSubmission } from '../lib/leads';
 import {
   createEmptyBrief,
   generateBriefSummary,
@@ -16,11 +16,14 @@ interface Props {
 }
 
 const optionalFields = ['company', 'current_url', 'budget_range', 'deadline', 'audience'] as const satisfies BriefField[];
+type StatusTone = 'neutral' | 'pending' | 'success' | 'error';
 
 export default function ContactTerminal({ locale, content }: Props) {
   const [brief, setBrief] = useState<TerminalBrief>(() => createEmptyBrief());
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState(content.readyStatus);
+  const [statusTone, setStatusTone] = useState<StatusTone>('neutral');
+  const [errors, setErrors] = useState<Partial<Record<BriefField, string>>>({});
 
   const summaryLabels = content.fieldLabels as BriefSummaryLabels;
   const emptySummaryValue = locale === 'cs' ? 'nenastaveno' : 'not set';
@@ -34,6 +37,13 @@ export default function ContactTerminal({ locale, content }: Props) {
       ...current,
       [field]: value,
     }));
+    setErrors((current) => {
+      if (!current[field]) return current;
+
+      const next = { ...current };
+      delete next[field];
+      return next;
+    });
   }
 
   async function submitForm(event: { preventDefault: () => void }) {
@@ -47,10 +57,18 @@ export default function ContactTerminal({ locale, content }: Props) {
     const missing = getMissingLeadFields(brief);
     if (missing.length > 0) {
       const error = `${content.missingRequiredPrefix}: ${missing.map((field) => fieldLabel(field, content)).join(', ')}`;
+      setErrors(
+        Object.fromEntries(missing.map((field) => [field, content.requiredError])) as Partial<
+          Record<BriefField, string>
+        >,
+      );
       setStatus(error);
+      setStatusTone('error');
+      window.requestAnimationFrame(() => document.getElementById(`brief-${missing[0]}`)?.focus());
       return;
     }
 
+    setErrors({});
     const payload = createLeadPayload(brief, {
       href: window.location.href,
       locale,
@@ -58,12 +76,33 @@ export default function ContactTerminal({ locale, content }: Props) {
     });
     const validation = validateLeadSubmission(payload);
     if (!validation.ok) {
-      setStatus(validation.errors.join(' '));
+      const validationErrors: Partial<Record<BriefField, string>> = {};
+
+      if (validation.errors.some((error) => error.startsWith('Email '))) {
+        validationErrors.email = content.invalidEmailError;
+      }
+
+      if (validation.errors.some((error) => error.startsWith('Current URL '))) {
+        validationErrors.current_url = content.invalidUrlError;
+      }
+
+      setErrors(validationErrors);
+      const invalidFields = Object.keys(validationErrors) as BriefField[];
+      setStatus(
+        invalidFields.length > 0
+          ? `${content.invalidFieldsPrefix}: ${invalidFields.map((field) => fieldLabel(field, content)).join(', ')}`
+          : validation.errors.join(' '),
+      );
+      setStatusTone('error');
+      if (invalidFields[0]) {
+        window.requestAnimationFrame(() => document.getElementById(`brief-${invalidFields[0]}`)?.focus());
+      }
       return;
     }
 
     setIsSubmitting(true);
     setStatus(content.sendingStatus);
+    setStatusTone('pending');
 
     try {
       const response = await fetch('/api/leads', {
@@ -85,10 +124,12 @@ export default function ContactTerminal({ locale, content }: Props) {
         throw new Error(`${result.error || content.apiUnavailable}${details}`);
       }
 
-      setStatus(locale === 'cs' ? `Poptávka uložena: ${result.leadId}` : `Request stored: ${result.leadId}`);
+      setStatus(`${content.storedPrefix}: ${result.leadId}`);
+      setStatusTone('success');
     } catch (error) {
       const message = error instanceof Error ? error.message : content.apiUnavailable;
       setStatus(message);
+      setStatusTone('error');
     } finally {
       setIsSubmitting(false);
     }
@@ -115,58 +156,95 @@ export default function ContactTerminal({ locale, content }: Props) {
           onSubmit={submitForm}
           className="terminal-window brief-form"
           aria-label={content.regionAria}
+          aria-describedby="brief-required-note"
           data-cat-platform="contact-form"
+          noValidate
         >
-          <div className="brief-form__grid">
-            <TextField
-              field="name"
-              value={brief.name}
-              content={content}
-              autoComplete="name"
-              required
-              onChange={updateField}
-            />
-            <TextField
-              field="email"
-              type="email"
-              value={brief.email}
-              content={content}
-              autoComplete="email"
-              required
-              onChange={updateField}
-            />
-            <label className="brief-field">
-              <span>{fieldLabel('project_type', content)}</span>
-              <select
-                id="brief-project_type"
-                name="project_type"
-                value={brief.project_type}
-                onChange={(event) => updateField('project_type', event.target.value)}
+          <fieldset className="brief-form__fieldset">
+            <legend>{content.commandLabel}</legend>
+            <p id="brief-required-note" className="brief-form__note">
+              {content.requiredNote}
+            </p>
+            <div className="brief-form__grid">
+              <TextField
+                field="name"
+                value={brief.name}
+                content={content}
+                autoComplete="name"
+                error={errors.name}
                 disabled={isSubmitting}
                 required
-              >
-                <option value="">{locale === 'cs' ? 'Vyberte možnost' : 'Choose an option'}</option>
-                {content.projectOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="brief-field brief-field--wide">
-              <span>{fieldLabel('message', content)}</span>
-              <textarea
-                id="brief-message"
-                name="message"
-                value={brief.message}
-                onChange={(event) => updateField('message', event.target.value)}
-                placeholder={content.placeholders.message}
-                disabled={isSubmitting}
-                required
-                rows={5}
+                onChange={updateField}
               />
-            </label>
-          </div>
+              <TextField
+                field="email"
+                type="email"
+                value={brief.email}
+                content={content}
+                autoComplete="email"
+                error={errors.email}
+                disabled={isSubmitting}
+                inputMode="email"
+                required
+                spellCheck={false}
+                onChange={updateField}
+              />
+              <div className="brief-field">
+                <label htmlFor="brief-project_type">
+                  <span>{fieldLabel('project_type', content)}</span>
+                  <small aria-hidden="true">{content.requiredLabel}</small>
+                </label>
+                <select
+                  id="brief-project_type"
+                  name="project_type"
+                  value={brief.project_type}
+                  onChange={(event) => updateField('project_type', event.target.value)}
+                  disabled={isSubmitting}
+                  autoComplete="off"
+                  aria-describedby={errors.project_type ? 'brief-project_type-error' : undefined}
+                  aria-invalid={errors.project_type ? 'true' : undefined}
+                  required
+                >
+                  <option value="">{content.selectPlaceholder}</option>
+                  {content.projectOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                {errors.project_type ? (
+                  <span className="brief-field__error" id="brief-project_type-error">
+                    {errors.project_type}
+                  </span>
+                ) : null}
+              </div>
+              <div className="brief-field brief-field--wide">
+                <label htmlFor="brief-message">
+                  <span>{fieldLabel('message', content)}</span>
+                  <small aria-hidden="true">{content.requiredLabel}</small>
+                </label>
+                <textarea
+                  id="brief-message"
+                  name="message"
+                  value={brief.message}
+                  onChange={(event) => updateField('message', event.target.value)}
+                  placeholder={content.placeholders.message}
+                  disabled={isSubmitting}
+                  autoComplete="off"
+                  aria-describedby={errors.message ? 'brief-message-error' : undefined}
+                  aria-invalid={errors.message ? 'true' : undefined}
+                  maxLength={leadFieldLimits.message}
+                  required
+                  rows={5}
+                />
+                {errors.message ? (
+                  <span className="brief-field__error" id="brief-message-error">
+                    {errors.message}
+                  </span>
+                ) : null}
+              </div>
+            </div>
+          </fieldset>
 
           <details className="brief-optional">
             <summary>{content.optionalTitle}</summary>
@@ -178,6 +256,10 @@ export default function ContactTerminal({ locale, content }: Props) {
                   value={brief[field]}
                   content={content}
                   type={field === 'current_url' ? 'url' : 'text'}
+                  autoComplete={field === 'company' ? 'organization' : 'off'}
+                  disabled={isSubmitting}
+                  inputMode={field === 'current_url' ? 'url' : undefined}
+                  spellCheck={field !== 'current_url'}
                   onChange={updateField}
                 />
               ))}
@@ -188,16 +270,22 @@ export default function ContactTerminal({ locale, content }: Props) {
             <button type="submit" disabled={isSubmitting}>
               {isSubmitting ? content.waitLabel : content.runLabel}
             </button>
-            <p className="terminal-status" aria-live="polite">
+            <p
+              className="terminal-status"
+              data-tone={statusTone}
+              role={statusTone === 'error' ? 'alert' : 'status'}
+              aria-live={statusTone === 'error' ? 'assertive' : 'polite'}
+              aria-atomic="true"
+            >
               {status}
             </p>
           </div>
         </form>
 
-        <aside className="brief-summary" aria-label={content.summaryAria} data-cat-platform="contact-summary">
+        <div className="brief-summary" data-cat-platform="contact-summary">
           <h3>{content.summaryTitle}</h3>
           <pre>{summary}</pre>
-        </aside>
+        </div>
       </div>
     </section>
   );
@@ -209,16 +297,36 @@ interface TextFieldProps {
   content: SiteContent['terminal'];
   type?: string;
   autoComplete?: string;
+  disabled?: boolean;
+  error?: string;
+  inputMode?: 'email' | 'url';
   required?: boolean;
+  spellCheck?: boolean;
   onChange: (field: BriefField, value: string) => void;
 }
 
-function TextField({ field, value, content, type = 'text', autoComplete, required, onChange }: TextFieldProps) {
+function TextField({
+  field,
+  value,
+  content,
+  type = 'text',
+  autoComplete = 'off',
+  disabled,
+  error,
+  inputMode,
+  required,
+  spellCheck,
+  onChange,
+}: TextFieldProps) {
   const fieldId = `brief-${field}`;
+  const errorId = `${fieldId}-error`;
 
   return (
-    <label className="brief-field">
-      <span>{fieldLabel(field, content)}</span>
+    <div className="brief-field">
+      <label htmlFor={fieldId}>
+        <span>{fieldLabel(field, content)}</span>
+        <small aria-hidden="true">{required ? content.requiredLabel : content.optionalLabel}</small>
+      </label>
       <input
         id={fieldId}
         name={field}
@@ -227,9 +335,20 @@ function TextField({ field, value, content, type = 'text', autoComplete, require
         onChange={(event) => onChange(field, event.target.value)}
         placeholder={content.placeholders[field] ?? ''}
         autoComplete={autoComplete}
+        disabled={disabled}
+        inputMode={inputMode}
+        maxLength={leadFieldLimits[field]}
+        aria-describedby={error ? errorId : undefined}
+        aria-invalid={error ? 'true' : undefined}
         required={required}
+        spellCheck={spellCheck}
       />
-    </label>
+      {error ? (
+        <span className="brief-field__error" id={errorId}>
+          {error}
+        </span>
+      ) : null}
+    </div>
   );
 }
 

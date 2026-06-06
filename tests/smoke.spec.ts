@@ -17,7 +17,7 @@ test('homepage core flow works', async ({ page }) => {
     page.getByRole('heading', { name: 'Nabídka, kterou si zákazník projde na první scroll bez slovníku.' }),
   ).toBeVisible();
   await expect(page.getByRole('link', { name: 'Co umíme' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Demo', exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'E-shop demo', exact: true })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Matrix' })).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'Důkazy' })).toHaveCount(0);
   await expect(page.getByText('Rychlý web')).toHaveCount(0);
@@ -29,7 +29,9 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.getByText('Nejdřív problém. Potom výstup. Nakonec další krok.')).toBeVisible();
   await expect(page.locator('.service-card')).toHaveCount(8);
   await expect(page.getByRole('heading', { name: 'Vyberte, kde se zákazník ztrácí.' })).toBeVisible();
-  await expect(page.locator('.service-card a').first()).toHaveAttribute('href', /\/demo\/service-landing\/$/);
+  await expect(page.locator('.service-card a[href$="/demo/service-landing/"]')).toHaveCount(1);
+  await expect(page.locator('main a[href*="/demo/"]')).toHaveCount(6);
+  await expect(page.locator('main a[href*="/demo/"]:not([href$="/demo/service-landing/"])')).toHaveCount(0);
   await expect(page.getByText('Co chcete postavit')).toHaveCount(0);
   await expect(page.getByText(/Jakou .* chcete vid/)).toHaveCount(0);
   await expect(page.getByText('Návrh A/B/C/D')).toHaveCount(0);
@@ -60,7 +62,7 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.locator('html')).toHaveAttribute('data-motion-ready', /true|reduced/);
   await expect(page.locator('html')).toHaveAttribute('data-motion-scene', /top|services|handoff|terminal/);
 
-  await page.locator('.service-card a').first().click();
+  await page.locator('.service-card a[href$="/demo/service-landing/"]').click();
   await expect(page).toHaveURL(/\/demo\/service-landing\/$/);
   await expect(page.locator('#matrix')).toHaveAttribute('data-hydrated', 'true');
   await expect(page.locator('.style-toggle')).toHaveAttribute('data-hydrated', 'true');
@@ -96,21 +98,6 @@ test('homepage core flow works', async ({ page }) => {
   await page.locator('.shop-product').nth(2).getByRole('button', { name: 'Porovnat' }).click();
   await expect(page.locator('.shop-compare__items')).toContainText('Upgrade Kit');
 
-  await page.goto('/demo/admin-dashboard/');
-  await selectTheme(page, /^C \/ Studio důkazů/);
-  await expect(
-    page.getByRole('heading', {
-      name: 'Interní rozhraní, které ukáže stav práce dřív, než se z něj stane problém.',
-    }),
-  ).toBeVisible();
-  await expect(page.getByText('Co jde sledovat')).toBeVisible();
-  await expect(page.locator('.matrix-preview')).toHaveAttribute('data-module', 'admin-dashboard');
-  await expect(page.locator('.matrix-preview')).toHaveAttribute('data-style', 'variant-c');
-  await expect(page.locator('.matrix-preview')).toHaveClass(/matrix-preview--proof/);
-  await expect(page.locator('.proof-metrics div')).toHaveCount(3);
-  await expect(page.locator('.proof-timeline li')).toHaveCount(5);
-  await expect(page.locator('html')).toHaveAttribute('data-style', 'variant-c');
-
   await page.goto('/');
   await expect(page.locator('#about')).toBeVisible();
   await expect(page.locator('.command-nav').getByRole('link', { name: 'O nás' })).toHaveAttribute('href', '#about');
@@ -129,11 +116,23 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.locator('#brief-email[name="email"]')).toHaveCount(1);
   await expect(page.locator('#brief-project_type[name="project_type"]')).toHaveCount(1);
   await expect(page.locator('#brief-message[name="message"]')).toHaveCount(1);
+  await expect(page.locator('form[aria-describedby="brief-required-note"]')).toHaveCount(1);
+  await expect(page.getByText('Pole označená jako povinná je potřeba vyplnit.')).toBeVisible();
+  await page.getByRole('button', { name: 'Odeslat poptávku' }).click();
+  await expect(page.locator('.brief-field__error')).toHaveCount(4);
+  await expect(page.locator('#brief-name')).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.locator('#brief-name')).toBeFocused();
+  await expect(page.getByRole('alert')).toContainText('Doplňte prosím');
 
   await page.getByRole('textbox', { name: 'Jméno' }).fill('Jan Siroky');
-  await page.getByRole('textbox', { name: 'E-mail' }).fill('jan@example.com');
+  await page.getByRole('textbox', { name: 'E-mail' }).fill('jan@');
   await page.getByRole('combobox', { name: 'Typ projektu' }).selectOption('Data, databáze a formuláře');
   await page.getByRole('textbox', { name: 'Zpráva' }).fill('Potřebuji zjednodušit poptávkovou cestu.');
+  await page.getByRole('button', { name: 'Odeslat poptávku' }).click();
+  await expect(page.locator('#brief-email')).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.locator('#brief-email-error')).toContainText('Zadejte platnou e-mailovou adresu.');
+  await expect(page.locator('#brief-email')).toBeFocused();
+  await page.getByRole('textbox', { name: 'E-mail' }).fill('jan@example.com');
   await expect(page.getByText('Typ projektu: Data, databáze a formuláře')).toBeVisible();
   await expect(page.getByText('Zpráva: Potřebuji zjednodušit poptávkovou cestu.')).toBeVisible();
 
@@ -206,7 +205,7 @@ test('homepage A/B/C/D variants use distinct composition skeletons', async ({ pa
     {
       button: /^D \//,
       root: 'demo-worlds',
-      h1: 'Vyberte ukázku podle toho, kde se váš web zasekl.',
+      h1: 'Vyberte cestu podle toho, kde se váš web nebo práce zasekly.',
       visible: '.demo-worlds',
       marker: 'Rychlý výběr bez technických slov',
     },

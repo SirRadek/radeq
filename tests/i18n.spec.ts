@@ -28,21 +28,12 @@ test('Czech and English routes expose localized first viewport and matrix copy',
     page.getByRole('heading', { name: 'A small studio. Direct communication. Work you understand.' }),
   ).toBeVisible();
   await expect(page.locator('.about-services__profile dl > div')).toHaveCount(3);
+  await expect(page.getByRole('link', { name: 'Shop demo', exact: true })).toHaveAttribute(
+    'href',
+    '/en/demo/service-landing/',
+  );
+  await expect(page.locator('main a[href*="/en/demo/"]:not([href$="/en/demo/service-landing/"])')).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'CZ', exact: true })).toHaveAttribute('href', '/');
-
-  await page.goto('/en/demo/admin-dashboard/');
-  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-  await expect(page.locator('head link[rel="canonical"]')).toHaveAttribute(
-    'href',
-    'https://radeq.cz/en/demo/admin-dashboard/',
-  );
-  await expect(page.locator('head link[rel="alternate"][hreflang="cs"]')).toHaveAttribute(
-    'href',
-    'https://radeq.cz/demo/admin-dashboard/',
-  );
-  await expect(page.getByRole('heading', { name: 'Team overview' })).toBeVisible();
-  await expect(page.getByRole('button', { name: /Team overview/ })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'CZ', exact: true })).toHaveAttribute('href', '/demo/admin-dashboard/');
 
   await page.goto('/en/demo/service-landing/');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
@@ -56,10 +47,4 @@ test('Czech and English routes expose localized first viewport and matrix copy',
   await expect(page.getByRole('link', { name: 'Request this build' })).toBeVisible();
   await expect(page.getByText('This preview does not place an order or process payment.')).toBeVisible();
   await expect(page.getByRole('link', { name: 'CZ', exact: true })).toHaveAttribute('href', '/demo/service-landing/');
-
-  await page.goto('/en/demo/eshop-offers/');
-  await expect(page.getByRole('heading', { name: 'Shop preview' })).toBeVisible();
-  await expect(page.locator('.matrix-control-group--modules')).toHaveCount(0);
-  await expect(page.locator('.matrix-preview--shop')).toHaveAttribute('data-module', 'eshop-offers');
-  await expect(page.locator('.shop-product')).toHaveCount(3);
 });

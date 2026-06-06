@@ -46,6 +46,8 @@
 }
 
 html[data-theme="light"] {
+  --accent-ink: #ffffff;
+  --status-error: #a52f2f;
   color-scheme: light;
   --page-bg: #f7f9f4;
   --text-main: #111711;
@@ -61,6 +63,8 @@ html[data-theme="light"] {
 }
 
 html[data-theme="dark"] {
+  --accent-ink: #081000;
+  --status-error: #ff9a8d;
   color-scheme: dark;
   --page-bg: #020303;
   --text-main: #f4f6ef;
@@ -71,6 +75,8 @@ html[data-theme="dark"] {
   --line-strong: #42513f;
   --accent: #d7ff35;
   --accent-2: #00e5ff;
+  --accent-ink: #081000;
+  --status-error: #ff9a8d;
   --warning: #ffb020;
   --shadow-hard: 0 18px 80px rgb(0 0 0 / 0.46);
 }
@@ -132,7 +138,7 @@ html[data-theme="light"][data-style="variant-c"] {
   --panel-strong: #efe4cc;
   --line: #decfae;
   --line-strong: #a8894d;
-  --accent: #a76500;
+  --accent: #9f6000;
   --accent-2: #3b6f37;
   --warning: #b65318;
 }
@@ -157,8 +163,8 @@ html[data-theme="light"][data-style="variant-d"] {
   --panel-strong: #e7f3ef;
   --line: #c8ddd7;
   --line-strong: #87aaa1;
-  --accent: #009c95;
-  --accent-2: #d14535;
+  --accent: #006f6a;
+  --accent-2: #a93428;
 }
 
 html[data-theme="dark"][data-style="variant-d"] {
@@ -331,6 +337,13 @@ html[data-style="variant-a"] body::after {
     linear-gradient(64deg, transparent 0 28%, color-mix(in srgb, var(--accent) 8%, transparent) 28% 32%, transparent 32% 72%, color-mix(in srgb, var(--accent-2) 6%, transparent) 72% 76%, transparent 76%),
     linear-gradient(148deg, transparent 0 52%, rgb(255 255 255 / 0.08) 52% 64%, transparent 64%);
   opacity: 0.28;
+}
+
+html[data-theme="dark"][data-style="variant-a"] body {
+  background:
+    linear-gradient(118deg, transparent 0 12%, color-mix(in srgb, var(--panel-strong) 54%, transparent) 12% 23%, transparent 23% 66%, color-mix(in srgb, var(--accent-2) 8%, transparent) 66% 82%, transparent 82%),
+    linear-gradient(180deg, color-mix(in srgb, var(--page-bg) 86%, #15251b 14%) 0%, var(--page-bg) 52%, color-mix(in srgb, var(--page-bg) 88%, #071b1d 12%) 100%),
+    var(--page-bg);
 }
 
 html[data-theme][data-style="variant-b"] body {
@@ -920,7 +933,7 @@ h1 {
   max-width: 13.5em;
   margin-bottom: 1.3rem;
   font-size: clamp(2.75rem, 5.1vw, 4.55rem);
-  line-height: 0.96;
+  line-height: 1;
   letter-spacing: 0;
   text-wrap: balance;
 }
@@ -929,7 +942,7 @@ h2 {
   max-width: 16ch;
   margin-bottom: 1rem;
   font-size: clamp(2.2rem, 5vw, 4.3rem);
-  line-height: 0.96;
+  line-height: 1.02;
   letter-spacing: 0;
   text-wrap: balance;
 }
@@ -1000,15 +1013,17 @@ p {
   font-size: 0.85rem;
 }
 
-.button-primary,
-.matrix-preview a {
+.button-primary {
   position: relative;
   z-index: 1;
-  color: #081000;
+  color: var(--accent-ink);
   background: var(--accent);
 }
 
 .matrix-preview a {
+  position: relative;
+  z-index: 1;
+  color: #081000;
   border-color: var(--matrix-accent);
   background: var(--matrix-accent);
 }
@@ -1211,7 +1226,7 @@ html[data-motion-ready="true"] .terminal-window::before {
 }
 
 .core-enable:not(:disabled):hover {
-  color: #081000;
+  color: var(--accent-ink);
   background: var(--accent);
 }
 
@@ -3102,7 +3117,7 @@ html[data-theme="light"] .shop-cart__remove {
   border: 1px solid var(--accent);
   border-radius: 999px;
   padding: 0.58rem 0.78rem;
-  color: #081000;
+  color: var(--accent-ink);
   font-family: var(--font-mono);
   font-size: 0.74rem;
   text-transform: uppercase;
@@ -3249,7 +3264,7 @@ html[data-theme="light"] .shop-cart__remove {
 }
 
 .service-card a:hover {
-  color: var(--page-bg);
+  color: var(--accent-ink);
   background: var(--accent);
   transform: translateY(-1px);
 }
@@ -4220,42 +4235,90 @@ html[data-style="variant-d"] .service-card {
 
 .terminal-grid {
   grid-template-columns: minmax(0, 1fr) minmax(280px, 0.45fr);
+  align-items: start;
 }
 
 .terminal-window {
   position: relative;
   min-height: 420px;
-  padding: 1rem;
-  background: #030504;
+  border-radius: 8px;
+  padding: clamp(1rem, 2.4vw, 1.4rem);
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--accent) 6%, transparent), transparent 48%),
+    var(--panel-bg);
 }
 
 .brief-form {
   display: grid;
-  gap: 1rem;
+  gap: 1.2rem;
   align-content: start;
+}
+
+.brief-form__fieldset {
+  display: grid;
+  gap: 0.9rem;
+  min-inline-size: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.brief-form__fieldset legend {
+  margin-bottom: 0.35rem;
+  color: var(--text-main);
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.brief-form__note {
+  max-width: 65ch;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
 }
 
 .brief-form__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.9rem;
+  gap: 1rem;
 }
 
 .brief-field {
   display: grid;
-  gap: 0.45rem;
+  gap: 0.5rem;
+  min-width: 0;
 }
 
 .brief-field--wide {
   grid-column: 1 / -1;
 }
 
-.brief-field span,
+.brief-field label,
 .brief-optional summary {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 0.76rem;
+  font-size: 0.78rem;
   text-transform: uppercase;
+}
+
+.brief-field label {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.brief-field label span {
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+.brief-field label small {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  font-weight: 500;
 }
 
 .brief-field input,
@@ -4263,22 +4326,49 @@ html[data-style="variant-d"] .service-card {
 .brief-field textarea {
   width: 100%;
   border: 1px solid var(--line-strong);
-  padding: 0.75rem 0.8rem;
+  border-radius: 6px;
+  padding: 0.82rem 0.9rem;
   color: var(--text-main);
   font: inherit;
-  background: rgb(255 255 255 / 0.035);
+  background-color: var(--panel-strong);
   outline: 0;
 }
 
+.brief-field input,
+.brief-field select {
+  min-height: 48px;
+}
+
+.brief-field input::placeholder,
+.brief-field textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
 .brief-field textarea {
+  min-height: 9rem;
+  line-height: 1.55;
   resize: vertical;
 }
 
-.brief-field input:focus,
-.brief-field select:focus,
-.brief-field textarea:focus {
+.brief-field input:focus-visible,
+.brief-field select:focus-visible,
+.brief-field textarea:focus-visible {
   border-color: var(--accent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+.brief-field input[aria-invalid="true"],
+.brief-field select[aria-invalid="true"],
+.brief-field textarea[aria-invalid="true"] {
+  border-color: var(--status-error);
+}
+
+.brief-field__error {
+  color: var(--status-error);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.4;
 }
 
 .brief-optional {
@@ -4286,11 +4376,15 @@ html[data-style="variant-d"] .service-card {
   gap: 0.8rem;
   border: 1px solid color-mix(in srgb, var(--line-strong) 62%, transparent);
   margin: 0;
-  padding: 0.95rem;
+  border-radius: 8px;
+  padding: 1rem;
+  background: color-mix(in srgb, var(--panel-strong) 72%, transparent);
 }
 
 .brief-optional summary {
   cursor: pointer;
+  color: var(--text-main);
+  font-weight: 700;
 }
 
 .brief-optional .brief-form__grid {
@@ -4307,10 +4401,11 @@ html[data-style="variant-d"] .service-card {
 }
 
 .brief-actions button {
-  min-height: 42px;
+  min-height: 48px;
   border: 1px solid var(--accent);
+  border-radius: 6px;
   padding: 0 1rem;
-  color: #081000;
+  color: var(--accent-ink);
   font-family: var(--font-mono);
   font-size: 0.78rem;
   text-transform: uppercase;
@@ -4378,7 +4473,7 @@ html[data-style="variant-d"] .service-card {
   min-height: 34px;
   border: 1px solid var(--accent);
   padding: 0 0.8rem;
-  color: #081000;
+  color: var(--accent-ink);
   font-family: var(--font-mono);
   font-size: 0.78rem;
   text-transform: uppercase;
@@ -4393,15 +4488,30 @@ html[data-style="variant-d"] .service-card {
 }
 
 .terminal-status {
-  margin: 0.65rem 0 0;
+  max-width: 52ch;
+  margin: 0;
   color: var(--text-muted);
   font-family: var(--font-mono);
   font-size: 0.76rem;
   line-height: 1.5;
 }
 
+.terminal-status[data-tone="error"] {
+  color: var(--status-error);
+  font-weight: 700;
+}
+
+.terminal-status[data-tone="success"] {
+  color: var(--accent);
+  font-weight: 700;
+}
+
 .brief-summary {
   min-height: 420px;
+  border-radius: 8px;
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--accent-2) 7%, transparent), transparent 52%),
+    var(--panel-bg);
 }
 
 .brief-summary h3 {

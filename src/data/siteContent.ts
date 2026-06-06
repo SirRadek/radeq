@@ -128,6 +128,14 @@ export interface SiteContent {
     apiUnavailable: string;
     storedPrefix: string;
     missingRequiredPrefix: string;
+    requiredNote: string;
+    requiredLabel: string;
+    optionalLabel: string;
+    requiredError: string;
+    invalidFieldsPrefix: string;
+    invalidEmailError: string;
+    invalidUrlError: string;
+    selectPlaceholder: string;
     emptyCommand: string;
     unknownCommandPrefix: string;
     unsupportedFieldPrefix: string;
@@ -156,7 +164,7 @@ export const siteContent = {
       navAria: 'Hlavní menu',
       navItems: [
         { href: '#services', label: 'Co umíme' },
-        { href: '/demo/service-landing/', label: 'Demo' },
+        { href: '/demo/service-landing/', label: 'E-shop demo' },
         { href: '#about', label: 'O nás' },
         { href: '#terminal', label: 'Poptávka' },
       ],
@@ -171,11 +179,11 @@ export const siteContent = {
       meta: ['Guided Offer Map', 'statický náhled', 'bez nových assetů'],
       title: 'Nabídka, kterou si zákazník projde na první scroll bez slovníku.',
       lead:
-        'První směr vede návštěvníka jako mapou: co řeší, co z toho vznikne, kde si může prohlédnout ukázku a kdy má poslat poptávku.',
+        'První směr vede návštěvníka jako mapou: co řeší, co z toho vznikne, jaký je další krok a kdy má poslat poptávku.',
       proof: [
         { label: 'Návrhy', value: 'netechničtí kupující rychle najdou svůj problém' },
         { label: 'Pohyb', value: 'služby jsou řazené podle rozhodnutí, ne podle interního názvosloví' },
-        { label: 'Cíl', value: 'jasnější cesta k demu nebo poptávce' },
+        { label: 'Cíl', value: 'jasnější cesta k e-shop ukázce nebo poptávce' },
       ],
       actionsAria: 'Hlavní akce',
       actions: [
@@ -291,7 +299,7 @@ export const siteContent = {
       sectionCode: '',
       title: 'Vyberte, kde se zákazník ztrácí.',
       lead:
-        'Mapa nezačíná technologiemi. Začíná situací, kterou kupující pozná, a vede ho k ukázce nebo poptávce bez obchodní omáčky.',
+        'Mapa nezačíná technologiemi. Začíná situací, kterou kupující pozná, a vede ho k užitečnému dalšímu kroku bez obchodní omáčky.',
       mapAria: 'Mapa nabídky podle zákaznické situace',
       guide: {
         eyebrow: 'Guided Offer Map',
@@ -301,35 +309,32 @@ export const siteContent = {
         steps: [
           { label: '01', value: 'návštěvník pozná vlastní situaci' },
           { label: '02', value: 'vidí konkrétní výstup, ne jen název služby' },
-          { label: '03', value: 'klikne na demo nebo pošle stručnou poptávku' },
+          { label: '03', value: 'otevře e-shop demo nebo pošle stručnou poptávku' },
         ],
       },
-      demoLabel: 'Otevřít demo',
+      demoLabel: 'Otevřít e-shop demo',
       requestLabel: 'Probrat v poptávce',
       items: [
         {
           problem: 'Potřebujete nový nebo lepší web',
           system: 'Firemní web, portfolio, blog nebo landing page',
           output: 'Jasná struktura, dobrý mobil a jednoduchá cesta ke kontaktu.',
-          demoModule: 'service-landing',
         },
         {
           problem: 'Web je pomalý, starý nebo špatně dohledatelný',
           system: 'Optimalizace rychlosti, SEO a měření',
           output: 'Rychlejší načítání, lepší struktura, titulky, interní odkazy a měření akcí.',
-          demoModule: 'blog-docs',
         },
         {
           problem: 'Chcete méně ruční práce',
           system: 'Poptávkové formuláře, sběr a filtrování dat',
           output: 'Poptávky se ukládají, třídí a posílají tam, kde je tým opravdu řeší.',
-          demoModule: 'admin-dashboard',
         },
         {
           problem: 'Prodáváte produkty, balíčky nebo služby',
           system: 'E-shop, nabídka a porovnání variant',
           output: 'Přehlednější nabídka, kratší rozhodování a měřitelný zájem o koupi.',
-          demoModule: 'eshop-offers',
+          demoModule: 'service-landing',
         },
         {
           problem: 'Web potřebuje nový nádech bez velkého restartu',
@@ -350,7 +355,6 @@ export const siteContent = {
           problem: 'Máte dokumenty a tabulky všude možně',
           system: 'Převod dokumentů, dat a podkladů',
           output: 'Čistší obsah, použitelné tabulky, PDF, prezentace nebo webový přehled.',
-          demoModule: 'blog-docs',
         },
       ],
     },
@@ -412,13 +416,21 @@ export const siteContent = {
       summaryAria: 'Souhrn poptávky',
       summaryTitle: 'Co zatím víme',
       runLabel: 'Odeslat poptávku',
-      waitLabel: 'Odesílám...',
+      waitLabel: 'Odesílám…',
       initialHistory: 'Vyplňte jméno, e-mail, typ projektu a krátkou zprávu.',
       readyStatus: 'Vyplňte povinná pole. Volitelné údaje pomůžou lépe odhadnout rozsah.',
-      sendingStatus: 'Odesílám poptávku...',
-      apiUnavailable: 'Formulář teď v náhledu nejde odeslat. Otevřete produkční verzi nebo napište e-mailem.',
-      storedPrefix: 'uloženo',
+      sendingStatus: 'Odesílám poptávku…',
+      apiUnavailable: 'Formulář se nepodařilo odeslat. Zkuste to prosím později nebo napište e-mailem.',
+      storedPrefix: 'Poptávka uložena',
       missingRequiredPrefix: 'Doplňte prosím',
+      requiredNote: 'Pole označená jako povinná je potřeba vyplnit. Ostatní údaje můžete doplnit později.',
+      requiredLabel: 'Povinné',
+      optionalLabel: 'Volitelné',
+      requiredError: 'Doplňte toto pole.',
+      invalidFieldsPrefix: 'Zkontrolujte prosím',
+      invalidEmailError: 'Zadejte platnou e-mailovou adresu.',
+      invalidUrlError: 'Adresa musí začínat http:// nebo https://.',
+      selectPlaceholder: 'Vyberte možnost',
       emptyCommand: 'Zpráva je prázdná.',
       unknownCommandPrefix: 'Tuhle část neumím uložit',
       unsupportedFieldPrefix: 'Tuhle část neumím uložit',
@@ -434,14 +446,14 @@ export const siteContent = {
         message: 'Zpráva',
       },
       placeholders: {
-        name: 'Jan Novák',
-        email: 'jan@example.cz',
-        company: 'Firma nebo značka',
-        audience: 'Pro koho má web být?',
-        deadline: 'Např. do 6 týdnů',
-        current_url: 'https://vas-web.cz',
-        budget_range: 'Např. 50-100 tis. Kč',
-        message: 'Co potřebujete postavit nebo zlepšit?',
+        name: 'Např. Jan Novák…',
+        email: 'Např. jan@example.cz…',
+        company: 'Firma nebo značka…',
+        audience: 'Pro koho má web být…',
+        deadline: 'Např. do 6 týdnů…',
+        current_url: 'Např. https://vas-web.cz…',
+        budget_range: 'Např. 50-100 tis. Kč…',
+        message: 'Co potřebujete postavit nebo zlepšit…',
       },
       projectOptions: [
         'Firemní web / portfolio',
@@ -489,7 +501,7 @@ export const siteContent = {
       navAria: 'Main menu',
       navItems: [
         { href: '#services', label: 'Services' },
-        { href: '/en/demo/service-landing/', label: 'Demo' },
+        { href: '/en/demo/service-landing/', label: 'Shop demo' },
         { href: '#about', label: 'About' },
         { href: '#terminal', label: 'Request' },
       ],
@@ -504,11 +516,11 @@ export const siteContent = {
       meta: ['Guided Offer Map', 'static preview', 'no new assets'],
       title: 'An offer buyers understand on the first scroll without a glossary.',
       lead:
-        'The first direction guides visitors like a map: what they need, what the work produces, where to inspect a demo, and when to send a request.',
+        'The first direction guides visitors like a map: what they need, what the work produces, the next useful step, and when to send a request.',
       proof: [
         { label: 'Start', value: 'non-technical buyers quickly recognize their problem' },
         { label: 'Map', value: 'services are ordered by decision, not internal vocabulary' },
-        { label: 'Goal', value: 'a clearer path to a demo or request' },
+        { label: 'Goal', value: 'a clearer path to the shop demo or a request' },
       ],
       actionsAria: 'Primary actions',
       actions: [
@@ -624,7 +636,7 @@ export const siteContent = {
       sectionCode: '',
       title: 'Choose where the buyer gets stuck.',
       lead:
-        'The map does not start with technologies. It starts with a situation the buyer recognizes and points to a demo or request without sales padding.',
+        'The map does not start with technologies. It starts with a situation the buyer recognizes and points to a useful next step without sales padding.',
       mapAria: 'Offer map by buyer situation',
       guide: {
         eyebrow: 'Guided Offer Map',
@@ -634,35 +646,32 @@ export const siteContent = {
         steps: [
           { label: '01', value: 'the visitor recognizes their situation' },
           { label: '02', value: 'they see a concrete output, not just a service label' },
-          { label: '03', value: 'they open a demo or send a short request' },
+          { label: '03', value: 'they open the shop demo or send a short request' },
         ],
       },
-      demoLabel: 'Open demo',
+      demoLabel: 'Open shop demo',
       requestLabel: 'Discuss in request',
       items: [
         {
           problem: 'You need a new or better website',
           system: 'Company website, portfolio, blog, or landing page',
           output: 'Clear structure, good mobile behavior, and a simple path to contact.',
-          demoModule: 'service-landing',
         },
         {
           problem: 'The site is slow, stale, or hard to find',
           system: 'Speed, SEO, and measurement optimization',
           output: 'Faster loading, clearer structure, titles, internal links, and action tracking.',
-          demoModule: 'blog-docs',
         },
         {
           problem: 'You want less manual work',
           system: 'Request forms, data collection, and filtering',
           output: 'Requests are stored, sorted, and sent where the team actually handles them.',
-          demoModule: 'admin-dashboard',
         },
         {
           problem: 'You sell products, packages, or services',
           system: 'Shop, offer, and variant comparison',
           output: 'A clearer offer, shorter decision path, and measurable buying interest.',
-          demoModule: 'eshop-offers',
+          demoModule: 'service-landing',
         },
         {
           problem: 'The site needs a refresh without a full restart',
@@ -683,7 +692,6 @@ export const siteContent = {
           problem: 'Your documents and sheets are scattered',
           system: 'Document, data, and source-material conversion',
           output: 'Cleaner content, usable tables, PDFs, presentations, or a web overview.',
-          demoModule: 'blog-docs',
         },
       ],
     },
@@ -746,13 +754,21 @@ export const siteContent = {
       summaryAria: 'Request summary',
       summaryTitle: 'What we know so far',
       runLabel: 'Send request',
-      waitLabel: 'Wait',
+      waitLabel: 'Sending…',
       initialHistory: 'Fill name, email, project type, and a short message.',
       readyStatus: 'Fill in the required fields. Optional details help estimate scope.',
-      sendingStatus: 'Sending request...',
-      apiUnavailable: 'The form cannot be submitted in this preview. Open the production version or write by email.',
-      storedPrefix: 'stored',
+      sendingStatus: 'Sending request…',
+      apiUnavailable: 'The form could not be submitted. Please try again later or write by email.',
+      storedPrefix: 'Request stored',
       missingRequiredPrefix: 'Please add',
+      requiredNote: 'Fields marked as required must be completed. The remaining details can be added later.',
+      requiredLabel: 'Required',
+      optionalLabel: 'Optional',
+      requiredError: 'Complete this field.',
+      invalidFieldsPrefix: 'Please check',
+      invalidEmailError: 'Enter a valid email address.',
+      invalidUrlError: 'The address must start with http:// or https://.',
+      selectPlaceholder: 'Choose an option',
       emptyCommand: 'The message is empty.',
       unknownCommandPrefix: 'This part cannot be saved',
       unsupportedFieldPrefix: 'This part cannot be saved',
@@ -768,14 +784,14 @@ export const siteContent = {
         message: 'Message',
       },
       placeholders: {
-        name: 'Jane Smith',
-        email: 'jane@example.com',
-        company: 'Company or brand',
-        audience: 'Who is the website for?',
-        deadline: 'For example, within 6 weeks',
-        current_url: 'https://your-site.com',
-        budget_range: 'For example, EUR 2k-5k',
-        message: 'What do you need to build or improve?',
+        name: 'For example, Jane Smith…',
+        email: 'For example, jane@example.com…',
+        company: 'Company or brand…',
+        audience: 'Who is the website for…',
+        deadline: 'For example, within 6 weeks…',
+        current_url: 'For example, https://your-site.com…',
+        budget_range: 'For example, EUR 2k-5k…',
+        message: 'What do you need to build or improve…',
       },
       projectOptions: [
         'Company website / portfolio',

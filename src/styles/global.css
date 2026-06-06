@@ -519,19 +519,23 @@ html[data-theme="light"] .style-toggle {
 
 .theme-toggle,
 .style-toggle {
-  display: inline-flex;
-  gap: 0.2rem;
-  align-items: center;
   min-height: 42px;
   padding: 0.25rem;
 }
 
 .theme-toggle {
+  display: inline-flex;
+  gap: 0.2rem;
+  align-items: center;
   perspective: 720px;
 }
 
+.style-toggle {
+  position: relative;
+}
+
 .theme-toggle__button,
-.style-toggle button {
+.style-toggle__trigger {
   display: inline-flex;
   gap: 0.38rem;
   align-items: center;
@@ -565,20 +569,132 @@ html[data-theme="light"] .style-toggle {
 }
 
 .theme-toggle__button:hover,
-.style-toggle button:hover,
-.style-toggle button.is-active {
+.style-toggle__trigger:hover,
+.style-toggle[data-open="true"] .style-toggle__trigger {
   color: var(--text-main);
   background: color-mix(in srgb, var(--accent) 12%, transparent);
 }
 
 .theme-toggle__button:active,
-.style-toggle button:active {
+.style-toggle__trigger:active,
+.style-toggle__option:active {
   transform: translateY(1px);
 }
 
-.style-toggle button {
-  min-width: 32px;
-  padding-inline: 0.52rem;
+.style-toggle__trigger {
+  min-width: 8.5rem;
+  min-height: 32px;
+  justify-content: flex-start;
+  padding-inline: 0.6rem;
+}
+
+.style-toggle__label {
+  color: var(--text-muted);
+  font-size: 0.62rem;
+}
+
+.style-toggle__current {
+  overflow: hidden;
+  max-width: 8rem;
+  color: var(--text-main);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.style-toggle__chevron {
+  width: 0.48rem;
+  height: 0.48rem;
+  margin-left: auto;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 160ms ease;
+}
+
+.style-toggle[data-open="true"] .style-toggle__chevron {
+  transform: translateY(2px) rotate(225deg);
+}
+
+.style-toggle__menu {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  display: grid;
+  gap: 0.25rem;
+  width: min(20rem, calc(100vw - 1rem));
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  padding: 0.35rem;
+  background: color-mix(in srgb, var(--panel-bg) 94%, transparent);
+  box-shadow: 0 22px 70px rgb(0 0 0 / 0.26);
+  backdrop-filter: blur(18px);
+}
+
+.style-toggle__option {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) 0.75rem;
+  gap: 0.65rem;
+  align-items: center;
+  width: 100%;
+  min-height: 56px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 0.6rem;
+  color: var(--text-main);
+  text-align: left;
+  background: transparent;
+  cursor: pointer;
+}
+
+.style-toggle__option:hover,
+.style-toggle__option:focus-visible,
+.style-toggle__option.is-active {
+  border-color: color-mix(in srgb, var(--accent) 34%, var(--line));
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.style-toggle__index {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--line));
+  border-radius: 50%;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+}
+
+.style-toggle__copy {
+  display: grid;
+  gap: 0.18rem;
+  min-width: 0;
+}
+
+.style-toggle__copy strong {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.style-toggle__copy small {
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.style-toggle__check {
+  width: 0.55rem;
+  height: 0.3rem;
+  border-bottom: 2px solid transparent;
+  border-left: 2px solid transparent;
+  transform: rotate(-45deg);
+}
+
+.style-toggle__option.is-active .style-toggle__check {
+  border-color: var(--accent);
 }
 
 .theme-toggle__coin {
@@ -4316,7 +4432,8 @@ html[data-style="variant-d"] .service-card {
   }
 
   .command-header {
-    position: static;
+    position: relative;
+    z-index: 30;
   }
 
   .brief-form__grid,
@@ -4359,8 +4476,13 @@ html[data-style="variant-d"] .service-card {
     justify-content: center;
   }
 
+  .style-toggle__menu {
+    right: auto;
+    left: 0;
+  }
+
   .theme-toggle__button,
-  .style-toggle button {
+  .style-toggle__trigger {
     flex: 1;
   }
 
@@ -4632,9 +4754,16 @@ html[data-style="variant-d"] .service-card {
     white-space: nowrap;
   }
 
-  .style-toggle button {
+  .style-toggle__trigger {
+    width: 100%;
     min-height: 32px;
     padding: 0.38rem 0.45rem;
+  }
+
+  .style-toggle__menu {
+    right: 0;
+    left: auto;
+    width: min(20rem, calc(100vw - 1rem));
   }
 
   h1 {

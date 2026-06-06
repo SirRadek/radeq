@@ -1,4 +1,14 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+
+async function selectTheme(page: Page, name: RegExp) {
+  const trigger = page.locator('.style-toggle__trigger');
+
+  if ((await trigger.getAttribute('aria-expanded')) !== 'true') {
+    await trigger.click();
+  }
+
+  await page.getByRole('menuitemradio', { name }).click();
+}
 
 test('homepage core flow works', async ({ page }) => {
   await page.goto('/');
@@ -26,11 +36,16 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.locator('.matrix-control-group--styles')).toHaveCount(0);
   await expect(page.locator('.module-style-picker')).toHaveCount(0);
   await expect(page.locator('.style-toggle')).toHaveAttribute('data-hydrated', 'true');
-  await expect(page.locator('.style-toggle button')).toHaveCount(4);
+  await expect(page.locator('.style-toggle__trigger')).toHaveAttribute('aria-expanded', 'false');
+  await expect(page.locator('.style-toggle__trigger')).toHaveAccessibleName('Téma: Jasná mapa');
+  await page.locator('.style-toggle__trigger').click();
+  await expect(page.getByRole('menu')).toBeVisible();
+  await expect(page.getByRole('menuitemradio')).toHaveCount(4);
+  await expect(page.getByRole('menuitemradio', { name: /^B \/ Kočičí průvodce/ })).toBeVisible();
   await expect(page.locator('html')).toHaveAttribute('data-style', 'variant-a');
-  await page.getByRole('button', { name: /^B \/ Pohyb/ }).click();
+  await page.getByRole('menuitemradio', { name: /^B \/ Kočičí průvodce/ }).click();
   await expect(page.locator('html')).toHaveAttribute('data-style', 'variant-b');
-  await page.getByRole('button', { name: /^A \/ Důvěra/ }).click();
+  await selectTheme(page, /^A \/ Jasná mapa/);
   await expect(page.locator('html')).toHaveAttribute('data-style', 'variant-a');
   await expect(page.locator('.theme-toggle__coin')).toBeVisible();
   await expect(page.locator('.theme-toggle__face--light')).toHaveCount(1);
@@ -60,8 +75,13 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.locator('.shop-product__price')).toHaveCount(3);
   const shopProductNames = await page.locator('.shop-product h4').allTextContents();
 
-  for (const style of [/^B \/ Pohyb/, /^C \/ Důkaz/, /^D \/ Studio/, /^A \/ Důvěra/]) {
-    await page.getByRole('button', { name: style }).click();
+  for (const style of [
+    /^B \/ Kočičí průvodce/,
+    /^C \/ Studio důkazů/,
+    /^D \/ Demo světy/,
+    /^A \/ Jasná mapa/,
+  ]) {
+    await selectTheme(page, style);
     await expect(page.locator('.matrix-preview')).toHaveAttribute('data-module', 'service-landing');
     await expect(page.locator('.matrix-preview')).toHaveClass(/matrix-preview--shop/);
     await expect(page.locator('.shop-product h4')).toHaveText(shopProductNames);
@@ -77,7 +97,7 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.locator('.shop-compare__items')).toContainText('Upgrade Kit');
 
   await page.goto('/demo/admin-dashboard/');
-  await page.getByRole('button', { name: /^C \/ Důkaz/ }).click();
+  await selectTheme(page, /^C \/ Studio důkazů/);
   await expect(
     page.getByRole('heading', {
       name: 'Interní rozhraní, které ukáže stav práce dřív, než se z něj stane problém.',
@@ -102,7 +122,7 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.getByText('S čím pomohu kromě nového webu')).toBeVisible();
   await expect(page.getByText('Stavba a výběr počítače')).toBeVisible();
   await expect(page.getByText('PC, AI a základní software')).toBeVisible();
-  await page.getByRole('button', { name: /^D \// }).click();
+  await selectTheme(page, /^D \/ Demo světy/);
   await expect(page.getByRole('heading', { name: 'E-shop / nabídka' })).toBeVisible();
 
   await expect(page.locator('#brief-name[name="name"]')).toHaveCount(1);
@@ -118,7 +138,7 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.getByText('Zpráva: Potřebuji zjednodušit poptávkovou cestu.')).toBeVisible();
 
   await page.goto('/');
-  await page.getByRole('button', { name: /^A \// }).click();
+  await selectTheme(page, /^A \/ Jasná mapa/);
   await page.getByRole('button', { name: 'Spustit kočičku' }).click();
   await expect(page.getByRole('button', { name: 'Spustit kočičku' })).toHaveCount(0);
   const mascot = page.locator('.core-canvas');
@@ -195,7 +215,7 @@ test('homepage A/B/C/D variants use distinct composition skeletons', async ({ pa
   const signatures: { h1: string; root: string; sections: string }[] = [];
 
   for (const variant of variants) {
-    await page.getByRole('button', { name: variant.button }).click();
+    await selectTheme(page, variant.button);
     await expect(page.locator('html')).toHaveAttribute('data-style', /variant-[abcd]/);
     await expect(page.locator(variant.visible)).toBeVisible();
     await expect(page.getByText(variant.marker)).toBeVisible();
@@ -251,7 +271,7 @@ test('variant B cards do not overlap across desktop, tablet, and mobile', async 
   for (const viewport of viewports) {
     await page.setViewportSize(viewport);
     await page.goto('/');
-    await page.getByRole('button', { name: /^B \// }).click();
+    await selectTheme(page, /^B \/ Kočičí průvodce/);
     await page.locator('.cat-guide__problems').scrollIntoViewIfNeeded();
 
     const cards = await page.locator('.cat-bubble').evaluateAll((elements) =>
@@ -301,7 +321,7 @@ test('variant backgrounds use distinct visual languages', async ({ page }) => {
   const backgrounds: string[] = [];
 
   for (const variant of variants) {
-    await page.getByRole('button', { name: variant.button }).click();
+    await selectTheme(page, variant.button);
     await expect(page.locator('html')).toHaveAttribute('data-style', variant.style);
     const background = await page.evaluate(() => getComputedStyle(document.body).backgroundImage);
     expect(background).toContain(variant.expected);
@@ -337,7 +357,13 @@ test('mobile header keeps controls compact without horizontal overflow', async (
   await expect(page.locator('.command-nav').getByRole('link', { name: 'O nás' })).toBeVisible();
   await expect(page.locator('.header-cta')).toBeHidden();
   await expect(page.locator('.style-toggle')).toBeVisible();
+  await expect(page.locator('.style-toggle__trigger')).toHaveAccessibleName('Téma: Jasná mapa');
   await expect(page.locator('.theme-toggle')).toBeVisible();
+  await page.locator('.style-toggle__trigger').click();
+  await expect(page.getByRole('menu')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('menu')).toHaveCount(0);
+  await expect(page.locator('.style-toggle__trigger')).toBeFocused();
 
   const hasOverflow = await page.evaluate(() => document.body.scrollWidth > window.innerWidth + 1);
   expect(hasOverflow).toBe(false);

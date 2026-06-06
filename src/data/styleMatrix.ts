@@ -295,16 +295,16 @@ const complexityByEpoch: Record<EpochId, Complexity> = {
 
 const epochCopy: Record<Locale, EpochOption[]> = {
   cs: [
-    { id: 'variant-a', label: 'A / Důvěra', benefit: 'Nejčitelnější verze pro netechnické zákazníky.' },
-    { id: 'variant-b', label: 'B / Pohyb', benefit: 'Hravější web s cursor a scroll reakcemi.' },
-    { id: 'variant-c', label: 'C / Důkaz', benefit: 'Proces, proof bloky a předání práce.' },
-    { id: 'variant-d', label: 'D / Studio', benefit: 'Konfigurátor potřeb, výsledků a přepínače vzhledu.' },
+    { id: 'variant-a', label: 'A / Jasná mapa', benefit: 'Klidná a nejčitelnější cesta nabídkou.' },
+    { id: 'variant-b', label: 'B / Kočičí průvodce', benefit: 'Hravější směr s maskotem a živým pohybem.' },
+    { id: 'variant-c', label: 'C / Studio důkazů', benefit: 'Výstupy, proces a předání práce na prvním místě.' },
+    { id: 'variant-d', label: 'D / Demo světy', benefit: 'Výraznější výběr podle situace návštěvníka.' },
   ],
   en: [
-    { id: 'variant-a', label: 'A / Trust', benefit: 'The clearest version for non-technical buyers.' },
-    { id: 'variant-b', label: 'B / Motion', benefit: 'A more playful site with cursor and scroll response.' },
-    { id: 'variant-c', label: 'C / Proof', benefit: 'Process, proof blocks, and handoff clarity.' },
-    { id: 'variant-d', label: 'D / Studio', benefit: 'Needs configurator, outcome map, and theme switching.' },
+    { id: 'variant-a', label: 'A / Clear Map', benefit: 'The calmest and clearest route through the offer.' },
+    { id: 'variant-b', label: 'B / Cat Guide', benefit: 'A playful direction with the mascot and live motion.' },
+    { id: 'variant-c', label: 'C / Proof Studio', benefit: 'Outputs, process, and handoff take priority.' },
+    { id: 'variant-d', label: 'D / Demo Worlds', benefit: 'A bolder choice organized by visitor situation.' },
   ],
 };
 

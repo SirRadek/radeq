@@ -18,6 +18,10 @@ test('Czech and English routes expose localized first viewport and matrix copy',
   await expect(
     page.getByRole('heading', { name: 'An offer buyers understand on the first scroll without a glossary.' }),
   ).toBeVisible();
+  await expect(page.locator('.style-toggle__trigger')).toHaveAccessibleName('Themes: Clear Map');
+  await page.locator('.style-toggle__trigger').click();
+  await expect(page.getByRole('menuitemradio', { name: /^B \/ Cat Guide/ })).toBeVisible();
+  await page.keyboard.press('Escape');
   await expect(page.getByRole('heading', { name: 'Choose where the buyer gets stuck.' })).toBeVisible();
   await expect(page.locator('.command-nav').getByRole('link', { name: 'About' })).toHaveAttribute('href', '#about');
   await expect(

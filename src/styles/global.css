@@ -1162,6 +1162,10 @@ html[data-motion-ready="true"] .terminal-window::before {
   align-items: stretch;
 }
 
+.matrix-workbench--preview-only {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .matrix-controls,
 .matrix-preview,
 .demo-card,

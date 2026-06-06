@@ -8,6 +8,7 @@ interface Props {
   locale: Locale;
   content: SiteContent['matrix'];
   initialModuleId?: ModuleId;
+  shopOnly?: boolean;
 }
 
 function isEpochId(value: string | null | undefined): value is EpochId {
@@ -193,7 +194,7 @@ const shopCopy: Record<Locale, ShopCopy> = {
   },
 };
 
-export default function StyleMatrixSimulator({ locale, content, initialModuleId }: Props) {
+export default function StyleMatrixSimulator({ locale, content, initialModuleId, shopOnly = false }: Props) {
   const [moduleId, setModuleId] = useState<ModuleId>(initialModuleId ?? DEFAULT_MATRIX_SELECTION.moduleId);
   const [epochId, setEpochId] = useState<EpochId>(DEFAULT_MATRIX_SELECTION.epochId);
   const [hydrated, setHydrated] = useState(false);
@@ -230,7 +231,7 @@ export default function StyleMatrixSimulator({ locale, content, initialModuleId 
   const preset = getMatrixPreset(selection, locale);
   const runtimeStyle = getRuntimeStyle(selection, locale) as CSSProperties;
   const moduleOptions = getModuleOptions(locale);
-  const activeShopCopy = moduleId === 'eshop-offers' ? shopCopy[locale] : null;
+  const activeShopCopy = shopOnly || moduleId === 'eshop-offers' ? shopCopy[locale] : null;
 
   return (
     <section
@@ -246,35 +247,47 @@ export default function StyleMatrixSimulator({ locale, content, initialModuleId 
         <p>{activeShopCopy?.sectionLead ?? content.lead}</p>
       </div>
 
-      <div className="matrix-workbench" data-cat-platform="matrix-workbench">
-        <div className="matrix-controls matrix-controls--combined">
-          <div
-            className="matrix-control-group matrix-control-group--modules"
-            role="group"
-            aria-label={content.moduleAria}
-          >
-            <h3>{content.moduleLabel}</h3>
-            {moduleOptions.map((option) => {
-              const isActiveModule = moduleId === option.id;
-              return (
-                <div key={option.id} className={`module-choice${isActiveModule ? ' is-active' : ''}`}>
-                  <button
-                    type="button"
-                    className={`module-card${isActiveModule ? ' is-active' : ''}`}
-                    onClick={() => setModuleId(option.id)}
-                    disabled={!hydrated}
-                    aria-pressed={isActiveModule}
-                  >
-                    <span className="module-card__title">{option.label}</span>
-                    <span className="module-card__benefit">{option.benefit}</span>
-                  </button>
-                </div>
-              );
-            })}
+      <div
+        className={`matrix-workbench${shopOnly ? ' matrix-workbench--preview-only' : ''}`}
+        data-cat-platform="matrix-workbench"
+      >
+        {!shopOnly ? (
+          <div className="matrix-controls matrix-controls--combined">
+            <div
+              className="matrix-control-group matrix-control-group--modules"
+              role="group"
+              aria-label={content.moduleAria}
+            >
+              <h3>{content.moduleLabel}</h3>
+              {moduleOptions.map((option) => {
+                const isActiveModule = moduleId === option.id;
+                return (
+                  <div key={option.id} className={`module-choice${isActiveModule ? ' is-active' : ''}`}>
+                    <button
+                      type="button"
+                      className={`module-card${isActiveModule ? ' is-active' : ''}`}
+                      onClick={() => setModuleId(option.id)}
+                      disabled={!hydrated}
+                      aria-pressed={isActiveModule}
+                    >
+                      <span className="module-card__title">{option.label}</span>
+                      <span className="module-card__benefit">{option.benefit}</span>
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        ) : null}
 
-        <ProposalPreview key={preset.id} preset={preset} moduleId={moduleId} variantId={epochId} locale={locale} />
+        <ProposalPreview
+          key={preset.id}
+          preset={preset}
+          moduleId={moduleId}
+          variantId={epochId}
+          locale={locale}
+          forceShop={shopOnly}
+        />
       </div>
     </section>
   );
@@ -285,14 +298,16 @@ function ProposalPreview({
   moduleId,
   variantId,
   locale,
+  forceShop,
 }: {
   preset: MatrixPreset;
   moduleId: ModuleId;
   variantId: EpochId;
   locale: Locale;
+  forceShop: boolean;
 }) {
-  if (moduleId === 'eshop-offers') {
-    return <ShopPreview preset={preset} variantId={variantId} locale={locale} />;
+  if (forceShop || moduleId === 'eshop-offers') {
+    return <ShopPreview preset={preset} moduleId={moduleId} variantId={variantId} locale={locale} />;
   }
 
   if (variantId === 'variant-a') {
@@ -310,7 +325,17 @@ function ProposalPreview({
   return <MotionPreview preset={preset} moduleId={moduleId} />;
 }
 
-function ShopPreview({ preset, variantId, locale }: { preset: MatrixPreset; variantId: EpochId; locale: Locale }) {
+function ShopPreview({
+  preset,
+  moduleId,
+  variantId,
+  locale,
+}: {
+  preset: MatrixPreset;
+  moduleId: ModuleId;
+  variantId: EpochId;
+  locale: Locale;
+}) {
   const copy = shopCopy[locale];
   const [category, setCategory] = useState<ShopCategory>('all');
   const [compareIds, setCompareIds] = useState<string[]>(copy.products.slice(0, 2).map((product) => product.id));
@@ -341,7 +366,7 @@ function ShopPreview({ preset, variantId, locale }: { preset: MatrixPreset; vari
     <article
       className="matrix-preview matrix-preview--shop"
       aria-live="polite"
-      data-module="eshop-offers"
+      data-module={moduleId}
       data-style={variantId}
       data-layout={preset.design.layout}
       data-cart-state={cartProduct ? 'selected' : 'empty'}

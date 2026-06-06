@@ -16,12 +16,17 @@ export function getStaticPaths() {
 const { moduleId } = Astro.props as { moduleId: ModuleId };
 const content = siteContent.cs;
 const moduleOption = getModuleOptions(content.layout.lang).find((option) => option.id === moduleId);
+const isShopShowcase = moduleId === 'service-landing' || moduleId === 'eshop-offers';
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 const servicesHref = `${basePath}/#services`;
-const pageTitle = moduleOption
+const pageTitle = isShopShowcase
+  ? 'E-shop ukázka | Radeq.cz'
+  : moduleOption
   ? `${moduleOption.label} demo | Radeq.cz`
   : `Demo ukázka | Radeq.cz`;
-const pageDescription = moduleOption?.benefit ?? content.layout.description;
+const pageDescription = isShopShowcase
+  ? 'Interaktivní ukázka e-shopu s produkty, filtrováním, porovnáním a nezávazným demo košíkem ve stylech A, B, C a D.'
+  : (moduleOption?.benefit ?? content.layout.description);
 ---
 
 <BaseLayout
@@ -42,10 +47,18 @@ const pageDescription = moduleOption?.benefit ?? content.layout.description;
     <section class="demo-route-hero" id="top" aria-labelledby="demo-route-title">
       <div>
         <p class="section-code">Demo</p>
-        <h1 id="demo-route-title">{moduleOption ? moduleOption.label : 'Ukázka webu'}</h1>
+        <h1 id="demo-route-title">{isShopShowcase ? 'E-shop ukázka' : moduleOption ? moduleOption.label : 'Ukázka webu'}</h1>
       </div>
       <div>
-        <p>{moduleOption ? moduleOption.benefit : content.matrix.lead}</p>
+        <p>
+          {
+            isShopShowcase
+              ? 'Jedna e-shopová ukázka, čtyři vizuální styly. Produkty, filtrování, porovnání i demo košík zůstávají stejné.'
+              : moduleOption
+                ? moduleOption.benefit
+                : content.matrix.lead
+          }
+        </p>
         <a class="button-secondary" href={servicesHref}>Zpět na služby</a>
       </div>
     </section>
@@ -53,6 +66,7 @@ const pageDescription = moduleOption?.benefit ?? content.layout.description;
       locale={content.layout.lang}
       content={content.matrix}
       initialModuleId={moduleId}
+      shopOnly={isShopShowcase}
       client:load
     />
     <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load />

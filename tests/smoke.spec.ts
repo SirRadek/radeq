@@ -49,14 +49,34 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page).toHaveURL(/\/demo\/service-landing\/$/);
   await expect(page.locator('#matrix')).toHaveAttribute('data-hydrated', 'true');
   await expect(page.locator('.style-toggle')).toHaveAttribute('data-hydrated', 'true');
-  await expect(page.getByText(/Jakou .* chcete vid/)).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'E-shop ukázka' })).toBeVisible();
+  await expect(page.locator('.matrix-control-group--modules')).toHaveCount(0);
   await expect(page.locator('.module-style-picker')).toHaveCount(0);
   await expect(page.locator('.style-chip')).toHaveCount(0);
+  await expect(page.locator('.matrix-preview')).toHaveAttribute('data-module', 'service-landing');
   await expect(page.locator('.matrix-preview')).toHaveAttribute('data-style', 'variant-a');
-  await expect(page.locator('.matrix-preview')).toHaveClass(/matrix-preview--trust/);
-  await expect(page.locator('.trust-page-sheet')).toBeVisible();
+  await expect(page.locator('.matrix-preview')).toHaveClass(/matrix-preview--shop/);
+  await expect(page.locator('.shop-product')).toHaveCount(3);
+  await expect(page.locator('.shop-product__price')).toHaveCount(3);
+  const shopProductNames = await page.locator('.shop-product h4').allTextContents();
 
-  await page.getByRole('button', { name: /Přehled pro tým/ }).click();
+  for (const style of [/^B \/ Pohyb/, /^C \/ Důkaz/, /^D \/ Studio/, /^A \/ Důvěra/]) {
+    await page.getByRole('button', { name: style }).click();
+    await expect(page.locator('.matrix-preview')).toHaveAttribute('data-module', 'service-landing');
+    await expect(page.locator('.matrix-preview')).toHaveClass(/matrix-preview--shop/);
+    await expect(page.locator('.shop-product h4')).toHaveText(shopProductNames);
+  }
+
+  await expect(page.locator('.shop-compare__items > div')).toHaveCount(2);
+  await expect(page.locator('.shop-cart')).toHaveAttribute('aria-live', 'polite');
+  await page.locator('.shop-action--primary').first().click();
+  await expect(page.locator('.matrix-preview')).toHaveAttribute('data-cart-state', 'selected');
+  await expect(page.locator('.shop-cart h4')).toHaveText('Focus Mini');
+  await expect(page.getByRole('link', { name: 'Nezávazně poptat sestavu' })).toBeVisible();
+  await page.locator('.shop-product').nth(2).getByRole('button', { name: 'Porovnat' }).click();
+  await expect(page.locator('.shop-compare__items')).toContainText('Upgrade Kit');
+
+  await page.goto('/demo/admin-dashboard/');
   await page.getByRole('button', { name: /^C \/ Důkaz/ }).click();
   await expect(
     page.getByRole('heading', {
@@ -70,27 +90,6 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.locator('.proof-metrics div')).toHaveCount(3);
   await expect(page.locator('.proof-timeline li')).toHaveCount(5);
   await expect(page.locator('html')).toHaveAttribute('data-style', 'variant-c');
-
-  await page.getByRole('button', { name: /E-shop/ }).click();
-  await expect(page.locator('.matrix-preview')).toHaveAttribute('data-module', 'eshop-offers');
-  await expect(page.locator('.matrix-preview')).toHaveClass(/matrix-preview--shop/);
-  await expect(page.locator('.shop-product')).toHaveCount(3);
-  await expect(page.locator('.shop-product__price')).toHaveCount(3);
-  await expect(page.locator('.shop-compare__items > div')).toHaveCount(2);
-  await expect(page.locator('.shop-cart')).toHaveAttribute('aria-live', 'polite');
-  await page.locator('.shop-action--primary').first().click();
-  await expect(page.locator('.matrix-preview')).toHaveAttribute('data-cart-state', 'selected');
-  await expect(page.locator('.shop-cart h4')).toHaveText('Focus Mini');
-  await expect(page.getByRole('link', { name: 'Nezávazně poptat sestavu' })).toBeVisible();
-  await page.locator('.shop-product').nth(2).getByRole('button', { name: 'Porovnat' }).click();
-  await expect(page.locator('.shop-compare__items')).toContainText('Upgrade Kit');
-
-  await page.getByRole('button', { name: /Poptávková stránka/ }).click();
-  await page.getByRole('button', { name: /^D \/ Studio/ }).click();
-  await expect(page.locator('.matrix-preview')).toHaveAttribute('data-style', 'variant-d');
-  await expect(page.locator('.matrix-preview')).toHaveClass(/matrix-preview--studio/);
-  await expect(page.locator('.studio-configurator')).toBeVisible();
-  await expect(page.locator('.studio-outcome-map')).toBeVisible();
 
   await page.goto('/');
   await expect(page.locator('#about')).toBeVisible();

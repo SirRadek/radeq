@@ -40,15 +40,22 @@ test('Czech and English routes expose localized first viewport and matrix copy',
   await expect(page.getByRole('button', { name: /Team overview/ })).toBeVisible();
   await expect(page.getByRole('link', { name: 'CZ', exact: true })).toHaveAttribute('href', '/demo/admin-dashboard/');
 
-  await page.goto('/en/demo/eshop-offers/');
+  await page.goto('/en/demo/service-landing/');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-  await expect(page.getByRole('heading', { name: 'Shop / offer' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Shop preview' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Choose a build without decoding specifications.' })).toBeVisible();
-  await expect(page.locator('.matrix-preview--shop')).toHaveAttribute('data-module', 'eshop-offers');
+  await expect(page.locator('.matrix-control-group--modules')).toHaveCount(0);
+  await expect(page.locator('.matrix-preview--shop')).toHaveAttribute('data-module', 'service-landing');
   await expect(page.locator('.shop-product')).toHaveCount(3);
   await expect(page.getByRole('button', { name: 'Add to cart' })).toHaveCount(3);
   await page.getByRole('button', { name: 'Add to cart' }).first().click();
   await expect(page.getByRole('link', { name: 'Request this build' })).toBeVisible();
   await expect(page.getByText('This preview does not place an order or process payment.')).toBeVisible();
-  await expect(page.getByRole('link', { name: 'CZ', exact: true })).toHaveAttribute('href', '/demo/eshop-offers/');
+  await expect(page.getByRole('link', { name: 'CZ', exact: true })).toHaveAttribute('href', '/demo/service-landing/');
+
+  await page.goto('/en/demo/eshop-offers/');
+  await expect(page.getByRole('heading', { name: 'Shop preview' })).toBeVisible();
+  await expect(page.locator('.matrix-control-group--modules')).toHaveCount(0);
+  await expect(page.locator('.matrix-preview--shop')).toHaveAttribute('data-module', 'eshop-offers');
+  await expect(page.locator('.shop-product')).toHaveCount(3);
 });

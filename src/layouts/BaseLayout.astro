@@ -9,9 +9,10 @@ interface Props {
   lang: Locale;
   alternatePath: string;
   alternateLang: Locale;
+  allowStoredStyle?: boolean;
 }
 
-const { title, description, lang, alternatePath, alternateLang } = Astro.props;
+const { title, description, lang, alternatePath, alternateLang, allowStoredStyle = false } = Astro.props;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 const alternateHref = `${basePath}${alternatePath}`;
 const siteUrl = Astro.site ?? new URL(Astro.url.origin);
@@ -20,7 +21,7 @@ const alternateUrl = new URL(alternateHref, siteUrl).toString();
 ---
 
 <!doctype html>
-<html lang={lang} data-style="variant-a" data-theme="light">
+<html lang={lang} data-style="variant-a" data-theme="light" data-style-source={allowStoredStyle ? 'stored' : 'fixed'}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -44,11 +45,16 @@ const alternateUrl = new URL(alternateHref, siteUrl).toString();
           document.documentElement.dataset.theme = 'light';
         }
 
-        try {
-          const storedStyle = localStorage.getItem('radeq-style-variant');
-          const allowedStyles = ['variant-a', 'variant-b', 'variant-c', 'variant-d'];
-          document.documentElement.dataset.style = allowedStyles.includes(storedStyle) ? storedStyle : 'variant-a';
-        } catch {
+        const styleSource = document.documentElement.dataset.styleSource;
+        if (styleSource === 'stored') {
+          try {
+            const storedStyle = localStorage.getItem('radeq-style-variant');
+            const allowedStyles = ['variant-a', 'variant-b', 'variant-c', 'variant-d'];
+            document.documentElement.dataset.style = allowedStyles.includes(storedStyle) ? storedStyle : 'variant-a';
+          } catch {
+            document.documentElement.dataset.style = 'variant-a';
+          }
+        } else {
           document.documentElement.dataset.style = 'variant-a';
         }
       })();

@@ -1,12 +1,10 @@
 ---
 import CommandHeader from '../../components/CommandHeader.astro';
 import ContactTerminal from '../../components/ContactTerminal';
-import CatGuide from '../../components/CatGuide.astro';
-import DemoWorlds from '../../components/DemoWorlds.astro';
 import HandoffStandard from '../../components/HandoffStandard.astro';
 import HeroSection from '../../components/HeroSection.astro';
+import PricingSection from '../../components/PricingSection.astro';
 import ServiceCatalog from '../../components/ServiceCatalog.astro';
-import StudioProof from '../../components/StudioProof.astro';
 import { siteContent } from '../../data/siteContent';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
@@ -25,15 +23,14 @@ const content = siteContent.en;
     alternatePath={content.layout.alternatePath}
     alternateLabel={content.layout.alternateLabel}
     locale={content.layout.lang}
+    showStyleToggle={false}
   />
   <main>
     <div class="proposal-stage" id="services">
       <HeroSection content={content.hero} />
       <ServiceCatalog locale={content.layout.lang} content={content.systems} />
-      <CatGuide locale={content.layout.lang} hero={content.hero} systems={content.systems} />
-      <StudioProof locale={content.layout.lang} systems={content.systems} />
-      <DemoWorlds locale={content.layout.lang} systems={content.systems} />
     </div>
+    <PricingSection content={content.pricing} />
     <section class="about-services" id="about" aria-labelledby="about-title" data-section-signature="about-services">
       <div class="about-services__intro">
         <p class="section-code">{content.about.sectionCode}</p>

@@ -1,6 +1,5 @@
 import { supportedLocales, type Locale } from './locales';
 import type { ModuleId } from './styleMatrix';
-
 export { supportedLocales, type Locale };
 
 export interface SiteContent {
@@ -83,13 +82,28 @@ export interface SiteContent {
       text: string;
       steps: { label: string; value: string }[];
     };
-    demoLabel: string;
     requestLabel: string;
+    secondaryTitle: string;
+    secondaryLead: string;
     items: {
       problem: string;
       system: string;
       output: string;
       demoModule?: ModuleId;
+    }[];
+  };
+  pricing: {
+    sectionCode: string;
+    title: string;
+    lead: string;
+    note: string;
+    items: {
+      name: string;
+      price: string;
+      text: string;
+      includes: string[];
+      cta: string;
+      featured?: boolean;
     }[];
   };
   about: {
@@ -151,9 +165,9 @@ export const siteContent = {
   cs: {
     layout: {
       lang: 'cs',
-      title: 'Radeq.cz | Rychlé weby a poptávkové systémy',
+      title: 'Radeq.cz | Weby pro malé firmy bez technické mlhy',
       description:
-        'Radeq.cz staví rychlé prezentační weby, landing pages, poptávkové cesty a malé systémy pro foundery, expertní značky a rostoucí firmy.',
+        'Radeq.cz navrhuje a staví firemní weby, redesigny a webovou péči pro živnostníky a malé firmy bez vlastního IT člověka.',
       path: '/',
       alternatePath: '/en/',
       alternateLabel: 'EN',
@@ -163,12 +177,12 @@ export const siteContent = {
       brandAria: 'Radeq.cz úvod',
       navAria: 'Hlavní menu',
       navItems: [
-        { href: '#services', label: 'Co umíme' },
-        { href: '/demo/service-landing/', label: 'E-shop demo' },
+        { href: '#services', label: 'Weby' },
+        { href: '#pricing', label: 'Ceny' },
         { href: '#about', label: 'O nás' },
         { href: '#terminal', label: 'Poptávka' },
       ],
-      cta: 'Nezávazná poptávka',
+      cta: 'Probrat web',
       styleLabel: 'Téma',
       themeLabel: 'Přepnout barevný režim',
       lightTheme: 'Světlý',
@@ -176,19 +190,19 @@ export const siteContent = {
     },
     hero: {
       metaAria: 'Směr návrhu',
-      meta: ['Guided Offer Map', 'statický náhled', 'bez nových assetů'],
-      title: 'Nabídka, kterou si zákazník projde na první scroll bez slovníku.',
+      meta: ['Nový web', 'Redesign', 'Předání bez chaosu'],
+      title: 'Web pro malé firmy, kterému rozumíte vy i vaši zákazníci.',
       lead:
-        'První směr vede návštěvníka jako mapou: co řeší, co z toho vznikne, jaký je další krok a kdy má poslat poptávku.',
+        'Navrhnu, napíšu a postavím firemní web nebo redesign tak, aby jasně vysvětlil vaši nabídku, fungoval na mobilu, šel dohledat a dal se po předání normálně spravovat.',
       proof: [
-        { label: 'Návrhy', value: 'netechničtí kupující rychle najdou svůj problém' },
-        { label: 'Pohyb', value: 'služby jsou řazené podle rozhodnutí, ne podle interního názvosloví' },
-        { label: 'Cíl', value: 'jasnější cesta k e-shop ukázce nebo poptávce' },
+        { label: 'Kompletně', value: 'struktura, texty, design, technika a základní SEO v jednom procesu' },
+        { label: 'Srozumitelně', value: 'přímá domluva s jedním člověkem bez zbytečných zkratek' },
+        { label: 'Předání', value: 'checklist, měření, formulář a návod, co kde ve webu najdete' },
       ],
       actionsAria: 'Hlavní akce',
       actions: [
-        { href: '#services', label: 'Projít mapu nabídky', variant: 'primary' },
-        { href: '#terminal', label: 'Poslat poptávku', variant: 'secondary' },
+        { href: '#terminal', label: 'Chci probrat nový web', variant: 'primary' },
+        { href: '#services', label: 'Ukázat postup a výstupy', variant: 'secondary' },
       ],
       coreAria: 'Interaktivní 3D náhled zrzavé kočičky',
       coreCaption: 'Pohyb je doplněk. Hlavní obsah a kontakt fungují i bez něj.',
@@ -215,20 +229,20 @@ export const siteContent = {
       title: 'Každý klient potřebuje jinou cestu k rozhodnutí.',
       items: [
         {
-          title: 'Micro-SaaS founders',
-          signal: 'Landing page s výkonem aplikace, dokumentací, waitlistem a cestou k demu.',
+          title: 'Živnostníci',
+          signal: 'Jednoduchý web, jasná nabídka, dobrý mobil a snadný kontakt.',
         },
         {
-          title: 'Expertní značky',
-          signal: 'Jasná prezentace expertízy, nabídky a výsledků bez agenturní vaty.',
+          title: 'Malé firmy',
+          signal: 'Firemní web, který vysvětlí služby, ukáže důvěryhodnost a půjde předat.',
         },
         {
-          title: 'Inovativní SME',
-          signal: 'Náhrada zastaralých procesů lehkým, udržitelným systémem.',
+          title: 'Majitelé bez IT člověka',
+          signal: 'Klidné vysvětlení, přiměřený rozsah a jasné rozhodnutí bez technické mlhy.',
         },
         {
-          title: 'Marketingoví architekti',
-          signal: 'Opakovatelné poptávkové cesty a jasná měření bez ručního přeposílání.',
+          title: 'Firmy se starším webem',
+          signal: 'Redesign, audit nebo opravy podle toho, co je levnější a jistější.',
         },
       ],
     },
@@ -284,88 +298,128 @@ export const siteContent = {
     },
     handoff: {
       sectionCode: '',
-      title: 'Klient nedostane jen web. Dostane systém, který lze převzít.',
-      lead: 'Výstup je dokumentovaný, měřitelný a připravený na údržbu bez závislosti na jednom dodavateli.',
+      title: 'Důkazem není jen vzhled. Důkazem je i předání.',
+      lead: 'Bez velkého veřejného portfolia musí být vidět, jak práce vzniká a jak se ověřuje. Proto je součástí webu i předávací a kontrolní vrstva.',
       items: [
-        'Přehled, co kde ve webu najdete a kdo za co odpovídá',
-        'Jednotný vizuální styl pro další úpravy',
-        'Pravidla pro úpravu obsahu',
-        'Jednoduchý postup pro zveřejnění změn',
-        'Přehled důležitých měření',
-        'Kontrola čitelnosti, rychlosti a přístupnosti',
+        'Mapa stránek, sekcí a hlavní cesty ke kontaktu',
+        'Texty a nadpisy napsané tak, aby jim rozuměl netechnický zákazník',
+        'Kontrola mobilního zobrazení, rychlosti, formuláře a základní přístupnosti',
+        'SEO základ: titulky, popisy, sitemap, indexovatelný obsah a interní odkazy',
+        'Přehled, kde se upravují texty, odkazy, měření a kontaktní údaje',
+        'Jasně označené věci mimo rozsah, aby nevznikala falešná očekávání',
       ],
     },
     systems: {
       sectionCode: '',
-      title: 'Vyberte, kde se zákazník ztrácí.',
+      title: 'Nejdřív vybereme správnou cestu k webu.',
       lead:
-        'Mapa nezačíná technologiemi. Začíná situací, kterou kupující pozná, a vede ho k užitečnému dalšímu kroku bez obchodní omáčky.',
-      mapAria: 'Mapa nabídky podle zákaznické situace',
+        'Nabídka nezačíná technologií ani platformou. Začíná tím, co má web vyřešit pro vaši firmu a co musí pochopit zákazník.',
+      mapAria: 'Cesty k novému webu nebo redesignu',
       guide: {
-        eyebrow: 'Guided Offer Map',
-        title: 'Nejdřív problém. Potom výstup. Nakonec další krok.',
+        eyebrow: 'Postup bez zkratek',
+        title: 'Nejdřív cíl. Potom struktura. Až pak stavba.',
         text:
-          'Každý uzel vysvětluje jednu běžnou nákupní situaci lidsky: proč na ní záleží, co z práce vznikne a kam pokračovat.',
+          'Každý krok musí být čitelný i pro člověka, který nechce řešit technické detaily. Proto oddělujeme rozhodnutí, obsah, stavbu a předání.',
         steps: [
-          { label: '01', value: 'návštěvník pozná vlastní situaci' },
-          { label: '02', value: 'vidí konkrétní výstup, ne jen název služby' },
-          { label: '03', value: 'otevře e-shop demo nebo pošle stručnou poptávku' },
+          { label: '01', value: 'pojmenujeme, co má web zákazníkovi vysvětlit' },
+          { label: '02', value: 'připravíme strukturu, texty a důvěryhodnou cestu ke kontaktu' },
+          { label: '03', value: 'web otestujeme, předáme a domluvíme další péči' },
         ],
       },
-      demoLabel: 'Otevřít e-shop demo',
-      requestLabel: 'Probrat v poptávce',
+      requestLabel: 'Probrat postup',
+      secondaryTitle: 'Doplňkově pomohu i s provozem okolo webu.',
+      secondaryLead:
+        'Tyto věci dávají smysl až po základním rozhodnutí, jestli řešíme nový web, redesign, nebo audit. Nejsou hlavní slib homepage, ale praktické navazující práce.',
       items: [
         {
-          problem: 'Potřebujete nový nebo lepší web',
-          system: 'Firemní web, portfolio, blog nebo landing page',
-          output: 'Jasná struktura, dobrý mobil a jednoduchá cesta ke kontaktu.',
+          problem: 'Nemáte web nebo působí zastarale',
+          system: 'Nový firemní web',
+          output: 'Jasná nabídka, srozumitelné texty, mobilní zobrazení, kontakt a základní SEO.',
         },
         {
-          problem: 'Web je pomalý, starý nebo špatně dohledatelný',
-          system: 'Optimalizace rychlosti, SEO a měření',
-          output: 'Rychlejší načítání, lepší struktura, titulky, interní odkazy a měření akcí.',
+          problem: 'Stávající web už nepomáhá',
+          system: 'Redesign staršího webu',
+          output: 'Zachováme, co funguje, a přestavíme obsah, vzhled, mobil, rychlost a poptávkovou cestu.',
         },
         {
-          problem: 'Chcete méně ruční práce',
-          system: 'Poptávkové formuláře, sběr a filtrování dat',
-          output: 'Poptávky se ukládají, třídí a posílají tam, kde je tým opravdu řeší.',
+          problem: 'Nevíte, čím začít',
+          system: 'Audit webu s plánem',
+          output: 'Dostanete konkrétní seznam slabých míst, priorit a odhad, jestli stačí oprava nebo nový základ.',
+        },
+        {
+          problem: 'Po spuštění nechcete zůstat sami',
+          system: 'Webová péče a rozvoj',
+          output: 'Drobné úpravy, nové sekce, kontrola formulářů, SEO doporučení a technická podpora podle domluvy.',
+        },
+        {
+          problem: 'Web funguje, ale má slabá místa',
+          system: 'Rychlá pomoc s webem',
+          output: 'Formuláře, měření, metadata, mobil, rychlost nebo drobné opravy ve WordPressu, Shoptetu, Shopify a dalších systémech.',
+        },
+        {
+          problem: 'Poptávky a podklady se řeší ručně',
+          system: 'Formuláře, data a jednoduchá automatizace',
+          output: 'Poptávky se ukládají, třídí a posílají tam, kde je skutečně řešíte.',
         },
         {
           problem: 'Prodáváte produkty, balíčky nebo služby',
-          system: 'E-shop, nabídka a porovnání variant',
-          output: 'Přehlednější nabídka, kratší rozhodování a měřitelný zájem o koupi.',
-          demoModule: 'service-landing',
+          system: 'Přehlednější nabídka nebo e-shop úprava',
+          output: 'Produktové stránky, porovnání variant, měření zájmu a kratší cesta k objednávce nebo poptávce.',
         },
         {
-          problem: 'Web potřebuje nový nádech bez velkého restartu',
-          system: 'Update webu, textů a vizuálního detailu',
-          output: 'Rychlejší úprava vzhledu, lepší texty, čistší sekce a jasnější cesta ke kontaktu.',
+          problem: 'Potřebujete pořádek i mimo web',
+          system: 'Digitální pořádek, dokumenty a AI pomocníci',
+          output: 'Praktické nastavení nástrojů, převody podkladů, jednoduché AI pomocníky nebo zaučení bez módních slibů.',
+        },
+      ],
+    },
+    pricing: {
+      sectionCode: 'Orientační ceny',
+      title: 'Ceny ukazuji dopředu, aby bylo jasné, o jakém rozsahu se bavíme.',
+      lead:
+        'Každý web má jiný rozsah, ale malá firma potřebuje rámec dřív, než pošle poptávku. Přesnou cenu dávám po krátkém zadání nebo auditu.',
+      note:
+        'Audit lze odečíst z následné realizace, pokud spolu navážeme na nový web, redesign nebo větší opravy.',
+      items: [
+        {
+          name: 'Audit webu s plánem',
+          price: '2 900-4 900 Kč',
+          text: 'Pro firmy, které nevědí, jestli web opravit, předělat, nebo postavit znovu.',
+          includes: ['slabá místa webu', 'prioritní plán', 'odhad další práce'],
+          cta: 'Začít auditem',
+          featured: true,
         },
         {
-          problem: 'Potřebujete stabilní počítač pro práci',
-          system: 'Stavba, výběr a nastavení PC',
-          output: 'Sestava podle práce, rozpočtu a softwaru, včetně základního nastavení a doporučení.',
+          name: 'Startovací firemní web',
+          price: 'od 25 000 Kč',
+          text: 'Jednodušší web pro živnostníka nebo malou firmu s jasnou nabídkou a kontaktem.',
+          includes: ['1-5 podstránek', 'textová struktura', 'SEO základ a formulář'],
+          cta: 'Probrat nový web',
         },
         {
-          problem: 'Chcete používat PC, AI nebo software jistěji',
-          system: 'Konzultace, zaučení a základní digitální pomoc',
-          output: 'Praktické vysvětlení, nastavení nástrojů a postupy, které můžete používat hned.',
+          name: 'Redesign staršího webu',
+          price: '35 000-75 000 Kč',
+          text: 'Přestavba existujícího webu, který potřebuje lepší obsah, mobil, rychlost a důvěryhodnost.',
+          includes: ['audit současného webu', 'nová struktura a texty', 'kontrola před spuštěním'],
+          cta: 'Chci zlepšit web',
         },
         {
-          problem: 'Máte dokumenty a tabulky všude možně',
-          system: 'Převod dokumentů, dat a podkladů',
-          output: 'Čistší obsah, použitelné tabulky, PDF, prezentace nebo webový přehled.',
+          name: 'Webová péče',
+          price: 'od 2 500 Kč / měsíc',
+          text: 'Drobné úpravy, kontrola funkčnosti, obsahové konzultace a technická podpora po spuštění.',
+          includes: ['úpravy obsahu', 'kontrola formulářů', 'SEO a provozní doporučení'],
+          cta: 'Domluvit péči',
         },
       ],
     },
     about: {
       sectionCode: 'O RadeQ',
-      title: 'Malé studio. Přímá domluva. Řešení, kterému rozumíte.',
+      title: 'Jeden člověk pro obsah, techniku i klidné vysvětlení.',
       lead:
-        'Za RadeQ stojí jeden člověk, se kterým řešíte zadání, návrh i předání. Bez přehazování mezi obchodem a vývojem a bez zbytečné technické mlhy.',
+        'Za RadeQ stojí přímá domluva. Probereme cíl, srovnáme obsah, vybereme přiměřené řešení a dostanete web, kterému rozumíte i po předání.',
       profileTitle: 'Jak spolupráce vypadá',
       profileText:
-        'Nejdřív zjistíme, co vás skutečně brzdí. Potom vybereme nejmenší užitečný krok a teprve pak stavíme, opravujeme nebo vysvětlujeme.',
+        'Opírám se o zkušenost z aplikační analýzy, správy databází, webů, SEO a copywritingu. Nejdřív překládám problém do srozumitelných rozhodnutí, až potom stavím.',
       principles: [
         {
           label: 'Jeden kontakt',
@@ -388,22 +442,22 @@ export const siteContent = {
           text: 'Zrychlení webu, základní dohledatelnost, titulky, odkazy, měření akcí a oprava slabých míst.',
         },
         {
-          label: 'Web update',
-          title: 'Nový nádech bez nového chaosu',
-          text: 'Úpravy staršího webu, nové sekce, texty, vizuální detail, lepší mobil a jasnější kontakt.',
+          label: 'Opravy',
+          title: 'Rychlá pomoc se starším webem',
+          text: 'Formuláře, metadata, měření, drobné chyby a úpravy ve WordPressu, Shoptetu, Shopify, Webnode, Wix nebo vlastním webu.',
         },
         {
-          label: 'PC',
-          title: 'Stavba a výběr počítače',
-          text: 'Doporučení sestavy, upgrade, základní nastavení a sladění počítače s tím, co opravdu děláte.',
+          label: 'Automatizace',
+          title: 'Formuláře, data a jednoduché AI pomocníky',
+          text: 'Sběr poptávek, třídění dat, převody dokumentů a malé pomocníky, kteří šetří ruční práci bez velkých slibů.',
         },
         {
           label: 'Konzultace',
-          title: 'PC, AI a základní software',
-          text: 'Praktické zaučení, nastavení nástrojů, pořádek v účtech, souborech, AI asistentech a každodenní práci.',
+          title: 'PC, software a digitální pořádek',
+          text: 'Praktické vysvětlení, nastavení nástrojů a postupy pro firmy, které nemají vlastního IT člověka.',
         },
       ],
-      note: 'Cílem není dodat co nejvíc techniky. Cílem je, aby web, počítač nebo nástroj přestal překážet a začal vám pomáhat.',
+      note: 'Cílem není dodat co nejvíc techniky. Cílem je, aby web a navazující nástroje přestaly překážet a začaly se dát normálně používat.',
     },
     terminal: {
       sectionCode: '',
@@ -449,24 +503,24 @@ export const siteContent = {
         name: 'Např. Jan Novák…',
         email: 'Např. jan@example.cz…',
         company: 'Firma nebo značka…',
-        audience: 'Pro koho má web být…',
-        deadline: 'Např. do 6 týdnů…',
+        audience: 'Pro koho je web určený…',
+        deadline: 'Např. během 4-8 týdnů…',
         current_url: 'Např. https://vas-web.cz…',
-        budget_range: 'Např. 50-100 tis. Kč…',
+        budget_range: 'Např. 25-50 tis. Kč…',
         message: 'Co potřebujete postavit nebo zlepšit…',
       },
       projectOptions: [
-        'Firemní web / portfolio',
-        'Landing page',
-        'Blog / obsah',
-        'Základy SEO a marketingu',
-        'Správa a údržba webu',
-        'Mailing a technická podpora',
-        'Lehká AI / chatbot',
-        'Data, databáze a formuláře',
-        'Převod dokumentů',
-        'Mobilní webová aplikace',
+        'Nový firemní web',
+        'Redesign staršího webu',
+        'Audit webu s plánem',
+        'Landing page / jednostránkový web',
+        'Webová péče a rozvoj',
+        'Rychlá oprava existujícího webu',
+        'Základní SEO, rychlost a měření',
+        'Formuláře, data a automatizace',
         'E-shop / nabídka',
+        'Dokumenty, tabulky a digitální pořádek',
+        'Konzultace PC, AI nebo software',
         'Nevím, potřebuji poradit',
       ],
       optionalTitle: 'Volitelné upřesnění',
@@ -474,12 +528,12 @@ export const siteContent = {
         'set name Jan Siroky',
         'set email siroky@radeq.cz',
         'set company Radeq.cz',
-        'set project_type Poptávková stránka',
-        'set audience Micro-SaaS founders',
-        'set deadline Q3',
+        'set project_type Redesign staršího webu',
+        'set audience majitelé menších firem',
+        'set deadline do 8 týdnů',
         'set current_url https://example.com',
-        'set budget_range 50k-100k CZK',
-        'set message Potřebuji rychlé routování leadů.',
+        'set budget_range 25k-50k CZK',
+        'set message Potřebuji předělat starší web a lépe vysvětlit nabídku.',
         'summary',
         'submit',
       ],
@@ -488,9 +542,9 @@ export const siteContent = {
   en: {
     layout: {
       lang: 'en',
-      title: 'Radeq.cz | High-performance web systems',
+      title: 'Radeq.cz | Websites for small businesses without technical fog',
       description:
-        'Radeq.cz builds fast conversion systems, SEO structures, and lead-flow automation for founders, expert brands, SMEs, and marketing architects.',
+        'Radeq.cz designs and builds company websites, redesigns, and website care for small businesses without an in-house IT person.',
       path: '/en/',
       alternatePath: '/',
       alternateLabel: 'CZ',
@@ -500,12 +554,12 @@ export const siteContent = {
       brandAria: 'Radeq.cz home',
       navAria: 'Main menu',
       navItems: [
-        { href: '#services', label: 'Services' },
-        { href: '/en/demo/service-landing/', label: 'Shop demo' },
+        { href: '#services', label: 'Websites' },
+        { href: '#pricing', label: 'Pricing' },
         { href: '#about', label: 'About' },
         { href: '#terminal', label: 'Request' },
       ],
-      cta: 'Request a quote',
+      cta: 'Discuss website',
       styleLabel: 'Themes',
       themeLabel: 'Switch color mode',
       lightTheme: 'Light',
@@ -513,19 +567,19 @@ export const siteContent = {
     },
     hero: {
       metaAria: 'Design direction',
-      meta: ['Guided Offer Map', 'static preview', 'no new assets'],
-      title: 'An offer buyers understand on the first scroll without a glossary.',
+      meta: ['New website', 'Redesign', 'Clear handoff'],
+      title: 'A website small businesses can understand and customers can trust.',
       lead:
-        'The first direction guides visitors like a map: what they need, what the work produces, the next useful step, and when to send a request.',
+        'I design, write, and build company websites or redesigns that explain your offer clearly, work well on mobile, are findable, and can be handed over without technical fog.',
       proof: [
-        { label: 'Start', value: 'non-technical buyers quickly recognize their problem' },
-        { label: 'Map', value: 'services are ordered by decision, not internal vocabulary' },
-        { label: 'Goal', value: 'a clearer path to the shop demo or a request' },
+        { label: 'Complete', value: 'structure, copy, design, implementation, and SEO basics in one process' },
+        { label: 'Plain', value: 'direct communication with one person and no needless acronyms' },
+        { label: 'Handoff', value: 'checklist, measurement, form path, and ownership notes' },
       ],
       actionsAria: 'Primary actions',
       actions: [
-        { href: '#services', label: 'Follow the offer map', variant: 'primary' },
-        { href: '#terminal', label: 'Send a request', variant: 'secondary' },
+        { href: '#terminal', label: 'Discuss a new website', variant: 'primary' },
+        { href: '#services', label: 'View process and outputs', variant: 'secondary' },
       ],
       coreAria: 'Interactive 3D ginger cat preview',
       coreCaption: 'Motion is an enhancement. The main content and contact path work without it.',
@@ -552,20 +606,20 @@ export const siteContent = {
       title: 'Different clients need different decision paths.',
       items: [
         {
-          title: 'Micro-SaaS founders',
-          signal: 'A landing page with app-grade performance, docs, waitlist, and demo routing.',
+          title: 'Sole traders',
+          signal: 'A simple website, clear offer, good mobile layout, and easy contact.',
         },
         {
-          title: 'Expert brands',
-          signal: 'Clear presentation of expertise, offer, and outcomes without agency padding.',
+          title: 'Small companies',
+          signal: 'A company website that explains services, builds trust, and can be handed over.',
         },
         {
-          title: 'Innovative SMEs',
-          signal: 'A replacement for stale process flows with lightweight, maintainable systems.',
+          title: 'Owners without an IT person',
+          signal: 'Plain explanation, right-sized scope, and decisions without technical fog.',
         },
         {
-          title: 'Marketing architects',
-          signal: 'Reusable request paths and clear measurement without manual forwarding.',
+          title: 'Companies with an older website',
+          signal: 'Redesign, audit, or fixes depending on what is cheaper and safer.',
         },
       ],
     },
@@ -621,88 +675,128 @@ export const siteContent = {
     },
     handoff: {
       sectionCode: '',
-      title: 'The client does not just get a website. They get a system they can take over.',
-      lead: 'The output is documented, measurable, and ready for maintenance without being locked to one provider.',
+      title: 'The proof is not only the look. The proof is also the handoff.',
+      lead: 'Without a large public portfolio, the work must show how it is made and checked. That is why the website includes a clear handoff and quality layer.',
       items: [
-        'A clear map of what lives where and who owns it',
-        'A consistent visual style for future edits',
-        'Content editing rules',
-        'A simple publishing and rollback guide',
-        'A list of important measurements',
-        'Readability, speed, and accessibility checks',
+        'A map of pages, sections, and the main contact path',
+        'Copy and headings written for non-technical customers',
+        'Checks for mobile layout, speed, form behavior, and basic accessibility',
+        'SEO basics: titles, descriptions, sitemap, indexable content, and internal links',
+        'Notes on where copy, links, measurement, and contact details are maintained',
+        'Clear out-of-scope notes so expectations stay realistic',
       ],
     },
     systems: {
       sectionCode: '',
-      title: 'Choose where the buyer gets stuck.',
+      title: 'First we choose the right path for the website.',
       lead:
-        'The map does not start with technologies. It starts with a situation the buyer recognizes and points to a useful next step without sales padding.',
-      mapAria: 'Offer map by buyer situation',
+        'The offer does not start with a platform or technical vocabulary. It starts with what the website should solve and what customers need to understand.',
+      mapAria: 'Paths to a new website or redesign',
       guide: {
-        eyebrow: 'Guided Offer Map',
-        title: 'Problem first. Output second. Next step last.',
+        eyebrow: 'Plain process',
+        title: 'Goal first. Structure second. Build last.',
         text:
-          'Each node explains one common buying situation in plain language: why it matters, what the work creates, and where to continue.',
+          'Each step must be clear even when you do not want to handle technical details. Decisions, content, build, and handoff are separated.',
         steps: [
-          { label: '01', value: 'the visitor recognizes their situation' },
-          { label: '02', value: 'they see a concrete output, not just a service label' },
-          { label: '03', value: 'they open the shop demo or send a short request' },
+          { label: '01', value: 'define what the website must explain to customers' },
+          { label: '02', value: 'prepare structure, copy, and a trustworthy contact path' },
+          { label: '03', value: 'test, hand off, and decide whether ongoing care makes sense' },
         ],
       },
-      demoLabel: 'Open shop demo',
-      requestLabel: 'Discuss in request',
+      requestLabel: 'Discuss approach',
+      secondaryTitle: 'I can also help with the operating layer around the website.',
+      secondaryLead:
+        'These items make sense after the first decision: new website, redesign, or audit. They are not the main homepage promise, but practical follow-up work.',
       items: [
         {
-          problem: 'You need a new or better website',
-          system: 'Company website, portfolio, blog, or landing page',
-          output: 'Clear structure, good mobile behavior, and a simple path to contact.',
+          problem: 'You have no website or the current one feels outdated',
+          system: 'New company website',
+          output: 'Clear offer, understandable copy, mobile layout, contact path, and SEO basics.',
         },
         {
-          problem: 'The site is slow, stale, or hard to find',
-          system: 'Speed, SEO, and measurement optimization',
-          output: 'Faster loading, clearer structure, titles, internal links, and action tracking.',
+          problem: 'The current website no longer helps',
+          system: 'Website redesign',
+          output: 'Keep what works and rebuild content, visuals, mobile behavior, speed, and the request path.',
         },
         {
-          problem: 'You want less manual work',
-          system: 'Request forms, data collection, and filtering',
-          output: 'Requests are stored, sorted, and sent where the team actually handles them.',
+          problem: 'You are not sure where to start',
+          system: 'Website audit with a plan',
+          output: 'A concrete list of weak spots, priorities, and whether repair or a new base is the better move.',
+        },
+        {
+          problem: 'You do not want to be alone after launch',
+          system: 'Website care and development',
+          output: 'Small changes, new sections, form checks, SEO recommendations, and technical support by agreement.',
+        },
+        {
+          problem: 'The website works but has weak spots',
+          system: 'Quick website help',
+          output: 'Forms, measurement, metadata, mobile, speed, or small fixes across WordPress, Shoptet, Shopify, and other systems.',
+        },
+        {
+          problem: 'Requests and source material are handled manually',
+          system: 'Forms, data, and light automation',
+          output: 'Requests are stored, sorted, and sent to the place where you actually handle them.',
         },
         {
           problem: 'You sell products, packages, or services',
-          system: 'Shop, offer, and variant comparison',
-          output: 'A clearer offer, shorter decision path, and measurable buying interest.',
-          demoModule: 'service-landing',
+          system: 'Clearer offer or shop adjustment',
+          output: 'Product pages, variant comparison, interest measurement, and a shorter path to an order or request.',
         },
         {
-          problem: 'The site needs a refresh without a full restart',
-          system: 'Website update, copy, and visual polish',
-          output: 'A faster visual refresh, better copy, cleaner sections, and clearer contact path.',
+          problem: 'You need order beyond the website',
+          system: 'Digital order, documents, and AI helpers',
+          output: 'Practical tool setup, source-material conversion, simple AI helpers, or onboarding without hype.',
+        },
+      ],
+    },
+    pricing: {
+      sectionCode: 'Indicative pricing',
+      title: 'Pricing is visible early, so the scope is not a mystery.',
+      lead:
+        'Every website has a different scope, but a small business needs a realistic range before sending a request. The exact price follows a short brief or audit.',
+      note:
+        'The audit can be deducted from the follow-up implementation when we continue with a new website, redesign, or larger fixes.',
+      items: [
+        {
+          name: 'Website audit with a plan',
+          price: 'CZK 2,900-4,900',
+          text: 'For companies unsure whether to repair, redesign, or rebuild the website from a cleaner base.',
+          includes: ['weak spots', 'priority plan', 'next-work estimate'],
+          cta: 'Start with audit',
+          featured: true,
         },
         {
-          problem: 'You need a stable computer for work',
-          system: 'PC build, selection, and setup',
-          output: 'A setup matched to your work, budget, and software, including basic configuration.',
+          name: 'Starter company website',
+          price: 'from CZK 25,000',
+          text: 'A simpler website for a sole trader or small company with a clear offer and contact path.',
+          includes: ['1-5 pages', 'copy structure', 'SEO basics and form'],
+          cta: 'Discuss a new website',
         },
         {
-          problem: 'You want to use PC, AI, or software with more confidence',
-          system: 'Consultation, onboarding, and basic digital help',
-          output: 'Practical explanation, tool setup, and workflows you can use immediately.',
+          name: 'Website redesign',
+          price: 'CZK 35,000-75,000',
+          text: 'Rebuilding an existing website that needs clearer content, mobile behavior, speed, and trust.',
+          includes: ['current-site audit', 'new structure and copy', 'pre-launch check'],
+          cta: 'Improve my website',
         },
         {
-          problem: 'Your documents and sheets are scattered',
-          system: 'Document, data, and source-material conversion',
-          output: 'Cleaner content, usable tables, PDFs, presentations, or a web overview.',
+          name: 'Website care',
+          price: 'from CZK 2,500 / month',
+          text: 'Small updates, functionality checks, content consulting, and technical support after launch.',
+          includes: ['content changes', 'form checks', 'SEO and operation notes'],
+          cta: 'Discuss care',
         },
       ],
     },
     about: {
       sectionCode: 'About RadeQ',
-      title: 'A small studio. Direct communication. Work you understand.',
+      title: 'One person for content, technical work, and plain explanation.',
       lead:
-        'RadeQ is one person you speak with from the first brief through design and handoff. No bouncing between sales and development, and no unnecessary technical fog.',
+        'RadeQ is direct collaboration. We clarify the goal, organize the content, choose a fitting solution, and hand over a website you can understand after launch.',
       profileTitle: 'How the collaboration works',
       profileText:
-        'First we identify what actually slows you down. Then we choose the smallest useful step and only then build, repair, or explain.',
+        'The work draws on application analysis, database administration, website operations, SEO, and copywriting. First I translate the problem into clear decisions, then I build.',
       principles: [
         {
           label: 'One contact',
@@ -725,23 +819,23 @@ export const siteContent = {
           text: 'Site speed, findability basics, titles, links, action tracking, and weak-spot cleanup.',
         },
         {
-          label: 'Web update',
-          title: 'A fresh feel without new chaos',
-          text: 'Older site updates, new sections, copy, visual polish, better mobile behavior, and clearer contact.',
+          label: 'Fixes',
+          title: 'Quick help with an existing website',
+          text: 'Forms, metadata, measurement, small errors, and edits in WordPress, Shoptet, Shopify, Webnode, Wix, or custom websites.',
         },
         {
-          label: 'PC',
-          title: 'Computer builds and selection',
-          text: 'Hardware recommendations, upgrades, basic setup, and matching the machine to the work you actually do.',
+          label: 'Automation',
+          title: 'Forms, data, and simple AI helpers',
+          text: 'Request intake, data sorting, document conversion, and small helpers that reduce manual work without overblown promises.',
         },
         {
           label: 'Consulting',
-          title: 'PC, AI, and everyday software',
-          text: 'Practical onboarding, tool setup, cleaner accounts and files, AI assistants, and daily workflows.',
+          title: 'PC, software, and digital order',
+          text: 'Practical explanation, tool setup, and workflows for companies without their own IT person.',
         },
       ],
       note:
-        'The goal is not to deliver the most technology. The goal is for the website, computer, or tool to stop getting in the way and start helping.',
+        'The goal is not to deliver the most technology. The goal is for the website and related tools to stop getting in the way and start being usable.',
     },
     terminal: {
       sectionCode: '',
@@ -788,23 +882,23 @@ export const siteContent = {
         email: 'For example, jane@example.com…',
         company: 'Company or brand…',
         audience: 'Who is the website for…',
-        deadline: 'For example, within 6 weeks…',
+        deadline: 'For example, within 4-8 weeks…',
         current_url: 'For example, https://your-site.com…',
-        budget_range: 'For example, EUR 2k-5k…',
+        budget_range: 'For example, CZK 25k-50k…',
         message: 'What do you need to build or improve…',
       },
       projectOptions: [
-        'Company website / portfolio',
-        'Landing page',
-        'Blog / content',
-        'SEO and marketing basics',
-        'Website maintenance',
-        'Mailing and technical support',
-        'Light AI / chatbot',
-        'Data, database, and forms',
-        'Document conversion',
-        'Mobile web app',
+        'New company website',
+        'Website redesign',
+        'Website audit with a plan',
+        'Landing page / one-page website',
+        'Website care and development',
+        'Quick fix for an existing website',
+        'SEO basics, speed, and measurement',
+        'Forms, data, and automation',
         'Shop / offer page',
+        'Documents, sheets, and digital order',
+        'PC, AI, or software consulting',
         'Not sure, need advice',
       ],
       optionalTitle: 'Optional details',
@@ -812,12 +906,12 @@ export const siteContent = {
         'set name Jan Siroky',
         'set email siroky@radeq.cz',
         'set company Radeq.cz',
-        'set project_type Request page',
-        'set audience Micro-SaaS founders',
-        'set deadline Q3',
+        'set project_type Website redesign',
+        'set audience small business owners',
+        'set deadline within 8 weeks',
         'set current_url https://example.com',
-        'set budget_range 50k-100k CZK',
-        'set message Need fast lead routing.',
+        'set budget_range 25k-50k CZK',
+        'set message Need to redesign an older website and explain the offer better.',
         'summary',
         'submit',
       ],

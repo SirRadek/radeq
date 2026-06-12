@@ -856,6 +856,7 @@ main {
 .handoff-section,
 .systems-section,
 .service-catalog,
+.pricing-section,
 .demo-route-hero,
 .terminal-section,
 .about-services,
@@ -1255,6 +1256,7 @@ html[data-motion-ready="true"] .terminal-window::before {
 .handoff-section,
 .systems-section,
 .service-catalog,
+.pricing-section,
 .about-services,
 .terminal-section {
   padding: clamp(3rem, 7vw, 6rem) 0;
@@ -3127,7 +3129,7 @@ html[data-theme="light"] .shop-cart__remove {
 .service-path {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
 }
 
@@ -3149,7 +3151,7 @@ html[data-theme="light"] .shop-cart__remove {
   display: grid;
   gap: 0.8rem;
   align-content: start;
-  grid-column: span 3;
+  grid-column: span 1;
   min-height: 250px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -3164,7 +3166,7 @@ html[data-theme="light"] .shop-cart__remove {
 }
 
 .service-card:first-child {
-  grid-column: span 4;
+  grid-column: span 1;
   min-height: 270px;
   border-color: color-mix(in srgb, var(--accent) 50%, var(--line));
   background:
@@ -3181,21 +3183,6 @@ html[data-theme="light"] .shop-cart__remove {
 
 .service-card:nth-child(2n) {
   --card-lift: -0.25rem;
-}
-
-.service-card:nth-child(3),
-.service-card:nth-child(6) {
-  grid-column: 2 / span 3;
-}
-
-.service-card:nth-child(4),
-.service-card:nth-child(8) {
-  grid-column: span 2;
-}
-
-.service-card:nth-child(5),
-.service-card:nth-child(7) {
-  grid-column: span 4;
 }
 
 .service-card::before {
@@ -3269,6 +3256,180 @@ html[data-theme="light"] .shop-cart__remove {
   transform: translateY(-1px);
 }
 
+.service-addons {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.32fr) minmax(0, 1fr);
+  gap: clamp(1rem, 2.4vw, 1.6rem);
+  align-items: start;
+  margin-top: clamp(1.1rem, 3vw, 2rem);
+  border-top: 1px solid var(--line);
+  padding-top: clamp(1rem, 2.6vw, 1.6rem);
+}
+
+.service-addons__intro {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.service-addons__intro h3,
+.service-addons__intro p {
+  margin: 0;
+}
+
+.service-addons__intro h3 {
+  max-width: 18ch;
+  font-size: clamp(1.2rem, 2vw, 1.75rem);
+  line-height: 1.08;
+}
+
+.service-addons__intro p:not(.section-code) {
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.service-addons__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.75rem;
+}
+
+.service-addon-card {
+  display: grid;
+  gap: 0.55rem;
+  align-content: start;
+  min-height: 215px;
+  border: 1px solid color-mix(in srgb, var(--line) 86%, transparent);
+  border-radius: 8px;
+  padding: 0.85rem;
+  background: color-mix(in srgb, var(--panel-bg) 78%, transparent);
+}
+
+.service-addon-card span {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+}
+
+.service-addon-card h4,
+.service-addon-card p {
+  margin: 0;
+}
+
+.service-addon-card h4 {
+  font-size: 0.98rem;
+  line-height: 1.18;
+}
+
+.service-addon-card p {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.service-addon-card a {
+  align-self: end;
+  width: fit-content;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.pricing-section {
+  display: grid;
+  gap: clamp(1.1rem, 2.5vw, 1.7rem);
+}
+
+.pricing-section__heading h2 {
+  max-width: 15ch;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.pricing-card {
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr auto auto;
+  gap: 1rem;
+  min-height: 360px;
+  border: 1px solid color-mix(in srgb, var(--line-strong) 54%, transparent);
+  border-radius: 8px;
+  padding: clamp(1rem, 2vw, 1.2rem);
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--accent-2) 7%, transparent), transparent 54%),
+    color-mix(in srgb, var(--panel-bg) 88%, transparent);
+  box-shadow: 0 20px 60px color-mix(in srgb, #000000 10%, transparent);
+}
+
+.pricing-card--featured {
+  border-color: color-mix(in srgb, var(--accent) 62%, var(--line));
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--accent) 16%, transparent), transparent 58%),
+    color-mix(in srgb, var(--panel-strong) 86%, transparent);
+}
+
+.pricing-card span {
+  display: inline-flex;
+  width: fit-content;
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  border-radius: 999px;
+  padding: 0.45rem 0.65rem;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+}
+
+.pricing-card h3 {
+  max-width: 12ch;
+  margin-top: 0.85rem;
+  font-size: clamp(1.22rem, 2vw, 1.58rem);
+}
+
+.pricing-card p {
+  margin-bottom: 0;
+  line-height: 1.55;
+}
+
+.pricing-card ul {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pricing-card li {
+  border-top: 1px solid color-mix(in srgb, var(--accent) 18%, var(--line));
+  padding-top: 0.55rem;
+  color: color-mix(in srgb, var(--text-main) 82%, var(--text-muted));
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.pricing-card a {
+  width: fit-content;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  padding: 0.68rem 0.78rem;
+  color: var(--accent-ink);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  background: var(--accent);
+}
+
+.pricing-section__note {
+  max-width: 56rem;
+  border-left: 4px solid var(--accent);
+  margin: 0;
+  padding: 0.75rem 0 0.75rem 1rem;
+  color: color-mix(in srgb, var(--text-main) 82%, var(--text-muted));
+}
+
 .proposal-stage {
   position: relative;
   scroll-margin-top: 5.75rem;
@@ -3284,18 +3445,18 @@ html[data-theme="light"] .shop-cart__remove {
   scroll-margin-top: 5.75rem;
 }
 
-html[data-style="variant-b"] .proposal-stage > .hero-section,
-html[data-style="variant-b"] .proposal-stage > .service-catalog,
-html[data-style="variant-c"] .proposal-stage > .hero-section,
-html[data-style="variant-c"] .proposal-stage > .service-catalog,
-html[data-style="variant-d"] .proposal-stage > .hero-section,
-html[data-style="variant-d"] .proposal-stage > .service-catalog {
+html[data-style="variant-b"] .proposal-stage--variants > .hero-section,
+html[data-style="variant-b"] .proposal-stage--variants > .service-catalog,
+html[data-style="variant-c"] .proposal-stage--variants > .hero-section,
+html[data-style="variant-c"] .proposal-stage--variants > .service-catalog,
+html[data-style="variant-d"] .proposal-stage--variants > .hero-section,
+html[data-style="variant-d"] .proposal-stage--variants > .service-catalog {
   display: none;
 }
 
-html[data-style="variant-b"] .cat-guide,
-html[data-style="variant-c"] .studio-proof,
-html[data-style="variant-d"] .demo-worlds {
+html[data-style="variant-b"] .proposal-stage--variants .cat-guide,
+html[data-style="variant-c"] .proposal-stage--variants .studio-proof,
+html[data-style="variant-d"] .proposal-stage--variants .demo-worlds {
   display: grid;
 }
 
@@ -4162,7 +4323,7 @@ html[data-style="variant-d"] .hero-section {
 }
 
 html[data-style="variant-d"] .service-path {
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 html[data-style="variant-d"] .service-card {
@@ -4518,6 +4679,12 @@ html[data-style="variant-d"] .service-card {
   margin-top: 0;
 }
 
+@media (max-width: 1180px) {
+  .pricing-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 920px) {
   .command-header,
   .hero-section,
@@ -4532,6 +4699,7 @@ html[data-style="variant-d"] .service-card {
   .about-services,
   .section-heading,
   .offer-map,
+  .service-addons,
   .matrix-workbench,
   .matrix-preview,
   .audience-band,
@@ -4628,6 +4796,8 @@ html[data-style="variant-d"] .service-card {
 
   .cat-guide__advice,
   .demo-worlds__finder ol,
+  .pricing-grid,
+  .service-addons__grid,
   .about-services__grid {
     grid-template-columns: 1fr;
   }
@@ -4644,6 +4814,10 @@ html[data-style="variant-d"] .service-card {
   }
 
   .about-services__grid article {
+    min-height: auto;
+  }
+
+  .pricing-card {
     min-height: auto;
   }
 
@@ -4752,12 +4926,7 @@ html[data-style="variant-d"] .service-card {
   }
 
   .service-card,
-  .service-card:nth-child(3),
-  .service-card:nth-child(4),
-  .service-card:nth-child(5),
-  .service-card:nth-child(6),
-  .service-card:nth-child(7),
-  .service-card:nth-child(8) {
+  .service-card:nth-child(3) {
     --card-lift: 0;
     grid-column: span 1;
   }

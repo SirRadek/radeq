@@ -11,9 +11,10 @@ interface Props {
   alternateLabel: string;
   locale: Locale;
   homePath?: string;
+  showStyleToggle?: boolean;
 }
 
-const { content, alternatePath, alternateLabel, locale, homePath } = Astro.props;
+const { content, alternatePath, alternateLabel, locale, homePath, showStyleToggle = true } = Astro.props;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 const alternateHref = `${basePath}${alternatePath}`;
 const styleOptions = getEpochOptions(locale);
@@ -35,7 +36,7 @@ const resolveHref = (href: string) => {
     {content.navItems.map((item) => <a href={resolveHref(item.href)}>{item.label}</a>)}
   </nav>
   <div class="header-actions">
-    <StyleVariantToggle label={content.styleLabel} options={styleOptions} client:load />
+    {showStyleToggle && <StyleVariantToggle label={content.styleLabel} options={styleOptions} client:load />}
     <ThemeModeToggle
       label={content.themeLabel}
       lightLabel={content.lightTheme}

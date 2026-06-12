@@ -15,16 +15,22 @@ describe('localized site content', () => {
       expect(content.demos.items).toHaveLength(6);
       expect(content.handoff.items.length).toBeGreaterThan(3);
       expect(content.systems.items).toHaveLength(8);
+      expect(content.systems.secondaryTitle).toBeTruthy();
+      expect(content.systems.items.some((item) => 'demoModule' in item)).toBe(false);
+      expect(content.pricing.items).toHaveLength(4);
+      expect(content.pricing.items.some((item) => 'featured' in item && item.featured)).toBe(true);
       expect(content.terminal.examples).toContain('submit');
     }
   });
 
   it('keeps the Czech route Czech and the English route English', () => {
-    expect(siteContent.cs.hero.title).toContain('první scroll');
-    expect(siteContent.cs.hero.proof.map((item) => item.label)).toEqual(['Návrhy', 'Pohyb', 'Cíl']);
-    expect(siteContent.cs.header.cta).toBe('Nezávazná poptávka');
-    expect(siteContent.en.hero.title).toContain('first scroll');
-    expect(siteContent.en.header.cta).toBe('Request a quote');
+    expect(siteContent.cs.hero.title).toContain('malé firmy');
+    expect(siteContent.cs.hero.proof.map((item) => item.label)).toEqual(['Kompletně', 'Srozumitelně', 'Předání']);
+    expect(siteContent.cs.header.cta).toBe('Probrat web');
+    expect(siteContent.cs.pricing.items[0].name).toBe('Audit webu s plánem');
+    expect(siteContent.en.hero.title).toContain('small businesses');
+    expect(siteContent.en.header.cta).toBe('Discuss website');
+    expect(siteContent.en.pricing.items[0].name).toBe('Website audit with a plan');
   });
   it('surfaces sanitized project proof before generic service offers', () => {
     for (const locale of supportedLocales) {

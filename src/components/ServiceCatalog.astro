@@ -7,22 +7,21 @@ interface Props {
 }
 
 const { content, locale } = Astro.props;
-const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
-const demoRoot = locale === 'en' ? '/en/demo' : '/demo';
-const getDemoHref = (moduleId: string) => `${basePath}${demoRoot}/${moduleId}/`;
+const primaryItems = content.items.slice(0, 3);
+const secondaryItems = content.items.slice(3);
 
 const routeCopy = {
   cs: {
     label: 'Doporučený start',
-    title: 'Nejdřív vyberte jednu ztrátu na webu.',
-    text: 'Mapa neprodává všechno najednou. Vede od rozpoznaného problému k jasnému dalšímu kroku.',
-    action: 'Poslat krátký brief',
+    title: 'Pokud si nejste jistí, začněte auditem.',
+    text: 'Krátký placený audit ukáže, jestli web opravit, předělat, nebo postavit znovu. Nevzniká tak slepý odhad.',
+    action: 'Začít auditem',
   },
   en: {
     label: 'Recommended start',
-    title: 'Pick one place where the site leaks trust.',
-    text: 'The map does not sell everything at once. It moves from a recognized problem to a clear next step.',
-    action: 'Send a short brief',
+    title: 'If you are unsure, start with an audit.',
+    text: 'A short paid audit shows whether the website should be repaired, redesigned, or rebuilt from a cleaner base.',
+    action: 'Start with audit',
   },
 }[locale];
 ---
@@ -57,7 +56,7 @@ const routeCopy = {
     </aside>
     <div class="service-path">
       {
-        content.items.map((item, index) => (
+        primaryItems.map((item, index) => (
           <article class="service-card" data-cat-platform={`service-card-${index + 1}`}>
             <div class="service-card__marker">
               <span>{String(index + 1).padStart(2, '0')}</span>
@@ -65,16 +64,31 @@ const routeCopy = {
             <p>{item.problem}</p>
             <h3>{item.system}</h3>
             <p>{item.output}</p>
-            {
-              item.demoModule ? (
-                <a href={getDemoHref(item.demoModule)}>{content.demoLabel}</a>
-              ) : (
-                <a href="#terminal">{content.requestLabel}</a>
-              )
-            }
+            <a href="#terminal">{content.requestLabel}</a>
           </article>
         ))
       }
     </div>
   </div>
+  {
+    secondaryItems.length > 0 && (
+      <div class="service-addons" aria-labelledby="service-addons-title">
+        <div class="service-addons__intro">
+          <p class="section-code">{locale === 'cs' ? 'Navazující práce' : 'Follow-up work'}</p>
+          <h3 id="service-addons-title">{content.secondaryTitle}</h3>
+          <p>{content.secondaryLead}</p>
+        </div>
+        <div class="service-addons__grid">
+          {secondaryItems.map((item, index) => (
+            <article class="service-addon-card">
+              <span>{String(index + 4).padStart(2, '0')}</span>
+              <h4>{item.system}</h4>
+              <p>{item.output}</p>
+              <a href="#terminal">{content.requestLabel}</a>
+            </article>
+          ))}
+        </div>
+      </div>
+    )
+  }
 </section>

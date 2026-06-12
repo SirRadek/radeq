@@ -1,0 +1,37 @@
+---
+import type { SiteContent } from '../data/siteContent';
+
+interface Props {
+  content: SiteContent['pricing'];
+}
+
+const { content } = Astro.props;
+---
+
+<section class="pricing-section" id="pricing" aria-labelledby="pricing-title" data-section-signature="pricing">
+  <div class="section-heading pricing-section__heading">
+    <div>
+      {content.sectionCode && <p class="section-code">{content.sectionCode}</p>}
+      <h2 id="pricing-title">{content.title}</h2>
+    </div>
+    <p>{content.lead}</p>
+  </div>
+  <div class="pricing-grid">
+    {
+      content.items.map((item) => (
+        <article class:list={['pricing-card', item.featured && 'pricing-card--featured']}>
+          <div>
+            <span>{item.price}</span>
+            <h3>{item.name}</h3>
+            <p>{item.text}</p>
+          </div>
+          <ul>
+            {item.includes.map((include) => <li>{include}</li>)}
+          </ul>
+          <a href="#terminal">{item.cta}</a>
+        </article>
+      ))
+    }
+  </div>
+  {content.note && <p class="pricing-section__note">{content.note}</p>}
+</section>

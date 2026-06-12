@@ -29,6 +29,7 @@ function applyThemeMode(mode: ThemeMode) {
 
 export default function ThemeModeToggle({ label, lightLabel, darkLabel }: Props) {
   const [mode, setMode] = useState<ThemeMode>('light');
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     let stored: string | null = null;
@@ -43,6 +44,7 @@ export default function ThemeModeToggle({ label, lightLabel, darkLabel }: Props)
 
     setMode(initialMode);
     document.documentElement.dataset.theme = initialMode;
+    setHydrated(true);
   }, []);
 
   function selectMode(nextMode: ThemeMode) {
@@ -58,7 +60,7 @@ export default function ThemeModeToggle({ label, lightLabel, darkLabel }: Props)
   const isDark = mode === 'dark';
 
   return (
-    <div className="theme-toggle" data-mode={mode}>
+    <div className="theme-toggle" data-mode={mode} data-hydrated={hydrated ? 'true' : 'false'}>
       <button
         type="button"
         className="theme-toggle__button"

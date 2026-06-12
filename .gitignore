@@ -5,6 +5,8 @@ dist/
 
 # local automation/test artifacts
 .codex-run/
+.wrangler/
+wrangler.toml
 test-results/
 docs/autopilot/reference/private-*
 

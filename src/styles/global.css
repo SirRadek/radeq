@@ -4985,6 +4985,11 @@ html[data-style="variant-d"] .service-card {
     min-height: 320px;
   }
 
+  .core-canvas--roaming {
+    width: clamp(92px, 24vw, 112px);
+    height: clamp(106px, 29vw, 132px);
+  }
+
   .variant-composition {
     width: min(100% - 1.25rem, var(--max-width));
     padding-top: clamp(1.5rem, 4vw, 2.5rem);

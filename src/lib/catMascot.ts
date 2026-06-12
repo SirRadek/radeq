@@ -500,6 +500,7 @@ export function getCatPlatformPose(
   const eased = easeInOutCubic(phase);
   const fromTarget = getPlatformTarget(fromPlatform, fromIndex, scrollY, viewport);
   const toTarget = getPlatformTarget(toPlatform, toIndex, scrollY, viewport);
+  const isMobileRail = viewport.width <= 560;
   const rawTravelX = toTarget.x - fromTarget.x;
   const rawTravelY = toTarget.y - fromTarget.y;
   const travelDirection = scrollDirection < 0 ? -1 : 1;
@@ -520,6 +521,8 @@ export function getCatPlatformPose(
   const turnYaw = travelX * (0.28 + airPulse * 0.44) + airDive * travelX * 0.16;
   const progress = lastIndex === 0 ? 0 : (fromIndex + phase) / lastIndex;
   const idleMask = 1 - clamp(anticipationPulse + pushPulse + airPulse + landPulse + settlePulse, 0, 1);
+  const screenY = lerp(fromTarget.y, toTarget.y, eased) - jump;
+  const mobileSafeScreenY = viewport.height * 0.54;
 
   return {
     step: Math.min(fromIndex, 4) as CatScrollStep,
@@ -527,7 +530,7 @@ export function getCatPlatformPose(
     panelX: lerp(fromTarget.x, toTarget.x, eased) / Math.max(viewport.width, 1) - 0.5,
     panelY: progress,
     screenX: lerp(fromTarget.x, toTarget.x, eased),
-    screenY: lerp(fromTarget.y, toTarget.y, eased) - jump,
+    screenY: isMobileRail ? Math.max(screenY, mobileSafeScreenY) : screenY,
     scale: lerp(1, 0.9, progress) - landPulse * 0.018,
     bodyPitch:
       anticipationPulse * 0.18 -
@@ -601,6 +604,18 @@ function getPlatformTarget(platform: CatPlatformRect, index: number, scrollY: nu
   const centerLanding = platform.left + platform.width * 0.62 - viewport.catWidth * 0.5;
   const desiredX = index % 2 === 0 ? rightLanding : centerLanding;
   const platformY = platform.top - scrollY - viewport.catHeight * 0.72;
+  const isMobileRail = viewport.width <= 560;
+  if (isMobileRail) {
+    const lowerLaneMin = viewport.height * 0.56;
+    const lowerLaneMax = Math.max(lowerLaneMin, viewport.height - viewport.catHeight - safe);
+    const mobileX = viewport.width - viewport.catWidth - safe;
+
+    return {
+      x: clamp(mobileX, safe, Math.max(safe, viewport.width - viewport.catWidth - safe)),
+      y: clamp(platformY, lowerLaneMin, lowerLaneMax),
+    };
+  }
+
   const upperLaneMax = Math.max(safe, viewport.height * 0.36);
   const desiredY = Math.min(platformY, upperLaneMax);
 

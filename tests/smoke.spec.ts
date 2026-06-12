@@ -242,6 +242,8 @@ test('mobile header keeps controls compact without horizontal overflow', async (
 
   await expect(page.locator('.command-nav')).toBeVisible();
   await expect(page.locator('.command-nav').getByRole('link', { name: 'O nás' })).toBeVisible();
+  await expect(page.locator('.language-link')).toBeVisible();
+  await expect(page.locator('.language-link')).toHaveText('EN');
   await expect(page.locator('.header-cta')).toBeHidden();
   await expect(page.locator('.style-toggle')).toHaveCount(0);
   await expect(page.locator('.theme-toggle')).toBeVisible();

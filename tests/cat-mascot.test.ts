@@ -211,6 +211,27 @@ describe('cat mascot controls', () => {
     expect(midJump?.facing).toBe('right');
   });
 
+  it('moves platform roaming into a lower safe rail on mobile viewports', () => {
+    const platforms = [
+      { id: 'hero-copy', left: 16, top: 130, width: 350, height: 80 },
+      { id: 'hero-actions', left: 16, top: 360, width: 350, height: 56 },
+      { id: 'service-card', left: 16, top: 780, width: 350, height: 160 },
+    ];
+    const viewport = { width: 390, height: 844, catWidth: 96, catHeight: 112 };
+
+    const top = getCatPlatformPose(0, viewport, platforms, 5.2);
+    const mid = getCatPlatformPose(250, viewport, platforms, 5.2);
+
+    expect(top).not.toBeNull();
+    expect(mid).not.toBeNull();
+    expect(top?.screenY).toBeGreaterThanOrEqual(viewport.height * 0.54);
+    expect(mid?.screenY).toBeGreaterThanOrEqual(viewport.height * 0.54);
+    expect(top?.screenY).toBeLessThanOrEqual(viewport.height - viewport.catHeight - 14);
+    expect(mid?.screenY).toBeLessThanOrEqual(viewport.height - viewport.catHeight - 14);
+    expect(top?.screenX).toBeGreaterThanOrEqual(14);
+    expect(top?.screenX).toBeLessThanOrEqual(viewport.width - viewport.catWidth - 14);
+  });
+
   it('lets the resting cat face the pointer after scroll motion stops', () => {
     expect(getCatAttentionFacing({ x: -0.8, y: 0, active: true }, 'right', false)).toBe('left');
     expect(getCatAttentionFacing({ x: 0.8, y: 0, active: true }, 'left', false)).toBe('right');

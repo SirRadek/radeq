@@ -1,8 +1,10 @@
 import { onRequestOptions, onRequestPost } from '../functions/api/leads';
+import type { SendEmailBinding } from '../src/lib/leadNotificationEmail';
 
 interface Env {
   ASSETS: AssetsFetcher;
   LEADS_DB?: D1Database;
+  EMAIL?: SendEmailBinding;
 }
 
 interface AssetsFetcher {

@@ -17,6 +17,7 @@ test('homepage core flow works', async ({ page }) => {
     page.getByRole('heading', { name: 'Web pro malé firmy, kterému rozumíte vy i vaši zákazníci.' }),
   ).toBeVisible();
   await expect(page.getByRole('link', { name: 'Weby' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Ukázky' })).toHaveAttribute('href', '/ukazky/');
   await expect(page.getByRole('link', { name: 'Ceny' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'O nás' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'E-shop demo', exact: true })).toHaveCount(0);
@@ -30,6 +31,7 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Nejdřív vybereme správnou cestu k webu.' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Doplňkově pomohu i s provozem okolo webu.' })).toBeVisible();
   await expect(page.locator('main a[href*="/demo/"]')).toHaveCount(0);
+  await expect(page.locator('main a[href*="/ukazky/"]')).toHaveCount(0);
   await expect(page.getByText('WordPress servis a opravy')).toHaveCount(0);
 
   await expect(page.locator('#pricing')).toBeVisible();
@@ -227,6 +229,10 @@ test('seo metadata and indexability endpoints are exposed', async ({ page, reque
   const sitemapText = await sitemap.text();
   expect(sitemapText).toContain('<loc>https://radeq.cz/</loc>');
   expect(sitemapText).toContain('<loc>https://radeq.cz/en/</loc>');
+  expect(sitemapText).toContain('<loc>https://radeq.cz/ukazky/</loc>');
+  expect(sitemapText).toContain('<loc>https://radeq.cz/ukazky/chatbot/</loc>');
+  expect(sitemapText).toContain('<loc>https://radeq.cz/ukazky/automatizace/</loc>');
+  expect(sitemapText).toContain('<loc>https://radeq.cz/ukazky/nabidka-eshop/</loc>');
   expect(sitemapText).toContain('<loc>https://radeq.cz/demo/service-landing/</loc>');
 });
 

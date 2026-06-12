@@ -7,8 +7,8 @@ import ThemeModeToggle from './ThemeModeToggle';
 
 interface Props {
   content: SiteContent['header'];
-  alternatePath: string;
-  alternateLabel: string;
+  alternatePath?: string;
+  alternateLabel?: string;
   locale: Locale;
   homePath?: string;
   showStyleToggle?: boolean;
@@ -16,7 +16,7 @@ interface Props {
 
 const { content, alternatePath, alternateLabel, locale, homePath, showStyleToggle = true } = Astro.props;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
-const alternateHref = `${basePath}${alternatePath}`;
+const alternateHref = alternatePath ? `${basePath}${alternatePath}` : undefined;
 const styleOptions = getEpochOptions(locale);
 const resolveHref = (href: string) => {
   if (homePath && href.startsWith('#')) {
@@ -43,7 +43,7 @@ const resolveHref = (href: string) => {
       darkLabel={content.darkTheme}
       client:load
     />
-    <a class="language-link" href={alternateHref}>{alternateLabel}</a>
+    {alternateHref && alternateLabel ? <a class="language-link" href={alternateHref}>{alternateLabel}</a> : null}
     <a class="header-cta" href="#terminal">{content.cta}</a>
   </div>
 </header>

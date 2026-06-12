@@ -1,0 +1,78 @@
+---
+import CommandHeader from '../../components/CommandHeader.astro';
+import ContactTerminal from '../../components/ContactTerminal';
+import RuleChatbotGuide from '../../components/RuleChatbotGuide';
+import { chatbotGuide } from '../../data/chatbotGuide';
+import { siteContent } from '../../data/siteContent';
+import { getShowcaseExample, showcaseExamples, type ShowcaseSlug } from '../../data/showcaseExamples';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  return showcaseExamples.map((example) => ({
+    params: { example: example.slug },
+    props: { slug: example.slug },
+  }));
+}
+
+const { slug } = Astro.props as { slug: ShowcaseSlug };
+const example = getShowcaseExample(slug);
+const content = siteContent.cs;
+
+if (!example) {
+  throw new Error(`Unknown showcase example: ${slug}`);
+}
+---
+
+<BaseLayout title={example.title} description={example.description} lang={content.layout.lang}>
+  <CommandHeader
+    content={content.header}
+    locale={content.layout.lang}
+    homePath="/"
+    showStyleToggle={false}
+  />
+  <main>
+    <section class="showcase-hero" id="top" aria-labelledby="showcase-detail-title">
+      <p class="section-code">{example.eyebrow}</p>
+      <h1 id="showcase-detail-title">{example.h1}</h1>
+      <p>{example.summary}</p>
+      <div class="showcase-hero__actions">
+        <a class="button-primary" href={example.primaryCta.href}>{example.primaryCta.label}</a>
+        {example.secondaryCta ? <a class="button-secondary" href={example.secondaryCta.href}>{example.secondaryCta.label}</a> : null}
+      </div>
+    </section>
+
+    <section class="showcase-safety" aria-labelledby="showcase-safety-title">
+      <h2 id="showcase-safety-title">Bezpečnost a hranice ukázky</h2>
+      <ul>
+        {example.safetyNotes.map((note) => <li>{note}</li>)}
+      </ul>
+    </section>
+
+    {slug === 'chatbot' ? <RuleChatbotGuide guide={chatbotGuide} client:load /> : null}
+
+    <section class="showcase-sections" aria-label="Popis ukázky">
+      {
+        example.sections.map((section) => (
+          <article class="showcase-section-card">
+            <h2>{section.title}</h2>
+            <p>{section.body}</p>
+            <ul>
+              {section.points.map((point) => (
+                <li>{point}</li>
+              ))}
+            </ul>
+          </article>
+        ))
+      }
+    </section>
+
+    <section class="showcase-out-of-scope" aria-labelledby="showcase-out-of-scope-title">
+      <h2 id="showcase-out-of-scope-title">Co tato ukázka neslibuje</h2>
+      <ul>
+        {example.outOfScope.map((item) => <li>{item}</li>)}
+      </ul>
+    </section>
+
+    <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load />
+  </main>
+</BaseLayout>

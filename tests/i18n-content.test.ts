@@ -9,7 +9,6 @@ describe('localized site content', () => {
       const content = siteContent[locale as Locale];
 
       expect(content.layout.lang).toBe(locale);
-      expect(content.header.navItems).toHaveLength(4);
       expect(content.hero.actions).toHaveLength(2);
       expect(content.audience.items).toHaveLength(4);
       expect(content.demos.items).toHaveLength(6);
@@ -27,9 +26,19 @@ describe('localized site content', () => {
     expect(siteContent.cs.hero.title).toContain('malé firmy');
     expect(siteContent.cs.hero.proof.map((item) => item.label)).toEqual(['Kompletně', 'Srozumitelně', 'Předání']);
     expect(siteContent.cs.header.cta).toBe('Probrat web');
+    expect(siteContent.cs.header.navItems).toHaveLength(5);
+    expect(siteContent.cs.header.navItems.some((item) => item.href === '/ukazky/' && item.label === 'Ukázky')).toBe(true);
+    expect(siteContent.cs.terminal.projectOptions).toEqual(
+      expect.arrayContaining([
+        'Jednoduchý chatbot / průvodce',
+        'Automatizace poptávek',
+        'Nabídka / e-shop úprava',
+      ]),
+    );
     expect(siteContent.cs.pricing.items[0].name).toBe('Audit webu s plánem');
     expect(siteContent.en.hero.title).toContain('small businesses');
     expect(siteContent.en.header.cta).toBe('Discuss website');
+    expect(siteContent.en.header.navItems).toHaveLength(4);
     expect(siteContent.en.pricing.items[0].name).toBe('Website audit with a plan');
   });
   it('surfaces sanitized project proof before generic service offers', () => {

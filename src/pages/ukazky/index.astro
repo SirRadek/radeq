@@ -1,0 +1,49 @@
+---
+import CommandHeader from '../../components/CommandHeader.astro';
+import ContactTerminal from '../../components/ContactTerminal';
+import { siteContent } from '../../data/siteContent';
+import { showcaseExamples, showcaseHub } from '../../data/showcaseExamples';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const content = siteContent.cs;
+---
+
+<BaseLayout title={showcaseHub.title} description={showcaseHub.description} lang={content.layout.lang}>
+  <CommandHeader
+    content={content.header}
+    locale={content.layout.lang}
+    homePath="/"
+    showStyleToggle={false}
+  />
+  <main>
+    <section class="showcase-hero" id="top" aria-labelledby="showcase-title">
+      <p class="section-code">Ukázky</p>
+      <h1 id="showcase-title">{showcaseHub.h1}</h1>
+      <p>{showcaseHub.summary}</p>
+    </section>
+
+    <section class="showcase-grid-section" aria-label="Přehled ukázek">
+      <div class="showcase-card-grid">
+        {
+          showcaseExamples.map((example) => (
+            <article class="showcase-card">
+              <p class="section-code">{example.eyebrow}</p>
+              <h2>{example.h1}</h2>
+              <p>{example.promise}</p>
+              <ul>
+                {example.proofTags.map((tag) => (
+                  <li>{tag}</li>
+                ))}
+              </ul>
+              <a class="button-secondary" href={`/ukazky/${example.slug}/`}>
+                Otevřít ukázku
+              </a>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load />
+  </main>
+</BaseLayout>

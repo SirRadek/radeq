@@ -4679,6 +4679,213 @@ html[data-style="variant-d"] .service-card {
   margin-top: 0;
 }
 
+.showcase-hero,
+.showcase-grid-section,
+.showcase-safety,
+.showcase-sections,
+.showcase-out-of-scope,
+.rule-chatbot {
+  position: relative;
+  z-index: 1;
+  width: min(100% - 2rem, var(--max-width));
+  margin: 0 auto;
+}
+
+.showcase-hero {
+  display: grid;
+  gap: clamp(1rem, 3vw, 1.5rem);
+  min-height: min(620px, calc(100vh - 6rem));
+  align-content: center;
+  padding: clamp(4rem, 9vw, 7rem) 0 clamp(2rem, 5vw, 4rem);
+}
+
+.showcase-hero h1 {
+  max-width: 12ch;
+  margin: 0;
+}
+
+.showcase-hero > p:not(.section-code) {
+  max-width: 72ch;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  line-height: 1.65;
+}
+
+.showcase-hero__actions,
+.rule-chatbot__controls {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.showcase-card-grid,
+.showcase-sections {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.showcase-card,
+.showcase-safety,
+.showcase-section-card,
+.showcase-out-of-scope,
+.rule-chatbot__panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: clamp(1.1rem, 2vw, 1.5rem);
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--accent) 5%, transparent), transparent 45%),
+    var(--panel-bg);
+  box-shadow: var(--shadow-hard);
+}
+
+.showcase-card {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+  min-height: 100%;
+}
+
+.showcase-card h2,
+.showcase-section-card h2,
+.showcase-safety h2,
+.showcase-out-of-scope h2,
+.rule-chatbot h2,
+.rule-chatbot h3 {
+  margin: 0;
+  line-height: 1.12;
+}
+
+.showcase-card p,
+.showcase-section-card p,
+.showcase-safety,
+.showcase-out-of-scope,
+.rule-chatbot p {
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+.showcase-card ul,
+.showcase-safety ul,
+.showcase-section-card ul,
+.showcase-out-of-scope ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--text-muted);
+  line-height: 1.75;
+}
+
+.showcase-card li::marker,
+.showcase-section-card li::marker,
+.showcase-safety li::marker,
+.showcase-out-of-scope li::marker {
+  color: var(--accent);
+}
+
+.showcase-grid-section,
+.showcase-safety,
+.showcase-sections,
+.showcase-out-of-scope,
+.rule-chatbot {
+  padding: clamp(1.6rem, 4vw, 3rem) 0;
+}
+
+.showcase-safety,
+.showcase-out-of-scope,
+.rule-chatbot {
+  display: grid;
+  gap: 1rem;
+}
+
+.showcase-sections {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.showcase-section-card {
+  display: grid;
+  gap: 0.85rem;
+  align-content: start;
+}
+
+.rule-chatbot {
+  grid-template-columns: minmax(0, 0.75fr) minmax(320px, 1fr);
+  align-items: start;
+}
+
+.rule-chatbot__intro {
+  display: grid;
+  gap: 1rem;
+  position: sticky;
+  top: 6rem;
+}
+
+.rule-chatbot__disclaimer {
+  border-left: 3px solid var(--accent);
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.rule-chatbot__panel {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.rule-chatbot__options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.rule-chatbot__options button,
+.rule-chatbot__result button,
+.rule-chatbot__controls button {
+  min-height: 44px;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  padding: 0.8rem 0.9rem;
+  color: var(--text-main);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  text-align: left;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--panel-strong) 86%, transparent);
+  cursor: pointer;
+}
+
+.rule-chatbot__options button:hover,
+.rule-chatbot__result button:hover,
+.rule-chatbot__controls button:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, var(--panel-strong));
+}
+
+.rule-chatbot__controls button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.rule-chatbot__result,
+.rule-chatbot__handoff {
+  display: grid;
+  gap: 0.8rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--line));
+  border-radius: 8px;
+  padding: 1rem;
+  background: color-mix(in srgb, var(--accent) 8%, var(--panel-strong));
+}
+
+.rule-chatbot__result button {
+  width: fit-content;
+  border-color: var(--accent);
+}
+
+.rule-chatbot__handoff p {
+  margin: 0;
+}
+
 @media (max-width: 1180px) {
   .pricing-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -4688,6 +4895,7 @@ html[data-style="variant-d"] .service-card {
 @media (max-width: 920px) {
   .command-header,
   .hero-section,
+  .rule-chatbot,
   .cat-guide__hero,
   .cat-guide__routes,
   .studio-proof__hero,
@@ -4707,6 +4915,11 @@ html[data-style="variant-d"] .service-card {
   .handoff-section,
   .terminal-grid {
     grid-template-columns: 1fr;
+  }
+
+  .rule-chatbot__intro {
+    position: relative;
+    top: auto;
   }
 
   .command-header {
@@ -4904,7 +5117,10 @@ html[data-style="variant-d"] .service-card {
 
   .audience-grid,
   .demo-grid,
-  .systems-grid {
+  .systems-grid,
+  .showcase-card-grid,
+  .showcase-sections,
+  .rule-chatbot__options {
     grid-template-columns: 1fr;
   }
 

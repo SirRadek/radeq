@@ -178,6 +178,7 @@ export const siteContent = {
       navAria: 'Hlavní menu',
       navItems: [
         { href: '#services', label: 'Weby' },
+        { href: '/ukazky/', label: 'Ukázky' },
         { href: '#pricing', label: 'Ceny' },
         { href: '#about', label: 'O nás' },
         { href: '#terminal', label: 'Poptávka' },
@@ -518,6 +519,9 @@ export const siteContent = {
         'Rychlá oprava existujícího webu',
         'Základní SEO, rychlost a měření',
         'Formuláře, data a automatizace',
+        'Jednoduchý chatbot / průvodce',
+        'Automatizace poptávek',
+        'Nabídka / e-shop úprava',
         'E-shop / nabídka',
         'Dokumenty, tabulky a digitální pořádek',
         'Konzultace PC, AI nebo software',

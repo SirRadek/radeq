@@ -1,8 +1,9 @@
 import type { APIRoute } from 'astro';
+import { showcaseExamples } from '../data/showcaseExamples';
 import { getModuleOptions } from '../data/styleMatrix';
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
-const lastmod = '2026-06-04';
+const lastmod = '2026-06-12';
 
 function withBase(path: string) {
   return `${basePath}${path}`;
@@ -22,9 +23,11 @@ function renderUrl(path: string, site: URL) {
 export const GET: APIRoute = ({ site }) => {
   const siteUrl = site ?? new URL('https://radeq.cz');
   const moduleIds = getModuleOptions('cs').map((moduleOption) => moduleOption.id);
+  const showcasePaths = ['/ukazky/', ...showcaseExamples.map((example) => `/ukazky/${example.slug}/`)];
   const paths = [
     '/',
     '/en/',
+    ...showcasePaths,
     ...moduleIds.map((moduleId) => `/demo/${moduleId}/`),
     ...moduleIds.map((moduleId) => `/en/demo/${moduleId}/`),
   ];

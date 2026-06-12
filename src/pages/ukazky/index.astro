@@ -3,6 +3,7 @@ import CommandHeader from '../../components/CommandHeader.astro';
 import ContactTerminal from '../../components/ContactTerminal';
 import { siteContent } from '../../data/siteContent';
 import { showcaseExamples, showcaseHub } from '../../data/showcaseExamples';
+import { withBaseHref } from '../../lib/links';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const content = siteContent.cs;
@@ -35,7 +36,7 @@ const content = siteContent.cs;
                   <li>{tag}</li>
                 ))}
               </ul>
-              <a class="button-secondary" href={`/ukazky/${example.slug}/`}>
+              <a class="button-secondary" href={withBaseHref(`/ukazky/${example.slug}/`)}>
                 Otevřít ukázku
               </a>
             </article>

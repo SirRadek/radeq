@@ -1,0 +1,44 @@
+---
+import CommandHeader from '../../components/CommandHeader.astro';
+import ContactTerminal from '../../components/ContactTerminal';
+import { routePages } from '../../data/routePages';
+import { siteContent } from '../../data/siteContent';
+import { withBaseHref } from '../../lib/links';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const content = siteContent.cs;
+const page = routePages.sluzby;
+const secondaryHref = withBaseHref(page.secondaryHref);
+---
+
+<BaseLayout title={page.title} description={page.description} lang={content.layout.lang}>
+  <CommandHeader
+    content={content.header}
+    locale={content.layout.lang}
+    homePath="/"
+    showStyleToggle={false}
+  />
+  <main class="route-page">
+    <section class="route-page__hero" id="top" aria-labelledby="route-title">
+      <p class="section-code">{page.eyebrow}</p>
+      <h1 id="route-title">{page.h1}</h1>
+      <p>{page.lead}</p>
+      <ul class="route-page__points">
+        {page.points.map((point) => <li>{point}</li>)}
+      </ul>
+      <div class="route-page__actions">
+        <a class="button-primary" href="#terminal" data-track="cta_primary_click">{page.primaryCta}</a>
+        <a class="button-secondary" href={secondaryHref}>{page.secondaryCta}</a>
+      </div>
+    </section>
+    <section class="route-page__details" aria-label={page.h1}>
+      {page.sections.map((section) => (
+        <article>
+          <h2>{section.title}</h2>
+          <p>{section.text}</p>
+        </article>
+      ))}
+    </section>
+    <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load />
+  </main>
+</BaseLayout>

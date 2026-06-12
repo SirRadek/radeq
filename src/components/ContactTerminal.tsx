@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import type { Locale } from '../data/locales';
 import type { SiteContent } from '../data/siteContent';
 import { createLeadPayload, getMissingLeadFields, leadFieldLimits, validateLeadSubmission } from '../lib/leads';
+import { dispatchMeasurementEvent } from '../lib/measurement';
 import {
   createEmptyBrief,
   generateBriefSummary,
@@ -24,6 +25,7 @@ export default function ContactTerminal({ locale, content }: Props) {
   const [status, setStatus] = useState(content.readyStatus);
   const [statusTone, setStatusTone] = useState<StatusTone>('neutral');
   const [errors, setErrors] = useState<Partial<Record<BriefField, string>>>({});
+  const hasStarted = useRef(false);
 
   const summaryLabels = content.fieldLabels as BriefSummaryLabels;
   const emptySummaryValue = locale === 'cs' ? 'nenastaveno' : 'not set';
@@ -33,6 +35,7 @@ export default function ContactTerminal({ locale, content }: Props) {
   );
 
   function updateField(field: BriefField, value: string) {
+    markStarted();
     setBrief((current) => ({
       ...current,
       [field]: value,
@@ -44,6 +47,12 @@ export default function ContactTerminal({ locale, content }: Props) {
       delete next[field];
       return next;
     });
+  }
+
+  function markStarted() {
+    if (hasStarted.current) return;
+    hasStarted.current = true;
+    dispatchMeasurementEvent('form_start');
   }
 
   async function submitForm(event: { preventDefault: () => void }) {
@@ -126,6 +135,7 @@ export default function ContactTerminal({ locale, content }: Props) {
 
       setStatus(`${content.storedPrefix}: ${result.leadId}`);
       setStatusTone('success');
+      dispatchMeasurementEvent('form_submit_success');
     } catch (error) {
       const message = error instanceof Error ? error.message : content.apiUnavailable;
       setStatus(message);
@@ -174,6 +184,7 @@ export default function ContactTerminal({ locale, content }: Props) {
                 error={errors.name}
                 disabled={isSubmitting}
                 required
+                onFocus={markStarted}
                 onChange={updateField}
               />
               <TextField
@@ -187,6 +198,7 @@ export default function ContactTerminal({ locale, content }: Props) {
                 inputMode="email"
                 required
                 spellCheck={false}
+                onFocus={markStarted}
                 onChange={updateField}
               />
               <div className="brief-field">
@@ -199,6 +211,7 @@ export default function ContactTerminal({ locale, content }: Props) {
                   name="project_type"
                   value={brief.project_type}
                   onChange={(event) => updateField('project_type', event.target.value)}
+                  onFocus={markStarted}
                   disabled={isSubmitting}
                   autoComplete="off"
                   aria-describedby={errors.project_type ? 'brief-project_type-error' : undefined}
@@ -228,6 +241,7 @@ export default function ContactTerminal({ locale, content }: Props) {
                   name="message"
                   value={brief.message}
                   onChange={(event) => updateField('message', event.target.value)}
+                  onFocus={markStarted}
                   placeholder={content.placeholders.message}
                   disabled={isSubmitting}
                   autoComplete="off"
@@ -260,6 +274,7 @@ export default function ContactTerminal({ locale, content }: Props) {
                   disabled={isSubmitting}
                   inputMode={field === 'current_url' ? 'url' : undefined}
                   spellCheck={field !== 'current_url'}
+                  onFocus={markStarted}
                   onChange={updateField}
                 />
               ))}
@@ -302,6 +317,7 @@ interface TextFieldProps {
   inputMode?: 'email' | 'url';
   required?: boolean;
   spellCheck?: boolean;
+  onFocus?: () => void;
   onChange: (field: BriefField, value: string) => void;
 }
 
@@ -316,6 +332,7 @@ function TextField({
   inputMode,
   required,
   spellCheck,
+  onFocus,
   onChange,
 }: TextFieldProps) {
   const fieldId = `brief-${field}`;
@@ -333,6 +350,7 @@ function TextField({
         type={type}
         value={value}
         onChange={(event) => onChange(field, event.target.value)}
+        onFocus={onFocus}
         placeholder={content.placeholders[field] ?? ''}
         autoComplete={autoComplete}
         disabled={disabled}

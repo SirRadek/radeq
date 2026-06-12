@@ -4679,6 +4679,8 @@ html[data-style="variant-d"] .service-card {
   margin-top: 0;
 }
 
+.route-page__hero,
+.route-page__details,
 .showcase-hero,
 .showcase-grid-section,
 .showcase-safety,
@@ -4689,6 +4691,88 @@ html[data-style="variant-d"] .service-card {
   z-index: 1;
   width: min(100% - 2rem, var(--max-width));
   margin: 0 auto;
+}
+
+.route-page {
+  padding-top: clamp(0.5rem, 2vw, 1.25rem);
+}
+
+.route-page__hero {
+  display: grid;
+  gap: clamp(1rem, 3vw, 1.5rem);
+  min-height: min(560px, calc(100vh - 7rem));
+  align-content: center;
+  padding: clamp(4rem, 9vw, 7rem) 0 clamp(2rem, 5vw, 3rem);
+}
+
+.route-page__hero h1 {
+  max-width: 12ch;
+  margin: 0;
+}
+
+.route-page__hero > p:not(.section-code) {
+  max-width: 72ch;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  line-height: 1.65;
+}
+
+.route-page__points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.route-page__points li {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.45rem 0.7rem;
+  color: var(--text-muted);
+  background: color-mix(in srgb, var(--panel-bg) 72%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.route-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.route-page__details {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  padding: clamp(1.6rem, 4vw, 3rem) 0;
+}
+
+.route-page__details article {
+  display: grid;
+  gap: 0.85rem;
+  align-content: start;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: clamp(1.1rem, 2vw, 1.5rem);
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--accent) 5%, transparent), transparent 45%),
+    var(--panel-bg);
+  box-shadow: var(--shadow-hard);
+}
+
+.route-page__details h2 {
+  margin: 0;
+  line-height: 1.12;
+}
+
+.route-page__details p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.65;
 }
 
 .showcase-hero {
@@ -5087,7 +5171,8 @@ html[data-style="variant-d"] .service-card {
   .proof-timeline,
   .proof-board,
   .studio-configurator,
-  .studio-outcome-map {
+  .studio-outcome-map,
+  .route-page__details {
     grid-column: 1;
     grid-row: auto;
   }
@@ -5271,6 +5356,7 @@ html[data-style="variant-d"] .service-card {
   }
 
   .hero-actions,
+  .route-page__actions,
   .cat-guide__actions,
   .cat-guide__demo-strip,
   .hero-proof-rail,

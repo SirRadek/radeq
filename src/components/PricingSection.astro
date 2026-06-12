@@ -28,7 +28,7 @@ const { content } = Astro.props;
           <ul>
             {item.includes.map((include) => <li>{include}</li>)}
           </ul>
-          <a href="#terminal">{item.cta}</a>
+          <a href="#terminal" data-track={item.featured ? 'audit_click' : undefined}>{item.cta}</a>
         </article>
       ))
     }

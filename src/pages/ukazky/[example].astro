@@ -5,6 +5,7 @@ import RuleChatbotGuide from '../../components/RuleChatbotGuide';
 import { chatbotGuide } from '../../data/chatbotGuide';
 import { siteContent } from '../../data/siteContent';
 import { getShowcaseExample, showcaseExamples, type ShowcaseSlug } from '../../data/showcaseExamples';
+import { withBaseHref } from '../../lib/links';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export function getStaticPaths() {
@@ -36,8 +37,8 @@ if (!example) {
       <h1 id="showcase-detail-title">{example.h1}</h1>
       <p>{example.summary}</p>
       <div class="showcase-hero__actions">
-        <a class="button-primary" href={example.primaryCta.href}>{example.primaryCta.label}</a>
-        {example.secondaryCta ? <a class="button-secondary" href={example.secondaryCta.href}>{example.secondaryCta.label}</a> : null}
+        <a class="button-primary" href={withBaseHref(example.primaryCta.href)}>{example.primaryCta.label}</a>
+        {example.secondaryCta ? <a class="button-secondary" href={withBaseHref(example.secondaryCta.href)}>{example.secondaryCta.label}</a> : null}
       </div>
     </section>
 

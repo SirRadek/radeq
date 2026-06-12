@@ -16,8 +16,26 @@ test('homepage core flow works', async ({ page }) => {
   await expect(
     page.getByRole('heading', { name: 'Web pro malé firmy, kterému rozumíte vy i vaši zákazníci.' }),
   ).toBeVisible();
+  await expect(page.locator('html')).toHaveAttribute('data-measurement-ready', 'true');
+  await page.evaluate(() => {
+    (window as unknown as { __radeqMeasurementEvents: unknown[] }).__radeqMeasurementEvents = [];
+    window.addEventListener('radeq:measurement', (event) => {
+      (window as unknown as { __radeqMeasurementEvents: unknown[] }).__radeqMeasurementEvents.push(
+        (event as CustomEvent).detail,
+      );
+    });
+  });
+  await page.getByRole('link', { name: 'Chci probrat web', exact: true }).click();
+  await expect
+    .poll(() =>
+      page.evaluate(() => (window as unknown as { __radeqMeasurementEvents: unknown[] }).__radeqMeasurementEvents),
+    )
+    .toContainEqual({ name: 'cta_primary_click', route: '/' });
   await expect(page.getByRole('link', { name: 'Weby' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Ukázky' })).toHaveAttribute('href', '/ukazky/');
+  await expect(page.locator('.command-nav').getByRole('link', { name: 'Ukázky', exact: true })).toHaveAttribute(
+    'href',
+    '/ukazky/',
+  );
   await expect(page.getByRole('link', { name: 'Ceny' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'O nás' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'E-shop demo', exact: true })).toHaveCount(0);
@@ -31,7 +49,7 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Nejdřív vybereme správnou cestu k webu.' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Doplňkově pomohu i s provozem okolo webu.' })).toBeVisible();
   await expect(page.locator('main a[href*="/demo/"]')).toHaveCount(0);
-  await expect(page.locator('main a[href*="/ukazky/"]')).toHaveCount(0);
+  await expect(page.locator('main a[href="/ukazky/"]')).toHaveCount(1);
   await expect(page.getByText('WordPress servis a opravy')).toHaveCount(0);
 
   await expect(page.locator('#pricing')).toBeVisible();
@@ -53,7 +71,7 @@ test('homepage core flow works', async ({ page }) => {
   await page.getByRole('switch', { name: /Tmavý/ }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   await expect(page.locator('html')).toHaveAttribute('data-motion-ready', /true|reduced/);
-  await expect(page.locator('html')).toHaveAttribute('data-motion-scene', /top|services|pricing|handoff|terminal/);
+  await expect(page.locator('html')).toHaveAttribute('data-motion-scene', /top|services|pricing|about|handoff|terminal/);
 
   await page.goto('/demo/service-landing/');
   await expect(page).toHaveURL(/\/demo\/service-landing\/$/);
@@ -91,6 +109,15 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.locator('.shop-compare__items')).toContainText('Upgrade Kit');
 
   await page.goto('/');
+  await expect(page.locator('html')).toHaveAttribute('data-measurement-ready', 'true');
+  await page.evaluate(() => {
+    (window as unknown as { __radeqMeasurementEvents: unknown[] }).__radeqMeasurementEvents = [];
+    window.addEventListener('radeq:measurement', (event) => {
+      (window as unknown as { __radeqMeasurementEvents: unknown[] }).__radeqMeasurementEvents.push(
+        (event as CustomEvent).detail,
+      );
+    });
+  });
   await expect(page.locator('#about')).toBeVisible();
   await expect(page.locator('.command-nav').getByRole('link', { name: 'O nás' })).toHaveAttribute('href', '#about');
   await expect(
@@ -113,17 +140,21 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.locator('#brief-name')).toHaveAttribute('aria-invalid', 'true');
   await expect(page.locator('#brief-name')).toBeFocused();
   await expect(page.getByRole('alert')).toContainText('Doplňte prosím');
-
+  await expect
+    .poll(() =>
+      page.evaluate(() => (window as unknown as { __radeqMeasurementEvents: unknown[] }).__radeqMeasurementEvents),
+    )
+    .toContainEqual({ name: 'form_start', route: '/' });
   await page.getByRole('textbox', { name: 'Jméno' }).fill('Jan Siroky');
   await page.getByRole('textbox', { name: 'E-mail' }).fill('jan@');
-  await page.getByRole('combobox', { name: 'Typ projektu' }).selectOption('Formuláře, data a automatizace');
+  await page.getByRole('combobox', { name: 'Typ projektu' }).selectOption('Audit webu s plánem');
   await page.getByRole('textbox', { name: 'Zpráva' }).fill('Potřebuji zjednodušit poptávkovou cestu.');
   await page.getByRole('button', { name: 'Odeslat poptávku' }).click();
   await expect(page.locator('#brief-email')).toHaveAttribute('aria-invalid', 'true');
   await expect(page.locator('#brief-email-error')).toContainText('Zadejte platnou e-mailovou adresu.');
   await expect(page.locator('#brief-email')).toBeFocused();
   await page.getByRole('textbox', { name: 'E-mail' }).fill('jan@example.com');
-  await expect(page.getByText('Typ projektu: Formuláře, data a automatizace')).toBeVisible();
+  await expect(page.getByText('Typ projektu: Audit webu s plánem')).toBeVisible();
   await expect(page.getByText('Zpráva: Potřebuji zjednodušit poptávkovou cestu.')).toBeVisible();
 
   await page.goto('/');

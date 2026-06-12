@@ -24,9 +24,11 @@ export const GET: APIRoute = ({ site }) => {
   const siteUrl = site ?? new URL('https://radeq.cz');
   const moduleIds = getModuleOptions('cs').map((moduleOption) => moduleOption.id);
   const showcasePaths = ['/ukazky/', ...showcaseExamples.map((example) => `/ukazky/${example.slug}/`)];
+  const routePagePaths = ['/kontakt/', '/sluzby/', '/portfolio/', '/soukromi/'];
   const paths = [
     '/',
     '/en/',
+    ...routePagePaths,
     ...showcasePaths,
     ...moduleIds.map((moduleId) => `/demo/${moduleId}/`),
     ...moduleIds.map((moduleId) => `/en/demo/${moduleId}/`),

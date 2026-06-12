@@ -22,6 +22,29 @@ describe('localized site content', () => {
     }
   });
 
+  it('keeps the Czech homepage focused on primary website offers', () => {
+    expect(siteContent.cs.hero.title).toBe('Web pro malé firmy, kterému rozumíte vy i vaši zákazníci.');
+    expect(siteContent.cs.hero.actions).toEqual([
+      { href: '#terminal', label: 'Chci probrat web', variant: 'primary' },
+      { href: '/ukazky/', label: 'Ukázky práce', variant: 'secondary' },
+    ]);
+    expect(siteContent.cs.header.navItems.map((item) => item.label)).toEqual([
+      'Weby',
+      'Ukázky',
+      'Ceny',
+      'O nás',
+      'Poptávka',
+    ]);
+    expect(siteContent.cs.terminal.projectOptions).toEqual([
+      'Nový firemní web',
+      'Redesign staršího webu',
+      'Audit webu s plánem',
+      'Rychlá oprava webu',
+      'Webová péče a rozvoj',
+      'Nejsem si jistý, potřebuji poradit',
+    ]);
+  });
+
   it('keeps the Czech route Czech and the English route English', () => {
     expect(siteContent.cs.hero.title).toContain('malé firmy');
     expect(siteContent.cs.hero.proof.map((item) => item.label)).toEqual(['Kompletně', 'Srozumitelně', 'Předání']);
@@ -29,11 +52,14 @@ describe('localized site content', () => {
     expect(siteContent.cs.header.navItems).toHaveLength(5);
     expect(siteContent.cs.header.navItems.some((item) => item.href === '/ukazky/' && item.label === 'Ukázky')).toBe(true);
     expect(siteContent.cs.terminal.projectOptions).toEqual(
-      expect.arrayContaining([
-        'Jednoduchý chatbot / průvodce',
-        'Automatizace poptávek',
-        'Nabídka / e-shop úprava',
-      ]),
+      [
+        'Nový firemní web',
+        'Redesign staršího webu',
+        'Audit webu s plánem',
+        'Rychlá oprava webu',
+        'Webová péče a rozvoj',
+        'Nejsem si jistý, potřebuji poradit',
+      ],
     );
     expect(siteContent.cs.pricing.items[0].name).toBe('Audit webu s plánem');
     expect(siteContent.en.hero.title).toContain('small businesses');
@@ -41,6 +67,15 @@ describe('localized site content', () => {
     expect(siteContent.en.header.navItems).toHaveLength(4);
     expect(siteContent.en.pricing.items[0].name).toBe('Website audit with a plan');
   });
+
+  it('keeps homepage copy free of public agent hype and fake guarantees', () => {
+    const homepageText = JSON.stringify(siteContent.cs).toLowerCase();
+
+    for (const forbidden of ['agentní', 'autonomní', 'pagespeed 95', 'garantujeme 1,5 s']) {
+      expect(homepageText).not.toContain(forbidden.toLowerCase());
+    }
+  });
+
   it('surfaces sanitized project proof before generic service offers', () => {
     for (const locale of supportedLocales) {
       const proofCards = siteContent[locale as Locale].demos.items.slice(0, 2);

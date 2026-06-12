@@ -44,6 +44,6 @@ const resolveHref = (href: string) => {
       client:load
     />
     {alternateHref && alternateLabel ? <a class="language-link" href={alternateHref}>{alternateLabel}</a> : null}
-    <a class="header-cta" href="#terminal">{content.cta}</a>
+    <a class="header-cta" href="#terminal" data-track="cta_primary_click">{content.cta}</a>
   </div>
 </header>

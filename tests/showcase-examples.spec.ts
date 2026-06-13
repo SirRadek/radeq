@@ -79,6 +79,27 @@ test('showcase pages fit mobile width', async ({ page }) => {
   }
 });
 
+test('showcase typography stays compact and scannable', async ({ page }) => {
+  await page.goto('/ukazky/');
+  const heroFontSize = await page.locator('.showcase-hero h1').evaluate((element) => {
+    return Number.parseFloat(window.getComputedStyle(element).fontSize);
+  });
+  const cardHeadingFontSize = await page.locator('.showcase-card h2').first().evaluate((element) => {
+    return Number.parseFloat(window.getComputedStyle(element).fontSize);
+  });
+
+  expect(heroFontSize).toBeLessThanOrEqual(46);
+  expect(cardHeadingFontSize).toBeLessThanOrEqual(20);
+
+  await page.setViewportSize({ width: 390, height: 920 });
+  await page.goto('/ukazky/');
+  const mobileHeroFontSize = await page.locator('.showcase-hero h1').evaluate((element) => {
+    return Number.parseFloat(window.getComputedStyle(element).fontSize);
+  });
+
+  expect(mobileHeroFontSize).toBeLessThanOrEqual(32);
+});
+
 test('sitemap exposes the showcase routes', async ({ request }) => {
   const sitemap = await request.get('/sitemap.xml');
   expect(sitemap.ok()).toBe(true);

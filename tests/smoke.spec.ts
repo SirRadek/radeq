@@ -289,6 +289,15 @@ test('core panel keeps decorative fallback clipped on tablet', async ({ page }) 
   await page.goto('/');
 
   await expect(page.locator('.core-panel')).toHaveCSS('overflow', 'hidden');
+  const panelBox = await page.locator('.core-panel').boundingBox();
+  expect(panelBox?.height).toBeLessThanOrEqual(200);
+});
+
+test('core panel does not consume mobile entry space', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 920 });
+  await page.goto('/');
+
+  await expect(page.locator('.core-panel')).toBeHidden();
 });
 
 test('3D cat launch is hydrated for an immediate first-viewport click', async ({ page }) => {

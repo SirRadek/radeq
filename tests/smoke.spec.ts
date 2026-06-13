@@ -158,10 +158,17 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.getByText('Zpráva: Potřebuji zjednodušit poptávkovou cestu.')).toBeVisible();
 
   await page.goto('/');
-  await page.getByRole('button', { name: 'Spustit kočičku' }).click();
-  await expect(page.getByRole('button', { name: 'Spustit kočičku' })).toHaveCount(0);
+  const catDoor = page.getByRole('button', { name: /kočičí vstup|cat entrance/i });
+  await expect(catDoor).toBeVisible();
+  await expect(catDoor).toHaveAttribute('aria-pressed', 'false');
+  await catDoor.click();
+  await expect(catDoor).toHaveAttribute('aria-pressed', 'true');
   const mascot = page.locator('.core-canvas');
   await expect(page.locator('.core-canvas canvas')).toBeVisible();
+  const canvasBox = await page.locator('.core-canvas canvas').boundingBox();
+  const canvasHostBox = await mascot.boundingBox();
+  expect(canvasBox?.width).toBeLessThanOrEqual((canvasHostBox?.width ?? 0) + 1);
+  expect(canvasBox?.height).toBeLessThanOrEqual((canvasHostBox?.height ?? 0) + 1);
   await expect(mascot).toHaveAttribute('data-model-source', /local:\/\/radeq-ginger-ghost/);
   await expect(mascot).toHaveAttribute('data-model-provenance', 'project-owned-generated');
   await expect(mascot).toHaveAttribute('data-model-loading-strategy', 'user-activated-progressive-enhancement');
@@ -195,6 +202,9 @@ test('homepage core flow works', async ({ page }) => {
   await page.mouse.down();
   await expect(mascot).toHaveAttribute('data-mascot-state', 'petting');
   await page.mouse.up();
+  await catDoor.click();
+  await expect(catDoor).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('.core-canvas canvas')).toHaveCount(0);
 });
 
 test('homepage keeps one public offer even when a demo style is stored', async ({ page }) => {
@@ -289,32 +299,51 @@ test('core panel keeps decorative fallback clipped on tablet', async ({ page }) 
   await page.goto('/');
 
   await expect(page.locator('.core-panel')).toHaveCSS('overflow', 'hidden');
+  await expect(page.getByRole('button', { name: /kočičí vstup|cat entrance/i })).toBeVisible();
   const panelBox = await page.locator('.core-panel').boundingBox();
-  expect(panelBox?.height).toBeLessThanOrEqual(200);
+  expect(panelBox?.height).toBeLessThanOrEqual(150);
+  expect(panelBox?.width).toBeLessThanOrEqual(130);
 });
 
 test('core panel does not consume mobile entry space', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 920 });
   await page.goto('/');
 
-  await expect(page.locator('.core-panel')).toBeHidden();
+  await expect(page.locator('.core-panel')).toBeVisible();
+  await expect(page.getByRole('button', { name: /kočičí vstup|cat entrance/i })).toBeVisible();
+  const panelBox = await page.locator('.core-panel').boundingBox();
+  expect(panelBox?.height).toBeLessThanOrEqual(120);
+  expect(panelBox?.width).toBeLessThanOrEqual(100);
 });
 
 test('3D cat launch is hydrated for an immediate first-viewport click', async ({ page }) => {
   await page.goto('/');
 
-  await page.getByRole('button', { name: /kočičku|cat/i }).click();
+  const catDoor = page.getByRole('button', { name: /kočičí vstup|cat entrance/i });
+  await catDoor.click();
 
   await expect(page.locator('.core-canvas canvas')).toBeVisible({ timeout: 10_000 });
   await expect(page.locator('.core-canvas')).toHaveAttribute('data-mascot-state', /idle|watching/);
+  const canvasBox = await page.locator('.core-canvas canvas').boundingBox();
+  const canvasHostBox = await page.locator('.core-canvas').boundingBox();
+  expect(canvasBox?.width).toBeLessThanOrEqual((canvasHostBox?.width ?? 0) + 1);
+  expect(canvasBox?.height).toBeLessThanOrEqual((canvasHostBox?.height ?? 0) + 1);
+  await expect(catDoor).toHaveAttribute('aria-pressed', 'true');
+  await catDoor.click();
+  await expect(catDoor).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('.core-canvas canvas')).toHaveCount(0);
 });
 
 test('3D cat launch respects reduced motion without leaving a blank panel', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
 
-  await page.getByRole('button', { name: /kočičku|cat/i }).click();
+  const catDoor = page.getByRole('button', { name: /kočičí vstup|cat entrance/i });
+  await catDoor.click();
 
   await expect(page.locator('.core-canvas canvas')).toHaveCount(0);
   await expect(page.locator('.core-load-state')).toContainText(/motion|pohyb/i);
+  await catDoor.click();
+  await expect(page.locator('.core-load-state')).toHaveCount(0);
+  await expect(catDoor).toHaveAttribute('aria-pressed', 'false');
 });

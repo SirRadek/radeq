@@ -33,7 +33,11 @@ export interface SiteContent {
     coreAria: string;
     coreCaption: string;
     core: {
+      doorLabel: string;
       enableLabel: string;
+      enableShortLabel: string;
+      disableLabel: string;
+      disableShortLabel: string;
       loadingLabel: string;
       failedLabel: string;
       reducedMotionLabel: string;
@@ -206,12 +210,16 @@ export const siteContent = {
         { href: '/ukazky/', label: 'Ukázky práce', variant: 'secondary' },
       ],
       coreAria: 'Interaktivní 3D náhled zrzavé kočičky',
-      coreCaption: 'Pohyb je doplněk. Hlavní obsah a kontakt fungují i bez něj.',
+      coreCaption: 'Volitelný pohyb. Web funguje i bez něj.',
       core: {
-        enableLabel: 'Spustit kočičku',
-        loadingLabel: 'Načítám kočičku...',
-        failedLabel: 'Kočičku se teď nepodařilo spustit. Zůstává jednoduchý náhled.',
-        reducedMotionLabel: 'Pohyb je v prohlížeči omezený, proto zůstává jednoduchý náhled.',
+        doorLabel: 'Kočka',
+        enableLabel: 'Otevřít kočičí vstup',
+        enableShortLabel: 'Zapnout',
+        disableLabel: 'Zavřít kočičí vstup',
+        disableShortLabel: 'Vypnout',
+        loadingLabel: 'Otevírám...',
+        failedLabel: 'Vstup teď nejde otevřít.',
+        reducedMotionLabel: 'Pohyb je vypnutý.',
       },
     },
     matrix: {
@@ -577,12 +585,16 @@ export const siteContent = {
         { href: '/ukazky/', label: 'Work examples', variant: 'secondary' },
       ],
       coreAria: 'Interactive 3D ginger cat preview',
-      coreCaption: 'Motion is an enhancement. The main content and contact path work without it.',
+      coreCaption: 'Optional motion. The website works without it.',
       core: {
-        enableLabel: 'Launch cat',
+        doorLabel: 'Cat',
+        enableLabel: 'Open cat entrance',
+        enableShortLabel: 'On',
+        disableLabel: 'Close cat entrance',
+        disableShortLabel: 'Off',
         loadingLabel: 'Loading cat...',
-        failedLabel: 'The cat cannot start here. A simple preview stays visible.',
-        reducedMotionLabel: 'Motion is limited in this browser, so a simple preview stays visible.',
+        failedLabel: 'The entrance cannot open right now.',
+        reducedMotionLabel: 'Motion is disabled.',
       },
     },
     matrix: {

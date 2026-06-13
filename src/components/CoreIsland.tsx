@@ -22,7 +22,11 @@ import {
 import { resolveCatRig } from '../lib/catRig';
 
 interface CoreIslandCopy {
+  doorLabel: string;
   enableLabel: string;
+  enableShortLabel: string;
+  disableLabel: string;
+  disableShortLabel: string;
   loadingLabel: string;
   failedLabel: string;
   reducedMotionLabel: string;
@@ -771,8 +775,36 @@ export default function CoreIsland({ copy }: Props) {
     setEnabled(true);
   }
 
+  function disableCore() {
+    setEnabled(false);
+    setLoading(false);
+    setFailed(false);
+    setReducedMotionBlocked(false);
+    setMascotState('idle');
+  }
+
+  const coreActive = enabled || reducedMotionBlocked || failed;
+  const doorState = !hydrated
+    ? 'idle'
+    : failed
+      ? 'failed'
+      : reducedMotionBlocked
+        ? 'blocked'
+        : loading
+          ? 'opening'
+          : enabled
+            ? 'open'
+            : 'closed';
+  const statusText = reducedMotionBlocked
+    ? copy.reducedMotionLabel
+    : loading
+      ? copy.loadingLabel
+      : failed
+        ? copy.failedLabel
+        : '';
+
   const mascotCanvas =
-    enabled && !reducedMotionBlocked ? (
+    enabled && !failed && !reducedMotionBlocked ? (
       <div
         ref={mountRef}
         className="core-canvas core-canvas--roaming"
@@ -807,19 +839,42 @@ export default function CoreIsland({ copy }: Props) {
     ) : null;
 
   return (
-    <div className={`core-enhancement${enabled && !reducedMotionBlocked ? ' is-roaming' : ''}`}>
+    <div
+      className="core-enhancement"
+      data-core-state={doorState}
+      data-core-enabled={enabled && !failed ? 'true' : 'false'}
+    >
       {mascotCanvas && portalTarget ? createPortal(mascotCanvas, portalTarget) : mascotCanvas}
-      {!enabled ? (
-        <button type="button" className="core-enable" onClick={enableCore} disabled={!hydrated}>
-          {copy.enableLabel}
+      <div className="cat-door-shell">
+        <button
+          type="button"
+          className="core-enable cat-door-trigger"
+          onClick={coreActive ? disableCore : enableCore}
+          disabled={!hydrated}
+          aria-label={coreActive ? copy.disableLabel : copy.enableLabel}
+          aria-pressed={enabled && !failed}
+        >
+          <span className="cat-door" aria-hidden="true">
+            <span className="cat-door__frame">
+              <span className="cat-door__cat">
+                <span className="cat-door__ear cat-door__ear--left" />
+                <span className="cat-door__ear cat-door__ear--right" />
+                <span className="cat-door__face">
+                  <span className="cat-door__eye cat-door__eye--left" />
+                  <span className="cat-door__eye cat-door__eye--right" />
+                  <span className="cat-door__nose" />
+                </span>
+              </span>
+              <span className="cat-door__leaf">
+                <span className="cat-door__knob" />
+                <span className="cat-door__sign">{copy.doorLabel}</span>
+              </span>
+            </span>
+          </span>
+          <span className="cat-door__toggle">{coreActive ? copy.disableShortLabel : copy.enableShortLabel}</span>
         </button>
-      ) : reducedMotionBlocked ? (
-        <p className="core-load-state">{copy.reducedMotionLabel}</p>
-      ) : loading ? (
-        <p className="core-load-state">{copy.loadingLabel}</p>
-      ) : failed ? (
-        <p className="core-load-state">{copy.failedLabel}</p>
-      ) : null}
+        {statusText ? <p className="core-load-state">{statusText}</p> : null}
+      </div>
     </div>
   );
 }

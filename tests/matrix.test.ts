@@ -7,12 +7,12 @@ import {
 } from '../src/lib/matrix';
 
 describe('style matrix logic', () => {
-  it('defaults to the industrial service landing recommendation', () => {
+  it('defaults to the A proposal service landing recommendation', () => {
     const preset = getMatrixPreset(DEFAULT_MATRIX_SELECTION);
 
     expect(preset.selection).toEqual({
       moduleId: 'service-landing',
-      epochId: 'industrial',
+      epochId: 'variant-a',
     });
     expect(preset.cta).toContain('poptávku');
     expect(preset.proofTag).toBe('Request path');
@@ -23,7 +23,7 @@ describe('style matrix logic', () => {
   it('serves localized copy for Czech and English matrix presets', () => {
     const selection = {
       moduleId: 'service-landing' as const,
-      epochId: 'industrial' as const,
+      epochId: 'variant-b' as const,
     };
 
     const czechPreset = getMatrixPreset(selection, 'cs');
@@ -35,18 +35,29 @@ describe('style matrix logic', () => {
     expect(englishPreset.proofPoints[0]?.label).toBe('What the visitor understands');
   });
 
-  it('contains every module and epoch combination', () => {
+  it('contains every module and proposal variant combination', () => {
     expect(listMatrixPresets()).toHaveLength(16);
   });
 
   it('returns stable runtime CSS variables for a preset', () => {
     const style = getRuntimeStyle({
       moduleId: 'admin-dashboard',
-      epochId: 'cyber-2036',
+      epochId: 'variant-c',
     });
 
     expect(style['--matrix-accent']).toMatch(/^#/);
-    expect(style['--matrix-motion']).toBe('holo-shift');
+    expect(style['--matrix-motion']).toBe('workflow-pulse');
     expect(style['--matrix-density']).toBe('dense');
+  });
+
+  it('includes the D studio proposal as a distinct layout', () => {
+    const preset = getMatrixPreset({
+      moduleId: 'service-landing',
+      epochId: 'variant-d',
+    });
+
+    expect(preset.design.layout).toBe('studio');
+    expect(preset.tokens.fontMode).toBe('studio');
+    expect(preset.tokens.motion).toBe('decision-map');
   });
 });

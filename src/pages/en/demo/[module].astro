@@ -1,0 +1,75 @@
+---
+import CommandHeader from '../../../components/CommandHeader.astro';
+import ContactTerminal from '../../../components/ContactTerminal';
+import StyleMatrixSimulator from '../../../components/StyleMatrixSimulator';
+import { siteContent } from '../../../data/siteContent';
+import { getModuleOptions, type ModuleId } from '../../../data/styleMatrix';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  return getModuleOptions('en').map((option) => ({
+    params: { module: option.id },
+    props: { moduleId: option.id },
+  }));
+}
+
+const { moduleId } = Astro.props as { moduleId: ModuleId };
+const content = siteContent.en;
+const moduleOption = getModuleOptions(content.layout.lang).find((option) => option.id === moduleId);
+const isShopShowcase = moduleId === 'service-landing' || moduleId === 'eshop-offers';
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const servicesHref = `${basePath}/en/#services`;
+const pageTitle = isShopShowcase
+  ? 'Shop preview | Radeq.cz'
+  : moduleOption
+    ? `${moduleOption.label} demo | Radeq.cz`
+    : `Demo preview | Radeq.cz`;
+const pageDescription = isShopShowcase
+  ? 'An interactive shop preview with products, filters, comparison, and a non-transactional demo cart in styles A, B, C, and D.'
+  : (moduleOption?.benefit ?? content.layout.description);
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  lang={content.layout.lang}
+  alternatePath={`/demo/${moduleId}/`}
+  alternateLang="cs"
+  allowStoredStyle
+>
+  <CommandHeader
+    content={content.header}
+    alternatePath={`/demo/${moduleId}/`}
+    alternateLabel={content.layout.alternateLabel}
+    locale={content.layout.lang}
+    homePath="/en/"
+  />
+  <main>
+    <section class="demo-route-hero" id="top" aria-labelledby="demo-route-title">
+      <div>
+        <p class="section-code">Demo</p>
+        <h1 id="demo-route-title">{isShopShowcase ? 'Shop preview' : moduleOption ? moduleOption.label : 'Website preview'}</h1>
+      </div>
+      <div>
+        <p>
+          {
+            isShopShowcase
+              ? 'One shop scenario, four visual styles. Products, filters, comparison, and the demo cart stay the same.'
+              : moduleOption
+                ? moduleOption.benefit
+                : content.matrix.lead
+          }
+        </p>
+        <a class="button-secondary" href={servicesHref}>Back to services</a>
+      </div>
+    </section>
+    <StyleMatrixSimulator
+      locale={content.layout.lang}
+      content={content.matrix}
+      initialModuleId={moduleId}
+      shopOnly={isShopShowcase}
+      client:load
+    />
+    <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load />
+  </main>
+</BaseLayout>

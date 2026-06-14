@@ -9,22 +9,73 @@ describe('localized site content', () => {
       const content = siteContent[locale as Locale];
 
       expect(content.layout.lang).toBe(locale);
-      expect(content.header.navItems).toHaveLength(4);
       expect(content.hero.actions).toHaveLength(2);
       expect(content.audience.items).toHaveLength(4);
       expect(content.demos.items).toHaveLength(6);
       expect(content.handoff.items.length).toBeGreaterThan(3);
       expect(content.systems.items).toHaveLength(8);
+      expect(content.systems.secondaryTitle).toBeTruthy();
+      expect(content.systems.items.some((item) => 'demoModule' in item)).toBe(false);
+      expect(content.pricing.items).toHaveLength(4);
+      expect(content.pricing.items.some((item) => 'featured' in item && item.featured)).toBe(true);
       expect(content.terminal.examples).toContain('submit');
     }
   });
 
-  it('keeps the Czech route Czech and the English route English', () => {
-    expect(siteContent.cs.hero.title).toContain('Weby');
-    expect(siteContent.cs.header.cta).toBe('Nezávazná poptávka');
-    expect(siteContent.en.hero.title).toContain('Websites');
-    expect(siteContent.en.header.cta).toBe('Request a quote');
+  it('keeps the Czech homepage focused on primary website offers', () => {
+    expect(siteContent.cs.hero.title).toBe('Web pro malé firmy, kterému rozumíte vy i vaši zákazníci.');
+    expect(siteContent.cs.hero.actions).toEqual([
+      { href: '#terminal', label: 'Chci probrat web', variant: 'primary' },
+      { href: '/ukazky/', label: 'Ukázky práce', variant: 'secondary' },
+    ]);
+    expect(siteContent.cs.header.navItems.map((item) => item.label)).toEqual([
+      'Weby',
+      'Ukázky',
+      'Ceny',
+      'O nás',
+      'Poptávka',
+    ]);
+    expect(siteContent.cs.terminal.projectOptions).toEqual([
+      'Nový firemní web',
+      'Redesign staršího webu',
+      'Audit webu s plánem',
+      'Rychlá oprava webu',
+      'Webová péče a rozvoj',
+      'Nejsem si jistý, potřebuji poradit',
+    ]);
   });
+
+  it('keeps the Czech route Czech and the English route English', () => {
+    expect(siteContent.cs.hero.title).toContain('malé firmy');
+    expect(siteContent.cs.hero.proof.map((item) => item.label)).toEqual(['Kompletně', 'Srozumitelně', 'Předání']);
+    expect(siteContent.cs.header.cta).toBe('Probrat web');
+    expect(siteContent.cs.header.navItems).toHaveLength(5);
+    expect(siteContent.cs.header.navItems.some((item) => item.href === '/ukazky/' && item.label === 'Ukázky')).toBe(true);
+    expect(siteContent.cs.terminal.projectOptions).toEqual(
+      [
+        'Nový firemní web',
+        'Redesign staršího webu',
+        'Audit webu s plánem',
+        'Rychlá oprava webu',
+        'Webová péče a rozvoj',
+        'Nejsem si jistý, potřebuji poradit',
+      ],
+    );
+    expect(siteContent.cs.pricing.items[0].name).toBe('Audit webu s plánem');
+    expect(siteContent.en.hero.title).toContain('small businesses');
+    expect(siteContent.en.header.cta).toBe('Discuss website');
+    expect(siteContent.en.header.navItems).toHaveLength(4);
+    expect(siteContent.en.pricing.items[0].name).toBe('Website audit with a plan');
+  });
+
+  it('keeps homepage copy free of public agent hype and fake guarantees', () => {
+    const homepageText = JSON.stringify(siteContent.cs).toLowerCase();
+
+    for (const forbidden of ['agentní', 'autonomní', 'pagespeed 95', 'garantujeme 1,5 s']) {
+      expect(homepageText).not.toContain(forbidden.toLowerCase());
+    }
+  });
+
   it('surfaces sanitized project proof before generic service offers', () => {
     for (const locale of supportedLocales) {
       const proofCards = siteContent[locale as Locale].demos.items.slice(0, 2);

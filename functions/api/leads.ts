@@ -1,7 +1,9 @@
 import { createLeadId, validateLeadSubmission } from '../../src/lib/leads';
+import { sendLeadNotificationEmail, type SendEmailBinding } from '../../src/lib/leadNotificationEmail';
 
 interface Env {
   LEADS_DB?: D1Database;
+  EMAIL?: SendEmailBinding;
 }
 
 interface PagesContext {
@@ -96,6 +98,16 @@ export async function onRequestPost(context: PagesContext) {
     return jsonResponse({ ok: false, error: 'Lead could not be stored.' }, 500);
   }
 
+  try {
+    await sendLeadNotificationEmail(env.EMAIL, lead, id, createdAt);
+  } catch (error) {
+    console.error('Lead notification email failed', {
+      leadId: id,
+      code: getEmailErrorCode(error),
+      message: error instanceof Error ? error.message : 'Unknown email error',
+    });
+  }
+
   return jsonResponse({ ok: true, leadId: id }, 201);
 }
 
@@ -124,4 +136,12 @@ function responseHeaders(): HeadersInit {
     'access-control-allow-methods': 'POST, OPTIONS',
     'access-control-allow-headers': 'content-type',
   };
+}
+
+function getEmailErrorCode(error: unknown): string {
+  if (typeof error === 'object' && error !== null && 'code' in error && typeof error.code === 'string') {
+    return error.code;
+  }
+
+  return 'unknown';
 }

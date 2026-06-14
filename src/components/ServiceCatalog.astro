@@ -1,0 +1,94 @@
+---
+import type { Locale, SiteContent } from '../data/siteContent';
+
+interface Props {
+  content: SiteContent['systems'];
+  locale: Locale;
+}
+
+const { content, locale } = Astro.props;
+const primaryItems = content.items.slice(0, 3);
+const secondaryItems = content.items.slice(3);
+
+const routeCopy = {
+  cs: {
+    label: 'Doporučený start',
+    title: 'Pokud si nejste jistí, začněte auditem.',
+    text: 'Krátký placený audit ukáže, jestli web opravit, předělat, nebo postavit znovu. Nevzniká tak slepý odhad.',
+    action: 'Začít auditem',
+  },
+  en: {
+    label: 'Recommended start',
+    title: 'If you are unsure, start with an audit.',
+    text: 'A short paid audit shows whether the website should be repaired, redesigned, or rebuilt from a cleaner base.',
+    action: 'Start with audit',
+  },
+}[locale];
+---
+
+<section class="service-catalog" id="services-guided" aria-labelledby="services-title" data-direction="guided-offer-map">
+  <div class="section-heading section-heading--services">
+    {content.sectionCode && <p class="section-code">{content.sectionCode}</p>}
+    <h2 id="services-title">{content.title}</h2>
+    <p>{content.lead}</p>
+  </div>
+  <div class="offer-map" aria-label={content.mapAria} data-cat-platform="service-grid">
+    <aside class="offer-map-guide">
+      <p class="section-code">{content.guide.eyebrow}</p>
+      <h3>{content.guide.title}</h3>
+      <p>{content.guide.text}</p>
+      <div class="offer-map-guide__recommendation">
+        <span>{routeCopy.label}</span>
+        <strong>{routeCopy.title}</strong>
+        <p>{routeCopy.text}</p>
+        <a href="#terminal">{routeCopy.action}</a>
+      </div>
+      <ol>
+        {
+          content.guide.steps.map((step) => (
+            <li>
+              <span>{step.label}</span>
+              <strong>{step.value}</strong>
+            </li>
+          ))
+        }
+      </ol>
+    </aside>
+    <div class="service-path">
+      {
+        primaryItems.map((item, index) => (
+          <article class="service-card" data-cat-platform={`service-card-${index + 1}`}>
+            <div class="service-card__marker">
+              <span>{String(index + 1).padStart(2, '0')}</span>
+            </div>
+            <p>{item.problem}</p>
+            <h3>{item.system}</h3>
+            <p>{item.output}</p>
+            <a href="#terminal">{content.requestLabel}</a>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+  {
+    secondaryItems.length > 0 && (
+      <div class="service-addons" aria-labelledby="service-addons-title">
+        <div class="service-addons__intro">
+          <p class="section-code">{locale === 'cs' ? 'Navazující práce' : 'Follow-up work'}</p>
+          <h3 id="service-addons-title">{content.secondaryTitle}</h3>
+          <p>{content.secondaryLead}</p>
+        </div>
+        <div class="service-addons__grid">
+          {secondaryItems.map((item, index) => (
+            <article class="service-addon-card">
+              <span>{String(index + 4).padStart(2, '0')}</span>
+              <h4>{item.system}</h4>
+              <p>{item.output}</p>
+              <a href="#terminal">{content.requestLabel}</a>
+            </article>
+          ))}
+        </div>
+      </div>
+    )
+  }
+</section>

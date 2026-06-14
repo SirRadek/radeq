@@ -1,5 +1,6 @@
 ---
 import type { SiteContent } from '../data/siteContent';
+import { withBaseHref } from '../lib/links';
 import CoreIsland from './CoreIsland';
 
 interface Props {
@@ -9,15 +10,29 @@ interface Props {
 const { content } = Astro.props;
 ---
 
-<section class="hero-section" id="top" aria-labelledby="hero-title">
+<section class="hero-section" id="top" aria-labelledby="hero-title" data-direction="guided-offer-map">
   <div class="hero-copy">
     {content.meta.length > 0 && <div class="meta-row" aria-label={content.metaAria}>{content.meta.map((item) => <span>{item}</span>)}</div>}
     <h1 id="hero-title">{content.title}</h1>
     {content.lead && <p>{content.lead}</p>}
+    <dl class="hero-proof-rail">
+      {
+        content.proof.map((item) => (
+          <div>
+            <dt>{item.label}</dt>
+            <dd>{item.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
     <div class="hero-actions" aria-label={content.actionsAria} data-cat-platform="hero-actions">
       {
         content.actions.map((action) => (
-          <a class={action.variant === 'primary' ? 'button-primary' : 'button-secondary'} href={action.href}>
+          <a
+            class={action.variant === 'primary' ? 'button-primary' : 'button-secondary'}
+            href={withBaseHref(action.href)}
+            data-track={action.variant === 'primary' ? 'cta_primary_click' : action.href.includes('/ukazky/') ? 'showcase_click' : undefined}
+          >
             {action.label}
           </a>
         ))

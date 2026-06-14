@@ -5,6 +5,9 @@ dist/
 
 # local automation/test artifacts
 .codex-run/
+.superpowers/
+.wrangler/
+wrangler.toml
 test-results/
 docs/autopilot/reference/private-*
 

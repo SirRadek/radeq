@@ -22,10 +22,16 @@ describe('cat mascot controls', () => {
   it('keeps the selected GLB within the static-site asset budget', () => {
     expect(CAT_MASCOT_ASSET.path).toBe('/models/cat/radeq-ginger-ghost.glb');
     expect(CAT_MASCOT_ASSET.license).toBe('Project-owned local generated asset');
-    expect(CAT_MASCOT_ASSET.bytes).toBeLessThanOrEqual(1_200_000);
-    expect(CAT_MASCOT_ASSET.triangles).toBeLessThanOrEqual(18_000);
+    expect(CAT_MASCOT_ASSET.provenance).toBe('project-owned-generated');
+    expect(CAT_MASCOT_ASSET.loadingStrategy).toBe('user-activated-progressive-enhancement');
+    expect(CAT_MASCOT_ASSET.seoRole).toBe('decorative-helper');
+    expect(CAT_MASCOT_ASSET.bytes).toBe(775_080);
+    expect(CAT_MASCOT_ASSET.bytes).toBeLessThanOrEqual(CAT_MASCOT_ASSET.budgetBytes);
+    expect(CAT_MASCOT_ASSET.triangles).toBeLessThanOrEqual(CAT_MASCOT_ASSET.budgetTriangles);
     expect(CAT_MASCOT_ASSET.requiredExtensions).toEqual([]);
     expect(CAT_MASCOT_ASSETS.quaternius.path).toBe('/models/cat/quaternius-cat.glb');
+    expect(CAT_MASCOT_ASSETS.quaternius.provenance).toBe('third-party-cc0');
+    expect(CAT_MASCOT_ASSETS.quaternius.bytes).toBeLessThanOrEqual(CAT_MASCOT_ASSETS.quaternius.budgetBytes);
     expect(resolveCatMascotAsset('?cat=quaternius').path).toBe('/models/cat/quaternius-cat.glb');
     expect(resolveCatMascotAsset('?cat=ghost').path).toBe('/models/cat/radeq-ginger-ghost.glb');
   });
@@ -203,6 +209,27 @@ describe('cat mascot controls', () => {
 
     expect(midJump?.travelX).toBeGreaterThan(0);
     expect(midJump?.facing).toBe('right');
+  });
+
+  it('moves platform roaming into a lower safe rail on mobile viewports', () => {
+    const platforms = [
+      { id: 'hero-copy', left: 16, top: 130, width: 350, height: 80 },
+      { id: 'hero-actions', left: 16, top: 360, width: 350, height: 56 },
+      { id: 'service-card', left: 16, top: 780, width: 350, height: 160 },
+    ];
+    const viewport = { width: 390, height: 844, catWidth: 96, catHeight: 112 };
+
+    const top = getCatPlatformPose(0, viewport, platforms, 5.2);
+    const mid = getCatPlatformPose(250, viewport, platforms, 5.2);
+
+    expect(top).not.toBeNull();
+    expect(mid).not.toBeNull();
+    expect(top?.screenY).toBeGreaterThanOrEqual(viewport.height * 0.54);
+    expect(mid?.screenY).toBeGreaterThanOrEqual(viewport.height * 0.54);
+    expect(top?.screenY).toBeLessThanOrEqual(viewport.height - viewport.catHeight - 14);
+    expect(mid?.screenY).toBeLessThanOrEqual(viewport.height - viewport.catHeight - 14);
+    expect(top?.screenX).toBeGreaterThanOrEqual(14);
+    expect(top?.screenX).toBeLessThanOrEqual(viewport.width - viewport.catWidth - 14);
   });
 
   it('lets the resting cat face the pointer after scroll motion stops', () => {

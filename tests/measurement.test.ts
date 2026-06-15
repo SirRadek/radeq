@@ -19,7 +19,7 @@ describe('measurement event contract', () => {
       createMeasurementEvent('form_submit_success', {
         email: 'client@example.com',
         message: 'Private message',
-        project_type: 'Audit webu s plánem',
+        project_type: 'Audit webu nebo procesu s plánem',
         route: '/kontakt/',
       }),
     ).toEqual({ name: 'form_submit_success', route: '/kontakt/' });

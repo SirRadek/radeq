@@ -56,8 +56,8 @@ export default function ThemeModeToggle({ label, lightLabel, darkLabel }: Props)
     selectMode(mode === 'light' ? 'dark' : 'light');
   }
 
-  const currentLabel = mode === 'light' ? lightLabel : darkLabel;
   const isDark = mode === 'dark';
+  const currentLabel = mode === 'light' ? lightLabel : darkLabel;
 
   return (
     <div className="theme-toggle" data-mode={mode} data-hydrated={hydrated ? 'true' : 'false'}>
@@ -82,7 +82,6 @@ export default function ThemeModeToggle({ label, lightLabel, darkLabel }: Props)
             </span>
           </span>
         </span>
-        <span className="theme-toggle__status">{currentLabel}</span>
       </button>
     </div>
   );

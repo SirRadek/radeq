@@ -6,10 +6,10 @@ test('Czech and English routes expose localized first viewport and demo copy', a
   await expect(page.locator('head link[rel="canonical"]')).toHaveAttribute('href', 'https://radeq.cz/');
   await expect(page.locator('head link[rel="alternate"][hreflang="en"]')).toHaveAttribute('href', 'https://radeq.cz/en/');
   await expect(
-    page.getByRole('heading', { name: 'Web pro malé firmy, kterému rozumíte vy i vaši zákazníci.' }),
+    page.getByRole('heading', { name: 'Praktická IT pomoc pro lidi a firmy, které chtějí méně ruční práce.' }),
   ).toBeVisible();
   await expect(page.getByRole('link', { name: 'EN', exact: true })).toHaveAttribute('href', '/en/');
-  await expect(page.getByRole('heading', { name: 'Nejdřív vybereme správnou cestu k webu.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Nejdřív hledám místo, kde se práce zbytečně opakuje.' })).toBeVisible();
   await expect(page.locator('.style-toggle')).toHaveCount(0);
 
   await page.goto('/en/');
@@ -17,13 +17,13 @@ test('Czech and English routes expose localized first viewport and demo copy', a
   await expect(page.locator('head link[rel="canonical"]')).toHaveAttribute('href', 'https://radeq.cz/en/');
   await expect(page.locator('head link[rel="alternate"][hreflang="cs"]')).toHaveAttribute('href', 'https://radeq.cz/');
   await expect(
-    page.getByRole('heading', { name: 'A website small businesses can understand and customers can trust.' }),
+    page.getByRole('heading', { name: 'Practical IT help for people and teams that want less manual work.' }),
   ).toBeVisible();
   await expect(page.locator('.style-toggle')).toHaveCount(0);
-  await expect(page.getByRole('heading', { name: 'First we choose the right path for the website.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'First I look for the place where work repeats for no good reason.' })).toBeVisible();
   await expect(page.locator('.command-nav').getByRole('link', { name: 'About' })).toHaveAttribute('href', '#about');
   await expect(
-    page.getByRole('heading', { name: 'One person for content, technical work, and plain explanation.' }),
+    page.getByRole('heading', { name: 'One technical partner for content, data, and plain explanation.' }),
   ).toBeVisible();
   await expect(page.locator('.about-services__profile dl > div')).toHaveCount(3);
   await expect(page.locator('#pricing')).toBeVisible();

@@ -1,7 +1,6 @@
 ---
 import type { SiteContent } from '../data/siteContent';
 import { withBaseHref } from '../lib/links';
-import CoreIsland from './CoreIsland';
 
 interface Props {
   content: SiteContent['hero'];
@@ -40,13 +39,4 @@ const { content } = Astro.props;
     </div>
   </div>
 
-  <div class="core-panel" aria-label={content.coreAria} data-cat-platform="hero-core">
-    <div class="core-fallback" aria-hidden="true">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-    <CoreIsland copy={content.core} client:load />
-    {content.coreCaption && <p class="core-caption">{content.coreCaption}</p>}
-  </div>
 </section>

@@ -22,50 +22,53 @@ describe('localized site content', () => {
     }
   });
 
-  it('keeps the Czech homepage focused on primary website offers', () => {
-    expect(siteContent.cs.hero.title).toBe('Web pro malé firmy, kterému rozumíte vy i vaši zákazníci.');
+  it('keeps the Czech homepage focused on practical IT help', () => {
+    expect(siteContent.cs.hero.title).toBe('Praktická IT pomoc pro lidi a firmy, které chtějí méně ruční práce.');
     expect(siteContent.cs.hero.actions).toEqual([
-      { href: '#terminal', label: 'Chci probrat web', variant: 'primary' },
-      { href: '/ukazky/', label: 'Ukázky práce', variant: 'secondary' },
+      { href: '#terminal', label: 'Probrat můj problém', variant: 'primary' },
+      { href: '#services', label: 'S čím pomáhám', variant: 'secondary' },
     ]);
     expect(siteContent.cs.header.navItems.map((item) => item.label)).toEqual([
-      'Weby',
+      'Úvod',
+      'IT pomoc',
       'Ukázky',
+      'O mně',
       'Ceny',
-      'O nás',
       'Poptávka',
     ]);
     expect(siteContent.cs.terminal.projectOptions).toEqual([
-      'Nový firemní web',
-      'Redesign staršího webu',
-      'Audit webu s plánem',
-      'Rychlá oprava webu',
-      'Webová péče a rozvoj',
+      'Automatizace rutinní práce',
+      'AI pomocník nebo chatbot',
+      'Databáze, evidence a přehled',
+      'Web nebo formulářová cesta',
+      'Audit webu nebo procesu s plánem',
+      'Rychlá oprava webu nebo nástroje',
       'Nejsem si jistý, potřebuji poradit',
     ]);
   });
 
   it('keeps the Czech route Czech and the English route English', () => {
-    expect(siteContent.cs.hero.title).toContain('malé firmy');
-    expect(siteContent.cs.hero.proof.map((item) => item.label)).toEqual(['Kompletně', 'Srozumitelně', 'Předání']);
-    expect(siteContent.cs.header.cta).toBe('Probrat web');
-    expect(siteContent.cs.header.navItems).toHaveLength(5);
+    expect(siteContent.cs.hero.title).toContain('méně ruční práce');
+    expect(siteContent.cs.hero.proof.map((item) => item.label)).toEqual(['Automatizace', 'Data a AI', 'Weby']);
+    expect(siteContent.cs.header.cta).toBe('Popsat situaci');
+    expect(siteContent.cs.header.navItems).toHaveLength(6);
     expect(siteContent.cs.header.navItems.some((item) => item.href === '/ukazky/' && item.label === 'Ukázky')).toBe(true);
     expect(siteContent.cs.terminal.projectOptions).toEqual(
       [
-        'Nový firemní web',
-        'Redesign staršího webu',
-        'Audit webu s plánem',
-        'Rychlá oprava webu',
-        'Webová péče a rozvoj',
+        'Automatizace rutinní práce',
+        'AI pomocník nebo chatbot',
+        'Databáze, evidence a přehled',
+        'Web nebo formulářová cesta',
+        'Audit webu nebo procesu s plánem',
+        'Rychlá oprava webu nebo nástroje',
         'Nejsem si jistý, potřebuji poradit',
       ],
     );
-    expect(siteContent.cs.pricing.items[0].name).toBe('Audit webu s plánem');
-    expect(siteContent.en.hero.title).toContain('small businesses');
-    expect(siteContent.en.header.cta).toBe('Discuss website');
-    expect(siteContent.en.header.navItems).toHaveLength(4);
-    expect(siteContent.en.pricing.items[0].name).toBe('Website audit with a plan');
+    expect(siteContent.cs.pricing.items[0].name).toBe('Audit webu nebo procesu s plánem');
+    expect(siteContent.en.hero.title).toContain('less manual work');
+    expect(siteContent.en.header.cta).toBe('Describe situation');
+    expect(siteContent.en.header.navItems).toHaveLength(6);
+    expect(siteContent.en.pricing.items[0].name).toBe('Website or process audit with a plan');
   });
 
   it('keeps homepage copy free of public agent hype and fake guarantees', () => {

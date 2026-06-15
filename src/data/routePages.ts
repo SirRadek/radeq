@@ -3,19 +3,19 @@ export const routePages = {
     path: '/kontakt/',
     title: 'Kontakt | Radeq.cz',
     description:
-      'Pošlete stručnou poptávku na nový web, redesign, audit nebo rychlou opravu webu. Bez telefonu a bez závazku.',
+      'Pošlete stručnou poptávku na automatizaci, AI pomocníka, databázi, web, audit nebo rychlou IT opravu. Bez telefonu a bez závazku.',
     eyebrow: 'Radeq.cz / Kontakt',
     h1: 'Kontakt',
     lead:
-      'Napište pár vět. Stačí typ webu, současný stav a co se má zlepšit. Odpověď půjde přes e-mail, ne přes veřejný telefon.',
-    primaryCta: 'Chci probrat web',
+      'Napište pár vět. Stačí popsat, co dnes zabírá čas, kde jsou data nebo jaký web či nástroj chcete zlepšit. Odpověď půjde přes e-mail, ne přes veřejný telefon.',
+    primaryCta: 'Probrat můj problém',
     secondaryCta: 'Zobrazit ukázky práce',
     secondaryHref: '/ukazky/',
     points: ['odpověď bez technické mlhy', 'jasný další krok', 'žádný závazek bez domluvy'],
     sections: [
       {
         title: 'Co poslat',
-        text: 'Popište, jestli řešíte nový web, redesign, audit nebo rychlou opravu. Odkaz na současný web pomůže, ale není povinný.',
+        text: 'Popište, jestli řešíte automatizaci, AI, data, nový web, redesign, audit nebo rychlou opravu. Odkaz na současný web pomůže, ale není povinný.',
       },
       {
         title: 'Kam poptávky chodí',
@@ -30,27 +30,27 @@ export const routePages = {
   sluzby: {
     path: '/sluzby/',
     title: 'Služby | Radeq.cz',
-    description: 'Nové firemní weby, redesigny, audity, rychlé opravy a webová péče pro malé firmy.',
+    description: 'Automatizace, AI pomocníci, databáze, formuláře, weby, audity a praktická IT péče pro jednotlivce, živnostníky a malé firmy.',
     eyebrow: 'Radeq.cz / Služby',
     h1: 'Služby',
     lead:
-      'Hlavní nabídka zůstává jednoduchá: nový web, redesign, audit, rychlá oprava a navazující péče. Doplňky řešíme až podle cíle webu.',
-    primaryCta: 'Chci probrat web',
+      'Hlavní nabídka zůstává jednoduchá: najít ruční nebo nepřehledné místo, navrhnout přiměřené řešení a postavit první funkční verzi bez zbytečné technické mlhy.',
+    primaryCta: 'Probrat můj problém',
     secondaryCta: 'Zobrazit ceny',
     secondaryHref: '/#pricing',
-    points: ['nový firemní web', 'redesign staršího webu', 'audit webu s plánem', 'rychlá oprava'],
+    points: ['automatizace rutiny', 'AI pomocníci', 'data a databáze', 'weby a formuláře'],
     sections: [
       {
-        title: 'Nový web a redesign',
-        text: 'Nejdřív srovnáme nabídku, strukturu a texty. Teprve potom dává smysl řešit vzhled, techniku a spuštění.',
+        title: 'Automatizace, data a AI',
+        text: 'Nejdřív zjistíme, co se dnes dělá ručně, kde vznikají chyby a která data potřebují pořádek. Teprve potom dává smysl vybírat nástroj.',
       },
       {
-        title: 'Audit a opravy',
-        text: 'Když není jasné, jestli web opravit nebo přestavět, začneme krátkým auditem a prioritami podle dopadu.',
+        title: 'Weby a formuláře',
+        text: 'Web, landing page nebo formulář má vysvětlit nabídku a poslat použitelné podklady dál. Není to jen vzhled, ale začátek procesu.',
       },
       {
-        title: 'Péče po spuštění',
-        text: 'Po předání může následovat drobný rozvoj, kontrola formulářů, SEO doporučení a bezpečný provozní pořádek.',
+        title: 'Audit, opravy a péče',
+        text: 'Když není jasné, čím začít, začneme krátkým auditem a prioritami podle dopadu. Po předání může následovat drobný rozvoj a kontrola provozu.',
       },
     ],
   },
@@ -62,7 +62,7 @@ export const routePages = {
     h1: 'Ukázky práce',
     lead:
       'Místo vymyšlených referencí ukazuji typ výsledku, kontrolu kvality a cestu ke kontaktu. Staré demo routy zůstávají oddělené.',
-    primaryCta: 'Chci probrat web',
+    primaryCta: 'Probrat můj problém',
     secondaryCta: 'Otevřít veřejné ukázky',
     secondaryHref: '/ukazky/',
     points: ['pravidlový chatbot bez LLM', 'automatizace poptávek', 'nabídka bez checkoutu', 'anatomie tohoto webu'],
@@ -89,7 +89,7 @@ export const routePages = {
     h1: 'Soukromí a poptávky',
     lead:
       'Formulář sbírá jen údaje potřebné k odpovědi na poptávku. Měření v první implementaci nesmí posílat osobní údaje ani obsah zpráv.',
-    primaryCta: 'Chci probrat web',
+    primaryCta: 'Probrat můj problém',
     secondaryCta: 'Zpět na služby',
     secondaryHref: '/sluzby/',
     points: ['poptávky jsou dobrovolné', 'měření je bez osobních údajů', 'citlivé údaje do formuláře nepatří'],

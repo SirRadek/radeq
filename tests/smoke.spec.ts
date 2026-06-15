@@ -14,7 +14,7 @@ test('homepage core flow works', async ({ page }) => {
   await page.goto('/');
 
   await expect(
-    page.getByRole('heading', { name: 'Web pro malé firmy, kterému rozumíte vy i vaši zákazníci.' }),
+    page.getByRole('heading', { name: 'Praktická IT pomoc pro lidi a firmy, které chtějí méně ruční práce.' }),
   ).toBeVisible();
   await expect(page.locator('html')).toHaveAttribute('data-measurement-ready', 'true');
   await page.evaluate(() => {
@@ -25,37 +25,38 @@ test('homepage core flow works', async ({ page }) => {
       );
     });
   });
-  await page.getByRole('link', { name: 'Chci probrat web', exact: true }).click();
+  await page.getByRole('link', { name: 'Probrat můj problém', exact: true }).click();
   await expect
     .poll(() =>
       page.evaluate(() => (window as unknown as { __radeqMeasurementEvents: unknown[] }).__radeqMeasurementEvents),
     )
     .toContainEqual({ name: 'cta_primary_click', route: '/' });
-  await expect(page.getByRole('link', { name: 'Weby' })).toBeVisible();
+  await expect(page.locator('.command-nav').getByRole('link', { name: 'Úvod', exact: true })).toBeVisible();
+  await expect(page.locator('.command-nav').getByRole('link', { name: 'IT pomoc', exact: true })).toBeVisible();
   await expect(page.locator('.command-nav').getByRole('link', { name: 'Ukázky', exact: true })).toHaveAttribute(
     'href',
     '/ukazky/',
   );
   await expect(page.getByRole('link', { name: 'Ceny' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'O nás' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'O mně' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'E-shop demo', exact: true })).toHaveCount(0);
   await expect(page.locator('.style-toggle')).toHaveCount(0);
   await expect(page.locator('#matrix')).toHaveCount(0);
   await expect(page.locator('#services')).toBeVisible();
   await expect(page.locator('.offer-map')).toBeVisible();
-  await expect(page.getByText('Nejdřív cíl. Potom struktura. Až pak stavba.')).toBeVisible();
+  await expect(page.getByText('Nejdřív provoz. Potom nástroj. Až pak stavba.')).toBeVisible();
   await expect(page.locator('.service-card')).toHaveCount(3);
   await expect(page.locator('.service-addon-card')).toHaveCount(5);
-  await expect(page.getByRole('heading', { name: 'Nejdřív vybereme správnou cestu k webu.' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Doplňkově pomohu i s provozem okolo webu.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Nejdřív hledám místo, kde se práce zbytečně opakuje.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Web může být začátek. Ne konec řešení.' })).toBeVisible();
   await expect(page.locator('main a[href*="/demo/"]')).toHaveCount(0);
-  await expect(page.locator('main a[href="/ukazky/"]')).toHaveCount(1);
+  await expect(page.locator('main a[href="/ukazky/"]')).toHaveCount(0);
   await expect(page.getByText('WordPress servis a opravy')).toHaveCount(0);
 
   await expect(page.locator('#pricing')).toBeVisible();
   await expect(page.locator('.pricing-card')).toHaveCount(4);
   await expect(page.getByRole('heading', { name: 'Ceny ukazuji dopředu, aby bylo jasné, o jakém rozsahu se bavíme.' })).toBeVisible();
-  await expect(page.locator('.pricing-section').getByRole('heading', { name: 'Audit webu s plánem' })).toBeVisible();
+  await expect(page.locator('.pricing-section').getByRole('heading', { name: 'Audit webu nebo procesu s plánem' })).toBeVisible();
   await expect(page.getByText('2 900-4 900 Kč')).toBeVisible();
   await expect(page.locator('.pricing-section').getByRole('link', { name: 'Začít auditem' })).toBeVisible();
 
@@ -119,13 +120,13 @@ test('homepage core flow works', async ({ page }) => {
     });
   });
   await expect(page.locator('#about')).toBeVisible();
-  await expect(page.locator('.command-nav').getByRole('link', { name: 'O nás' })).toHaveAttribute('href', '#about');
+  await expect(page.locator('.command-nav').getByRole('link', { name: 'O mně' })).toHaveAttribute('href', '#about');
   await expect(
-    page.getByRole('heading', { name: 'Jeden člověk pro obsah, techniku i klidné vysvětlení.' }),
+    page.getByRole('heading', { name: 'Jeden technický partner pro obsah, data i klidné vysvětlení.' }),
   ).toBeVisible();
   await expect(page.locator('.about-services__profile dl > div')).toHaveCount(3);
   await expect(page.getByText('Jeden kontakt')).toBeVisible();
-  await expect(page.getByText('S čím pomohu kromě nového webu')).toBeVisible();
+  await expect(page.getByText('S čím pomohu vedle samotného webu')).toBeVisible();
   await expect(page.getByText('Rychlá pomoc se starším webem')).toBeVisible();
   await expect(page.getByText('Formuláře, data a jednoduché AI pomocníky')).toBeVisible();
 
@@ -147,64 +148,21 @@ test('homepage core flow works', async ({ page }) => {
     .toContainEqual({ name: 'form_start', route: '/' });
   await page.getByRole('textbox', { name: 'Jméno' }).fill('Jan Siroky');
   await page.getByRole('textbox', { name: 'E-mail' }).fill('jan@');
-  await page.getByRole('combobox', { name: 'Typ projektu' }).selectOption('Audit webu s plánem');
+  await page.getByRole('combobox', { name: 'Typ projektu' }).selectOption('Audit webu nebo procesu s plánem');
   await page.getByRole('textbox', { name: 'Zpráva' }).fill('Potřebuji zjednodušit poptávkovou cestu.');
   await page.getByRole('button', { name: 'Odeslat poptávku' }).click();
   await expect(page.locator('#brief-email')).toHaveAttribute('aria-invalid', 'true');
   await expect(page.locator('#brief-email-error')).toContainText('Zadejte platnou e-mailovou adresu.');
   await expect(page.locator('#brief-email')).toBeFocused();
   await page.getByRole('textbox', { name: 'E-mail' }).fill('jan@example.com');
-  await expect(page.getByText('Typ projektu: Audit webu s plánem')).toBeVisible();
+  await expect(page.getByText('Typ projektu: Audit webu nebo procesu s plánem')).toBeVisible();
   await expect(page.getByText('Zpráva: Potřebuji zjednodušit poptávkovou cestu.')).toBeVisible();
 
   await page.goto('/');
-  const catDoor = page.getByRole('button', { name: /kočičí vstup|cat entrance/i });
-  await expect(catDoor).toBeVisible();
-  await expect(catDoor).toHaveAttribute('aria-pressed', 'false');
-  await catDoor.click();
-  await expect(catDoor).toHaveAttribute('aria-pressed', 'true');
-  const mascot = page.locator('.core-canvas');
-  await expect(page.locator('.core-canvas canvas')).toBeVisible();
-  const canvasBox = await page.locator('.core-canvas canvas').boundingBox();
-  const canvasHostBox = await mascot.boundingBox();
-  expect(canvasBox?.width).toBeLessThanOrEqual((canvasHostBox?.width ?? 0) + 1);
-  expect(canvasBox?.height).toBeLessThanOrEqual((canvasHostBox?.height ?? 0) + 1);
-  await expect(mascot).toHaveAttribute('data-model-source', /local:\/\/radeq-ginger-ghost/);
-  await expect(mascot).toHaveAttribute('data-model-provenance', 'project-owned-generated');
-  await expect(mascot).toHaveAttribute('data-model-loading-strategy', 'user-activated-progressive-enhancement');
-  await expect(mascot).toHaveAttribute('data-model-seo-role', 'decorative-helper');
-  await expect(mascot).toHaveAttribute('data-model-bytes', '775080');
-  await expect(mascot).toHaveAttribute('data-model-budget-bytes', '1200000');
-  await expect(mascot).toHaveAttribute('data-cat-rig-version', /custom-contract-v1|legacy-quaternius-v1/);
-  await expect(mascot).toHaveAttribute('data-cat-rig-quality', /contract|legacy|partial/);
-  await expect(mascot).toHaveAttribute('data-cat-texture', 'procedural-tabby-v1');
-  await expect(mascot).toHaveAttribute('data-cat-motion', 'platform');
-  await expect(mascot).toHaveAttribute('data-cat-scene', /top|services|pricing|terminal|handoff|section/);
-  await expect(mascot).toHaveAttribute('data-cat-facing', /left|right/);
-  await expect(mascot).toHaveAttribute('data-cat-hunt-state', /idle|watching|stalk|laser|prePounce/);
-  await expect(mascot).toHaveAttribute('data-cat-pointer-speed', /^\d+\.\d{3}$/);
-  await expect(mascot).toHaveAttribute('data-cat-front-crouch', /^\d+\.\d{3}$/);
-  await expect(mascot).toHaveAttribute('data-cat-air-dive', /^-?\d+\.\d{3}$/);
-  await expect(mascot).toHaveAttribute('data-cat-turn-yaw', /^-?\d+\.\d{3}$/);
-  await expect(mascot).toHaveAttribute('data-platform-count', /^[1-9]\d*$/);
-  await expect(mascot).toHaveAttribute('data-platform-id', /hero|service|pricing|handoff|contact/);
-  await expect(mascot).toHaveAttribute('data-mascot-state', /idle|watching/);
-  await page.mouse.move(60, 140);
-  await expect(mascot).toHaveAttribute('data-pointer-active', 'true');
-  await expect(mascot).toHaveAttribute('data-pointer-mode', 'viewport');
-  await expect(mascot).toHaveAttribute('data-mascot-state', 'watching');
-
-  const box = await mascot.boundingBox();
-  expect(box).not.toBeNull();
-  await page.mouse.move(box!.x - 12, box!.y - 12);
-  await mascot.hover({ position: { x: box!.width * 0.8, y: box!.height * 0.35 } });
-  await expect(mascot).toHaveAttribute('data-mascot-state', 'watching');
-  await page.mouse.down();
-  await expect(mascot).toHaveAttribute('data-mascot-state', 'petting');
-  await page.mouse.up();
-  await catDoor.click();
-  await expect(catDoor).toHaveAttribute('aria-pressed', 'false');
-  await expect(page.locator('.core-canvas canvas')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /kočičí vstup|cat entrance/i })).toHaveCount(0);
+  await expect(page.locator('.core-panel')).toHaveCount(0);
+  await expect(page.locator('.core-canvas')).toHaveCount(0);
+  await expect(page.locator('.back-to-top')).toBeVisible();
 });
 
 test('homepage keeps one public offer even when a demo style is stored', async ({ page }) => {
@@ -218,7 +176,7 @@ test('homepage keeps one public offer even when a demo style is stored', async (
   await expect(page.locator('html')).toHaveAttribute('data-style-source', 'fixed');
   await expect(page.locator('.style-toggle')).toHaveCount(0);
   await expect(
-    page.getByRole('heading', { name: 'Web pro malé firmy, kterému rozumíte vy i vaši zákazníci.' }),
+    page.getByRole('heading', { name: 'Praktická IT pomoc pro lidi a firmy, které chtějí méně ruční práce.' }),
   ).toBeVisible();
   await expect(page.locator('.service-catalog')).toBeVisible();
   await expect(page.locator('.pricing-section')).toBeVisible();
@@ -258,7 +216,7 @@ test('seo metadata and indexability endpoints are exposed', async ({ page, reque
   await expect(page.locator('head meta[property="og:url"]')).toHaveAttribute('content', 'https://radeq.cz/');
   await expect(page.locator('head meta[name="description"]')).toHaveAttribute(
     'content',
-    /firemní weby, redesigny a webovou péči/,
+    /automatizací, AI, databázemi/,
   );
 
   const robots = await request.get('/robots.txt');
@@ -282,10 +240,10 @@ test('mobile header keeps controls compact without horizontal overflow', async (
   await page.goto('/');
 
   await expect(page.locator('.command-nav')).toBeVisible();
-  await expect(page.locator('.command-nav').getByRole('link', { name: 'O nás' })).toBeVisible();
+  await expect(page.locator('.command-nav').getByRole('link', { name: 'O mně' })).toBeVisible();
   await expect(page.locator('.language-link')).toBeVisible();
   await expect(page.locator('.language-link')).toHaveText('EN');
-  await expect(page.locator('.header-cta')).toBeHidden();
+  await expect(page.locator('.header-cta')).toHaveCount(0);
   await expect(page.locator('.style-toggle')).toHaveCount(0);
   await expect(page.locator('.theme-toggle')).toBeVisible();
   await expect(page.locator('.pricing-card')).toHaveCount(4);
@@ -294,56 +252,18 @@ test('mobile header keeps controls compact without horizontal overflow', async (
   expect(hasOverflow).toBe(false);
 });
 
-test('core panel keeps decorative fallback clipped on tablet', async ({ page }) => {
+test('homepage keeps cat mascot off the public entry on tablet', async ({ page }) => {
   await page.setViewportSize({ width: 768, height: 1024 });
   await page.goto('/');
 
-  await expect(page.locator('.core-panel')).toHaveCSS('overflow', 'hidden');
-  await expect(page.getByRole('button', { name: /kočičí vstup|cat entrance/i })).toBeVisible();
-  const panelBox = await page.locator('.core-panel').boundingBox();
-  expect(panelBox?.height).toBeLessThanOrEqual(150);
-  expect(panelBox?.width).toBeLessThanOrEqual(130);
+  await expect(page.locator('.core-panel')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /kočičí vstup|cat entrance/i })).toHaveCount(0);
 });
 
-test('core panel does not consume mobile entry space', async ({ page }) => {
+test('homepage keeps cat mascot off the public entry on mobile', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 920 });
   await page.goto('/');
 
-  await expect(page.locator('.core-panel')).toBeVisible();
-  await expect(page.getByRole('button', { name: /kočičí vstup|cat entrance/i })).toBeVisible();
-  const panelBox = await page.locator('.core-panel').boundingBox();
-  expect(panelBox?.height).toBeLessThanOrEqual(120);
-  expect(panelBox?.width).toBeLessThanOrEqual(100);
-});
-
-test('3D cat launch is hydrated for an immediate first-viewport click', async ({ page }) => {
-  await page.goto('/');
-
-  const catDoor = page.getByRole('button', { name: /kočičí vstup|cat entrance/i });
-  await catDoor.click();
-
-  await expect(page.locator('.core-canvas canvas')).toBeVisible({ timeout: 10_000 });
-  await expect(page.locator('.core-canvas')).toHaveAttribute('data-mascot-state', /idle|watching/);
-  const canvasBox = await page.locator('.core-canvas canvas').boundingBox();
-  const canvasHostBox = await page.locator('.core-canvas').boundingBox();
-  expect(canvasBox?.width).toBeLessThanOrEqual((canvasHostBox?.width ?? 0) + 1);
-  expect(canvasBox?.height).toBeLessThanOrEqual((canvasHostBox?.height ?? 0) + 1);
-  await expect(catDoor).toHaveAttribute('aria-pressed', 'true');
-  await catDoor.click();
-  await expect(catDoor).toHaveAttribute('aria-pressed', 'false');
-  await expect(page.locator('.core-canvas canvas')).toHaveCount(0);
-});
-
-test('3D cat launch respects reduced motion without leaving a blank panel', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/');
-
-  const catDoor = page.getByRole('button', { name: /kočičí vstup|cat entrance/i });
-  await catDoor.click();
-
-  await expect(page.locator('.core-canvas canvas')).toHaveCount(0);
-  await expect(page.locator('.core-load-state')).toContainText(/motion|pohyb/i);
-  await catDoor.click();
-  await expect(page.locator('.core-load-state')).toHaveCount(0);
-  await expect(catDoor).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('.core-panel')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /kočičí vstup|cat entrance/i })).toHaveCount(0);
 });

@@ -447,7 +447,6 @@ input {
   pointer-events: none;
 }
 
-.brand-mark,
 .language-link,
 .header-cta,
 .command-nav,
@@ -464,7 +463,6 @@ input {
   pointer-events: auto;
 }
 
-html[data-theme="light"] .brand-mark,
 html[data-theme="light"] .language-link,
 html[data-theme="light"] .header-cta,
 html[data-theme="light"] .command-nav,
@@ -483,6 +481,7 @@ html[data-theme="light"] .style-toggle {
   padding: 0.65rem 0.85rem;
   font-family: var(--font-mono);
   font-size: 0.9rem;
+  pointer-events: auto;
 }
 
 .brand-pulse {
@@ -517,10 +516,15 @@ html[data-theme="light"] .style-toggle {
 }
 
 .command-nav a:hover,
+.command-nav a[aria-current],
 .language-link:hover,
 .header-cta:hover {
   color: var(--text-main);
   background: rgb(215 255 53 / 0.08);
+}
+
+.command-nav a[aria-current] {
+  color: var(--accent);
 }
 
 .header-actions {
@@ -570,9 +574,10 @@ html[data-theme="light"] .style-toggle {
 }
 
 .theme-toggle__button {
-  min-width: 6.6rem;
+  width: 44px;
+  min-width: 44px;
   overflow: hidden;
-  padding: 0.26rem 0.62rem 0.26rem 0.3rem;
+  padding: 0.28rem;
   color: var(--text-main);
   background: color-mix(in srgb, var(--accent) 9%, transparent);
 }
@@ -844,6 +849,30 @@ html[data-theme="light"] .style-toggle {
   color: var(--accent);
 }
 
+.back-to-top {
+  position: fixed;
+  right: clamp(0.85rem, 2vw, 1.25rem);
+  bottom: clamp(0.85rem, 2vw, 1.25rem);
+  z-index: 25;
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--line));
+  border-radius: 8px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  background: color-mix(in srgb, var(--panel-bg) 88%, transparent);
+  box-shadow: var(--shadow-hard);
+  backdrop-filter: blur(16px);
+}
+
+.back-to-top:hover {
+  color: var(--accent-ink);
+  background: var(--accent);
+}
+
 main {
   position: relative;
   z-index: 1;
@@ -870,10 +899,10 @@ main {
 
 .hero-section {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(116px, 0.18fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: clamp(1rem, 2.4vw, 2.4rem);
   align-items: center;
-  min-height: clamp(460px, 58svh, 580px);
+  min-height: clamp(420px, 54svh, 560px);
   padding: clamp(1.1rem, 2.6vw, 2.4rem) 0 1.25rem;
 }
 
@@ -942,8 +971,8 @@ h1 {
 h2 {
   max-width: 16ch;
   margin-bottom: 1rem;
-  font-size: clamp(2.2rem, 5vw, 4.3rem);
-  line-height: 1.02;
+  font-size: clamp(1.85rem, 3.4vw, 3.2rem);
+  line-height: 1.06;
   letter-spacing: 0;
   text-wrap: balance;
 }
@@ -963,7 +992,7 @@ p {
 }
 
 .hero-copy p {
-  max-width: 42rem;
+  max-width: 48rem;
   font-size: clamp(1rem, 1.5vw, 1.18rem);
 }
 
@@ -971,7 +1000,7 @@ p {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.65rem;
-  max-width: 45rem;
+  max-width: 55rem;
   margin: 1.5rem 0 0;
 }
 

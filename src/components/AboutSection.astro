@@ -1,0 +1,46 @@
+---
+import type { SiteContent } from '../data/siteContent';
+
+interface Props {
+  content: SiteContent['about'];
+}
+
+const { content } = Astro.props;
+---
+
+<section class="about-services" id="about" aria-labelledby="about-title" data-section-signature="about-services">
+  <div class="about-services__intro">
+    <p class="section-code">{content.sectionCode}</p>
+    <h2 id="about-title">{content.title}</h2>
+    <p>{content.lead}</p>
+  </div>
+  <div class="about-services__profile">
+    <p class="section-code">{content.profileTitle}</p>
+    <p>{content.profileText}</p>
+    <dl>
+      {
+        content.principles.map((principle) => (
+          <div>
+            <dt>{principle.label}</dt>
+            <dd>{principle.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+  <div class="about-services__services">
+    <p class="section-code">{content.servicesTitle}</p>
+  </div>
+  <div class="about-services__grid" aria-label={content.servicesTitle}>
+    {
+      content.items.map((item) => (
+        <article>
+          <span>{item.label}</span>
+          <h3>{item.title}</h3>
+          <p>{item.text}</p>
+        </article>
+      ))
+    }
+  </div>
+  <p class="about-services__note">{content.note}</p>
+</section>

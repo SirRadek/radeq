@@ -14,8 +14,8 @@ for (const route of publicRoutes) {
     await expect(page.getByRole('heading', { name: route.heading, level: 1 })).toBeVisible();
     await expect(page.locator('.command-nav')).toBeVisible();
     await expect(page.locator('#terminal')).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Chci probrat web' })).toBeVisible();
-    await expect(page.locator('.command-nav').getByRole('link', { name: 'Weby' })).toHaveAttribute(
+    await expect(page.getByRole('link', { name: 'Probrat můj problém' })).toBeVisible();
+    await expect(page.locator('.command-nav').getByRole('link', { name: 'IT pomoc' })).toHaveAttribute(
       'href',
       '/#services',
     );

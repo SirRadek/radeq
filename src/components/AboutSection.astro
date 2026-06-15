@@ -6,6 +6,9 @@ interface Props {
 }
 
 const { content } = Astro.props;
+const isCzech = content.sectionCode === 'O RadeQ';
+const showMoreLabel = isCzech ? 'Zobrazit více' : 'Show more';
+const showLessLabel = isCzech ? 'Zobrazit méně' : 'Show less';
 ---
 
 <section class="about-services" id="about" aria-labelledby="about-title" data-section-signature="about-services">
@@ -27,6 +30,23 @@ const { content } = Astro.props;
         ))
       }
     </dl>
+  </div>
+  <div class="about-services__service-map" aria-label={content.servicesTitle}>
+    {
+      content.items.map((item, index) => (
+        <details class="about-service-card">
+          <summary>
+            <span>{String(index + 1).padStart(2, '0')} / {item.label}</span>
+            <strong>{item.title}</strong>
+            <em aria-hidden="true">
+              <span class="about-service-card__more-closed">{showMoreLabel}</span>
+              <span class="about-service-card__more-open">{showLessLabel}</span>
+            </em>
+          </summary>
+          <p>{item.text}</p>
+        </details>
+      ))
+    }
   </div>
   <p class="about-services__note">{content.note}</p>
 </section>

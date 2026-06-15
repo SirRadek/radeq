@@ -1,0 +1,81 @@
+---
+import type { Locale } from '../data/locales';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const isCzech = locale === 'cs';
+const copy = isCzech
+  ? {
+      eyebrow: 'Vizuální směr',
+      title: 'Čistší světlý motiv a retro-future značka.',
+      lead:
+        'Výchozí motiv používá klidnější pozadí, vyšší kontrast a menší množství efektů. Varianty níže drží stejný původní signál: technická značka, stavová tečka, krátký název.',
+      paletteAria: 'Barevné směry světlého motivu',
+      logoAria: 'Pět variant loga RadeQ',
+      logoLabel: 'Logo varianta',
+    }
+  : {
+      eyebrow: 'Visual direction',
+      title: 'A cleaner light theme and retro-future mark.',
+      lead:
+        'The default theme uses a calmer background, stronger contrast, and fewer effects. The variants keep the original signal: technical brand, status dot, short name.',
+      paletteAria: 'Light theme color directions',
+      logoAria: 'Five RadeQ logo variants',
+      logoLabel: 'Logo variant',
+    };
+
+const palettes = [
+  { name: 'Clean IT', bg: '#f8faf7', ink: '#111827', accent: '#0f766e', extra: '#b45309' },
+  { name: 'Graphite Pulse', bg: '#f3f5f2', ink: '#16181d', accent: '#2563eb', extra: '#6b8e23' },
+  { name: 'Mint Console', bg: '#f4fbf8', ink: '#10201b', accent: '#087f5b', extra: '#7c3aed' },
+  { name: 'Amber Signal', bg: '#fbfaf6', ink: '#18181b', accent: '#0f766e', extra: '#c2410c' },
+];
+
+const logos = [
+  { label: '01', className: 'logo-sample--prompt', text: 'RadeQ.cz' },
+  { label: '02', className: 'logo-sample--pixel', text: 'RadeQ.cz' },
+  { label: '03', className: 'logo-sample--power', text: 'RadeQ.cz' },
+  { label: '04', className: 'logo-sample--badge', text: 'RQ' },
+  { label: '05', className: 'logo-sample--scan', text: 'RadeQ.cz' },
+];
+---
+
+<section class="brand-options" aria-labelledby="brand-options-title">
+  <div class="section-heading brand-options__heading">
+    <div>
+      <p class="section-code">{copy.eyebrow}</p>
+      <h2 id="brand-options-title">{copy.title}</h2>
+    </div>
+    <p>{copy.lead}</p>
+  </div>
+  <div class="palette-grid" aria-label={copy.paletteAria}>
+    {
+      palettes.map((palette) => (
+        <article class="palette-card" style={`--swatch-bg: ${palette.bg}; --swatch-ink: ${palette.ink}; --swatch-accent: ${palette.accent}; --swatch-extra: ${palette.extra};`}>
+          <span>{palette.name}</span>
+          <div aria-hidden="true">
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+  <div class="logo-grid" aria-label={copy.logoAria}>
+    {
+      logos.map((logo) => (
+        <article class="logo-card">
+          <span>{logo.label}</span>
+          <div class:list={['logo-sample', logo.className]} aria-label={`${copy.logoLabel} ${logo.label}`}>
+            <b>{logo.text}</b>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</section>

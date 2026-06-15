@@ -52,7 +52,8 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Ceny ukazuji dopředu, aby bylo jasné, o jakém rozsahu se bavíme.' })).toBeVisible();
   await expect(page.locator('.pricing-section').getByRole('heading', { name: 'Audit webu nebo procesu s plánem' })).toBeVisible();
   await expect(page.getByText('2 900-4 900 Kč')).toBeVisible();
-  await expect(page.locator('.pricing-section').getByRole('link', { name: 'Začít auditem' })).toBeVisible();
+  await expect(page.locator('.pricing-section').getByRole('link', { name: 'Začít auditem' })).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Začít auditem' })).toHaveCount(0);
 
   await expect(page.locator('.theme-toggle')).toHaveAttribute('data-hydrated', 'true');
   await expect(page.locator('.theme-toggle__coin')).toBeVisible();
@@ -66,7 +67,7 @@ test('homepage core flow works', async ({ page }) => {
   await page.getByRole('switch', { name: /Tmavý/ }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   await expect(page.locator('html')).toHaveAttribute('data-motion-ready', /true|reduced/);
-  await expect(page.locator('html')).toHaveAttribute('data-motion-scene', /top|services|pricing|about|handoff|terminal/);
+  await expect(page.locator('html')).toHaveAttribute('data-motion-scene', /top|services|pricing|about|brand-options|handoff|terminal/);
 
   await page.goto('/demo/service-landing/');
   await expect(page).toHaveURL(/\/demo\/service-landing\/$/);
@@ -122,7 +123,11 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.getByText('Jeden kontakt')).toBeVisible();
   await expect(page.locator('.about-services__profile dt').getByText('Předání', { exact: true })).toBeVisible();
   await expect(page.getByText('S čím pomohu vedle samotného webu')).toHaveCount(0);
-  await expect(page.getByText('Rychlá pomoc se starším webem')).toHaveCount(0);
+  await expect(page.locator('.about-service-card')).toHaveCount(4);
+  await expect(page.getByText('Rychlá pomoc se starším webem')).toBeVisible();
+  await expect(page.locator('.brand-options')).toBeVisible();
+  await expect(page.locator('.palette-card')).toHaveCount(4);
+  await expect(page.locator('.logo-card')).toHaveCount(5);
 
   await expect(page.locator('#brief-name[name="name"]')).toHaveCount(1);
   await expect(page.locator('#brief-email[name="email"]')).toHaveCount(1);
@@ -227,6 +232,9 @@ test('seo metadata and indexability endpoints are exposed', async ({ page, reque
   expect(sitemapText).toContain('<loc>https://radeq.cz/ukazky/automatizace/</loc>');
   expect(sitemapText).toContain('<loc>https://radeq.cz/ukazky/nabidka-eshop/</loc>');
   expect(sitemapText).toContain('<loc>https://radeq.cz/demo/service-landing/</loc>');
+  expect(sitemapText).toContain('<loc>https://radeq.cz/podminky/</loc>');
+  expect(sitemapText).toContain('<loc>https://radeq.cz/gdpr/</loc>');
+  expect(sitemapText).toContain('<loc>https://radeq.cz/cookies/</loc>');
 });
 
 test('mobile header keeps controls compact without horizontal overflow', async ({ page }) => {
@@ -235,6 +243,7 @@ test('mobile header keeps controls compact without horizontal overflow', async (
 
   await expect(page.locator('.command-nav')).toBeVisible();
   await expect(page.locator('.command-nav').getByRole('link', { name: 'O mně' })).toBeVisible();
+  await expect(page.locator('.command-nav').getByRole('link', { name: 'Poptávka' })).toHaveCount(0);
   await expect(page.locator('.language-link')).toBeVisible();
   await expect(page.locator('.language-link')).toHaveText('EN');
   await expect(page.locator('.header-cta')).toHaveCount(0);

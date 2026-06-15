@@ -106,7 +106,7 @@ export interface SiteContent {
       price: string;
       text: string;
       includes: string[];
-      cta: string;
+      cta?: string;
       featured?: boolean;
     }[];
   };
@@ -393,7 +393,6 @@ export const siteContent = {
           price: '2 900-4 900 Kč',
           text: 'Pro jednotlivce, živnostníky nebo firmy, které nevědí, jestli opravit web, formulář, data nebo ruční postup.',
           includes: ['slabá místa webu nebo procesu', 'prioritní plán', 'odhad další práce'],
-          cta: 'Začít auditem',
           featured: true,
         },
         {
@@ -772,7 +771,6 @@ export const siteContent = {
           price: 'CZK 2,900-4,900',
           text: 'For individuals, sole traders, or companies unsure whether to fix a website, form, data flow, or manual process.',
           includes: ['website or process weak spots', 'priority plan', 'next-work estimate'],
-          cta: 'Start with audit',
           featured: true,
         },
         {

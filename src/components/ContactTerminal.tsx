@@ -297,9 +297,23 @@ export default function ContactTerminal({ locale, content }: Props) {
           </div>
         </form>
 
-        <div className="brief-summary" data-cat-platform="contact-summary">
-          <h3>{content.summaryTitle}</h3>
-          <pre>{summary}</pre>
+        <div className="brief-summary pc-brief-panel" data-cat-platform="contact-summary" aria-live="polite">
+          <div className="pc-brief-panel__bezel" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div className="pc-brief-panel__screen">
+            <div className="pc-brief-panel__toolbar">
+              <h3>{content.summaryTitle}</h3>
+              <span>LIVE</span>
+            </div>
+            <pre>{summary}</pre>
+            <div className="pc-brief-panel__footer" aria-hidden="true">
+              <span>READY</span>
+              <span>INPUT CHECK</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>

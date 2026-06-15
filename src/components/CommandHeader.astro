@@ -54,6 +54,7 @@ const isCurrentPath = (href: string) => {
             href={resolveHref(item.href)}
             aria-current={active}
             data-section-target={sectionTarget}
+            data-nav-href={item.href}
           >
             {item.label}
           </a>

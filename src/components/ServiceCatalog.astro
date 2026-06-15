@@ -13,13 +13,11 @@ const routeCopy = {
     label: 'Doporučený start',
     title: 'Pokud si nejste jistí, začněte auditem.',
     text: 'Krátký placený audit ukáže, jestli řešit web, formulář, data, automatizaci nebo jen menší opravu. Nevzniká tak slepý odhad.',
-    action: 'Začít auditem',
   },
   en: {
     label: 'Recommended start',
     title: 'If you are unsure, start with an audit.',
     text: 'A short paid audit shows whether to address the website, forms, data, automation, or a smaller repair first.',
-    action: 'Start with audit',
   },
 }[locale];
 
@@ -36,7 +34,7 @@ const outcomeLabel = locale === 'cs' ? 'Výsledek' : 'Outcome';
     <p>{content.lead}</p>
   </div>
   <div class="offer-map" aria-label={content.mapAria} data-cat-platform="service-grid">
-    <aside class="offer-map-guide">
+    <div class="offer-map-guide">
       <p class="section-code">{content.guide.eyebrow}</p>
       <h3>{content.guide.title}</h3>
       <p>{content.guide.text}</p>
@@ -44,7 +42,6 @@ const outcomeLabel = locale === 'cs' ? 'Výsledek' : 'Outcome';
         <span>{routeCopy.label}</span>
         <strong>{routeCopy.title}</strong>
         <p>{routeCopy.text}</p>
-        <a href="#terminal">{routeCopy.action}</a>
       </div>
       <ol>
         {
@@ -56,7 +53,7 @@ const outcomeLabel = locale === 'cs' ? 'Výsledek' : 'Outcome';
           ))
         }
       </ol>
-    </aside>
+    </div>
     <div class="service-path" data-service-focus-list>
       {
         content.items.map((item, index) => (

@@ -1,13 +1,23 @@
 ---
-import CommandHeader from '../../components/CommandHeader.astro';
-import ContactTerminal from '../../components/ContactTerminal';
-import { routePages } from '../../data/routePages';
-import { siteContent } from '../../data/siteContent';
-import { withBaseHref } from '../../lib/links';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import CommandHeader from './CommandHeader.astro';
+import ContactTerminal from './ContactTerminal';
+import { routePages, type RoutePageKey } from '../data/routePages';
+import { siteContent } from '../data/siteContent';
+import { withBaseHref } from '../lib/links';
+import BaseLayout from '../layouts/BaseLayout.astro';
 
+type RoutePage = (typeof routePages)[RoutePageKey] & {
+  primaryHref?: string;
+};
+
+interface Props {
+  page: RoutePage;
+  includeContact?: boolean;
+}
+
+const { page, includeContact = false } = Astro.props;
 const content = siteContent.cs;
-const page = routePages.portfolio;
+const primaryHref = page.primaryHref ?? '#terminal';
 const secondaryHref = withBaseHref(page.secondaryHref);
 ---
 
@@ -27,7 +37,7 @@ const secondaryHref = withBaseHref(page.secondaryHref);
         {page.points.map((point) => <li>{point}</li>)}
       </ul>
       <div class="route-page__actions">
-        <a class="button-primary" href="#terminal" data-track="cta_primary_click">{page.primaryCta}</a>
+        <a class="button-primary" href={primaryHref} data-track={primaryHref === '#terminal' ? 'cta_primary_click' : undefined}>{page.primaryCta}</a>
         <a class="button-secondary" href={secondaryHref}>{page.secondaryCta}</a>
       </div>
     </section>
@@ -39,6 +49,6 @@ const secondaryHref = withBaseHref(page.secondaryHref);
         </article>
       ))}
     </section>
-    <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load />
+    {includeContact ? <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load /> : null}
   </main>
 </BaseLayout>

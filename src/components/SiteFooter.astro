@@ -1,0 +1,45 @@
+---
+import type { Locale } from '../data/locales';
+import { withBaseHref } from '../lib/links';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const copy = lang === 'cs'
+  ? {
+      contact: 'Kontakt',
+      legal: 'Dokumenty',
+      home: 'Radeq.cz',
+      mail: 'info@radeq.cz',
+      links: [
+        { href: '/podminky/', label: 'Podmínky' },
+        { href: '/gdpr/', label: 'GDPR' },
+        { href: '/cookies/', label: 'Cookies' },
+        { href: '/soukromi/', label: 'Soukromí' },
+      ],
+    }
+  : {
+      contact: 'Contact',
+      legal: 'Documents',
+      home: 'Radeq.cz',
+      mail: 'info@radeq.cz',
+      links: [
+        { href: '/podminky/', label: 'Terms' },
+        { href: '/gdpr/', label: 'GDPR' },
+        { href: '/cookies/', label: 'Cookies' },
+        { href: '/soukromi/', label: 'Privacy' },
+      ],
+    };
+---
+
+<footer class="site-footer" aria-label={copy.legal}>
+  <div>
+    <a class="site-footer__brand" href={withBaseHref(lang === 'cs' ? '/' : '/en/')}>{copy.home}</a>
+    <p>{copy.contact}: <a href={`mailto:${copy.mail}`}>{copy.mail}</a></p>
+  </div>
+  <nav aria-label={copy.legal}>
+    {copy.links.map((link) => <a href={withBaseHref(link.href)}>{link.label}</a>)}
+  </nav>
+</footer>

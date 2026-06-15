@@ -2,6 +2,7 @@
 import type { Locale } from '../data/locales';
 import MeasurementTracker from '../components/MeasurementTracker';
 import MotionOrchestrator from '../components/MotionOrchestrator';
+import SiteFooter from '../components/SiteFooter.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -64,5 +65,6 @@ const alternateUrl = alternatePath ? new URL(`${basePath}${alternatePath}`, site
     <MeasurementTracker client:load />
     <MotionOrchestrator client:load />
     <slot />
+    <SiteFooter lang={lang} />
   </body>
 </html>

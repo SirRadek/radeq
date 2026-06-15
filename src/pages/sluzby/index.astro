@@ -31,7 +31,7 @@ const secondaryHref = withBaseHref(page.secondaryHref);
         <a class="button-secondary" href={secondaryHref}>{page.secondaryCta}</a>
       </div>
     </section>
-    <section class="route-page__details" aria-label={page.h1}>
+    <section class="route-page__details" aria-label={`${page.h1} - detaily`}>
       {page.sections.map((section) => (
         <article>
           <h2>{section.title}</h2>

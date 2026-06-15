@@ -108,6 +108,90 @@ export const routePages = {
       },
     ],
   },
+  podminky: {
+    path: '/podminky/',
+    title: 'Podmínky spolupráce | Radeq.cz',
+    description: 'Základní podmínky poptávky, domluvy rozsahu, cenového odhadu a předání práce na Radeq.cz.',
+    eyebrow: 'Radeq.cz / Podmínky',
+    h1: 'Podmínky spolupráce',
+    lead:
+      'Stránka shrnuje praktická pravidla pro první kontakt a orientační domluvu. Konkrétní rozsah, cena, termín a odpovědnost se potvrzují až v nabídce nebo samostatné dohodě.',
+    primaryCta: 'Napsat e-mail',
+    primaryHref: 'mailto:info@radeq.cz',
+    secondaryCta: 'Zpět na úvod',
+    secondaryHref: '/',
+    points: ['nezávazná poptávka', 'rozsah až po domluvě', 'předání bez skrytých slibů'],
+    sections: [
+      {
+        title: 'Poptávka není objednávka',
+        text: 'Odeslání formuláře nebo e-mailu slouží k prvnímu posouzení situace. Práce začíná až po společném potvrzení rozsahu, ceny a termínu.',
+      },
+      {
+        title: 'Odhady a ceny',
+        text: 'Ceny na webu jsou orientační. Přesná cena závisí na podkladech, technickém stavu, termínu, potřebných integracích a rozsahu předání.',
+      },
+      {
+        title: 'Podklady a přístupy',
+        text: 'Hesla, citlivé dokumenty a interní údaje neposílejte přes veřejný formulář. Pokud budou potřeba, domluví se bezpečnější způsob předání.',
+      },
+    ],
+  },
+  gdpr: {
+    path: '/gdpr/',
+    title: 'GDPR a osobní údaje | Radeq.cz',
+    description: 'Informace o správci, účelu, rozsahu a uchování osobních údajů z poptávkového formuláře Radeq.cz.',
+    eyebrow: 'Radeq.cz / GDPR',
+    h1: 'GDPR a osobní údaje',
+    lead:
+      'Správcem údajů pro poptávky z tohoto webu je Radeq.cz. Pro dotazy k osobním údajům pište na info@radeq.cz. Formulář má sbírat jen údaje nutné k odpovědi na poptávku.',
+    primaryCta: 'Napsat správci',
+    primaryHref: 'mailto:info@radeq.cz',
+    secondaryCta: 'Soukromí a poptávky',
+    secondaryHref: '/soukromi/',
+    points: ['účel: odpověď na poptávku', 'rozsah: údaje z formuláře', 'kontakt: info@radeq.cz'],
+    sections: [
+      {
+        title: 'Jaké údaje',
+        text: 'Typicky jde o jméno, e-mail, firmu nebo značku, typ projektu, zprávu a dobrovolné upřesnění. Do formuláře nepatří hesla, platební údaje ani interní dokumenty.',
+      },
+      {
+        title: 'Proč a jak dlouho',
+        text: 'Údaje slouží k odpovědi, přípravě nabídky a návazné domluvě. Nevyužité poptávky se mají držet jen po přiměřenou dobu pro vyřízení komunikace a obranu oprávněných nároků.',
+      },
+      {
+        title: 'Práva a kontakt',
+        text: 'Můžete požádat o přístup, opravu, výmaz, omezení zpracování nebo vysvětlení. Pokud máte pochybnosti, můžete se obrátit také na Úřad pro ochranu osobních údajů.',
+      },
+    ],
+  },
+  cookies: {
+    path: '/cookies/',
+    title: 'Cookies a měření | Radeq.cz',
+    description: 'Jak Radeq.cz přistupuje ke cookies, technickému ukládání a budoucímu měření návštěvnosti.',
+    eyebrow: 'Radeq.cz / Cookies',
+    h1: 'Cookies a měření',
+    lead:
+      'Aktuální implementace počítá s lokálním nastavením vzhledu a technickými funkcemi webu. Měření návštěvnosti nebo marketingové cookies se mají zapnout až po samostatném schválení a odpovídajícím souhlasu.',
+    primaryCta: 'Napsat dotaz',
+    primaryHref: 'mailto:info@radeq.cz',
+    secondaryCta: 'GDPR informace',
+    secondaryHref: '/gdpr/',
+    points: ['technické ukládání', 'bez marketingu v první vlně', 'souhlas až pro netechnické cookies'],
+    sections: [
+      {
+        title: 'Technické nastavení',
+        text: 'Web může v prohlížeči ukládat volbu světlého nebo tmavého režimu a podobná nastavení, která slouží k fungování rozhraní.',
+      },
+      {
+        title: 'Měření návštěvnosti',
+        text: 'Pokud se později zapne analytika, nesmí se do ní posílat obsah formuláře ani osobní údaje. Netechnické měření má mít jasný popis a odpovídající možnost souhlasu.',
+      },
+      {
+        title: 'Změna souhlasu',
+        text: 'Pokud bude web používat volitelné cookies, doplní se ovládání souhlasu. Do té doby tato stránka slouží jako průběžné vysvětlení aktuálního stavu.',
+      },
+    ],
+  },
 } as const;
 
 export type RoutePageKey = keyof typeof routePages;

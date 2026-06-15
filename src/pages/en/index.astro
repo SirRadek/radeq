@@ -1,6 +1,7 @@
 ---
 import CommandHeader from '../../components/CommandHeader.astro';
 import AboutSection from '../../components/AboutSection.astro';
+import BrandOptions from '../../components/BrandOptions.astro';
 import ContactTerminal from '../../components/ContactTerminal';
 import HeroSection from '../../components/HeroSection.astro';
 import PricingSection from '../../components/PricingSection.astro';
@@ -30,6 +31,7 @@ const content = siteContent.en;
       <HeroSection content={content.hero} />
     </div>
     <AboutSection content={content.about} />
+    <BrandOptions locale={content.layout.lang} />
     <ServiceCatalog locale={content.layout.lang} content={content.systems} />
     <PricingSection content={content.pricing} />
     <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load />

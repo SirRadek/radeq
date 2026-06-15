@@ -7,8 +7,6 @@ interface Props {
 }
 
 const { content, locale } = Astro.props;
-const primaryItems = content.items.slice(0, 3);
-const secondaryItems = content.items.slice(3);
 
 const routeCopy = {
   cs: {
@@ -24,6 +22,11 @@ const routeCopy = {
     action: 'Start with audit',
   },
 }[locale];
+
+const showMoreLabel = locale === 'cs' ? 'Zobrazit více' : 'Show more';
+const showLessLabel = locale === 'cs' ? 'Zobrazit méně' : 'Show less';
+const situationLabel = locale === 'cs' ? 'Typická situace' : 'Typical situation';
+const outcomeLabel = locale === 'cs' ? 'Výsledek' : 'Outcome';
 ---
 
 <section class="service-catalog" id="services" aria-labelledby="services-title" data-direction="guided-offer-map">
@@ -54,41 +57,90 @@ const routeCopy = {
         }
       </ol>
     </aside>
-    <div class="service-path">
+    <div class="service-path" data-service-focus-list>
       {
-        primaryItems.map((item, index) => (
-          <article class="service-card" data-cat-platform={`service-card-${index + 1}`}>
-            <div class="service-card__marker">
-              <span>{String(index + 1).padStart(2, '0')}</span>
+        content.items.map((item, index) => (
+          <details class="service-card" data-service-card data-cat-platform={`service-card-${index + 1}`}>
+            <summary class="service-card__summary">
+              <span class="service-card__marker">
+                <span>{String(index + 1).padStart(2, '0')}</span>
+              </span>
+              <span class="service-card__body">
+                <span class="service-card__label">{item.system}</span>
+                <span class="service-card__short">{item.output}</span>
+                <span class="service-card__more" aria-hidden="true">
+                  <span class="service-card__more-closed">{showMoreLabel}</span>
+                  <span class="service-card__more-open">{showLessLabel}</span>
+                </span>
+              </span>
+            </summary>
+            <div class="service-card__details">
+              <p><strong>{situationLabel}:</strong> {item.problem}</p>
+              <p><strong>{outcomeLabel}:</strong> {item.output}</p>
             </div>
-            <p>{item.problem}</p>
-            <h3>{item.system}</h3>
-            <p>{item.output}</p>
-            <a href="#terminal">{content.requestLabel}</a>
-          </article>
+          </details>
         ))
       }
     </div>
   </div>
-  {
-    secondaryItems.length > 0 && (
-      <div class="service-addons" aria-labelledby="service-addons-title">
-        <div class="service-addons__intro">
-          <p class="section-code">{locale === 'cs' ? 'Navazující práce' : 'Follow-up work'}</p>
-          <h3 id="service-addons-title">{content.secondaryTitle}</h3>
-          <p>{content.secondaryLead}</p>
-        </div>
-        <div class="service-addons__grid">
-          {secondaryItems.map((item, index) => (
-            <article class="service-addon-card">
-              <span>{String(index + 4).padStart(2, '0')}</span>
-              <h4>{item.system}</h4>
-              <p>{item.output}</p>
-              <a href="#terminal">{content.requestLabel}</a>
-            </article>
-          ))}
-        </div>
-      </div>
-    )
-  }
 </section>
+
+<script is:inline>
+  (() => {
+    const cards = Array.from(document.querySelectorAll('[data-service-card]'));
+    if (!cards.length) return;
+
+    const mobileQuery = window.matchMedia('(max-width: 560px)');
+    const scheduleFrame =
+      window.requestAnimationFrame?.bind(window) ?? ((callback) => window.setTimeout(callback, 16));
+    let ticking = false;
+
+    const clearForwardState = () => {
+      cards.forEach((card) => card.classList.remove('is-forward'));
+    };
+
+    const updateForwardCard = () => {
+      ticking = false;
+
+      if (!mobileQuery.matches) {
+        clearForwardState();
+        return;
+      }
+
+      const viewportCenter = window.innerHeight / 2;
+      let bestCard = null;
+      let bestDistance = Number.POSITIVE_INFINITY;
+
+      cards.forEach((card) => {
+        const rect = card.getBoundingClientRect();
+        const isVisible = rect.bottom > 0 && rect.top < window.innerHeight;
+
+        if (!isVisible) return;
+
+        const distance = Math.abs(rect.top + rect.height / 2 - viewportCenter);
+
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          bestCard = card;
+        }
+      });
+
+      clearForwardState();
+
+      if (bestCard) {
+        bestCard.classList.add('is-forward');
+      }
+    };
+
+    const requestUpdate = () => {
+      if (ticking) return;
+      ticking = true;
+      scheduleFrame(updateForwardCard);
+    };
+
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate);
+    mobileQuery.addEventListener?.('change', requestUpdate);
+    requestUpdate();
+  })();
+</script>

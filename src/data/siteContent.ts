@@ -206,10 +206,7 @@ export const siteContent = {
         { label: 'Weby', value: 'web nebo formulář beru jako vstup do systému, ne jako konec řešení' },
       ],
       actionsAria: 'Hlavní akce',
-      actions: [
-        { href: '#terminal', label: 'Probrat můj problém', variant: 'primary' },
-        { href: '#services', label: 'S čím pomáhám', variant: 'secondary' },
-      ],
+      actions: [],
       coreAria: 'Interaktivní 3D náhled zrzavé kočičky',
       coreCaption: 'Volitelný pohyb. Web funguje i bez něj.',
       core: {
@@ -378,7 +375,7 @@ export const siteContent = {
         },
         {
           problem: 'Potřebujete pořádek i mimo web',
-          system: 'Digitální pořádek, dokumenty a AI pomocníci',
+          system: 'Digitální pořádek, software a AI pomocníci',
           output: 'Praktické nastavení nástrojů, převody podkladů, jednoduché AI pomocníky nebo zaučení bez módních slibů.',
         },
       ],
@@ -442,6 +439,10 @@ export const siteContent = {
         {
           label: 'Přiměřený rozsah',
           value: 'Malá oprava zůstane malá. Větší systém dostane jasné etapy.',
+        },
+        {
+          label: 'Předání',
+          value: 'Dostanete přehled, co vzniklo, kde se to upravuje a co zůstává mimo rozsah.',
         },
       ],
       servicesTitle: 'S čím pomohu vedle samotného webu',
@@ -579,15 +580,12 @@ export const siteContent = {
       lead:
         'I help individuals, sole traders, small businesses, and teams with automation, AI, databases, websites, forms, and connected tools so work makes more sense and repeats less.',
       proof: [
-        { label: 'Automation', value: 'repeat tasks, forms, and copied data get a simpler path' },
+        { label: 'Automation', value: 'repetitive tasks, forms, and copied data get a simpler path' },
         { label: 'Data and AI', value: 'records, databases, and helpers need a clear job, not just a trendy label' },
         { label: 'Websites', value: 'a website or form is an entry point into a system, not the end of the work' },
       ],
       actionsAria: 'Primary actions',
-      actions: [
-        { href: '#terminal', label: 'Discuss my problem', variant: 'primary' },
-        { href: '#services', label: 'What I help with', variant: 'secondary' },
-      ],
+      actions: [],
       coreAria: 'Interactive 3D ginger cat preview',
       coreCaption: 'Optional motion. The website works without it.',
       core: {
@@ -756,7 +754,7 @@ export const siteContent = {
         },
         {
           problem: 'You need order beyond the website',
-          system: 'Digital order, documents, and AI helpers',
+          system: 'Digital order, software, and AI helpers',
           output: 'Practical tool setup, source-material conversion, simple AI helpers, or onboarding without hype.',
         },
       ],
@@ -804,7 +802,7 @@ export const siteContent = {
       sectionCode: 'About RadeQ',
       title: 'One technical partner for content, data, and plain explanation.',
       lead:
-        'RadeQ is direct collaboration for individuals, sole traders, small businesses, and teams without an in-house IT person. We clarify the situation, organize the source material, choose a fitting solution, and hand over work you can understand after launch.',
+        'RadeQ is direct collaboration for individuals, sole traders, small businesses, and teams without an in-house IT person. I clarify the situation, organize the source material, choose a fitting solution, and hand over work you can understand after launch.',
       profileTitle: 'How the collaboration works',
       profileText:
         'The work draws on application analysis, database administration, website operations, SEO, and copywriting. First I translate the problem into clear decisions, then I choose the technology and build.',
@@ -820,6 +818,10 @@ export const siteContent = {
         {
           label: 'Right-sized scope',
           value: 'A small repair stays small. A larger system gets clear stages.',
+        },
+        {
+          label: 'Handoff',
+          value: 'You get a plain overview of what was built, where to edit it, and what remains outside the scope.',
         },
       ],
       servicesTitle: 'What I can help with beyond the website itself',

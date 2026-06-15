@@ -2,7 +2,6 @@
 import CommandHeader from '../components/CommandHeader.astro';
 import AboutSection from '../components/AboutSection.astro';
 import ContactTerminal from '../components/ContactTerminal';
-import HandoffStandard from '../components/HandoffStandard.astro';
 import HeroSection from '../components/HeroSection.astro';
 import PricingSection from '../components/PricingSection.astro';
 import ServiceCatalog from '../components/ServiceCatalog.astro';
@@ -33,7 +32,6 @@ const content = siteContent.cs;
     <AboutSection content={content.about} />
     <ServiceCatalog locale={content.layout.lang} content={content.systems} />
     <PricingSection content={content.pricing} />
-    <HandoffStandard content={content.handoff} />
     <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load />
     <a class="back-to-top" href="#top" aria-label="Zpět nahoru"><span aria-hidden="true">↑</span></a>
   </main>

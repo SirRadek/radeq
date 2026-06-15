@@ -28,19 +28,5 @@ const { content } = Astro.props;
       }
     </dl>
   </div>
-  <div class="about-services__services">
-    <p class="section-code">{content.servicesTitle}</p>
-  </div>
-  <div class="about-services__grid" aria-label={content.servicesTitle}>
-    {
-      content.items.map((item) => (
-        <article>
-          <span>{item.label}</span>
-          <h3>{item.title}</h3>
-          <p>{item.text}</p>
-        </article>
-      ))
-    }
-  </div>
   <p class="about-services__note">{content.note}</p>
 </section>

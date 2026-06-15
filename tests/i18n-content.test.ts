@@ -9,7 +9,7 @@ describe('localized site content', () => {
       const content = siteContent[locale as Locale];
 
       expect(content.layout.lang).toBe(locale);
-      expect(content.hero.actions).toHaveLength(2);
+      expect(content.hero.actions).toHaveLength(0);
       expect(content.audience.items).toHaveLength(4);
       expect(content.demos.items).toHaveLength(6);
       expect(content.handoff.items.length).toBeGreaterThan(3);
@@ -24,10 +24,7 @@ describe('localized site content', () => {
 
   it('keeps the Czech homepage focused on practical IT help', () => {
     expect(siteContent.cs.hero.title).toBe('Praktická IT pomoc pro lidi a firmy, které chtějí méně ruční práce.');
-    expect(siteContent.cs.hero.actions).toEqual([
-      { href: '#terminal', label: 'Probrat můj problém', variant: 'primary' },
-      { href: '#services', label: 'S čím pomáhám', variant: 'secondary' },
-    ]);
+    expect(siteContent.cs.hero.actions).toEqual([]);
     expect(siteContent.cs.header.navItems.map((item) => item.label)).toEqual([
       'Úvod',
       'IT pomoc',

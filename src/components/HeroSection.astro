@@ -24,7 +24,7 @@ const { content } = Astro.props;
         ))
       }
     </dl>
-    <div class="hero-actions" aria-label={content.actionsAria} data-cat-platform="hero-actions">
+    {content.actions.length > 0 && <div class="hero-actions" aria-label={content.actionsAria} data-cat-platform="hero-actions">
       {
         content.actions.map((action) => (
           <a
@@ -36,7 +36,7 @@ const { content } = Astro.props;
           </a>
         ))
       }
-    </div>
+    </div>}
   </div>
 
 </section>

@@ -17,20 +17,9 @@ test('homepage core flow works', async ({ page }) => {
     page.getByRole('heading', { name: 'Praktická IT pomoc pro lidi a firmy, které chtějí méně ruční práce.' }),
   ).toBeVisible();
   await expect(page.locator('html')).toHaveAttribute('data-measurement-ready', 'true');
-  await page.evaluate(() => {
-    (window as unknown as { __radeqMeasurementEvents: unknown[] }).__radeqMeasurementEvents = [];
-    window.addEventListener('radeq:measurement', (event) => {
-      (window as unknown as { __radeqMeasurementEvents: unknown[] }).__radeqMeasurementEvents.push(
-        (event as CustomEvent).detail,
-      );
-    });
-  });
-  await page.getByRole('link', { name: 'Probrat můj problém', exact: true }).click();
-  await expect
-    .poll(() =>
-      page.evaluate(() => (window as unknown as { __radeqMeasurementEvents: unknown[] }).__radeqMeasurementEvents),
-    )
-    .toContainEqual({ name: 'cta_primary_click', route: '/' });
+  await expect(page.locator('.hero-actions')).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Probrat můj problém', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'S čím pomáhám', exact: true })).toHaveCount(0);
   await expect(page.locator('.command-nav').getByRole('link', { name: 'Úvod', exact: true })).toBeVisible();
   await expect(page.locator('.command-nav').getByRole('link', { name: 'IT pomoc', exact: true })).toBeVisible();
   await expect(page.locator('.command-nav').getByRole('link', { name: 'Ukázky', exact: true })).toHaveAttribute(
@@ -45,10 +34,15 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.locator('#services')).toBeVisible();
   await expect(page.locator('.offer-map')).toBeVisible();
   await expect(page.getByText('Nejdřív provoz. Potom nástroj. Až pak stavba.')).toBeVisible();
-  await expect(page.locator('.service-card')).toHaveCount(3);
-  await expect(page.locator('.service-addon-card')).toHaveCount(5);
+  await expect(page.locator('.service-card')).toHaveCount(8);
+  await expect(page.locator('.service-addon-card')).toHaveCount(0);
+  await expect(page.locator('.service-card a')).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Nejdřív hledám místo, kde se práce zbytečně opakuje.' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Web může být začátek. Ne konec řešení.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Web může být začátek. Ne konec řešení.' })).toHaveCount(0);
+  await expect(page.locator('.service-card').first().locator('.service-card__more-closed')).toHaveText('Zobrazit více');
+  await page.locator('.service-card').first().locator('summary').click();
+  await expect(page.locator('.service-card').first()).toHaveAttribute('open', '');
+  await expect(page.locator('.service-card').first()).toContainText('Typická situace');
   await expect(page.locator('main a[href*="/demo/"]')).toHaveCount(0);
   await expect(page.locator('main a[href="/ukazky/"]')).toHaveCount(0);
   await expect(page.getByText('WordPress servis a opravy')).toHaveCount(0);
@@ -124,11 +118,11 @@ test('homepage core flow works', async ({ page }) => {
   await expect(
     page.getByRole('heading', { name: 'Jeden technický partner pro obsah, data i klidné vysvětlení.' }),
   ).toBeVisible();
-  await expect(page.locator('.about-services__profile dl > div')).toHaveCount(3);
+  await expect(page.locator('.about-services__profile dl > div')).toHaveCount(4);
   await expect(page.getByText('Jeden kontakt')).toBeVisible();
-  await expect(page.getByText('S čím pomohu vedle samotného webu')).toBeVisible();
-  await expect(page.getByText('Rychlá pomoc se starším webem')).toBeVisible();
-  await expect(page.getByText('Formuláře, data a jednoduché AI pomocníky')).toBeVisible();
+  await expect(page.locator('.about-services__profile dt').getByText('Předání', { exact: true })).toBeVisible();
+  await expect(page.getByText('S čím pomohu vedle samotného webu')).toHaveCount(0);
+  await expect(page.getByText('Rychlá pomoc se starším webem')).toHaveCount(0);
 
   await expect(page.locator('#brief-name[name="name"]')).toHaveCount(1);
   await expect(page.locator('#brief-email[name="email"]')).toHaveCount(1);
@@ -246,6 +240,11 @@ test('mobile header keeps controls compact without horizontal overflow', async (
   await expect(page.locator('.header-cta')).toHaveCount(0);
   await expect(page.locator('.style-toggle')).toHaveCount(0);
   await expect(page.locator('.theme-toggle')).toBeVisible();
+  await expect(page.locator('.service-card')).toHaveCount(8);
+  await page.locator('.service-card').first().evaluate((element) => {
+    element.scrollIntoView({ block: 'center' });
+  });
+  await expect(page.locator('.service-card').first()).toHaveClass(/is-forward/);
   await expect(page.locator('.pricing-card')).toHaveCount(4);
 
   const hasOverflow = await page.evaluate(() => document.body.scrollWidth > window.innerWidth + 1);

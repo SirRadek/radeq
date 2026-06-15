@@ -25,7 +25,7 @@ test('Czech and English routes expose localized first viewport and demo copy', a
   await expect(
     page.getByRole('heading', { name: 'One technical partner for content, data, and plain explanation.' }),
   ).toBeVisible();
-  await expect(page.locator('.about-services__profile dl > div')).toHaveCount(3);
+  await expect(page.locator('.about-services__profile dl > div')).toHaveCount(4);
   await expect(page.locator('#pricing')).toBeVisible();
   await expect(page.locator('main a[href*="/en/demo/"]')).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'CZ', exact: true })).toHaveAttribute('href', '/');

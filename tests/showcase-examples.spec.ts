@@ -43,6 +43,10 @@ test('chatbot guide is rule-based and does not submit data before handoff', asyn
   await expect(page.getByRole('heading', { name: 'Statický průvodce bez klientských dat' })).toBeVisible();
   await expect(page.locator('.rule-chatbot textarea')).toHaveCount(0);
   await expect(page.locator('.rule-chatbot input')).toHaveCount(0);
+  await page.waitForFunction(() => {
+    const island = document.querySelector('.rule-chatbot')?.closest('astro-island');
+    return island && !island.hasAttribute('ssr');
+  });
   await expect(page.getByRole('button', { name: 'Opakují se stejné dotazy nebo poptávky' })).toBeVisible();
   await page.getByRole('button', { name: 'Opakují se stejné dotazy nebo poptávky' }).click();
   await page.getByRole('button', { name: 'Třídění poptávek a odpovědi' }).click();

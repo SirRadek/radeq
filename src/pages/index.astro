@@ -2,9 +2,11 @@
 import CommandHeader from '../components/CommandHeader.astro';
 import AboutSection from '../components/AboutSection.astro';
 import ContactTerminal from '../components/ContactTerminal';
+import DemoBlocks from '../components/DemoBlocks.astro';
 import HeroSection from '../components/HeroSection.astro';
 import PricingSection from '../components/PricingSection.astro';
 import ServiceCatalog from '../components/ServiceCatalog.astro';
+import { showcaseExamples } from '../data/showcaseExamples';
 import { siteContent } from '../data/siteContent';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
@@ -32,6 +34,7 @@ const content = siteContent.cs;
     <AboutSection content={content.about} />
     <ServiceCatalog locale={content.layout.lang} content={content.systems} />
     <PricingSection content={content.pricing} />
+    <DemoBlocks locale={content.layout.lang} content={content.demos} examples={showcaseExamples} />
     <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load />
     <a class="back-to-top" href="#top" aria-label="Zpět nahoru"><span aria-hidden="true">↑</span></a>
   </main>

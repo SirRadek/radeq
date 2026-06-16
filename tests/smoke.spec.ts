@@ -29,7 +29,7 @@ test('homepage core flow works', async ({ page }) => {
   );
   await expect(page.locator('.command-nav').getByRole('link', { name: 'Ukázky', exact: true })).toHaveAttribute(
     'href',
-    '/ukazky/',
+    '#demos',
   );
   await expect(page.locator('.command-nav').getByRole('link', { name: 'Poptávka', exact: true })).toHaveCount(0);
   await expect(page.locator('.brand-mark--logo-b .radeq-brand-logo')).toBeVisible();
@@ -71,8 +71,22 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Web může být začátek. Ne konec řešení.' })).toHaveCount(0);
   await expect(page.locator('.service-card').first()).toContainText('Výstupy');
   await expect(page.locator('.service-card').first()).toContainText('Ukázky');
+  await expect(page.getByText('připravujeme')).toHaveCount(0);
   await expect(page.locator('main a[href*="/demo/"]')).toHaveCount(0);
-  await expect(page.locator('main a[href="/ukazky/"]')).toHaveCount(0);
+  await expect(page.locator('#demos')).toBeVisible();
+  await expect(page.locator('.demo-card')).toHaveCount(3);
+  await expect(page.locator('#demos')).toContainText('Chatbot, který odpovídá jen z připravených pravidel');
+  await expect(page.locator('#demos')).toContainText('Automatizace, která ubere ruční přepisování');
+  await expect(page.locator('#demos')).toContainText('Nabídka, která zkracuje rozhodování');
+  await expect(page.locator('#demos').getByRole('link', { name: 'Zobrazit ukázku' })).toHaveCount(3);
+  await expect(page.locator('#demos').getByRole('link', { name: 'Zobrazit ukázku' }).nth(0)).toHaveAttribute(
+    'href',
+    '/ukazky/chatbot/',
+  );
+  await expect(page.locator('#demos').getByRole('link', { name: 'Otevřít všechny ukázky' })).toHaveAttribute(
+    'href',
+    '/ukazky/',
+  );
   await expect(page.getByText('WordPress servis a opravy')).toHaveCount(0);
 
   await expect(page.locator('#pricing')).toBeVisible();
@@ -97,7 +111,25 @@ test('homepage core flow works', async ({ page }) => {
   await page.getByRole('switch', { name: /Tmavý/ }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   await expect(page.locator('html')).toHaveAttribute('data-motion-ready', /true|reduced/);
-  await expect(page.locator('html')).toHaveAttribute('data-motion-scene', /top|services|pricing|about|handoff|terminal/);
+  await expect(page.locator('html')).toHaveAttribute('data-motion-scene', /top|services|pricing|about|demos|handoff|terminal/);
+
+  const navOrder = await page.evaluate(() => {
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.command-nav a[data-nav-href^="#"]'));
+    return links.map((link) => {
+      const id = link.dataset.navHref?.slice(1) ?? '';
+      const target = document.getElementById(id);
+      return {
+        id,
+        exists: Boolean(target),
+        top: target ? Math.round(target.getBoundingClientRect().top + window.scrollY) : -1,
+      };
+    });
+  });
+  expect(navOrder.map((item) => item.id)).toEqual(['top', 'about', 'services', 'process', 'pricing', 'demos']);
+  expect(navOrder.every((item) => item.exists)).toBe(true);
+  for (let index = 1; index < navOrder.length; index += 1) {
+    expect(navOrder[index].top).toBeGreaterThan(navOrder[index - 1].top);
+  }
 
   await page.goto('/demo/service-landing/');
   await expect(page).toHaveURL(/\/demo\/service-landing\/$/);
@@ -278,14 +310,34 @@ test('mobile header keeps controls compact without horizontal overflow', async (
   await expect(page.locator('.style-toggle')).toHaveCount(0);
   await expect(page.locator('.theme-toggle')).toBeVisible();
   await expect(page.locator('.service-card')).toHaveCount(5);
+  await expect(page.locator('.service-path')).toHaveCSS('grid-template-columns', /^[\d.]+px$/);
   await page.locator('.service-card').first().evaluate((element) => {
     element.scrollIntoView({ block: 'center' });
   });
   await expect(page.locator('.service-card').first()).toHaveClass(/is-forward/);
   await expect(page.locator('.pricing-card')).toHaveCount(5);
 
-  const hasOverflow = await page.evaluate(() => document.body.scrollWidth > window.innerWidth + 1);
-  expect(hasOverflow).toBe(false);
+  const mobileNavTarget = page.locator('.command-nav').getByRole('link', { name: 'Ukázky' });
+  await mobileNavTarget.scrollIntoViewIfNeeded();
+  await mobileNavTarget.focus();
+  const mobileLayoutState = await page.evaluate(() => {
+    const nav = document.querySelector<HTMLElement>('.command-nav')!;
+    const target = document.querySelector<HTMLAnchorElement>('.command-nav a[data-nav-href="#demos"]')!;
+    const rect = target.getBoundingClientRect();
+
+    return {
+      bodyOverflow: document.body.scrollWidth > window.innerWidth + 1,
+      documentOverflow: document.documentElement.scrollWidth > window.innerWidth + 1,
+      navScrollable: nav.scrollWidth > nav.clientWidth,
+      targetFullyVisible: rect.left >= 0 && rect.right <= window.innerWidth,
+      targetFocused: document.activeElement === target,
+    };
+  });
+  expect(mobileLayoutState.bodyOverflow).toBe(false);
+  expect(mobileLayoutState.documentOverflow).toBe(false);
+  expect(mobileLayoutState.navScrollable).toBe(true);
+  expect(mobileLayoutState.targetFullyVisible).toBe(true);
+  expect(mobileLayoutState.targetFocused).toBe(true);
 
   const mobilePricingColumns = await page.evaluate(() =>
     getComputedStyle(document.querySelector('.pricing-grid')!).gridTemplateColumns.split(' ').filter(Boolean).length,
@@ -294,27 +346,93 @@ test('mobile header keeps controls compact without horizontal overflow', async (
 });
 
 test('homepage keeps tablet and 4k layout from collapsing into mobile composition', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/');
+
+  const desktopLayout = await page.evaluate(() => {
+    const pricingColumns = getComputedStyle(document.querySelector('.pricing-grid')!).gridTemplateColumns;
+    const serviceColumns = getComputedStyle(document.querySelector('.service-path')!).gridTemplateColumns;
+    const headingColumns = getComputedStyle(document.querySelector('.section-heading--services')!).gridTemplateColumns;
+
+    return {
+      pricingCount: pricingColumns.split(' ').filter(Boolean).length,
+      serviceCount: serviceColumns.split(' ').filter(Boolean).length,
+      headingCount: headingColumns.split(' ').filter(Boolean).length,
+    };
+  });
+
+  expect(desktopLayout.pricingCount).toBe(5);
+  expect(desktopLayout.serviceCount).toBe(2);
+  expect(desktopLayout.headingCount).toBe(2);
+
   await page.setViewportSize({ width: 768, height: 1024 });
   await page.goto('/');
 
   const tabletLayout = await page.evaluate(() => {
     const pricingColumns = getComputedStyle(document.querySelector('.pricing-grid')!).gridTemplateColumns;
     const serviceColumns = getComputedStyle(document.querySelector('.service-path')!).gridTemplateColumns;
+    const headingColumns = getComputedStyle(document.querySelector('.section-heading--services')!).gridTemplateColumns;
 
     return {
       pricingCount: pricingColumns.split(' ').filter(Boolean).length,
       serviceCount: serviceColumns.split(' ').filter(Boolean).length,
+      headingCount: headingColumns.split(' ').filter(Boolean).length,
     };
   });
 
-  expect(tabletLayout.pricingCount).toBeGreaterThanOrEqual(2);
-  expect(tabletLayout.serviceCount).toBeGreaterThanOrEqual(2);
+  expect(tabletLayout.pricingCount).toBe(2);
+  expect(tabletLayout.serviceCount).toBe(2);
+  expect(tabletLayout.headingCount).toBe(1);
 
   await page.setViewportSize({ width: 3840, height: 2160 });
   await page.goto('/');
 
+  const fourKLayout = await page.evaluate(() => {
+    const pricingColumns = getComputedStyle(document.querySelector('.pricing-grid')!).gridTemplateColumns;
+    const serviceColumns = getComputedStyle(document.querySelector('.service-path')!).gridTemplateColumns;
+    const headingColumns = getComputedStyle(document.querySelector('.section-heading--services')!).gridTemplateColumns;
+
+    return {
+      pricingCount: pricingColumns.split(' ').filter(Boolean).length,
+      serviceCount: serviceColumns.split(' ').filter(Boolean).length,
+      headingCount: headingColumns.split(' ').filter(Boolean).length,
+    };
+  });
+
+  expect(fourKLayout.pricingCount).toBe(5);
+  expect(fourKLayout.serviceCount).toBe(3);
+  expect(fourKLayout.headingCount).toBe(2);
   const desktopHeading = await page.locator('#services-title').boundingBox();
   expect(desktopHeading?.width ?? 0).toBeGreaterThan(560);
+});
+
+test('homepage card hover and keyboard focus have visible emphasis', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/');
+
+  const serviceCard = page.locator('.service-card').first();
+  const serviceBefore = await serviceCard.evaluate((element) => getComputedStyle(element).transform);
+  await serviceCard.hover();
+  await expect
+    .poll(() => serviceCard.evaluate((element) => getComputedStyle(element).transform))
+    .not.toBe(serviceBefore);
+  await serviceCard.focus();
+  await expect(serviceCard).toBeFocused();
+  await expect
+    .poll(() => serviceCard.evaluate((element) => getComputedStyle(element).transform))
+    .not.toBe(serviceBefore);
+
+  const pricingCard = page.locator('.pricing-card').first();
+  const pricingBefore = await pricingCard.evaluate((element) => getComputedStyle(element).transform);
+  await pricingCard.hover();
+  await expect
+    .poll(() => pricingCard.evaluate((element) => getComputedStyle(element).transform))
+    .not.toBe(pricingBefore);
+  await pricingCard.focus();
+  await expect(pricingCard).toBeFocused();
+  await expect
+    .poll(() => pricingCard.evaluate((element) => getComputedStyle(element).transform))
+    .not.toBe(pricingBefore);
 });
 
 test('homepage keeps cat mascot off the public entry on tablet', async ({ page }) => {

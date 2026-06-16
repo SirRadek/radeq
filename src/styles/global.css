@@ -3640,6 +3640,7 @@ html[data-theme="light"] .shop-cart__remove {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: clamp(0.8rem, 1.4vw, 1rem);
+  scroll-margin-top: 6rem;
 }
 
 .pricing-card {
@@ -4636,12 +4637,84 @@ html[data-style="variant-d"] .service-card {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.demo-section {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
 .audience-grid article,
 .demo-card,
 .systems-grid article,
 .handoff-list,
 .brief-summary {
   padding: 1rem;
+}
+
+.demo-card {
+  position: relative;
+  border-radius: 8px;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.demo-card:hover,
+.demo-card:focus-within,
+.demo-card:focus-visible {
+  z-index: 2;
+  border-color: color-mix(in srgb, var(--accent) 82%, var(--line));
+  box-shadow: 0 26px 74px color-mix(in srgb, var(--accent) 20%, #000000 16%);
+  transform: translateY(-0.35rem);
+}
+
+.demo-card:focus-visible,
+.demo-card:focus-within {
+  outline: 3px solid color-mix(in srgb, var(--accent) 70%, transparent);
+  outline-offset: 4px;
+}
+
+.demo-card__link {
+  align-self: end;
+  justify-self: start;
+  margin-top: 0.2rem;
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.demo-card__link:hover,
+.demo-card__link:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.22em;
+}
+
+.demo-section__link {
+  justify-self: start;
+  border: 1px solid color-mix(in srgb, var(--accent) 46%, var(--line));
+  border-radius: 8px;
+  padding: 0.7rem 0.95rem;
+  color: var(--text-main);
+  font-weight: 700;
+  text-decoration: none;
+  background: color-mix(in srgb, var(--accent) 9%, var(--panel-bg));
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.demo-section__link:hover,
+.demo-section__link:focus-visible {
+  border-color: color-mix(in srgb, var(--accent) 82%, var(--line));
+  box-shadow: 0 18px 48px color-mix(in srgb, var(--accent) 20%, #000000 12%);
+  transform: translateY(-0.18rem);
+}
+
+.demo-section__link:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 70%, transparent);
+  outline-offset: 4px;
 }
 
 .demo-card ol,

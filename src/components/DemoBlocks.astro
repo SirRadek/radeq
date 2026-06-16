@@ -1,11 +1,28 @@
 ---
 import type { SiteContent } from '../data/siteContent';
+import type { Locale } from '../data/locales';
+import type { ShowcaseExample } from '../data/showcaseExamples';
 
 interface Props {
   content: SiteContent['demos'];
+  locale: Locale;
+  examples?: ShowcaseExample[];
 }
 
-const { content } = Astro.props;
+const { content, locale, examples = [] } = Astro.props;
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const showcaseHref = `${basePath}/ukazky/`;
+const showcaseLabel = locale === 'cs' ? 'Otevřít všechny ukázky' : 'Open all examples';
+const demoItems =
+  examples.length > 0
+    ? examples.map((example) => ({
+        name: example.h1,
+        metric: example.eyebrow,
+        summary: example.summary,
+        events: example.proofTags.slice(0, 4),
+        href: `${basePath}/ukazky/${example.slug}/`,
+      }))
+    : content.items.map((item) => ({ ...item, href: undefined }));
 ---
 
 <section class="demo-section" id="demos" aria-labelledby="demo-title">
@@ -16,8 +33,8 @@ const { content } = Astro.props;
   </div>
   <div class="demo-grid">
     {
-      content.items.map((demo, index) => (
-        <article class="demo-card" data-cat-platform={`demo-card-${index + 1}`}>
+      demoItems.map((demo, index) => (
+        <article class="demo-card" data-cat-platform={`demo-card-${index + 1}`} tabindex="0">
           {demo.metric && <div class="card-kicker">{demo.metric}</div>}
           <h3>{demo.name}</h3>
           <p>{demo.summary}</p>
@@ -26,8 +43,14 @@ const { content } = Astro.props;
               <li>{event}</li>
             ))}
           </ol>
+          {demo.href && (
+            <a class="demo-card__link" href={demo.href}>
+              {locale === 'cs' ? 'Zobrazit ukázku' : 'View example'}
+            </a>
+          )}
         </article>
       ))
     }
   </div>
+  <a class="demo-section__link" href={showcaseHref}>{showcaseLabel}</a>
 </section>

@@ -13,13 +13,11 @@ const labels = {
     outputs: 'Výstupy',
     fit: 'Pro koho se hodí',
     examples: 'Ukázky',
-    examplesSuffix: 'připravujeme',
   },
   en: {
     outputs: 'Outputs',
     fit: 'Best fit',
     examples: 'Examples',
-    examplesSuffix: 'in preparation',
   },
 }[locale];
 ---
@@ -53,7 +51,7 @@ const labels = {
             <p><strong>{labels.fit}</strong> {item.fit}</p>
             <p class="service-card__examples">
               <strong>{labels.examples}</strong>
-              <span>{item.examples.join(' / ')} - {labels.examplesSuffix}</span>
+              <span>{item.examples.join(' / ')}</span>
             </p>
           </div>
         </article>

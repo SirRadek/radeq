@@ -25,6 +25,10 @@ for (const route of publicRoutes) {
       'href',
       '/#services',
     );
+    await expect(page.locator('.command-nav').getByRole('link', { name: 'Ukázky' })).toHaveAttribute(
+      'href',
+      '/#demos',
+    );
     await expect(page.locator('main a[href*="/demo/"]')).toHaveCount(0);
   });
 }
@@ -38,6 +42,12 @@ for (const route of legalRoutes) {
     await expect(page.getByRole('link', { name: /Napsat/ })).toBeVisible();
     await expect(page.locator('#terminal')).toHaveCount(0);
     await expect(page.locator('.site-footer')).toContainText('info@radeq.cz');
+    await expect(page.locator('.site-footer')).toContainText('Radek Široký');
+    await expect(page.locator('.site-footer')).toContainText('IČO: 08748811');
+    await expect(page.locator('.site-footer')).toContainText('Nezamyslova 274/10');
+    await expect(page.locator('.site-footer').getByRole('link', { name: 'Podmínky' })).toHaveAttribute('href', '/podminky/');
+    await expect(page.locator('.site-footer').getByRole('link', { name: 'GDPR' })).toHaveAttribute('href', '/gdpr/');
+    await expect(page.locator('.site-footer').getByRole('link', { name: 'Cookies' })).toHaveAttribute('href', '/cookies/');
     await expect(page.locator('main a[href*="/demo/"]')).toHaveCount(0);
   });
 }

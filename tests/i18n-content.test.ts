@@ -49,7 +49,7 @@ describe('localized site content', () => {
     expect(siteContent.cs.hero.proof.map((item) => item.label)).toEqual(['Automatizace', 'Data a AI', 'Weby']);
     expect(siteContent.cs.header.cta).toBe('Popsat situaci');
     expect(siteContent.cs.header.navItems).toHaveLength(6);
-    expect(siteContent.cs.header.navItems.some((item) => item.href === '/ukazky/' && item.label === 'Ukázky')).toBe(true);
+    expect(siteContent.cs.header.navItems.some((item) => item.href === '#demos' && item.label === 'Ukázky')).toBe(true);
     expect(siteContent.cs.header.navItems.map((item) => item.href)).not.toContain('#terminal');
     expect(siteContent.cs.terminal.projectOptions).toEqual(
       [

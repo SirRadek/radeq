@@ -874,6 +874,402 @@ html[data-theme="light"] .style-toggle {
   background: var(--accent);
 }
 
+html[data-palette-preview="true"] {
+  --preview-control-bg: color-mix(in srgb, var(--panel-bg) 94%, transparent);
+  --preview-control-soft: color-mix(in srgb, var(--panel-strong) 86%, var(--panel-bg));
+  --preview-control-ink: var(--text-main);
+  --preview-logo-r: var(--text-main);
+  --preview-logo-q: var(--accent);
+  --preview-logo-dot: var(--accent);
+  --preview-logo-bg: var(--panel-bg);
+  --preview-logo-line: var(--line);
+  --preview-logo-tick: var(--accent-2);
+}
+
+html[data-palette-preview="true"][data-theme="light"][data-palette="walnut"] {
+  --page-bg: #f7f1e8;
+  --text-main: #241914;
+  --text-muted: #6f6258;
+  --panel-bg: #fffdf8;
+  --panel-strong: #efe6dc;
+  --line: #d8cbbe;
+  --line-strong: #a58f7b;
+  --accent: #a85f2a;
+  --accent-2: #2f6f68;
+  --accent-ink: #fffdf8;
+  --warning: #9e5525;
+  --shadow-hard: 0 18px 64px rgb(60 39 27 / 0.14);
+}
+
+html[data-palette-preview="true"][data-theme="dark"][data-palette="walnut"] {
+  --page-bg: #18110e;
+  --text-main: #f6efe6;
+  --text-muted: #b9aa9d;
+  --panel-bg: #241914;
+  --panel-strong: #33251f;
+  --line: #3c2d25;
+  --line-strong: #6f5848;
+  --accent: #d58a4a;
+  --accent-2: #6fb3aa;
+  --accent-ink: #241914;
+  --warning: #d58a4a;
+  --shadow-hard: 0 18px 80px rgb(0 0 0 / 0.48);
+}
+
+html[data-palette-preview="true"][data-theme="light"][data-palette="forest"] {
+  --page-bg: #faf6ef;
+  --text-main: #211713;
+  --text-muted: #665b52;
+  --panel-bg: #ffffff;
+  --panel-strong: #efe6d9;
+  --line: #ded2c4;
+  --line-strong: #a58e76;
+  --accent: #a85f2a;
+  --accent-2: #315c45;
+  --accent-ink: #ffffff;
+  --warning: #9e5525;
+  --shadow-hard: 0 18px 64px rgb(59 42 34 / 0.13);
+}
+
+html[data-palette-preview="true"][data-theme="dark"][data-palette="forest"] {
+  --page-bg: #15100d;
+  --text-main: #f8f1e8;
+  --text-muted: #b7a99b;
+  --panel-bg: #211713;
+  --panel-strong: #30231d;
+  --line: #3a2a22;
+  --line-strong: #675142;
+  --accent: #d17a3a;
+  --accent-2: #7fb08b;
+  --accent-ink: #211713;
+  --warning: #d17a3a;
+  --shadow-hard: 0 18px 80px rgb(0 0 0 / 0.5);
+}
+
+html[data-palette-preview="true"][data-theme="light"][data-palette="royal"] {
+  --page-bg: #f8f1e8;
+  --text-main: #211713;
+  --text-muted: #675a50;
+  --panel-bg: #fffdf8;
+  --panel-strong: #eee3d5;
+  --line: #decfc1;
+  --line-strong: #9c8978;
+  --accent: #a65f2a;
+  --accent-2: #1d4e89;
+  --accent-ink: #fffdf8;
+  --warning: #9e5525;
+  --shadow-hard: 0 18px 64px rgb(45 50 70 / 0.14);
+}
+
+html[data-palette-preview="true"][data-theme="dark"][data-palette="royal"] {
+  --page-bg: #130f0d;
+  --text-main: #f7efe3;
+  --text-muted: #b7a89a;
+  --panel-bg: #211713;
+  --panel-strong: #2d211c;
+  --line: #3a2b23;
+  --line-strong: #665246;
+  --accent: #d78445;
+  --accent-2: #79a8e8;
+  --accent-ink: #211713;
+  --warning: #d78445;
+  --shadow-hard: 0 18px 80px rgb(0 0 0 / 0.52);
+}
+
+html[data-palette-preview="true"][data-theme="light"][data-palette="espresso"] {
+  --page-bg: #f5f0e9;
+  --text-main: #16110e;
+  --text-muted: #61554c;
+  --panel-bg: #ffffff;
+  --panel-strong: #ebe1d4;
+  --line: #d7c8b8;
+  --line-strong: #8f7a66;
+  --accent: #9e5525;
+  --accent-2: #3a2b23;
+  --accent-ink: #ffffff;
+  --warning: #9e5525;
+  --shadow-hard: 0 18px 64px rgb(32 24 19 / 0.15);
+}
+
+html[data-palette-preview="true"][data-theme="dark"][data-palette="espresso"] {
+  --page-bg: #0e0b09;
+  --text-main: #f4e9dc;
+  --text-muted: #afa196;
+  --panel-bg: #1a1411;
+  --panel-strong: #261c17;
+  --line: #33251f;
+  --line-strong: #5f493c;
+  --accent: #c8783b;
+  --accent-2: #b48a65;
+  --accent-ink: #1a1411;
+  --warning: #c8783b;
+  --shadow-hard: 0 18px 80px rgb(0 0 0 / 0.56);
+}
+
+html[data-palette-preview="true"] body {
+  background:
+    linear-gradient(118deg, transparent 0 18%, color-mix(in srgb, var(--panel-bg) 42%, transparent) 18% 31%, transparent 31% 69%, color-mix(in srgb, var(--accent) 8%, transparent) 69% 84%, transparent 84%),
+    linear-gradient(180deg, color-mix(in srgb, var(--page-bg) 94%, var(--panel-bg)) 0%, var(--page-bg) 58%, color-mix(in srgb, var(--page-bg) 86%, var(--accent-2) 14%) 100%),
+    var(--page-bg);
+}
+
+html[data-palette-preview="true"] body::before,
+html[data-palette-preview="true"] body::after {
+  opacity: 0.58;
+}
+
+.brand-mark--logo-b {
+  min-width: 10.75rem;
+  border-color: color-mix(in srgb, var(--accent) 32%, var(--line));
+  padding: 0.28rem 0.5rem;
+  color: var(--text-main);
+  background: color-mix(in srgb, var(--panel-bg) 82%, transparent);
+}
+
+.brand-mark--logo-b:hover {
+  border-color: color-mix(in srgb, var(--accent) 70%, var(--line));
+}
+
+.brand-mark--logo-b .radeq-logo-b--wordmark {
+  width: clamp(10.5rem, 13vw, 13rem);
+  height: auto;
+}
+
+.radeq-logo-b {
+  display: block;
+  color: var(--text-main);
+}
+
+.radeq-logo-b__badge-bg {
+  fill: var(--preview-logo-bg);
+  stroke: color-mix(in srgb, var(--line) 70%, transparent);
+  stroke-width: 2;
+}
+
+.radeq-logo-b__badge-line {
+  fill: none;
+  stroke: var(--preview-logo-line);
+  stroke-width: 2;
+}
+
+.radeq-logo-b__badge-letter--r {
+  fill: var(--preview-logo-r);
+}
+
+.radeq-logo-b__badge-letter--q,
+.radeq-logo-b__word-q,
+.radeq-logo-b__dot,
+.radeq-logo-b__mini-dot {
+  fill: var(--preview-logo-q);
+  color: var(--preview-logo-q);
+}
+
+.radeq-logo-b__ticks rect {
+  fill: var(--preview-logo-tick);
+}
+
+.radeq-logo-b__mini-text,
+.radeq-logo-b__word {
+  fill: var(--preview-logo-r);
+  font-family: var(--font-sans);
+  font-weight: 850;
+  letter-spacing: 0;
+}
+
+.radeq-logo-b__mini-text {
+  font-size: 27px;
+}
+
+.radeq-logo-b__word {
+  font-size: 50px;
+}
+
+.radeq-logo-b__scan {
+  fill: none;
+  stroke: var(--preview-logo-q);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.42;
+}
+
+.palette-preview-panel {
+  position: sticky;
+  top: 0.7rem;
+  z-index: 28;
+  display: grid;
+  grid-template-columns: minmax(180px, 0.7fr) minmax(0, 1.7fr) minmax(220px, 0.8fr);
+  gap: 0.75rem;
+  align-items: stretch;
+  width: min(100% - 2rem, var(--max-width));
+  border: 1px solid color-mix(in srgb, var(--line) 78%, transparent);
+  border-radius: 10px;
+  margin: 0.8rem auto 0;
+  padding: 0.75rem;
+  color: var(--preview-control-ink);
+  background: color-mix(in srgb, var(--preview-control-bg) 92%, transparent);
+  box-shadow: 0 18px 60px color-mix(in srgb, #000000 14%, transparent);
+  backdrop-filter: blur(18px);
+}
+
+.palette-preview-panel__brand {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.65rem;
+  align-items: center;
+  min-width: 0;
+  border: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+  border-radius: 8px;
+  padding: 0.55rem;
+  background: color-mix(in srgb, var(--panel-bg) 82%, transparent);
+}
+
+.palette-preview-panel__brand .radeq-logo-b--badge {
+  width: 44px;
+  height: 44px;
+}
+
+.palette-preview-panel__brand .radeq-logo-b--wordmark {
+  width: min(14rem, 100%);
+  height: auto;
+}
+
+.palette-preview-panel__group {
+  display: grid;
+  gap: 0.42rem;
+  min-width: 0;
+}
+
+.palette-preview-panel__group > span {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.palette-preview-panel__options,
+.palette-preview-panel__modes {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.palette-preview-panel__options {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.palette-preview-panel__modes {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.palette-preview-panel button {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  min-height: 44px;
+  border: 1px solid color-mix(in srgb, var(--line) 82%, transparent);
+  border-radius: 8px;
+  padding: 0.5rem;
+  color: var(--text-main);
+  text-align: left;
+  background: color-mix(in srgb, var(--panel-bg) 78%, transparent);
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.palette-preview-panel button:hover,
+.palette-preview-panel button:focus-visible {
+  border-color: color-mix(in srgb, var(--accent) 68%, var(--line));
+  background: color-mix(in srgb, var(--accent) 8%, var(--panel-bg));
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.palette-preview-panel button[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--accent) 82%, var(--line));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 36%, transparent);
+}
+
+.palette-preview-panel button strong {
+  font-size: 0.9rem;
+}
+
+.palette-preview-panel button span,
+.palette-preview-panel button em,
+.palette-preview-panel button small {
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 0.74rem;
+  font-style: normal;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.palette-preview-panel button i {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.18rem;
+  margin-top: 0.42rem;
+}
+
+.palette-preview-panel button b {
+  display: block;
+  height: 0.42rem;
+  border-radius: 999px;
+  background: var(--swatch);
+}
+
+.palette-preview-panel__modes button {
+  place-items: center;
+  text-align: center;
+}
+
+@media (max-width: 1120px) {
+  .palette-preview-panel {
+    grid-template-columns: 1fr;
+    position: relative;
+    top: auto;
+  }
+
+  .palette-preview-panel__brand {
+    grid-template-columns: auto minmax(0, 14rem);
+    justify-content: start;
+  }
+}
+
+@media (max-width: 680px) {
+  .brand-mark--logo-b {
+    min-width: 0;
+    padding: 0.25rem 0.35rem;
+  }
+
+  .brand-mark--logo-b .radeq-logo-b--wordmark {
+    width: clamp(7.25rem, 35vw, 9.25rem);
+  }
+
+  .palette-preview-panel {
+    width: min(100% - 1rem, var(--max-width));
+    margin-top: 0.5rem;
+    padding: 0.55rem;
+  }
+
+  .palette-preview-panel__brand .radeq-logo-b--badge {
+    width: 38px;
+    height: 38px;
+  }
+
+  .palette-preview-panel__options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .palette-preview-panel button {
+    padding: 0.48rem;
+  }
+}
+
 main {
   position: relative;
   z-index: 1;

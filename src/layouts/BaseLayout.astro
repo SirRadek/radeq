@@ -60,6 +60,7 @@ const alternateUrl = alternatePath ? new URL(`${basePath}${alternatePath}`, site
         }
       })();
     </script>
+    <slot name="head" />
   </head>
   <body>
     <MeasurementTracker client:load />

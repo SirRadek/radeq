@@ -2,6 +2,7 @@
 import type { SiteContent } from '../data/siteContent';
 import type { Locale } from '../data/locales';
 import { getEpochOptions } from '../data/styleMatrix';
+import RadeqLogoVariantB from './RadeqLogoVariantB.astro';
 import StyleVariantToggle from './StyleVariantToggle';
 import ThemeModeToggle from './ThemeModeToggle';
 
@@ -12,9 +13,20 @@ interface Props {
   locale: Locale;
   homePath?: string;
   showStyleToggle?: boolean;
+  showThemeToggle?: boolean;
+  brandVariant?: 'default' | 'logo-b';
 }
 
-const { content, alternatePath, alternateLabel, locale, homePath, showStyleToggle = true } = Astro.props;
+const {
+  content,
+  alternatePath,
+  alternateLabel,
+  locale,
+  homePath,
+  showStyleToggle = true,
+  showThemeToggle = true,
+  brandVariant = 'default',
+} = Astro.props;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 const alternateHref = alternatePath ? `${basePath}${alternatePath}` : undefined;
 const styleOptions = getEpochOptions(locale);
@@ -39,9 +51,17 @@ const isCurrentPath = (href: string) => {
 ---
 
 <header class="command-header" aria-label={content.ariaLabel}>
-  <a class="brand-mark" href="#top" aria-label={content.brandAria}>
-    <span class="brand-pulse" aria-hidden="true"></span>
-    <span>Radeq.cz</span>
+  <a class:list={['brand-mark', brandVariant === 'logo-b' && 'brand-mark--logo-b']} href="#top" aria-label={content.brandAria}>
+    {
+      brandVariant === 'logo-b'
+        ? <RadeqLogoVariantB variant="wordmark" />
+        : (
+          <>
+            <span class="brand-pulse" aria-hidden="true"></span>
+            <span>Radeq.cz</span>
+          </>
+        )
+    }
   </a>
   <nav class="command-nav" aria-label={content.navAria}>
     {
@@ -64,12 +84,16 @@ const isCurrentPath = (href: string) => {
   </nav>
   <div class="header-actions">
     {showStyleToggle && <StyleVariantToggle label={content.styleLabel} options={styleOptions} client:load />}
-    <ThemeModeToggle
-      label={content.themeLabel}
-      lightLabel={content.lightTheme}
-      darkLabel={content.darkTheme}
-      client:load
-    />
+    {
+      showThemeToggle && (
+        <ThemeModeToggle
+          label={content.themeLabel}
+          lightLabel={content.lightTheme}
+          darkLabel={content.darkTheme}
+          client:load
+        />
+      )
+    }
     {alternateHref && alternateLabel ? <a class="language-link" href={alternateHref}>{alternateLabel}</a> : null}
   </div>
 </header>

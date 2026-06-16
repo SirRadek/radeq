@@ -1,0 +1,37 @@
+---
+interface Props {
+  variant?: 'wordmark' | 'badge';
+  label?: string;
+}
+
+const { variant = 'wordmark', label = 'RadeQ.cz' } = Astro.props;
+---
+
+{
+  variant === 'badge' ? (
+    <svg class="radeq-logo-b radeq-logo-b--badge" viewBox="0 0 96 96" role="img" aria-label={label}>
+      <rect class="radeq-logo-b__badge-bg" x="5" y="5" width="86" height="86" rx="17"></rect>
+      <rect class="radeq-logo-b__badge-line" x="11" y="11" width="74" height="74" rx="13"></rect>
+      <path class="radeq-logo-b__badge-letter radeq-logo-b__badge-letter--r" d="M24 67V28h25c8 0 14 6 14 14 0 6-3 11-9 13l12 12H51L41 56h-5v11H24Zm12-22h12c3 0 5-2 5-5s-2-5-5-5H36v10Z"></path>
+      <path class="radeq-logo-b__badge-letter radeq-logo-b__badge-letter--q" d="M59 68c-11 0-20-9-20-20s9-20 20-20 20 9 20 20c0 4-1 8-3 11l7 7-8 8-7-7c-3 1-6 1-9 1Zm0-11c5 0 9-4 9-9s-4-9-9-9-9 4-9 9 4 9 9 9Z"></path>
+      <g class="radeq-logo-b__ticks" aria-hidden="true">
+        <rect x="20" y="74" width="8" height="5" rx="1"></rect>
+        <rect x="32" y="74" width="8" height="5" rx="1"></rect>
+        <rect x="44" y="74" width="8" height="5" rx="1"></rect>
+      </g>
+    </svg>
+  ) : (
+    <svg class="radeq-logo-b radeq-logo-b--wordmark" viewBox="0 0 420 92" role="img" aria-label={label}>
+      <g class="radeq-logo-b__mini-badge" aria-hidden="true">
+        <rect class="radeq-logo-b__badge-bg" x="4" y="10" width="72" height="72" rx="15"></rect>
+        <rect class="radeq-logo-b__badge-line" x="10" y="16" width="60" height="60" rx="11"></rect>
+        <text class="radeq-logo-b__mini-text" x="40" y="57" text-anchor="middle">RQ</text>
+        <rect class="radeq-logo-b__mini-dot" x="19" y="66" width="7" height="5" rx="1"></rect>
+        <rect class="radeq-logo-b__mini-dot" x="30" y="66" width="7" height="5" rx="1"></rect>
+        <rect class="radeq-logo-b__mini-dot" x="41" y="66" width="7" height="5" rx="1"></rect>
+      </g>
+      <text class="radeq-logo-b__word" x="96" y="58">Rade<tspan class="radeq-logo-b__word-q">Q</tspan><tspan class="radeq-logo-b__dot">.cz</tspan></text>
+      <path class="radeq-logo-b__scan" d="M224 25h24M220 32h33M218 39h36M218 46h31M221 53h26M226 60h17" aria-hidden="true"></path>
+    </svg>
+  )
+}

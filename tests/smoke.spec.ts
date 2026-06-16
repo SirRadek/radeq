@@ -95,6 +95,21 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.locator('.pricing-section').getByRole('heading', { name: 'Audit webu nebo procesu s plánem' })).toBeVisible();
   await expect(page.getByText('2 900-4 900 Kč')).toBeVisible();
   await expect(page.locator('.pricing-card__price')).toHaveCount(5);
+  const priceLineState = await page.locator('.pricing-card__price').evaluateAll((prices) =>
+    prices.map((price) => {
+      const style = getComputedStyle(price);
+      return {
+        text: price.textContent?.trim(),
+        whiteSpace: style.whiteSpace,
+        height: price.getBoundingClientRect().height,
+        lineHeight: Number.parseFloat(style.lineHeight),
+        overflow: price.scrollWidth > price.clientWidth + 1,
+      };
+    }),
+  );
+  expect(priceLineState.every((price) => price.whiteSpace === 'nowrap')).toBe(true);
+  expect(priceLineState.every((price) => price.height <= price.lineHeight + 2)).toBe(true);
+  expect(priceLineState.every((price) => !price.overflow)).toBe(true);
   await expect(page.locator('.pricing-card a')).toHaveCount(0);
   await expect(page.locator('.pricing-section').getByRole('link', { name: 'Začít auditem' })).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'Začít auditem' })).toHaveCount(0);
@@ -361,7 +376,7 @@ test('homepage keeps tablet and 4k layout from collapsing into mobile compositio
     };
   });
 
-  expect(desktopLayout.pricingCount).toBe(5);
+  expect(desktopLayout.pricingCount).toBe(3);
   expect(desktopLayout.serviceCount).toBe(2);
   expect(desktopLayout.headingCount).toBe(2);
 
@@ -404,6 +419,49 @@ test('homepage keeps tablet and 4k layout from collapsing into mobile compositio
   expect(fourKLayout.headingCount).toBe(2);
   const desktopHeading = await page.locator('#services-title').boundingBox();
   expect(desktopHeading?.width ?? 0).toBeGreaterThan(560);
+});
+
+test('homepage typography hierarchy stays readable and prices fit cards', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/');
+
+  const typeState = await page.evaluate(() => {
+    const fontSize = (selector: string) => Number.parseFloat(getComputedStyle(document.querySelector(selector)!).fontSize);
+    const lineHeight = (selector: string) => Number.parseFloat(getComputedStyle(document.querySelector(selector)!).lineHeight);
+    const prices = Array.from(document.querySelectorAll<HTMLElement>('.pricing-card__price')).map((price) => {
+      const style = getComputedStyle(price);
+      return {
+        text: price.textContent?.trim(),
+        fontSize: Number.parseFloat(style.fontSize),
+        lineHeight: Number.parseFloat(style.lineHeight),
+        height: price.getBoundingClientRect().height,
+        overflow: price.scrollWidth > price.clientWidth + 1,
+        whiteSpace: style.whiteSpace,
+      };
+    });
+
+    return {
+      body: fontSize('body'),
+      heroLead: fontSize('.hero-copy p'),
+      h1: fontSize('h1'),
+      h1Line: lineHeight('h1'),
+      h2: fontSize('#services-title'),
+      h3: fontSize('.service-card h3'),
+      prices,
+    };
+  });
+
+  expect(typeState.heroLead).toBeGreaterThanOrEqual(typeState.body);
+  expect(typeState.h3 / typeState.body).toBeGreaterThanOrEqual(1.2);
+  expect(typeState.h2 / typeState.body).toBeGreaterThanOrEqual(2);
+  expect(typeState.h1 / typeState.body).toBeGreaterThanOrEqual(3);
+  expect(typeState.h1).toBeGreaterThan(typeState.h2);
+  expect(typeState.h2).toBeGreaterThan(typeState.h3);
+  expect(typeState.h3).toBeGreaterThan(typeState.body);
+  expect(typeState.h1Line / typeState.h1).toBeGreaterThanOrEqual(0.95);
+  expect(typeState.prices.every((price) => price.whiteSpace === 'nowrap')).toBe(true);
+  expect(typeState.prices.every((price) => price.height <= price.lineHeight + 2)).toBe(true);
+  expect(typeState.prices.every((price) => !price.overflow)).toBe(true);
 });
 
 test('homepage card hover and keyboard focus have visible emphasis', async ({ page }) => {

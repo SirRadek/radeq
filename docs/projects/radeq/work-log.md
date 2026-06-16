@@ -38,3 +38,21 @@ Follow-up corrections from the loop:
 - Moved the pricing anchor to the price-card area so `#process` comes before `#pricing` in real page geometry.
 - Replaced the generic Czech homepage demo cards with the real public showcase links: chatbot, automation, and offer simplification.
 - Removed the "in preparation" suffix from service-card example labels because public examples now exist.
+
+## 2026-06-16 Typography and pricing fit loop
+
+Scope: compare public preview typography against common web type-scale guidance and fix price wrapping.
+
+Findings:
+- Current homepage hierarchy is broadly readable: body remains 16px, H3 is above body, H2 is clearly above H3, and hero H1 stays dominant.
+- The ceník issue was not global typography; it came from too many narrow pricing columns on normal desktop and a price element that could wrap.
+- Pricing values should behave like labels/numbers, not paragraphs: one line, no hyphenation/wrapping, and size based on card width.
+
+Changes:
+- Pricing cards now define an inline-size container and `.pricing-card__price` scales with container query units.
+- Prices use `white-space: nowrap` and a one-line line-height test to prevent visual wrapping.
+- Pricing grid uses three columns on normal desktop, two on tablet, one on mobile, and five only on large/wide screens.
+
+Verification to keep:
+- Assert H1/H2/H3/body hierarchy ratios in Playwright.
+- Assert every pricing value is one line, `nowrap`, and has no horizontal overflow.

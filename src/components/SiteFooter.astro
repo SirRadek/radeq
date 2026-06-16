@@ -10,8 +10,14 @@ const { lang } = Astro.props;
 const copy = lang === 'cs'
   ? {
       contact: 'Kontakt',
+      brandTitle: 'RadeQ',
+      brandText: 'Praktické weby, automatizace a provozní zjednodušení.',
+      billing: 'Fakturační údaje',
+      owner: 'Radek Široký',
+      ico: 'IČO: 08748811',
+      address: ['Nezamyslova 274/10', 'Nusle, 128 00 Praha 2', 'Česká republika'],
       legal: 'Dokumenty',
-      home: 'Radeq.cz',
+      copyright: '© 2026 RadeQ / Radek Široký',
       mail: 'info@radeq.cz',
       links: [
         { href: '/podminky/', label: 'Podmínky' },
@@ -22,8 +28,14 @@ const copy = lang === 'cs'
     }
   : {
       contact: 'Contact',
+      brandTitle: 'RadeQ',
+      brandText: 'Practical websites, automation, and operational cleanup.',
+      billing: 'Billing details',
+      owner: 'Radek Široký',
+      ico: 'Company ID: 08748811',
+      address: ['Nezamyslova 274/10', 'Nusle, 128 00 Prague 2', 'Czech Republic'],
       legal: 'Documents',
-      home: 'Radeq.cz',
+      copyright: '© 2026 RadeQ / Radek Široký',
       mail: 'info@radeq.cz',
       links: [
         { href: '/podminky/', label: 'Terms' },
@@ -35,9 +47,22 @@ const copy = lang === 'cs'
 ---
 
 <footer class="site-footer" aria-label={copy.legal}>
-  <div>
-    <a class="site-footer__brand" href={withBaseHref(lang === 'cs' ? '/' : '/en/')}>{copy.home}</a>
-    <p>{copy.contact}: <a href={`mailto:${copy.mail}`}>{copy.mail}</a></p>
+  <div class="site-footer__brand-block">
+    <strong class="site-footer__brand">{copy.brandTitle}</strong>
+    <p>{copy.brandText}</p>
+    <small>{copy.copyright}</small>
+  </div>
+  <div class="site-footer__contact">
+    <p class="section-code">{copy.contact}</p>
+    <a class="site-footer__mail" href={`mailto:${copy.mail}`}>{copy.mail}</a>
+  </div>
+  <div class="site-footer__billing">
+    <p class="section-code">{copy.billing}</p>
+    <strong>{copy.owner}</strong>
+    <span>{copy.ico}</span>
+    <address>
+      {copy.address.map((line) => <span>{line}</span>)}
+    </address>
   </div>
   <nav aria-label={copy.legal}>
     {copy.links.map((link) => <a href={withBaseHref(link.href)}>{link.label}</a>)}

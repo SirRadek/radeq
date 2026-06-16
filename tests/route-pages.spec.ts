@@ -21,7 +21,7 @@ for (const route of publicRoutes) {
     await expect(page.locator('.command-nav')).toBeVisible();
     await expect(page.locator('#terminal')).toBeVisible();
     await expect(page.getByRole('link', { name: 'Probrat můj problém' })).toBeVisible();
-    await expect(page.locator('.command-nav').getByRole('link', { name: 'IT pomoc' })).toHaveAttribute(
+    await expect(page.locator('.command-nav').getByRole('link', { name: 'Služby' })).toHaveAttribute(
       'href',
       '/#services',
     );

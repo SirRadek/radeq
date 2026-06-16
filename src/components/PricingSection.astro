@@ -16,19 +16,36 @@ const { content } = Astro.props;
     </div>
     <p>{content.lead}</p>
   </div>
+  <div class="pricing-process" id="process" aria-labelledby="process-title">
+    <div>
+      <p class="section-code">{content.process.eyebrow}</p>
+      <h3 id="process-title">{content.process.title}</h3>
+      <p>{content.process.text}</p>
+    </div>
+    <ol>
+      {
+        content.process.steps.map((step) => (
+          <li>
+            <span>{step.label}</span>
+            <strong>{step.value}</strong>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
   <div class="pricing-grid">
     {
       content.items.map((item) => (
-        <article class:list={['pricing-card', item.featured && 'pricing-card--featured']}>
+        <article class:list={['pricing-card', item.featured && 'pricing-card--featured']} tabindex="0">
           <div>
-            <span>{item.price}</span>
+            <span class="pricing-card__price">{item.price}</span>
             <h3>{item.name}</h3>
             <p>{item.text}</p>
           </div>
           <ul>
             {item.includes.map((include) => <li>{include}</li>)}
           </ul>
-          {item.cta ? <a href="#terminal" data-track={item.featured ? 'audit_click' : undefined}>{item.cta}</a> : null}
+          <p class="pricing-card__output">{item.output}</p>
         </article>
       ))
     }

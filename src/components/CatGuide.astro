@@ -10,8 +10,7 @@ interface Props {
 
 const { hero, locale, systems } = Astro.props;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
-const demoRoot = locale === 'en' ? '/en/demo' : '/demo';
-const getDemoHref = (moduleId: string) => `${basePath}${demoRoot}/${moduleId}/`;
+const showcaseHref = `${basePath}/ukazky/`;
 
 const copy = {
   cs: {
@@ -53,7 +52,7 @@ const copy = {
 }[locale];
 
 const bubbles = systems.items.slice(0, 5);
-const featured = systems.items.filter((item) => item.demoModule).slice(0, 4);
+const featured = systems.items.slice(0, 4);
 const adviceCopy = {
   cs: {
     label: 'Co doporučí průvodce',
@@ -117,16 +116,12 @@ const adviceCopy = {
       bubbles.map((item, index) => (
         <article class={`cat-bubble cat-bubble--${index + 1}`}>
           <span>{String(index + 1).padStart(2, '0')}</span>
-          <h2>{item.problem}</h2>
-          <p>{item.output}</p>
+          <h2>{item.title}</h2>
+          <p>{item.fit}</p>
           <strong class="cat-bubble__tip">
-            {adviceCopy.tip}: {item.demoModule ? copy.demoPrefix : copy.secondary}
+            {adviceCopy.tip}: {copy.secondary}
           </strong>
-          {item.demoModule ? (
-            <a href={getDemoHref(item.demoModule)}>{copy.demoPrefix}</a>
-          ) : (
-            <a href="#terminal">{copy.secondary}</a>
-          )}
+          <a href="#terminal">{copy.secondary}</a>
         </article>
       ))
     }
@@ -151,7 +146,7 @@ const adviceCopy = {
     <div class="cat-guide__demo-strip" aria-label={systems.mapAria}>
       {
         featured.map((item) => (
-          <a href={getDemoHref(item.demoModule!)}>{item.system}</a>
+          <a href={showcaseHref}>{item.title}</a>
         ))
       }
     </div>

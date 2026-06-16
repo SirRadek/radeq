@@ -1,5 +1,4 @@
 import { supportedLocales, type Locale } from './locales';
-import type { ModuleId } from './styleMatrix';
 export { supportedLocales, type Locale };
 
 export interface SiteContent {
@@ -80,33 +79,31 @@ export interface SiteContent {
     title: string;
     lead: string;
     mapAria: string;
-    guide: {
-      eyebrow: string;
+    items: {
       title: string;
       text: string;
-      steps: { label: string; value: string }[];
-    };
-    requestLabel: string;
-    secondaryTitle: string;
-    secondaryLead: string;
-    items: {
-      problem: string;
-      system: string;
-      output: string;
-      demoModule?: ModuleId;
+      outputs: string[];
+      fit: string;
+      examples: string[];
     }[];
   };
   pricing: {
     sectionCode: string;
     title: string;
     lead: string;
+    process: {
+      eyebrow: string;
+      title: string;
+      text: string;
+      steps: { label: string; value: string }[];
+    };
     note: string;
     items: {
       name: string;
       price: string;
       text: string;
       includes: string[];
-      cta?: string;
+      output: string;
       featured?: boolean;
     }[];
   };
@@ -120,12 +117,8 @@ export interface SiteContent {
       label: string;
       value: string;
     }[];
-    servicesTitle: string;
-    items: {
-      label: string;
-      title: string;
-      text: string;
-    }[];
+    bridgeTitle: string;
+    bridgeText: string;
     note: string;
   };
   terminal: {
@@ -182,11 +175,11 @@ export const siteContent = {
       navAria: 'Hlavní menu',
       navItems: [
         { href: '#top', label: 'Úvod' },
-        { href: '#services', label: 'IT pomoc' },
+        { href: '#about', label: 'Co řeším' },
+        { href: '#services', label: 'Služby' },
+        { href: '#process', label: 'Jak pracuji' },
+        { href: '#pricing', label: 'Ceník' },
         { href: '/ukazky/', label: 'Ukázky' },
-        { href: '#about', label: 'O mně' },
-        { href: '#pricing', label: 'Ceny' },
-        { href: '#terminal', label: 'Poptávka' },
       ],
       cta: 'Popsat situaci',
       styleLabel: 'Téma',
@@ -317,66 +310,81 @@ export const siteContent = {
       ],
     },
     systems: {
-      sectionCode: '',
-      title: 'Nejdřív hledám místo, kde se práce zbytečně opakuje.',
+      sectionCode: 'Služby',
+      title: 'Web, automatizace a provozní zjednodušení v jednom katalogu.',
       lead:
-        'Nabídka nezačíná technologií ani platformou. Začíná tím, co vás brzdí: ruční přepisování, nepořádek v datech, nepropojené nástroje nebo web bez návaznosti.',
-      mapAria: 'Cesty k praktičtější IT pomoci',
-      guide: {
-        eyebrow: 'Postup bez zkratek',
-        title: 'Nejdřív provoz. Potom nástroj. Až pak stavba.',
-        text:
-          'Každý krok musí být čitelný i pro člověka, který nechce řešit technické detaily. Proto oddělujeme pochopení problému, návrh jednoduchého řešení, stavbu a předání.',
-        steps: [
-          { label: '01', value: 'pojmenujeme, co se dnes dělá ručně, pomalu nebo opakovaně' },
-          { label: '02', value: 'vybereme nejjednodušší řešení: formulář, evidenci, automatizaci, web nebo AI pomocníka' },
-          { label: '03', value: 'výsledek otestujeme, vysvětlíme a domluvíme další péči jen tam, kde dává smysl' },
-        ],
-      },
-      requestLabel: 'Probrat situaci',
-      secondaryTitle: 'Web může být začátek. Ne konec řešení.',
-      secondaryLead:
-        'Když web, formulář nebo nabídka sbírá poptávky, musí navazovat na další práci. Proto řeším i provozní vrstvy okolo: měření, data, opravy, obsah a přehlednější předání.',
+        'Neřeším web jako izolovanou vizitku. Web, formulář, tabulka nebo AI pomocník má být vstup do systému, který šetří práci a dá se předat.',
+      mapAria: 'Katalog praktické IT pomoci',
       items: [
         {
-          problem: 'Přepisujete stejné věci pořád dokola',
-          system: 'Automatizace rutinní práce',
-          output: 'Formuláře, tabulky, e-maily a opakované kroky dostanou jednodušší tok, který šetří čas i chyby.',
+          title: 'Weby a landing pages',
+          text:
+            'Pro jednoduché weby, redesigny a stránky, které nemají jen vypadat dobře, ale přivést člověka ke konkrétní akci.',
+          outputs: [
+            'jednoduchý web nebo landing page',
+            'redesign existující stránky',
+            'kontaktní nebo poptávkový formulář',
+            'technické SEO minimum',
+            'responzivní verze pro mobil i desktop',
+          ],
+          fit: 'Hodí se, když potřebujete srozumitelně vysvětlit nabídku a sbírat použitelné podklady.',
+          examples: ['landing page', 'redesign', 'formulář'],
         },
         {
-          problem: 'Chcete použít AI, ale nevíte kde',
-          system: 'AI pomocníci s jasným účelem',
-          output: 'Navrhnu malé pomocníky pro třídění dotazů, přípravu odpovědí, práci s texty nebo interní rozhodování.',
+          title: 'Automatizace a interní procesy',
+          text:
+            'Pro ruční práci, která se opakuje v e-mailech, tabulkách, formulářích nebo mezi nástroji.',
+          outputs: [
+            'automatizace ručních kroků',
+            'propojení formulářů, tabulek a e-mailů',
+            'jednoduché interní nástroje',
+            'přehledové dashboardy',
+            'hlídání opakujících se úkolů',
+          ],
+          fit: 'Hodí se, když lidé ztrácí čas kopírováním, přepisováním nebo dohledáváním stavu.',
+          examples: ['automatizace poptávky', 'evidence zakázek', 'provozní dashboard'],
         },
         {
-          problem: 'Data jsou v tabulkách, e-mailech a hlavách lidí',
-          system: 'Databáze, evidence a přehledy',
-          output: 'Srovnáme vstupy, pole, stavy a výstupy tak, aby bylo jasné, co se děje a kdo má udělat další krok.',
+          title: 'Data, databáze a migrace',
+          text:
+            'Pro tabulky, evidence a zdroje dat, které už nejsou přehledné nebo se musí ručně upravovat.',
+          outputs: [
+            'čištění dat',
+            'převody tabulek',
+            'jednoduché databáze',
+            'import a export',
+            'sjednocení zdrojů dat',
+          ],
+          fit: 'Hodí se, když potřebujete vědět, co v datech opravdu je, a dostat je do použitelné struktury.',
+          examples: ['převod tabulky do systému', 'struktura databáze', 'kontrola dat'],
         },
         {
-          problem: 'Nástroje spolu nemluví',
-          system: 'Propojení systémů a formulářů',
-          output: 'Poptávky, objednávky nebo podklady se pošlou tam, kde se opravdu řeší, místo aby se ručně kopírovaly.',
+          title: 'AI asistenti a pracovní podpora',
+          text:
+            'Pro malé AI pomocníky, kteří mají konkrétní pracovní účel a jasné hranice použití.',
+          outputs: [
+            'interní chatbot nebo znalostní pomocník',
+            'třídění textů a požadavků',
+            'návrhy odpovědí',
+            'práce s dokumenty',
+            'bezpečné použití AI v procesu',
+          ],
+          fit: 'Hodí se, když chcete AI použít prakticky, ne jen přidat módní nálepku.',
+          examples: ['AI asistent pro podporu', 'třídění požadavků', 'práce s dokumentem'],
         },
         {
-          problem: 'Web nebo formulář nesbírá použitelné podklady',
-          system: 'Web jako vstup do systému',
-          output: 'Web, redesign nebo formulář navrhnu tak, aby vysvětlil nabídku a zároveň poslal správná data dál.',
-        },
-        {
-          problem: 'Stávající web má slabá místa',
-          system: 'Rychlá webová oprava, SEO a měření',
-          output: 'Formuláře, metadata, mobil, rychlost nebo drobné opravy ve WordPressu, Shoptetu, Shopify a dalších systémech.',
-        },
-        {
-          problem: 'Prodáváte produkty, balíčky nebo služby',
-          system: 'Přehlednější nabídka nebo e-shop úprava',
-          output: 'Produktové stránky, porovnání variant, měření zájmu a kratší cesta k objednávce nebo poptávce.',
-        },
-        {
-          problem: 'Potřebujete pořádek i mimo web',
-          system: 'Digitální pořádek, software a AI pomocníci',
-          output: 'Praktické nastavení nástrojů, převody podkladů, jednoduché AI pomocníky nebo zaučení bez módních slibů.',
+          title: 'Správa, opravy a dlouhodobá péče',
+          text:
+            'Pro weby a nástroje, které už existují, ale potřebují opravu, drobné změny nebo průběžné zlepšování.',
+          outputs: [
+            'drobné úpravy webu',
+            'kontrola chyb',
+            'technická údržba',
+            'měsíční péče',
+            'průběžné zlepšování',
+          ],
+          fit: 'Hodí se, když nechcete pokaždé rozjíždět nový projekt, ale potřebujete spolehlivou technickou pomoc.',
+          examples: ['audit', 'před a po', 'seznam oprav'],
         },
       ],
     },
@@ -385,36 +393,55 @@ export const siteContent = {
       title: 'Ceny ukazuji dopředu, aby bylo jasné, o jakém rozsahu se bavíme.',
       lead:
         'Každý web, automatizace nebo datové řešení má jiný rozsah, ale živnostník i malá firma potřebují rámec dřív, než pošlou poptávku. Přesnou cenu dávám po krátkém zadání nebo auditu.',
+      process: {
+        eyebrow: 'Postup bez zkratek',
+        title: 'Nejdřív provoz. Potom nástroj. Až pak stavba.',
+        text:
+          'Před cenovou nabídkou musí být jasné, co se dnes dělá ručně, kde vzniká chaos a co má být výsledkem. Proto nejdřív odděluji pochopení problému, návrh jednoduchého řešení, realizaci a předání.',
+        steps: [
+          { label: '01', value: 'pojmenujeme, co se dnes dělá ručně, pomalu nebo opakovaně' },
+          { label: '02', value: 'vybereme nejjednodušší řešení: formulář, evidenci, automatizaci, web nebo AI pomocníka' },
+          { label: '03', value: 'výsledek otestujeme, vysvětlíme a domluvíme další péči jen tam, kde dává smysl' },
+        ],
+      },
       note:
         'Audit lze odečíst z následné realizace, pokud spolu navážeme na web, automatizaci, datový pořádek nebo větší opravy.',
       items: [
         {
           name: 'Audit webu nebo procesu s plánem',
           price: '2 900-4 900 Kč',
-          text: 'Pro jednotlivce, živnostníky nebo firmy, které nevědí, jestli opravit web, formulář, data nebo ruční postup.',
-          includes: ['slabá místa webu nebo procesu', 'prioritní plán', 'odhad další práce'],
+          text: 'Vhodné, když nevíte, kde začít, ale víte, že web, formulář nebo proces nefunguje dobře.',
+          includes: ['rychlé zmapování problému', 'návrh priorit', 'seznam doporučených úprav', 'odhad další práce'],
+          output: 'Výstup: stručné zadání, podle kterého lze pokračovat v realizaci.',
           featured: true,
         },
         {
-          name: 'Startovací web nebo formulářová cesta',
+          name: 'Startovací web / landing page',
           price: 'od 25 000 Kč',
-          text: 'Jednodušší web, landing page nebo formulář pro člověka či malý tým, který potřebuje jasnou nabídku a použitelné podklady.',
-          includes: ['1-5 podstránek nebo toků', 'textová struktura', 'SEO základ a formulář'],
-          cta: 'Probrat start',
+          text: 'Pro jednoduchou prezentaci, službu nebo nabídku, která má být jasná na mobilu i desktopu.',
+          includes: ['struktura stránky', 'textové vedení návštěvníka', 'formulář nebo kontakt', 'SEO a měření v základním rozsahu'],
+          output: 'Výstup: spuštěná stránka, která vysvětluje nabídku a sbírá použitelné kontakty.',
         },
         {
           name: 'Redesign nebo provozní zjednodušení',
           price: '35 000-75 000 Kč',
-          text: 'Větší úprava existujícího webu, formulářů, evidence nebo ručního workflow, které už brzdí další práci.',
-          includes: ['audit současného stavu', 'nová struktura a postup', 'kontrola před spuštěním'],
-          cta: 'Chci zlepšit provoz',
+          text: 'Pro existující web, formulář nebo workflow, které už brzdí práci a potřebuje srozumitelnou přestavbu.',
+          includes: ['audit současného stavu', 'nová struktura a postup', 'úprava klíčových obrazovek nebo toků', 'kontrola před spuštěním'],
+          output: 'Výstup: přehlednější cesta pro klienta i interní práci okolo.',
         },
         {
-          name: 'Průběžná IT a webová péče',
+          name: 'Automatizace / formuláře / data',
+          price: 'od 18 000 Kč',
+          text: 'Pro ruční přepisování, nepropojené tabulky, formuláře, e-maily nebo jednoduché evidence.',
+          includes: ['návrh toku dat', 'formulář nebo propojení', 'kontrola vstupů', 'předání postupu'],
+          output: 'Výstup: menší funkční celek, který ubere opakovanou práci a chyby.',
+        },
+        {
+          name: 'Měsíční péče',
           price: 'od 2 500 Kč / měsíc',
-          text: 'Drobné úpravy, kontrola funkčnosti, obsahové konzultace, formuláře, data a technická podpora po spuštění.',
-          includes: ['úpravy obsahu', 'kontrola formulářů a dat', 'SEO a provozní doporučení'],
-          cta: 'Domluvit péči',
+          text: 'Pro drobné úpravy, kontrolu funkčnosti, obsahové konzultace a technickou podporu po spuštění.',
+          includes: ['úpravy obsahu', 'kontrola formulářů a dat', 'SEO a provozní doporučení', 'průběžný seznam drobných zlepšení'],
+          output: 'Výstup: klidnější provoz bez toho, aby se z každé maličkosti dělal nový projekt.',
         },
       ],
     },
@@ -444,29 +471,9 @@ export const siteContent = {
           value: 'Dostanete přehled, co vzniklo, kde se to upravuje a co zůstává mimo rozsah.',
         },
       ],
-      servicesTitle: 'S čím pomohu vedle samotného webu',
-      items: [
-        {
-          label: 'Optimalizace',
-          title: 'Rychlost, SEO a měření',
-          text: 'Zrychlení webu, základní dohledatelnost, titulky, odkazy, měření akcí a oprava slabých míst.',
-        },
-        {
-          label: 'Opravy',
-          title: 'Rychlá pomoc se starším webem',
-          text: 'Formuláře, metadata, měření, drobné chyby a úpravy ve WordPressu, Shoptetu, Shopify, Webnode, Wix nebo vlastním webu.',
-        },
-        {
-          label: 'Automatizace',
-          title: 'Formuláře, data a jednoduché AI pomocníky',
-          text: 'Sběr poptávek, třídění dat, převody dokumentů a malé pomocníky, kteří šetří ruční práci bez velkých slibů.',
-        },
-        {
-          label: 'Konzultace',
-          title: 'PC, software a digitální pořádek',
-          text: 'Praktické vysvětlení, nastavení nástrojů a postupy pro lidi a firmy, které nemají vlastního IT člověka.',
-        },
-      ],
+      bridgeTitle: 'Web není konec řešení, ale vstup do systému.',
+      bridgeText:
+        'Cílem je méně ruční práce, méně chaosu a více přehledu. Služby se proto dají skládat dohromady: web, formulář, data, automatizace, měření i jednoduchá AI podpora.',
       note: 'Cílem není dodat co nejvíc techniky. Cílem je, aby web a navazující nástroje přestaly překážet a začaly se dát normálně používat.',
     },
     terminal: {
@@ -560,11 +567,11 @@ export const siteContent = {
       navAria: 'Main menu',
       navItems: [
         { href: '#top', label: 'Home' },
-        { href: '#services', label: 'IT help' },
-        { href: '/ukazky/', label: 'Work' },
-        { href: '#about', label: 'About' },
+        { href: '#about', label: 'What I solve' },
+        { href: '#services', label: 'Services' },
+        { href: '#process', label: 'How I work' },
         { href: '#pricing', label: 'Pricing' },
-        { href: '#terminal', label: 'Request' },
+        { href: '/ukazky/', label: 'Work' },
       ],
       cta: 'Describe situation',
       styleLabel: 'Themes',
@@ -695,66 +702,50 @@ export const siteContent = {
       ],
     },
     systems: {
-      sectionCode: '',
-      title: 'First I look for the place where work repeats for no good reason.',
+      sectionCode: 'Services',
+      title: 'Websites, automation, and operational cleanup in one catalog.',
       lead:
-        'The offer does not start with a platform or technical vocabulary. It starts with what slows you down: copied data, messy records, disconnected tools, or a website with no follow-up process.',
-      mapAria: 'Paths to practical IT help',
-      guide: {
-        eyebrow: 'Plain process',
-        title: 'Operation first. Tool second. Build last.',
-        text:
-          'Each step must be clear even when you do not want to handle technical details. Problem understanding, a simple solution, build, and handoff are separated.',
-        steps: [
-          { label: '01', value: 'name what is manual, slow, or repeated today' },
-          { label: '02', value: 'choose the simplest useful path: form, records, automation, website, or AI helper' },
-          { label: '03', value: 'test, explain, and keep ongoing care only where it makes sense' },
-        ],
-      },
-      requestLabel: 'Discuss situation',
-      secondaryTitle: 'A website can be the start. Not the whole solution.',
-      secondaryLead:
-        'When a website, form, or offer collects requests, it should connect to the next step. That is why I also handle measurement, data, fixes, content, and handoff around the public page.',
+        'I do not treat a website as an isolated brochure. A website, form, spreadsheet, or AI helper should be an entry point into a system that saves work and can be handed over.',
+      mapAria: 'Catalog of practical IT help',
       items: [
         {
-          problem: 'You copy the same information again and again',
-          system: 'Automation for repeated work',
-          output: 'Forms, sheets, emails, and repeated steps get a simpler path that saves time and reduces mistakes.',
+          title: 'Websites and landing pages',
+          text:
+            'For simple websites, redesigns, and pages that should do more than look good: they should move a person toward a clear action.',
+          outputs: ['simple website or landing page', 'existing-page redesign', 'contact or request form', 'technical SEO basics', 'responsive mobile and desktop version'],
+          fit: 'Useful when you need a clear offer and usable source material from visitors.',
+          examples: ['landing page', 'redesign', 'form'],
         },
         {
-          problem: 'You want to use AI but do not know where it helps',
-          system: 'AI helpers with a clear purpose',
-          output: 'Small helpers for sorting requests, preparing replies, working with text, or supporting internal decisions.',
+          title: 'Automation and internal processes',
+          text:
+            'For manual work that repeats across email, spreadsheets, forms, or disconnected tools.',
+          outputs: ['manual-step automation', 'forms, sheets, and email connections', 'small internal tools', 'overview dashboards', 'watching repeated tasks'],
+          fit: 'Useful when people lose time copying, retyping, or searching for status.',
+          examples: ['request automation', 'job records', 'operations dashboard'],
         },
         {
-          problem: 'Data lives in sheets, emails, and people’s heads',
-          system: 'Databases, records, and overviews',
-          output: 'Inputs, fields, states, and outputs are organized so the next step and owner are visible.',
+          title: 'Data, databases, and migration',
+          text:
+            'For spreadsheets, records, and data sources that are no longer clear or need manual cleanup.',
+          outputs: ['data cleaning', 'spreadsheet conversion', 'simple databases', 'import and export', 'source consolidation'],
+          fit: 'Useful when you need to know what is really in the data and move it into a usable structure.',
+          examples: ['messy sheet to system', 'database structure', 'data check'],
         },
         {
-          problem: 'Your tools do not talk to each other',
-          system: 'Connected systems and forms',
-          output: 'Requests, orders, or source material move to the place where the work actually happens instead of being copied manually.',
+          title: 'AI assistants and work support',
+          text: 'For small AI helpers with a concrete job and clear boundaries.',
+          outputs: ['internal chatbot or knowledge helper', 'text and request sorting', 'reply drafts', 'document work', 'safe AI use in a process'],
+          fit: 'Useful when you want practical AI, not a trendy label.',
+          examples: ['support assistant', 'request sorting', 'document workflow'],
         },
         {
-          problem: 'The website or form does not collect useful information',
-          system: 'Website as a system entry point',
-          output: 'A new website, redesign, or form explains the offer and sends useful data to the next workflow.',
-        },
-        {
-          problem: 'The existing website has weak spots',
-          system: 'Quick website fixes, SEO, and measurement',
-          output: 'Forms, measurement, metadata, mobile, speed, or small fixes across WordPress, Shoptet, Shopify, and other systems.',
-        },
-        {
-          problem: 'You sell products, packages, or services',
-          system: 'Clearer offer or shop adjustment',
-          output: 'Product pages, variant comparison, interest measurement, and a shorter path to an order or request.',
-        },
-        {
-          problem: 'You need order beyond the website',
-          system: 'Digital order, software, and AI helpers',
-          output: 'Practical tool setup, source-material conversion, simple AI helpers, or onboarding without hype.',
+          title: 'Care, fixes, and ongoing support',
+          text:
+            'For existing websites and tools that need fixes, small changes, or ongoing improvement.',
+          outputs: ['small website edits', 'error checks', 'technical maintenance', 'monthly care', 'ongoing improvements'],
+          fit: 'Useful when you do not want a new project for every small technical need.',
+          examples: ['audit', 'before and after', 'fix list'],
         },
       ],
     },
@@ -763,36 +754,55 @@ export const siteContent = {
       title: 'Pricing is visible early, so the scope is not a mystery.',
       lead:
         'Every website, automation, or data cleanup has a different scope, but an individual or small business needs a realistic range before sending a request. The exact price follows a short brief or audit.',
+      process: {
+        eyebrow: 'Plain process',
+        title: 'Operation first. Tool second. Build last.',
+        text:
+          'Before a price estimate, the manual work, messy point, and expected outcome need to be clear. That is why I separate problem understanding, simple solution design, implementation, and handoff.',
+        steps: [
+          { label: '01', value: 'name what is manual, slow, or repeated today' },
+          { label: '02', value: 'choose the simplest useful path: form, records, automation, website, or AI helper' },
+          { label: '03', value: 'test, explain, and keep ongoing care only where it makes sense' },
+        ],
+      },
       note:
         'The audit can be deducted from the follow-up implementation when we continue with a website, automation, data cleanup, or larger fixes.',
       items: [
         {
           name: 'Website or process audit with a plan',
           price: 'CZK 2,900-4,900',
-          text: 'For individuals, sole traders, or companies unsure whether to fix a website, form, data flow, or manual process.',
-          includes: ['website or process weak spots', 'priority plan', 'next-work estimate'],
+          text: 'Useful when you do not know where to start, but know the website, form, or process does not work well.',
+          includes: ['quick problem mapping', 'priority proposal', 'recommended fixes', 'next-work estimate'],
+          output: 'Output: a short brief that can be used for follow-up implementation.',
           featured: true,
         },
         {
-          name: 'Starter website or form path',
+          name: 'Starter website / landing page',
           price: 'from CZK 25,000',
-          text: 'A simpler website, landing page, or form for a person or small team that needs a clear offer and useful source material.',
-          includes: ['1-5 pages or flows', 'copy structure', 'SEO basics and form'],
-          cta: 'Discuss a start',
+          text: 'For a simple presentation, service, or offer that needs to be clear on mobile and desktop.',
+          includes: ['page structure', 'visitor guidance copy', 'form or contact path', 'basic SEO and measurement'],
+          output: 'Output: a launched page that explains the offer and collects usable contacts.',
         },
         {
           name: 'Redesign or operations cleanup',
           price: 'CZK 35,000-75,000',
-          text: 'A larger improvement to an existing website, form flow, record system, or manual workflow that now slows work down.',
-          includes: ['current-state audit', 'new structure and process', 'pre-launch check'],
-          cta: 'Improve operations',
+          text: 'For an existing website, form, or workflow that now slows work down and needs a clearer rebuild.',
+          includes: ['current-state audit', 'new structure and process', 'key screen or flow updates', 'pre-launch check'],
+          output: 'Output: a clearer path for both the client and the internal work around it.',
         },
         {
-          name: 'Ongoing IT and website care',
+          name: 'Automation / forms / data',
+          price: 'from CZK 18,000',
+          text: 'For copied data, disconnected sheets, forms, emails, or simple records.',
+          includes: ['data-flow proposal', 'form or connection', 'input checks', 'handoff notes'],
+          output: 'Output: a small working unit that reduces repeated work and errors.',
+        },
+        {
+          name: 'Monthly care',
           price: 'from CZK 2,500 / month',
           text: 'Small updates, functionality checks, content consulting, forms, data, and technical support after launch.',
-          includes: ['content changes', 'form and data checks', 'SEO and operation notes'],
-          cta: 'Discuss care',
+          includes: ['content changes', 'form and data checks', 'SEO and operation notes', 'ongoing small-improvement list'],
+          output: 'Output: calmer operation without turning every small change into a new project.',
         },
       ],
     },
@@ -822,29 +832,9 @@ export const siteContent = {
           value: 'You get a plain overview of what was built, where to edit it, and what remains outside the scope.',
         },
       ],
-      servicesTitle: 'What I can help with beyond the website itself',
-      items: [
-        {
-          label: 'Optimization',
-          title: 'Speed, SEO, and measurement',
-          text: 'Site speed, findability basics, titles, links, action tracking, and weak-spot cleanup.',
-        },
-        {
-          label: 'Fixes',
-          title: 'Quick help with an existing website',
-          text: 'Forms, metadata, measurement, small errors, and edits in WordPress, Shoptet, Shopify, Webnode, Wix, or custom websites.',
-        },
-        {
-          label: 'Automation',
-          title: 'Forms, data, and simple AI helpers',
-          text: 'Request intake, data sorting, document conversion, and small helpers that reduce manual work without overblown promises.',
-        },
-        {
-          label: 'Consulting',
-          title: 'PC, software, and digital order',
-          text: 'Practical explanation, tool setup, and workflows for people and companies without their own IT person.',
-        },
-      ],
+      bridgeTitle: 'A website is not the end of the solution. It is an entry point into a system.',
+      bridgeText:
+        'The goal is less manual work, less chaos, and more overview. Services can be combined: website, form, data, automation, measurement, and simple AI support.',
       note:
         'The goal is not to deliver the most technology. The goal is for the website and related tools to stop getting in the way and start being usable.',
     },

@@ -8,8 +8,7 @@ interface Props {
 
 const { locale, systems } = Astro.props;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
-const demoRoot = locale === 'en' ? '/en/demo' : '/demo';
-const getDemoHref = (moduleId: string) => `${basePath}${demoRoot}/${moduleId}/`;
+const showcaseHref = `${basePath}/ukazky/`;
 
 const copy = {
   cs: {
@@ -130,12 +129,10 @@ const artifactCopy = {
       {
         ledgerItems.map((item) => (
           <article>
-            <strong>{item.problem}</strong>
-            <span>{item.system}</span>
-            <span>{item.output}</span>
-            <a href={item.demoModule ? getDemoHref(item.demoModule) : '#terminal'}>
-              {item.demoModule ? copy.proofLabel : copy.requestLabel}
-            </a>
+            <strong>{item.fit}</strong>
+            <span>{item.title}</span>
+            <span>{item.text}</span>
+            <a href={showcaseHref}>{copy.proofLabel}</a>
           </article>
         ))
       }

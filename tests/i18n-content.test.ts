@@ -13,10 +13,10 @@ describe('localized site content', () => {
       expect(content.audience.items).toHaveLength(4);
       expect(content.demos.items).toHaveLength(6);
       expect(content.handoff.items.length).toBeGreaterThan(3);
-      expect(content.systems.items).toHaveLength(8);
-      expect(content.systems.secondaryTitle).toBeTruthy();
-      expect(content.systems.items.some((item) => 'demoModule' in item)).toBe(false);
-      expect(content.pricing.items).toHaveLength(4);
+      expect(content.systems.items).toHaveLength(5);
+      expect(content.systems.items.every((item) => item.outputs.length >= 5)).toBe(true);
+      expect(content.pricing.process.steps).toHaveLength(3);
+      expect(content.pricing.items).toHaveLength(5);
       expect(content.pricing.items.some((item) => 'featured' in item && item.featured)).toBe(true);
       expect(content.terminal.examples).toContain('submit');
     }
@@ -27,11 +27,11 @@ describe('localized site content', () => {
     expect(siteContent.cs.hero.actions).toEqual([]);
     expect(siteContent.cs.header.navItems.map((item) => item.label)).toEqual([
       'Úvod',
-      'IT pomoc',
+      'Co řeším',
+      'Služby',
+      'Jak pracuji',
+      'Ceník',
       'Ukázky',
-      'O mně',
-      'Ceny',
-      'Poptávka',
     ]);
     expect(siteContent.cs.terminal.projectOptions).toEqual([
       'Automatizace rutinní práce',
@@ -50,6 +50,7 @@ describe('localized site content', () => {
     expect(siteContent.cs.header.cta).toBe('Popsat situaci');
     expect(siteContent.cs.header.navItems).toHaveLength(6);
     expect(siteContent.cs.header.navItems.some((item) => item.href === '/ukazky/' && item.label === 'Ukázky')).toBe(true);
+    expect(siteContent.cs.header.navItems.map((item) => item.href)).not.toContain('#terminal');
     expect(siteContent.cs.terminal.projectOptions).toEqual(
       [
         'Automatizace rutinní práce',

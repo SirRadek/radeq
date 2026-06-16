@@ -8,23 +8,20 @@ interface Props {
 
 const { content, locale } = Astro.props;
 
-const routeCopy = {
+const labels = {
   cs: {
-    label: 'Doporučený start',
-    title: 'Pokud si nejste jistí, začněte auditem.',
-    text: 'Krátký placený audit ukáže, jestli řešit web, formulář, data, automatizaci nebo jen menší opravu. Nevzniká tak slepý odhad.',
+    outputs: 'Výstupy',
+    fit: 'Pro koho se hodí',
+    examples: 'Ukázky',
+    examplesSuffix: 'připravujeme',
   },
   en: {
-    label: 'Recommended start',
-    title: 'If you are unsure, start with an audit.',
-    text: 'A short paid audit shows whether to address the website, forms, data, automation, or a smaller repair first.',
+    outputs: 'Outputs',
+    fit: 'Best fit',
+    examples: 'Examples',
+    examplesSuffix: 'in preparation',
   },
 }[locale];
-
-const showMoreLabel = locale === 'cs' ? 'Zobrazit více' : 'Show more';
-const showLessLabel = locale === 'cs' ? 'Zobrazit méně' : 'Show less';
-const situationLabel = locale === 'cs' ? 'Typická situace' : 'Typical situation';
-const outcomeLabel = locale === 'cs' ? 'Výsledek' : 'Outcome';
 ---
 
 <section class="service-catalog" id="services" aria-labelledby="services-title" data-direction="guided-offer-map">
@@ -33,52 +30,35 @@ const outcomeLabel = locale === 'cs' ? 'Výsledek' : 'Outcome';
     <h2 id="services-title">{content.title}</h2>
     <p>{content.lead}</p>
   </div>
-  <div class="offer-map" aria-label={content.mapAria} data-cat-platform="service-grid">
-    <div class="offer-map-guide">
-      <p class="section-code">{content.guide.eyebrow}</p>
-      <h3>{content.guide.title}</h3>
-      <p>{content.guide.text}</p>
-      <div class="offer-map-guide__recommendation">
-        <span>{routeCopy.label}</span>
-        <strong>{routeCopy.title}</strong>
-        <p>{routeCopy.text}</p>
-      </div>
-      <ol>
-        {
-          content.guide.steps.map((step) => (
-            <li>
-              <span>{step.label}</span>
-              <strong>{step.value}</strong>
-            </li>
-          ))
-        }
-      </ol>
-    </div>
-    <div class="service-path" data-service-focus-list>
-      {
-        content.items.map((item, index) => (
-          <details class="service-card" data-service-card data-cat-platform={`service-card-${index + 1}`}>
-            <summary class="service-card__summary">
-              <span class="service-card__marker">
-                <span>{String(index + 1).padStart(2, '0')}</span>
-              </span>
-              <span class="service-card__body">
-                <span class="service-card__label">{item.system}</span>
-                <span class="service-card__short">{item.output}</span>
-                <span class="service-card__more" aria-hidden="true">
-                  <span class="service-card__more-closed">{showMoreLabel}</span>
-                  <span class="service-card__more-open">{showLessLabel}</span>
-                </span>
-              </span>
-            </summary>
-            <div class="service-card__details">
-              <p><strong>{situationLabel}:</strong> {item.problem}</p>
-              <p><strong>{outcomeLabel}:</strong> {item.output}</p>
+  <div class="service-path" aria-label={content.mapAria} data-service-focus-list>
+    {
+      content.items.map((item, index) => (
+        <article class="service-card" tabindex="0" data-service-card data-cat-platform={`service-card-${index + 1}`}>
+          <div class="service-card__summary">
+            <span class="service-card__marker">
+              <span>{String(index + 1).padStart(2, '0')}</span>
+            </span>
+            <div class="service-card__body">
+              <h3 class="service-card__label">{item.title}</h3>
+              <p class="service-card__short">{item.text}</p>
             </div>
-          </details>
-        ))
-      }
-    </div>
+          </div>
+          <div class="service-card__details">
+            <div>
+              <strong>{labels.outputs}</strong>
+              <ul>
+                {item.outputs.map((output) => <li>{output}</li>)}
+              </ul>
+            </div>
+            <p><strong>{labels.fit}</strong> {item.fit}</p>
+            <p class="service-card__examples">
+              <strong>{labels.examples}</strong>
+              <span>{item.examples.join(' / ')} - {labels.examplesSuffix}</span>
+            </p>
+          </div>
+        </article>
+      ))
+    }
   </div>
 </section>
 
@@ -93,7 +73,10 @@ const outcomeLabel = locale === 'cs' ? 'Výsledek' : 'Outcome';
     let ticking = false;
 
     const clearForwardState = () => {
-      cards.forEach((card) => card.classList.remove('is-forward'));
+      cards.forEach((card) => {
+        card.classList.remove('is-forward');
+        card.removeAttribute('aria-current');
+      });
     };
 
     const updateForwardCard = () => {
@@ -126,6 +109,7 @@ const outcomeLabel = locale === 'cs' ? 'Výsledek' : 'Outcome';
 
       if (bestCard) {
         bestCard.classList.add('is-forward');
+        bestCard.setAttribute('aria-current', 'true');
       }
     };
 

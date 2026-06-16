@@ -878,6 +878,9 @@ html[data-palette-preview="true"] {
   --preview-control-bg: color-mix(in srgb, var(--panel-bg) 94%, transparent);
   --preview-control-soft: color-mix(in srgb, var(--panel-strong) 86%, var(--panel-bg));
   --preview-control-ink: var(--text-main);
+  --brand-logo-main: var(--text-main);
+  --brand-logo-accent: var(--accent);
+  --brand-logo-shadow: color-mix(in srgb, var(--page-bg) 70%, #000000 30%);
   --preview-logo-r: var(--text-main);
   --preview-logo-q: var(--accent);
   --preview-logo-dot: var(--accent);
@@ -1108,22 +1111,29 @@ html[data-palette-preview="true"] body::after {
 
 .brand-mark--logo-b {
   min-width: clamp(13rem, 17vw, 18rem);
-  border-color: color-mix(in srgb, var(--accent) 32%, var(--line));
-  border-radius: 10px;
-  padding: 0.26rem 0.38rem;
-  background: #ffffff;
-  box-shadow: 0 12px 32px color-mix(in srgb, #000000 12%, transparent);
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .brand-mark--logo-b:hover {
-  border-color: color-mix(in srgb, var(--accent) 70%, var(--line));
+  background: transparent;
 }
 
 .radeq-brand-logo {
   display: block;
   width: clamp(13rem, 17vw, 18rem);
-  height: auto;
-  object-fit: contain;
+  aspect-ratio: 920 / 164;
+  background:
+    linear-gradient(
+      90deg,
+      var(--brand-logo-main, var(--text-main)) 0 58%,
+      var(--brand-logo-accent, var(--accent)) 58% 79%,
+      var(--brand-logo-main, var(--text-main)) 79% 100%
+    );
+  filter: drop-shadow(0 1px 0 color-mix(in srgb, var(--brand-logo-shadow, #000000) 16%, transparent));
+  -webkit-mask: var(--brand-logo-mask) center / contain no-repeat;
+  mask: var(--brand-logo-mask) center / contain no-repeat;
 }
 
 .palette-preview-panel {

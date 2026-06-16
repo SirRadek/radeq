@@ -5,15 +5,12 @@ interface Props {
 
 const { label = 'RadeQ.cz' } = Astro.props;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
-const logoSrc = `${basePath}/brand/radeq-logo-b-wordmark.png`;
+const logoMask = `${basePath}/brand/radeq-logo-b-mask.png`;
 ---
 
-<img
+<span
   class="radeq-brand-logo"
-  src={logoSrc}
-  width="920"
-  height="176"
-  alt={label}
-  decoding="async"
-  fetchpriority="high"
-/>
+  role="img"
+  aria-label={label}
+  style={`--brand-logo-mask: url("${logoMask}")`}
+></span>

@@ -17,6 +17,7 @@ test('palette preview switches homepage colors and exposes mode-aware favicons',
     '/brand/radeq-favicon-b-dark.png',
   );
   await expect(page.locator('.brand-mark--logo-b .radeq-brand-logo')).toBeVisible();
+  await expect(page.locator('.brand-mark--logo-b img')).toHaveCount(0);
   await expect(page.locator('.palette-preview-panel .radeq-brand-logo')).toHaveCount(0);
   await expect(
     page.getByRole('heading', { name: 'Praktická IT pomoc pro lidi a firmy, které chtějí méně ruční práce.' }),
@@ -24,6 +25,22 @@ test('palette preview switches homepage colors and exposes mode-aware favicons',
 
   const initialAccent = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
   expect(initialAccent).toBe('#a85f2a');
+  const logoVisual = await page.evaluate(() => {
+    const shell = document.querySelector('.brand-mark--logo-b');
+    const logo = document.querySelector('.radeq-brand-logo');
+    const shellStyle = shell ? getComputedStyle(shell) : undefined;
+    const logoStyle = logo ? getComputedStyle(logo) : undefined;
+
+    return {
+      shellBackground: shellStyle?.backgroundColor,
+      logoBackground: logoStyle?.backgroundImage,
+      logoMask: logoStyle?.getPropertyValue('-webkit-mask-image') || logoStyle?.maskImage,
+    };
+  });
+  expect(logoVisual.shellBackground).toBe('rgba(0, 0, 0, 0)');
+  expect(logoVisual.logoMask).toContain('radeq-logo-b-mask.png');
+  expect(logoVisual.logoBackground).toContain('rgb(36, 25, 20)');
+  expect(logoVisual.logoBackground).toContain('rgb(168, 95, 42)');
 
   await page.getByRole('button', { name: /C Walnut \+ royal blue/ }).click();
   await expect(page.locator('html')).toHaveAttribute('data-palette', 'royal');
@@ -57,8 +74,14 @@ test('palette preview auto mode follows prefers-color-scheme for page colors', a
 
   const autoAccent = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
   const autoBackground = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--page-bg').trim());
+  const logoBackground = await page.evaluate(() => {
+    const logo = document.querySelector('.radeq-brand-logo');
+    return logo ? getComputedStyle(logo).backgroundImage : '';
+  });
   expect(autoAccent).toBe('#d58a4a');
   expect(autoBackground).toBe('#18110e');
+  expect(logoBackground).toContain('rgb(246, 239, 230)');
+  expect(logoBackground).toContain('rgb(213, 138, 74)');
   await expect(page.locator('link[data-preview-favicon-active]')).toHaveAttribute(
     'href',
     '/brand/radeq-favicon-b-dark.png',

@@ -23,9 +23,9 @@ const {
   alternateLabel,
   locale,
   homePath,
-  showStyleToggle = true,
+  showStyleToggle = false,
   showThemeToggle = true,
-  brandVariant = 'default',
+  brandVariant = 'logo-b',
 } = Astro.props;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 const alternateHref = alternatePath ? `${basePath}${alternatePath}` : undefined;

@@ -20,6 +20,11 @@ function getInitialMode(): ThemeMode {
 
 function applyThemeMode(mode: ThemeMode) {
   document.documentElement.dataset.theme = mode;
+  const activeFavicon = document.querySelector<HTMLLinkElement>('link[data-theme-favicon-active]');
+  if (activeFavicon) {
+    activeFavicon.href = mode === 'dark' ? activeFavicon.dataset.darkHref ?? activeFavicon.href : activeFavicon.dataset.lightHref ?? activeFavicon.href;
+  }
+
   try {
     localStorage.setItem(STORAGE_KEY, mode);
   } catch {
@@ -44,6 +49,10 @@ export default function ThemeModeToggle({ label, lightLabel, darkLabel }: Props)
 
     setMode(initialMode);
     document.documentElement.dataset.theme = initialMode;
+    const activeFavicon = document.querySelector<HTMLLinkElement>('link[data-theme-favicon-active]');
+    if (activeFavicon) {
+      activeFavicon.href = initialMode === 'dark' ? activeFavicon.dataset.darkHref ?? activeFavicon.href : activeFavicon.dataset.lightHref ?? activeFavicon.href;
+    }
     setHydrated(true);
   }, []);
 

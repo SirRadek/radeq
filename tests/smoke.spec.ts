@@ -26,6 +26,29 @@ test('homepage core flow works', async ({ page }) => {
     'href',
     '/ukazky/',
   );
+  await expect(page.locator('.brand-mark--logo-b .radeq-brand-logo')).toBeVisible();
+  await expect(page.locator('.brand-mark--logo-b img')).toHaveCount(0);
+  await expect(page.locator('link[rel="icon"][media="(prefers-color-scheme: light)"]')).toHaveAttribute(
+    'href',
+    '/brand/radeq-favicon-b-light.png',
+  );
+  await expect(page.locator('link[rel="icon"][media="(prefers-color-scheme: dark)"]')).toHaveAttribute(
+    'href',
+    '/brand/radeq-favicon-b-dark.png',
+  );
+  await expect(page.locator('link[data-theme-favicon-active]')).toHaveAttribute('href', /radeq-favicon-b-(light|dark)\.png/);
+  const homePalette = await page.evaluate(() => {
+    const logo = document.querySelector('.radeq-brand-logo');
+
+    return {
+      background: getComputedStyle(document.documentElement).getPropertyValue('--page-bg').trim(),
+      accent: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim(),
+      logoMask: logo ? getComputedStyle(logo).getPropertyValue('-webkit-mask-image') : '',
+    };
+  });
+  expect(homePalette.logoMask).toContain('radeq-logo-b-mask.png');
+  expect(['#f7f1e8', '#18110e']).toContain(homePalette.background);
+  expect(['#a85f2a', '#d58a4a']).toContain(homePalette.accent);
   await expect(page.getByRole('link', { name: 'Ceny' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'O mně' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'E-shop demo', exact: true })).toHaveCount(0);

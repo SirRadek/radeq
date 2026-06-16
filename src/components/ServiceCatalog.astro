@@ -10,14 +10,12 @@ const { content, locale } = Astro.props;
 
 const labels = {
   cs: {
-    outputs: 'Výstupy',
-    fit: 'Pro koho se hodí',
-    examples: 'Ukázky',
+    outputs: 'Výstup',
+    fit: 'Kdy pomůže',
   },
   en: {
-    outputs: 'Outputs',
-    fit: 'Best fit',
-    examples: 'Examples',
+    outputs: 'Output',
+    fit: 'When it helps',
   },
 }[locale];
 ---
@@ -49,10 +47,6 @@ const labels = {
               </ul>
             </div>
             <p><strong>{labels.fit}</strong> {item.fit}</p>
-            <p class="service-card__examples">
-              <strong>{labels.examples}</strong>
-              <span>{item.examples.join(' / ')}</span>
-            </p>
           </div>
         </article>
       ))

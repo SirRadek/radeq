@@ -48,6 +48,8 @@ const isCurrentPath = (href: string) => {
   const normalizedHref = href.endsWith('/') ? href : `${href}/`;
   return currentPath === `${basePath}${normalizedHref}` || currentPath === normalizedHref;
 };
+const menuLabel = locale === 'cs' ? 'Menu' : 'Menu';
+const menuAria = locale === 'cs' ? 'Otevřít menu' : 'Open menu';
 ---
 
 <header class="command-header" aria-label={content.ariaLabel}>
@@ -60,10 +62,21 @@ const isCurrentPath = (href: string) => {
             <span class="brand-pulse" aria-hidden="true"></span>
             <span>Radeq.cz</span>
           </>
-        )
+      )
     }
   </a>
-  <nav class="command-nav" aria-label={content.navAria}>
+  <button
+    class="mobile-menu-toggle"
+    type="button"
+    aria-label={menuAria}
+    aria-expanded="false"
+    aria-controls="command-nav"
+    data-mobile-menu-toggle
+  >
+    <span aria-hidden="true"></span>
+    <span>{menuLabel}</span>
+  </button>
+  <nav class="command-nav" id="command-nav" aria-label={content.navAria}>
     {
       content.navItems.map((item) => {
         const sectionTarget = getSectionTarget(item.href);
@@ -81,6 +94,12 @@ const isCurrentPath = (href: string) => {
         );
       })
     }
+    <a
+      class="command-nav__cta"
+      href={resolveHref('#terminal')}
+    >
+      {content.cta}
+    </a>
   </nav>
   <div class="header-actions">
     {showStyleToggle && <StyleVariantToggle label={content.styleLabel} options={styleOptions} client:load />}
@@ -100,6 +119,27 @@ const isCurrentPath = (href: string) => {
 
 <script>
   (() => {
+    const header = document.querySelector<HTMLElement>('.command-header');
+    const menuButton = document.querySelector<HTMLButtonElement>('[data-mobile-menu-toggle]');
+    const nav = document.getElementById('command-nav');
+
+    if (header && menuButton && nav) {
+      const setOpen = (open: boolean) => {
+        header.toggleAttribute('data-mobile-menu-open', open);
+        menuButton.setAttribute('aria-expanded', String(open));
+      };
+
+      menuButton.addEventListener('click', () => {
+        setOpen(!header.hasAttribute('data-mobile-menu-open'));
+      });
+
+      nav.addEventListener('click', (event) => {
+        if (event.target instanceof HTMLAnchorElement) {
+          setOpen(false);
+        }
+      });
+    }
+
     const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.command-nav a[data-section-target]'));
     if (links.length === 0) return;
 

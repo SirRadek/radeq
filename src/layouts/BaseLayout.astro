@@ -45,7 +45,6 @@ const darkFavicon = `${basePath}/brand/radeq-favicon-b-dark.png`;
     <script is:inline define:vars={{ lightFavicon, darkFavicon }}>
       (() => {
         const root = document.documentElement;
-        const systemDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
         const setActiveFavicon = (theme) => {
           const active = document.querySelector('link[data-theme-favicon-active]');
           active?.setAttribute('href', theme === 'dark' ? darkFavicon : lightFavicon);
@@ -53,9 +52,9 @@ const darkFavicon = `${basePath}/brand/radeq-favicon-b-dark.png`;
 
         try {
           const stored = localStorage.getItem('radeq-theme-mode');
-          root.dataset.theme = stored === 'dark' || stored === 'light' ? stored : (systemDark ? 'dark' : 'light');
+          root.dataset.theme = stored === 'dark' || stored === 'light' ? stored : 'light';
         } catch {
-          root.dataset.theme = systemDark ? 'dark' : 'light';
+          root.dataset.theme = 'light';
         }
         setActiveFavicon(root.dataset.theme);
 

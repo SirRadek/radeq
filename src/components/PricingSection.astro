@@ -9,13 +9,6 @@ const { content } = Astro.props;
 ---
 
 <section class="pricing-section" aria-labelledby="pricing-title" data-section-signature="pricing">
-  <div class="section-heading pricing-section__heading">
-    <div>
-      {content.sectionCode && <p class="section-code">{content.sectionCode}</p>}
-      <h2 id="pricing-title">{content.title}</h2>
-    </div>
-    <p>{content.lead}</p>
-  </div>
   <div class="pricing-process" id="process" aria-labelledby="process-title">
     <div>
       <p class="section-code">{content.process.eyebrow}</p>
@@ -33,7 +26,14 @@ const { content } = Astro.props;
       }
     </ol>
   </div>
-  <div class="pricing-grid" id="pricing">
+  <div class="section-heading pricing-section__heading" id="pricing">
+    <div>
+      {content.sectionCode && <p class="section-code">{content.sectionCode}</p>}
+      <h2 id="pricing-title">{content.title}</h2>
+    </div>
+    <p>{content.lead}</p>
+  </div>
+  <div class="pricing-grid">
     {
       content.items.map((item) => (
         <article class:list={['pricing-card', item.featured && 'pricing-card--featured']} tabindex="0">

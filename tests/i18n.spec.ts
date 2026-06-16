@@ -6,10 +6,10 @@ test('Czech and English routes expose localized first viewport and demo copy', a
   await expect(page.locator('head link[rel="canonical"]')).toHaveAttribute('href', 'https://radeq.cz/');
   await expect(page.locator('head link[rel="alternate"][hreflang="en"]')).toHaveAttribute('href', 'https://radeq.cz/en/');
   await expect(
-    page.getByRole('heading', { name: 'Praktická IT pomoc pro lidi a firmy, které chtějí méně ruční práce.' }),
+    page.getByRole('heading', { name: 'Weby, formuláře a automatizace pro méně ruční práce.' }),
   ).toBeVisible();
   await expect(page.getByRole('link', { name: 'EN', exact: true })).toHaveAttribute('href', '/en/');
-  await expect(page.getByRole('heading', { name: 'Jeden technický partner pro obsah, data i klidné vysvětlení.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Kdy to dává smysl' })).toBeVisible();
   await expect(page.locator('.style-toggle')).toHaveCount(0);
 
   await page.goto('/en/');
@@ -17,20 +17,17 @@ test('Czech and English routes expose localized first viewport and demo copy', a
   await expect(page.locator('head link[rel="canonical"]')).toHaveAttribute('href', 'https://radeq.cz/en/');
   await expect(page.locator('head link[rel="alternate"][hreflang="cs"]')).toHaveAttribute('href', 'https://radeq.cz/');
   await expect(
-    page.getByRole('heading', { name: 'Practical IT help for people and teams that want less manual work.' }),
+    page.getByRole('heading', { name: 'Websites, forms, and automation for less manual work.' }),
   ).toBeVisible();
   await expect(page.locator('.style-toggle')).toHaveCount(0);
   await expect(page.locator('.command-nav').getByRole('link', { name: 'What I solve' })).toHaveAttribute('href', '#about');
   await expect(
-    page.getByRole('heading', { name: 'One technical partner for content, data, and plain explanation.' }),
+    page.getByRole('heading', { name: 'When this makes sense' }),
   ).toBeVisible();
-  await expect(page.locator('.about-services__profile dl > div')).toHaveCount(4);
+  await expect(page.locator('.fit-list li')).toHaveCount(6);
   await expect(page.locator('#pricing')).toBeVisible();
   await expect(page.locator('#demos')).toBeVisible();
-  await expect(page.locator('#demos').getByRole('link', { name: 'Open all examples' })).toHaveAttribute(
-    'href',
-    '/ukazky/',
-  );
+  await expect(page.locator('#demos').getByRole('link', { name: 'Open all examples' })).toHaveCount(0);
   await expect(page.locator('main a[href*="/en/demo/"]')).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'CZ', exact: true })).toHaveAttribute('href', '/');
 

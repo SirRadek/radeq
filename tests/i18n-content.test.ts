@@ -9,64 +9,71 @@ describe('localized site content', () => {
       const content = siteContent[locale as Locale];
 
       expect(content.layout.lang).toBe(locale);
-      expect(content.hero.actions).toHaveLength(0);
-      expect(content.audience.items).toHaveLength(4);
-      expect(content.demos.items).toHaveLength(6);
+      expect(content.hero.actions).toHaveLength(2);
+      expect(content.audience.items).toHaveLength(7);
+      expect(content.demos.items).toHaveLength(0);
       expect(content.handoff.items.length).toBeGreaterThan(3);
       expect(content.systems.items).toHaveLength(5);
-      expect(content.systems.items.every((item) => item.outputs.length >= 5)).toBe(true);
+      expect(content.systems.items.every((item) => item.outputs.length >= 4)).toBe(true);
       expect(content.pricing.process.steps).toHaveLength(3);
-      expect(content.pricing.items).toHaveLength(5);
+      expect(content.pricing.items).toHaveLength(3);
       expect(content.pricing.items.some((item) => 'featured' in item && item.featured)).toBe(true);
       expect(content.terminal.examples).toContain('submit');
     }
   });
 
   it('keeps the Czech homepage focused on practical IT help', () => {
-    expect(siteContent.cs.hero.title).toBe('Praktická IT pomoc pro lidi a firmy, které chtějí méně ruční práce.');
-    expect(siteContent.cs.hero.actions).toEqual([]);
+    expect(siteContent.cs.hero.title).toBe('Weby, formuláře a automatizace pro méně ruční práce.');
+    expect(siteContent.cs.hero.actions.map((action) => action.label)).toEqual([
+      'Chci zmapovat problém',
+      'Co umím zjednodušit',
+    ]);
     expect(siteContent.cs.header.navItems.map((item) => item.label)).toEqual([
-      'Úvod',
       'Co řeším',
       'Služby',
       'Jak pracuji',
-      'Ceník',
-      'Ukázky',
+      'Ceny',
+      'Kontakt',
     ]);
     expect(siteContent.cs.terminal.projectOptions).toEqual([
-      'Automatizace rutinní práce',
-      'AI pomocník nebo chatbot',
-      'Databáze, evidence a přehled',
-      'Web nebo formulářová cesta',
-      'Audit webu nebo procesu s plánem',
-      'Rychlá oprava webu nebo nástroje',
-      'Nejsem si jistý, potřebuji poradit',
+      'Web',
+      'E-mail',
+      'Tabulky',
+      'Formulář',
+      'Jiné / kombinace nástrojů',
     ]);
   });
 
   it('keeps the Czech route Czech and the English route English', () => {
     expect(siteContent.cs.hero.title).toContain('méně ruční práce');
-    expect(siteContent.cs.hero.proof.map((item) => item.label)).toEqual(['Automatizace', 'Data a AI', 'Weby']);
-    expect(siteContent.cs.header.cta).toBe('Popsat situaci');
-    expect(siteContent.cs.header.navItems).toHaveLength(6);
-    expect(siteContent.cs.header.navItems.some((item) => item.href === '#demos' && item.label === 'Ukázky')).toBe(true);
-    expect(siteContent.cs.header.navItems.map((item) => item.href)).not.toContain('#terminal');
+    expect(siteContent.cs.hero.proof.map((item) => item.label)).toEqual([
+      'Audit od 2 900 Kč',
+      'Web od 25 000 Kč',
+      'Výstup s návodem',
+    ]);
+    expect(siteContent.cs.header.cta).toBe('Chci zmapovat problém');
+    expect(siteContent.cs.header.navItems).toHaveLength(5);
+    expect(siteContent.cs.header.navItems.map((item) => item.href)).toEqual([
+      '#about',
+      '#services',
+      '#process',
+      '#pricing',
+      '#terminal',
+    ]);
     expect(siteContent.cs.terminal.projectOptions).toEqual(
       [
-        'Automatizace rutinní práce',
-        'AI pomocník nebo chatbot',
-        'Databáze, evidence a přehled',
-        'Web nebo formulářová cesta',
-        'Audit webu nebo procesu s plánem',
-        'Rychlá oprava webu nebo nástroje',
-        'Nejsem si jistý, potřebuji poradit',
+        'Web',
+        'E-mail',
+        'Tabulky',
+        'Formulář',
+        'Jiné / kombinace nástrojů',
       ],
     );
-    expect(siteContent.cs.pricing.items[0].name).toBe('Audit webu nebo procesu s plánem');
+    expect(siteContent.cs.pricing.items[0].name).toBe('Audit webu nebo procesu');
     expect(siteContent.en.hero.title).toContain('less manual work');
-    expect(siteContent.en.header.cta).toBe('Describe situation');
-    expect(siteContent.en.header.navItems).toHaveLength(6);
-    expect(siteContent.en.pricing.items[0].name).toBe('Website or process audit with a plan');
+    expect(siteContent.en.header.cta).toBe('Map the problem');
+    expect(siteContent.en.header.navItems).toHaveLength(5);
+    expect(siteContent.en.pricing.items[0].name).toBe('Website or process audit');
   });
 
   it('keeps homepage copy free of public agent hype and fake guarantees', () => {
@@ -77,17 +84,14 @@ describe('localized site content', () => {
     }
   });
 
-  it('surfaces sanitized project proof before generic service offers', () => {
+  it('keeps homepage examples as a short teaser until full examples are ready', () => {
     for (const locale of supportedLocales) {
-      const proofCards = siteContent[locale as Locale].demos.items.slice(0, 2);
+      const demos = siteContent[locale as Locale].demos;
 
-      expect(proofCards.map((item) => item.metric)).toEqual(['PROOF 01', 'PROOF 02']);
+      expect(demos.items).toHaveLength(0);
+      expect(demos.title.length).toBeGreaterThan(10);
+      expect(demos.lead.toLowerCase()).toContain(locale === 'cs' ? 'modelové ukázky' : 'model examples');
     }
-
-    expect(siteContent.cs.demos.items[0].events).toContain('Staticky audit');
-    expect(siteContent.cs.demos.items[1].events).toContain('Mapa workflow');
-    expect(siteContent.en.demos.items[0].events).toContain('Static audit');
-    expect(siteContent.en.demos.items[1].events).toContain('Workflow map');
   });
 
   it('keeps private repository identifiers out of public demo content', () => {

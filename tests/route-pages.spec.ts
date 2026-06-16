@@ -25,9 +25,9 @@ for (const route of publicRoutes) {
       'href',
       '/#services',
     );
-    await expect(page.locator('.command-nav').getByRole('link', { name: 'Ukázky' })).toHaveAttribute(
+    await expect(page.locator('.command-nav').getByRole('link', { name: 'Kontakt' })).toHaveAttribute(
       'href',
-      '/#demos',
+      '/#terminal',
     );
     await expect(page.locator('main a[href*="/demo/"]')).toHaveCount(0);
   });

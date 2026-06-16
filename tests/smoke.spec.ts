@@ -14,22 +14,28 @@ test('homepage core flow works', async ({ page }) => {
   await page.goto('/');
 
   await expect(
-    page.getByRole('heading', { name: 'Praktická IT pomoc pro lidi a firmy, které chtějí méně ruční práce.' }),
+    page.getByRole('heading', { name: 'Weby, formuláře a automatizace pro méně ruční práce.' }),
   ).toBeVisible();
   await expect(page.locator('html')).toHaveAttribute('data-measurement-ready', 'true');
-  await expect(page.locator('.hero-actions')).toHaveCount(0);
+  await expect(page.locator('.hero-actions')).toBeVisible();
+  await expect(page.locator('.hero-actions').getByRole('link', { name: 'Chci zmapovat problém', exact: true })).toBeVisible();
+  await expect(page.locator('.hero-actions').getByRole('link', { name: 'Co umím zjednodušit', exact: true })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Probrat můj problém', exact: true })).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'S čím pomáhám', exact: true })).toHaveCount(0);
-  await expect(page.locator('.command-nav').getByRole('link', { name: 'Úvod', exact: true })).toBeVisible();
+  await expect(page.locator('.command-nav').getByRole('link', { name: 'Úvod', exact: true })).toHaveCount(0);
   await expect(page.locator('.command-nav').getByRole('link', { name: 'Co řeším', exact: true })).toBeVisible();
   await expect(page.locator('.command-nav').getByRole('link', { name: 'Služby', exact: true })).toBeVisible();
   await expect(page.locator('.command-nav').getByRole('link', { name: 'Jak pracuji', exact: true })).toHaveAttribute(
     'href',
     '#process',
   );
-  await expect(page.locator('.command-nav').getByRole('link', { name: 'Ukázky', exact: true })).toHaveAttribute(
+  await expect(page.locator('.command-nav').getByRole('link', { name: 'Ceny', exact: true })).toHaveAttribute(
     'href',
-    '#demos',
+    '#pricing',
+  );
+  await expect(page.locator('.command-nav').getByRole('link', { name: 'Kontakt', exact: true })).toHaveAttribute(
+    'href',
+    '#terminal',
   );
   await expect(page.locator('.command-nav').getByRole('link', { name: 'Poptávka', exact: true })).toHaveCount(0);
   await expect(page.locator('.brand-mark--logo-b .radeq-brand-logo')).toBeVisible();
@@ -55,7 +61,7 @@ test('homepage core flow works', async ({ page }) => {
   expect(homePalette.logoMask).toContain('radeq-logo-b-mask.png');
   expect(['#f7f1e8', '#18110e']).toContain(homePalette.background);
   expect(['#a85f2a', '#d58a4a']).toContain(homePalette.accent);
-  await expect(page.getByRole('link', { name: 'Ceník' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Ceny' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Co řeším' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'E-shop demo', exact: true })).toHaveCount(0);
   await expect(page.locator('.style-toggle')).toHaveCount(0);
@@ -63,38 +69,31 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.locator('#services')).toBeVisible();
   await expect(page.locator('.offer-map')).toHaveCount(0);
   await expect(page.locator('#process')).toBeVisible();
-  await expect(page.getByText('Nejdřív provoz. Potom nástroj. Až pak stavba.')).toBeVisible();
+  await expect(
+    page.getByText('Nejdřív pochopím provoz. Pak navrhnu nejjednodušší řešení.'),
+  ).toBeVisible();
   await expect(page.locator('.service-card')).toHaveCount(5);
   await expect(page.locator('.service-addon-card')).toHaveCount(0);
   await expect(page.locator('.service-card a')).toHaveCount(0);
-  await expect(page.getByRole('heading', { name: 'Web, automatizace a provozní zjednodušení v jednom katalogu.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Co vám můžu zjednodušit' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Web může být začátek. Ne konec řešení.' })).toHaveCount(0);
-  await expect(page.locator('.service-card').first()).toContainText('Výstupy');
-  await expect(page.locator('.service-card').first()).toContainText('Ukázky');
+  await expect(page.locator('.service-card').first()).toContainText('Výstup');
+  await expect(page.locator('.service-card__examples')).toHaveCount(0);
   await expect(page.getByText('připravujeme')).toHaveCount(0);
   await expect(page.locator('main a[href*="/demo/"]')).toHaveCount(0);
   await expect(page.locator('#demos')).toBeVisible();
-  await expect(page.locator('.demo-card')).toHaveCount(3);
-  await expect(page.locator('#demos')).toContainText('Chatbot, který odpovídá jen z připravených pravidel');
-  await expect(page.locator('#demos')).toContainText('Automatizace, která ubere ruční přepisování');
-  await expect(page.locator('#demos')).toContainText('Nabídka, která zkracuje rozhodování');
-  await expect(page.locator('#demos').getByRole('link', { name: 'Zobrazit ukázku' })).toHaveCount(3);
-  await expect(page.locator('#demos').getByRole('link', { name: 'Zobrazit ukázku' }).nth(0)).toHaveAttribute(
-    'href',
-    '/ukazky/chatbot/',
-  );
-  await expect(page.locator('#demos').getByRole('link', { name: 'Otevřít všechny ukázky' })).toHaveAttribute(
-    'href',
-    '/ukazky/',
-  );
+  await expect(page.locator('.demo-card')).toHaveCount(0);
+  await expect(page.locator('#demos')).toContainText('Připravované ukázky řešení');
+  await expect(page.locator('#demos')).toContainText('modelové ukázky');
+  await expect(page.locator('#demos').getByRole('link')).toHaveCount(0);
   await expect(page.getByText('WordPress servis a opravy')).toHaveCount(0);
 
   await expect(page.locator('#pricing')).toBeVisible();
-  await expect(page.locator('.pricing-card')).toHaveCount(5);
-  await expect(page.getByRole('heading', { name: 'Ceny ukazuji dopředu, aby bylo jasné, o jakém rozsahu se bavíme.' })).toBeVisible();
-  await expect(page.locator('.pricing-section').getByRole('heading', { name: 'Audit webu nebo procesu s plánem' })).toBeVisible();
-  await expect(page.getByText('2 900-4 900 Kč')).toBeVisible();
-  await expect(page.locator('.pricing-card__price')).toHaveCount(5);
+  await expect(page.locator('.pricing-card')).toHaveCount(3);
+  await expect(page.getByRole('heading', { name: 'Orientační ceny bez překvapení.' })).toBeVisible();
+  await expect(page.locator('.pricing-section').getByRole('heading', { name: 'Audit webu nebo procesu' })).toBeVisible();
+  await expect(page.getByText('2 900–4 900 Kč')).toBeVisible();
+  await expect(page.locator('.pricing-card__price')).toHaveCount(3);
   const priceLineState = await page.locator('.pricing-card__price').evaluateAll((prices) =>
     prices.map((price) => {
       const style = getComputedStyle(price);
@@ -140,7 +139,7 @@ test('homepage core flow works', async ({ page }) => {
       };
     });
   });
-  expect(navOrder.map((item) => item.id)).toEqual(['top', 'about', 'services', 'process', 'pricing', 'demos']);
+  expect(navOrder.map((item) => item.id)).toEqual(['about', 'services', 'process', 'pricing', 'terminal']);
   expect(navOrder.every((item) => item.exists)).toBe(true);
   for (let index = 1; index < navOrder.length; index += 1) {
     expect(navOrder[index].top).toBeGreaterThan(navOrder[index - 1].top);
@@ -194,21 +193,22 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.locator('#about')).toBeVisible();
   await expect(page.locator('.command-nav').getByRole('link', { name: 'Co řeším' })).toHaveAttribute('href', '#about');
   await expect(
-    page.getByRole('heading', { name: 'Jeden technický partner pro obsah, data i klidné vysvětlení.' }),
+    page.getByRole('heading', { name: 'Kdy to dává smysl' }),
   ).toBeVisible();
-  await expect(page.locator('.about-services__profile dl > div')).toHaveCount(4);
-  await expect(page.getByText('Jeden kontakt')).toBeVisible();
-  await expect(page.locator('.about-services__profile dt').getByText('Předání', { exact: true })).toBeVisible();
+  await expect(page.locator('.fit-list li')).toHaveCount(6);
+  await expect(page.getByText('poptávky chodí různě a ztrácí se v e-mailech')).toBeVisible();
   await expect(page.getByText('S čím pomohu vedle samotného webu')).toHaveCount(0);
   await expect(page.locator('.about-service-card')).toHaveCount(0);
-  await expect(page.getByText('Web není konec řešení, ale vstup do systému.')).toBeVisible();
+  await expect(page.getByText('Web není konec řešení, ale vstup do systému.')).toHaveCount(0);
   await expect(page.locator('#brief-name[name="name"]')).toHaveCount(1);
   await expect(page.locator('#brief-email[name="email"]')).toHaveCount(1);
   await expect(page.locator('#brief-project_type[name="project_type"]')).toHaveCount(1);
   await expect(page.locator('#brief-message[name="message"]')).toHaveCount(1);
   await expect(page.locator('form[aria-describedby="brief-required-note"]')).toHaveCount(1);
-  await expect(page.getByText('Pole označená jako povinná je potřeba vyplnit.')).toBeVisible();
-  await page.getByRole('button', { name: 'Odeslat poptávku' }).click();
+  await expect(page.getByText('Stačí stručně. Podrobnosti můžeme doplnit později.')).toBeVisible();
+  await expect(page.locator('.brief-optional')).toHaveCount(0);
+  await expect(page.locator('.pc-brief-panel')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Odeslat' }).click();
   await expect(page.locator('.brief-field__error')).toHaveCount(4);
   await expect(page.locator('#brief-name')).toHaveAttribute('aria-invalid', 'true');
   await expect(page.locator('#brief-name')).toBeFocused();
@@ -219,16 +219,16 @@ test('homepage core flow works', async ({ page }) => {
     )
     .toContainEqual({ name: 'form_start', route: '/' });
   await page.getByRole('textbox', { name: 'Jméno' }).fill('Jan Siroky');
-  await page.getByRole('textbox', { name: 'E-mail' }).fill('jan@');
-  await page.getByRole('combobox', { name: 'Typ projektu' }).selectOption('Audit webu nebo procesu s plánem');
-  await page.getByRole('textbox', { name: 'Zpráva' }).fill('Potřebuji zjednodušit poptávkovou cestu.');
-  await page.getByRole('button', { name: 'Odeslat poptávku' }).click();
+  await page.getByRole('textbox', { name: 'Kontakt' }).fill('jan@');
+  await page.getByRole('combobox', { name: 'Co dnes používáte?' }).selectOption('Tabulky');
+  await page.getByRole('textbox', { name: 'Co potřebujete zjednodušit?' }).fill('Potřebuji zjednodušit poptávkovou cestu.');
+  await page.getByRole('button', { name: 'Odeslat' }).click();
   await expect(page.locator('#brief-email')).toHaveAttribute('aria-invalid', 'true');
   await expect(page.locator('#brief-email-error')).toContainText('Zadejte platnou e-mailovou adresu.');
   await expect(page.locator('#brief-email')).toBeFocused();
-  await page.getByRole('textbox', { name: 'E-mail' }).fill('jan@example.com');
-  await expect(page.getByText('Typ projektu: Audit webu nebo procesu s plánem')).toBeVisible();
-  await expect(page.getByText('Zpráva: Potřebuji zjednodušit poptávkovou cestu.')).toBeVisible();
+  await page.getByRole('textbox', { name: 'Kontakt' }).fill('jan@example.com');
+  await expect(page.locator('#brief-project_type')).toHaveValue('Tabulky');
+  await expect(page.locator('#brief-message')).toHaveValue('Potřebuji zjednodušit poptávkovou cestu.');
 
   await page.goto('/');
   await expect(page.getByRole('button', { name: /kočičí vstup|cat entrance/i })).toHaveCount(0);
@@ -248,7 +248,7 @@ test('homepage keeps one public offer even when a demo style is stored', async (
   await expect(page.locator('html')).toHaveAttribute('data-style-source', 'fixed');
   await expect(page.locator('.style-toggle')).toHaveCount(0);
   await expect(
-    page.getByRole('heading', { name: 'Praktická IT pomoc pro lidi a firmy, které chtějí méně ruční práce.' }),
+    page.getByRole('heading', { name: 'Weby, formuláře a automatizace pro méně ruční práce.' }),
   ).toBeVisible();
   await expect(page.locator('.service-catalog')).toBeVisible();
   await expect(page.locator('.pricing-section')).toBeVisible();
@@ -314,9 +314,12 @@ test('mobile header keeps controls compact without horizontal overflow', async (
   await page.setViewportSize({ width: 390, height: 920 });
   await page.goto('/');
 
+  await expect(page.locator('.command-nav')).toBeHidden();
+  await expect(page.getByRole('button', { name: 'Otevřít menu' })).toBeVisible();
+  await page.getByRole('button', { name: 'Otevřít menu' }).click();
   await expect(page.locator('.command-nav')).toBeVisible();
   await expect(page.locator('.command-nav').getByRole('link', { name: 'Co řeším' })).toBeVisible();
-  await expect(page.locator('.command-nav').getByRole('link', { name: 'Ukázky' })).toBeVisible();
+  await expect(page.locator('.command-nav').getByRole('link', { name: 'Kontakt' })).toBeVisible();
   await expect(page.locator('.command-nav').getByRole('link', { name: 'Poptávka' })).toHaveCount(0);
   await expect(page.locator('.command-nav a')).toHaveCount(6);
   await expect(page.locator('.language-link')).toBeVisible();
@@ -330,14 +333,14 @@ test('mobile header keeps controls compact without horizontal overflow', async (
     element.scrollIntoView({ block: 'center' });
   });
   await expect(page.locator('.service-card').first()).toHaveClass(/is-forward/);
-  await expect(page.locator('.pricing-card')).toHaveCount(5);
+  await expect(page.locator('.pricing-card')).toHaveCount(3);
 
-  const mobileNavTarget = page.locator('.command-nav').getByRole('link', { name: 'Ukázky' });
+  const mobileNavTarget = page.locator('.command-nav').getByRole('link', { name: 'Kontakt' });
   await mobileNavTarget.scrollIntoViewIfNeeded();
   await mobileNavTarget.focus();
   const mobileLayoutState = await page.evaluate(() => {
     const nav = document.querySelector<HTMLElement>('.command-nav')!;
-    const target = document.querySelector<HTMLAnchorElement>('.command-nav a[data-nav-href="#demos"]')!;
+    const target = document.querySelector<HTMLAnchorElement>('.command-nav a[data-nav-href="#terminal"]')!;
     const rect = target.getBoundingClientRect();
 
     return {
@@ -350,7 +353,7 @@ test('mobile header keeps controls compact without horizontal overflow', async (
   });
   expect(mobileLayoutState.bodyOverflow).toBe(false);
   expect(mobileLayoutState.documentOverflow).toBe(false);
-  expect(mobileLayoutState.navScrollable).toBe(true);
+  expect(mobileLayoutState.navScrollable).toBe(false);
   expect(mobileLayoutState.targetFullyVisible).toBe(true);
   expect(mobileLayoutState.targetFocused).toBe(true);
 
@@ -414,7 +417,7 @@ test('homepage keeps tablet and 4k layout from collapsing into mobile compositio
     };
   });
 
-  expect(fourKLayout.pricingCount).toBe(5);
+  expect(fourKLayout.pricingCount).toBe(3);
   expect(fourKLayout.serviceCount).toBe(3);
   expect(fourKLayout.headingCount).toBe(2);
   const desktopHeading = await page.locator('#services-title').boundingBox();

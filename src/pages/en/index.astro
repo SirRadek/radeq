@@ -1,8 +1,8 @@
 ---
 import CommandHeader from '../../components/CommandHeader.astro';
-import AboutSection from '../../components/AboutSection.astro';
 import ContactTerminal from '../../components/ContactTerminal';
 import DemoBlocks from '../../components/DemoBlocks.astro';
+import FitSection from '../../components/FitSection.astro';
 import HeroSection from '../../components/HeroSection.astro';
 import PricingSection from '../../components/PricingSection.astro';
 import ServiceCatalog from '../../components/ServiceCatalog.astro';
@@ -30,7 +30,7 @@ const content = siteContent.en;
     <div class="proposal-stage">
       <HeroSection content={content.hero} />
     </div>
-    <AboutSection content={content.about} />
+    <FitSection content={content.audience} />
     <ServiceCatalog locale={content.layout.lang} content={content.systems} />
     <PricingSection content={content.pricing} />
     <DemoBlocks locale={content.layout.lang} content={content.demos} />

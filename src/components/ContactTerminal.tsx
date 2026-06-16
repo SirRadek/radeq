@@ -1,22 +1,15 @@
-import { useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import type { Locale } from '../data/locales';
 import type { SiteContent } from '../data/siteContent';
 import { createLeadPayload, getMissingLeadFields, leadFieldLimits, validateLeadSubmission } from '../lib/leads';
 import { dispatchMeasurementEvent } from '../lib/measurement';
-import {
-  createEmptyBrief,
-  generateBriefSummary,
-  type BriefField,
-  type BriefSummaryLabels,
-  type TerminalBrief,
-} from '../lib/terminal';
+import { createEmptyBrief, type BriefField, type TerminalBrief } from '../lib/terminal';
 
 interface Props {
   locale: Locale;
   content: SiteContent['terminal'];
 }
 
-const optionalFields = ['company', 'current_url', 'budget_range', 'deadline', 'audience'] as const satisfies BriefField[];
 type StatusTone = 'neutral' | 'pending' | 'success' | 'error';
 
 export default function ContactTerminal({ locale, content }: Props) {
@@ -26,13 +19,6 @@ export default function ContactTerminal({ locale, content }: Props) {
   const [statusTone, setStatusTone] = useState<StatusTone>('neutral');
   const [errors, setErrors] = useState<Partial<Record<BriefField, string>>>({});
   const hasStarted = useRef(false);
-
-  const summaryLabels = content.fieldLabels as BriefSummaryLabels;
-  const emptySummaryValue = locale === 'cs' ? 'nenastaveno' : 'not set';
-  const summary = useMemo(
-    () => generateBriefSummary(brief, summaryLabels, emptySummaryValue),
-    [brief, emptySummaryValue, summaryLabels],
-  );
 
   function updateField(field: BriefField, value: string) {
     markStarted();
@@ -161,7 +147,7 @@ export default function ContactTerminal({ locale, content }: Props) {
         </p>
       </div>
 
-      <div className="terminal-grid">
+      <div className="terminal-grid terminal-grid--simple">
         <form
           onSubmit={submitForm}
           className="terminal-window brief-form"
@@ -175,32 +161,33 @@ export default function ContactTerminal({ locale, content }: Props) {
             <p id="brief-required-note" className="brief-form__note">
               {content.requiredNote}
             </p>
-            <div className="brief-form__grid">
-              <TextField
-                field="name"
-                value={brief.name}
-                content={content}
-                autoComplete="name"
-                error={errors.name}
-                disabled={isSubmitting}
-                required
-                onFocus={markStarted}
-                onChange={updateField}
-              />
-              <TextField
-                field="email"
-                type="email"
-                value={brief.email}
-                content={content}
-                autoComplete="email"
-                error={errors.email}
-                disabled={isSubmitting}
-                inputMode="email"
-                required
-                spellCheck={false}
-                onFocus={markStarted}
-                onChange={updateField}
-              />
+            <div className="brief-form__grid brief-form__grid--compact">
+              <div className="brief-field brief-field--wide">
+                <label htmlFor="brief-message">
+                  <span>{fieldLabel('message', content)}</span>
+                  <small aria-hidden="true">{content.requiredLabel}</small>
+                </label>
+                <textarea
+                  id="brief-message"
+                  name="message"
+                  value={brief.message}
+                  onChange={(event) => updateField('message', event.target.value)}
+                  onFocus={markStarted}
+                  placeholder={content.placeholders.message}
+                  disabled={isSubmitting}
+                  autoComplete="off"
+                  aria-describedby={errors.message ? 'brief-message-error' : undefined}
+                  aria-invalid={errors.message ? 'true' : undefined}
+                  maxLength={leadFieldLimits.message}
+                  required
+                  rows={5}
+                />
+                {errors.message ? (
+                  <span className="brief-field__error" id="brief-message-error">
+                    {errors.message}
+                  </span>
+                ) : null}
+              </div>
               <div className="brief-field">
                 <label htmlFor="brief-project_type">
                   <span>{fieldLabel('project_type', content)}</span>
@@ -231,55 +218,33 @@ export default function ContactTerminal({ locale, content }: Props) {
                   </span>
                 ) : null}
               </div>
-              <div className="brief-field brief-field--wide">
-                <label htmlFor="brief-message">
-                  <span>{fieldLabel('message', content)}</span>
-                  <small aria-hidden="true">{content.requiredLabel}</small>
-                </label>
-                <textarea
-                  id="brief-message"
-                  name="message"
-                  value={brief.message}
-                  onChange={(event) => updateField('message', event.target.value)}
-                  onFocus={markStarted}
-                  placeholder={content.placeholders.message}
-                  disabled={isSubmitting}
-                  autoComplete="off"
-                  aria-describedby={errors.message ? 'brief-message-error' : undefined}
-                  aria-invalid={errors.message ? 'true' : undefined}
-                  maxLength={leadFieldLimits.message}
-                  required
-                  rows={5}
-                />
-                {errors.message ? (
-                  <span className="brief-field__error" id="brief-message-error">
-                    {errors.message}
-                  </span>
-                ) : null}
-              </div>
+              <TextField
+                field="email"
+                type="email"
+                value={brief.email}
+                content={content}
+                autoComplete="email"
+                error={errors.email}
+                disabled={isSubmitting}
+                inputMode="email"
+                required
+                spellCheck={false}
+                onFocus={markStarted}
+                onChange={updateField}
+              />
+              <TextField
+                field="name"
+                value={brief.name}
+                content={content}
+                autoComplete="name"
+                error={errors.name}
+                disabled={isSubmitting}
+                required
+                onFocus={markStarted}
+                onChange={updateField}
+              />
             </div>
           </fieldset>
-
-          <details className="brief-optional">
-            <summary>{content.optionalTitle}</summary>
-            <div className="brief-form__grid">
-              {optionalFields.map((field) => (
-                <TextField
-                  key={field}
-                  field={field}
-                  value={brief[field]}
-                  content={content}
-                  type={field === 'current_url' ? 'url' : 'text'}
-                  autoComplete={field === 'company' ? 'organization' : 'off'}
-                  disabled={isSubmitting}
-                  inputMode={field === 'current_url' ? 'url' : undefined}
-                  spellCheck={field !== 'current_url'}
-                  onFocus={markStarted}
-                  onChange={updateField}
-                />
-              ))}
-            </div>
-          </details>
 
           <div className="brief-actions">
             <button type="submit" disabled={isSubmitting}>
@@ -297,24 +262,6 @@ export default function ContactTerminal({ locale, content }: Props) {
           </div>
         </form>
 
-        <div className="brief-summary pc-brief-panel" data-cat-platform="contact-summary" aria-live="polite">
-          <div className="pc-brief-panel__bezel" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <div className="pc-brief-panel__screen">
-            <div className="pc-brief-panel__toolbar">
-              <h3>{content.summaryTitle}</h3>
-              <span>LIVE</span>
-            </div>
-            <pre>{summary}</pre>
-            <div className="pc-brief-panel__footer" aria-hidden="true">
-              <span>READY</span>
-              <span>INPUT CHECK</span>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

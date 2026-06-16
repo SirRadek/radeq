@@ -1,0 +1,28 @@
+---
+import type { SiteContent } from '../data/siteContent';
+
+interface Props {
+  content: SiteContent['audience'];
+}
+
+const { content } = Astro.props;
+---
+
+<section class="fit-section" id="about" aria-labelledby="fit-title" data-section-signature="fit">
+  <div class="section-heading section-heading--fit">
+    <div>
+      {content.sectionCode && <p class="section-code">{content.sectionCode}</p>}
+      <h2 id="fit-title">{content.title}</h2>
+    </div>
+    <p>{content.items[0]?.title}</p>
+  </div>
+  <ul class="fit-list" data-cat-platform="fit-list">
+    {
+      content.items.slice(1).map((item) => (
+        <li>
+          <span>{item.signal}</span>
+        </li>
+      ))
+    }
+  </ul>
+</section>

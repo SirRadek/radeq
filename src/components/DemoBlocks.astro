@@ -23,6 +23,7 @@ const demoItems =
         href: `${basePath}/ukazky/${example.slug}/`,
       }))
     : content.items.map((item) => ({ ...item, href: undefined }));
+const hasCards = demoItems.length > 0;
 ---
 
 <section class="demo-section" id="demos" aria-labelledby="demo-title">
@@ -31,26 +32,32 @@ const demoItems =
     <h2 id="demo-title">{content.title}</h2>
     <p>{content.lead}</p>
   </div>
-  <div class="demo-grid">
-    {
-      demoItems.map((demo, index) => (
-        <article class="demo-card" data-cat-platform={`demo-card-${index + 1}`} tabindex="0">
-          {demo.metric && <div class="card-kicker">{demo.metric}</div>}
-          <h3>{demo.name}</h3>
-          <p>{demo.summary}</p>
-          <ol>
-            {demo.events.map((event) => (
-              <li>{event}</li>
-            ))}
-          </ol>
-          {demo.href && (
-            <a class="demo-card__link" href={demo.href}>
-              {locale === 'cs' ? 'Zobrazit ukázku' : 'View example'}
-            </a>
-          )}
-        </article>
-      ))
-    }
-  </div>
-  <a class="demo-section__link" href={showcaseHref}>{showcaseLabel}</a>
+  {
+    hasCards && (
+      <>
+        <div class="demo-grid">
+          {
+            demoItems.map((demo, index) => (
+              <article class="demo-card" data-cat-platform={`demo-card-${index + 1}`} tabindex="0">
+                {demo.metric && <div class="card-kicker">{demo.metric}</div>}
+                <h3>{demo.name}</h3>
+                <p>{demo.summary}</p>
+                <ol>
+                  {demo.events.map((event) => (
+                    <li>{event}</li>
+                  ))}
+                </ol>
+                {demo.href && (
+                  <a class="demo-card__link" href={demo.href}>
+                    {locale === 'cs' ? 'Zobrazit ukázku' : 'View example'}
+                  </a>
+                )}
+              </article>
+            ))
+          }
+        </div>
+        <a class="demo-section__link" href={showcaseHref}>{showcaseLabel}</a>
+      </>
+    )
+  }
 </section>

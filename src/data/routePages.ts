@@ -69,7 +69,7 @@ export const routePages = {
     sections: [
       {
         title: 'Bez soukromých dat',
-        text: 'Veřejné ukázky popisují archetypy práce a bezpečné koncepty. Neobsahují klientské repozitáře, interní podklady ani privátní měření.',
+        text: 'Veřejné ukázky popisují modelové ukázky práce a bezpečné koncepty. Neobsahují klientské repozitáře, interní podklady ani privátní měření.',
       },
       {
         title: 'Ukázky jsou statické',

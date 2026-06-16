@@ -67,7 +67,7 @@ test('homepage core flow works', async ({ page }) => {
   await page.getByRole('switch', { name: /Tmavý/ }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   await expect(page.locator('html')).toHaveAttribute('data-motion-ready', /true|reduced/);
-  await expect(page.locator('html')).toHaveAttribute('data-motion-scene', /top|services|pricing|about|brand-options|handoff|terminal/);
+  await expect(page.locator('html')).toHaveAttribute('data-motion-scene', /top|services|pricing|about|handoff|terminal/);
 
   await page.goto('/demo/service-landing/');
   await expect(page).toHaveURL(/\/demo\/service-landing\/$/);
@@ -125,10 +125,6 @@ test('homepage core flow works', async ({ page }) => {
   await expect(page.getByText('S čím pomohu vedle samotného webu')).toHaveCount(0);
   await expect(page.locator('.about-service-card')).toHaveCount(4);
   await expect(page.getByText('Rychlá pomoc se starším webem')).toBeVisible();
-  await expect(page.locator('.brand-options')).toBeVisible();
-  await expect(page.locator('.palette-card')).toHaveCount(4);
-  await expect(page.locator('.logo-card')).toHaveCount(5);
-
   await expect(page.locator('#brief-name[name="name"]')).toHaveCount(1);
   await expect(page.locator('#brief-email[name="email"]')).toHaveCount(1);
   await expect(page.locator('#brief-project_type[name="project_type"]')).toHaveCount(1);

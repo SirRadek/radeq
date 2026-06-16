@@ -6,6 +6,7 @@ test('palette preview switches homepage colors and exposes mode-aware favicons',
   await expect(page.locator('html')).toHaveAttribute('data-palette-preview', 'true');
   await expect(page.locator('html')).toHaveAttribute('data-palette', 'walnut');
   await expect(page.locator('html')).toHaveAttribute('data-preview-theme-preference', 'auto');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'auto');
   await expect(page.locator('head meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
   await expect(page.locator('link[rel="icon"][media="(prefers-color-scheme: light)"]')).toHaveAttribute(
     'href',
@@ -44,6 +45,23 @@ test('palette preview switches homepage colors and exposes mode-aware favicons',
   await expect(page.locator('link[data-preview-favicon-active]')).toHaveAttribute(
     'href',
     '/brand/radeq-favicon-b-light.png',
+  );
+});
+
+test('palette preview auto mode follows prefers-color-scheme for page colors', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('/preview/palety/');
+
+  await expect(page.locator('html')).toHaveAttribute('data-preview-theme-preference', 'auto');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'auto');
+
+  const autoAccent = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
+  const autoBackground = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--page-bg').trim());
+  expect(autoAccent).toBe('#d58a4a');
+  expect(autoBackground).toBe('#18110e');
+  await expect(page.locator('link[data-preview-favicon-active]')).toHaveAttribute(
+    'href',
+    '/brand/radeq-favicon-b-dark.png',
   );
 });
 

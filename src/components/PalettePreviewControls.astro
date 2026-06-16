@@ -95,12 +95,11 @@ const modes = [
     const apply = () => {
       const palette = read(paletteKey, 'walnut', palettes);
       const mode = read(modeKey, 'auto', modes);
-      const effectiveTheme = mode === 'auto' ? (systemQuery.matches ? 'dark' : 'light') : mode;
 
       root.dataset.palettePreview = 'true';
       root.dataset.palette = palette;
       root.dataset.previewThemePreference = mode;
-      root.dataset.theme = effectiveTheme;
+      root.dataset.theme = mode;
       setPressed(paletteButtons, 'palettePreviewOption', palette);
       setPressed(modeButtons, 'palettePreviewMode', mode);
       updateFavicon(mode);

@@ -1,0 +1,19 @@
+---
+interface Props {
+  label?: string;
+}
+
+const { label = 'RadeQ.cz' } = Astro.props;
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const logoSrc = `${basePath}/brand/radeq-logo-b-wordmark.png`;
+---
+
+<img
+  class="radeq-brand-logo"
+  src={logoSrc}
+  width="920"
+  height="176"
+  alt={label}
+  decoding="async"
+  fetchpriority="high"
+/>

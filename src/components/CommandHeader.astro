@@ -2,7 +2,7 @@
 import type { SiteContent } from '../data/siteContent';
 import type { Locale } from '../data/locales';
 import { getEpochOptions } from '../data/styleMatrix';
-import RadeqLogoVariantB from './RadeqLogoVariantB.astro';
+import RadeqBrandLogo from './RadeqBrandLogo.astro';
 import StyleVariantToggle from './StyleVariantToggle';
 import ThemeModeToggle from './ThemeModeToggle';
 
@@ -54,7 +54,7 @@ const isCurrentPath = (href: string) => {
   <a class:list={['brand-mark', brandVariant === 'logo-b' && 'brand-mark--logo-b']} href="#top" aria-label={content.brandAria}>
     {
       brandVariant === 'logo-b'
-        ? <RadeqLogoVariantB variant="wordmark" />
+        ? <RadeqBrandLogo />
         : (
           <>
             <span class="brand-pulse" aria-hidden="true"></span>

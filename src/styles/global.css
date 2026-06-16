@@ -1019,77 +1019,23 @@ html[data-palette-preview="true"] body::after {
 }
 
 .brand-mark--logo-b {
-  min-width: 10.75rem;
+  min-width: clamp(13rem, 17vw, 18rem);
   border-color: color-mix(in srgb, var(--accent) 32%, var(--line));
-  padding: 0.28rem 0.5rem;
-  color: var(--text-main);
-  background: color-mix(in srgb, var(--panel-bg) 82%, transparent);
+  border-radius: 10px;
+  padding: 0.26rem 0.38rem;
+  background: #ffffff;
+  box-shadow: 0 12px 32px color-mix(in srgb, #000000 12%, transparent);
 }
 
 .brand-mark--logo-b:hover {
   border-color: color-mix(in srgb, var(--accent) 70%, var(--line));
 }
 
-.brand-mark--logo-b .radeq-logo-b--wordmark {
-  width: clamp(10.5rem, 13vw, 13rem);
-  height: auto;
-}
-
-.radeq-logo-b {
+.radeq-brand-logo {
   display: block;
-  color: var(--text-main);
-}
-
-.radeq-logo-b__badge-bg {
-  fill: var(--preview-logo-bg);
-  stroke: color-mix(in srgb, var(--line) 70%, transparent);
-  stroke-width: 2;
-}
-
-.radeq-logo-b__badge-line {
-  fill: none;
-  stroke: var(--preview-logo-line);
-  stroke-width: 2;
-}
-
-.radeq-logo-b__badge-letter--r {
-  fill: var(--preview-logo-r);
-}
-
-.radeq-logo-b__badge-letter--q,
-.radeq-logo-b__word-q,
-.radeq-logo-b__dot,
-.radeq-logo-b__mini-dot {
-  fill: var(--preview-logo-q);
-  color: var(--preview-logo-q);
-}
-
-.radeq-logo-b__ticks rect {
-  fill: var(--preview-logo-tick);
-}
-
-.radeq-logo-b__mini-text,
-.radeq-logo-b__word {
-  fill: var(--preview-logo-r);
-  font-family: var(--font-sans);
-  font-weight: 850;
-  letter-spacing: 0;
-}
-
-.radeq-logo-b__mini-text {
-  font-size: 27px;
-}
-
-.radeq-logo-b__word {
-  font-size: 50px;
-}
-
-.radeq-logo-b__scan {
-  fill: none;
-  stroke: var(--preview-logo-q);
-  stroke-width: 2;
-  stroke-linecap: round;
-  opacity: 0.42;
+  width: clamp(13rem, 17vw, 18rem);
+  height: auto;
+  object-fit: contain;
 }
 
 .palette-preview-panel {
@@ -1097,7 +1043,7 @@ html[data-palette-preview="true"] body::after {
   top: 0.7rem;
   z-index: 28;
   display: grid;
-  grid-template-columns: minmax(180px, 0.7fr) minmax(0, 1.7fr) minmax(220px, 0.8fr);
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.36fr);
   gap: 0.75rem;
   align-items: stretch;
   width: min(100% - 2rem, var(--max-width));
@@ -1109,28 +1055,6 @@ html[data-palette-preview="true"] body::after {
   background: color-mix(in srgb, var(--preview-control-bg) 92%, transparent);
   box-shadow: 0 18px 60px color-mix(in srgb, #000000 14%, transparent);
   backdrop-filter: blur(18px);
-}
-
-.palette-preview-panel__brand {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 0.65rem;
-  align-items: center;
-  min-width: 0;
-  border: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
-  border-radius: 8px;
-  padding: 0.55rem;
-  background: color-mix(in srgb, var(--panel-bg) 82%, transparent);
-}
-
-.palette-preview-panel__brand .radeq-logo-b--badge {
-  width: 44px;
-  height: 44px;
-}
-
-.palette-preview-panel__brand .radeq-logo-b--wordmark {
-  width: min(14rem, 100%);
-  height: auto;
 }
 
 .palette-preview-panel__group {
@@ -1233,21 +1157,16 @@ html[data-palette-preview="true"] body::after {
     position: relative;
     top: auto;
   }
-
-  .palette-preview-panel__brand {
-    grid-template-columns: auto minmax(0, 14rem);
-    justify-content: start;
-  }
 }
 
 @media (max-width: 680px) {
   .brand-mark--logo-b {
     min-width: 0;
-    padding: 0.25rem 0.35rem;
+    padding: 0.22rem 0.28rem;
   }
 
-  .brand-mark--logo-b .radeq-logo-b--wordmark {
-    width: clamp(7.25rem, 35vw, 9.25rem);
+  .radeq-brand-logo {
+    width: clamp(9.25rem, 42vw, 11.5rem);
   }
 
   .palette-preview-panel {
@@ -1255,12 +1174,6 @@ html[data-palette-preview="true"] body::after {
     margin-top: 0.5rem;
     padding: 0.55rem;
   }
-
-  .palette-preview-panel__brand .radeq-logo-b--badge {
-    width: 38px;
-    height: 38px;
-  }
-
   .palette-preview-panel__options {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

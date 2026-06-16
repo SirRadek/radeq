@@ -11,8 +11,8 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 
 const content = siteContent.cs;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
-const lightFavicon = `${basePath}/brand/radeq-favicon-b-light.svg`;
-const darkFavicon = `${basePath}/brand/radeq-favicon-b-dark.svg`;
+const lightFavicon = `${basePath}/brand/radeq-favicon-b-light.png`;
+const darkFavicon = `${basePath}/brand/radeq-favicon-b-dark.png`;
 ---
 
 <BaseLayout
@@ -22,9 +22,9 @@ const darkFavicon = `${basePath}/brand/radeq-favicon-b-dark.svg`;
 >
   <Fragment slot="head">
     <meta name="robots" content="noindex, nofollow" />
-    <link rel="icon" type="image/svg+xml" href={lightFavicon} media="(prefers-color-scheme: light)" />
-    <link rel="icon" type="image/svg+xml" href={darkFavicon} media="(prefers-color-scheme: dark)" />
-    <link rel="icon" type="image/svg+xml" href={lightFavicon} data-preview-favicon-active data-light-href={lightFavicon} data-dark-href={darkFavicon} />
+    <link rel="icon" type="image/png" href={lightFavicon} media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/png" href={darkFavicon} media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/png" href={lightFavicon} data-preview-favicon-active data-light-href={lightFavicon} data-dark-href={darkFavicon} />
     <script is:inline define:vars={{ lightFavicon, darkFavicon }}>
       (() => {
         const root = document.documentElement;

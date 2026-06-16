@@ -9,14 +9,14 @@ test('palette preview switches homepage colors and exposes mode-aware favicons',
   await expect(page.locator('head meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
   await expect(page.locator('link[rel="icon"][media="(prefers-color-scheme: light)"]')).toHaveAttribute(
     'href',
-    '/brand/radeq-favicon-b-light.svg',
+    '/brand/radeq-favicon-b-light.png',
   );
   await expect(page.locator('link[rel="icon"][media="(prefers-color-scheme: dark)"]')).toHaveAttribute(
     'href',
-    '/brand/radeq-favicon-b-dark.svg',
+    '/brand/radeq-favicon-b-dark.png',
   );
-  await expect(page.locator('.brand-mark--logo-b .radeq-logo-b--wordmark')).toBeVisible();
-  await expect(page.locator('.palette-preview-panel .radeq-logo-b--badge')).toBeVisible();
+  await expect(page.locator('.brand-mark--logo-b .radeq-brand-logo')).toBeVisible();
+  await expect(page.locator('.palette-preview-panel .radeq-brand-logo')).toHaveCount(0);
   await expect(
     page.getByRole('heading', { name: 'Praktická IT pomoc pro lidi a firmy, které chtějí méně ruční práce.' }),
   ).toBeVisible();
@@ -35,7 +35,7 @@ test('palette preview switches homepage colors and exposes mode-aware favicons',
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await expect(page.locator('link[data-preview-favicon-active]')).toHaveAttribute(
     'href',
-    '/brand/radeq-favicon-b-dark.svg',
+    '/brand/radeq-favicon-b-dark.png',
   );
 
   await page.getByRole('button', { name: /Světlý/ }).click();
@@ -43,7 +43,7 @@ test('palette preview switches homepage colors and exposes mode-aware favicons',
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   await expect(page.locator('link[data-preview-favicon-active]')).toHaveAttribute(
     'href',
-    '/brand/radeq-favicon-b-light.svg',
+    '/brand/radeq-favicon-b-light.png',
   );
 });
 

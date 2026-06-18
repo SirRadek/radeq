@@ -3494,16 +3494,29 @@ html[data-theme="light"] .shop-cart__remove {
 }
 
 .service-card__marker {
-  position: relative;
-  z-index: 1;
-  display: inline-grid;
-  place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
-  border-radius: 6px;
-  background: color-mix(in srgb, var(--panel-bg) 86%, var(--accent) 14%);
-  box-shadow: 0 10px 24px color-mix(in srgb, #000000 12%, transparent);
+  position: absolute;
+  top: 0.6rem;
+  right: 0.8rem;
+  z-index: 0;
+  pointer-events: none;
+  display: block;
+  width: auto;
+  height: auto;
+  border: none;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.service-card__marker span {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: clamp(3.5rem, 5vw, 5rem);
+  font-weight: 700;
+  color: var(--accent);
+  opacity: 0.1;
+  line-height: 1;
+  user-select: none;
 }
 
 .service-card h3,

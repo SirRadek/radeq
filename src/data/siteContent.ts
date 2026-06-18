@@ -196,7 +196,7 @@ export const siteContent = {
     hero: {
       metaAria: 'Směr návrhu',
       meta: ['Nový web', 'Redesign', 'Předání bez chaosu'],
-      title: 'Web pro malé firmy, kterému rozumíte vy i vaši zákazníci.',
+      title: 'Web, který jasně vysvětlí vaši nabídku — a ušetří čas na zbytek.',
       lead:
         'Navrhnu, napíšu a postavím firemní web nebo redesign tak, aby jasně vysvětlil vaši nabídku, fungoval na mobilu, šel dohledat a dal se po předání normálně spravovat.',
       proof: [
@@ -571,7 +571,7 @@ export const siteContent = {
     hero: {
       metaAria: 'Design direction',
       meta: ['New website', 'Redesign', 'Clear handoff'],
-      title: 'A website small businesses can understand and customers can trust.',
+      title: 'A website that explains your offer clearly — and saves time for the rest.',
       lead:
         'I design, write, and build company websites or redesigns that explain your offer clearly, work well on mobile, are findable, and can be handed over without technical fog.',
       proof: [

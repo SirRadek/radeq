@@ -1,4 +1,5 @@
 ---
+import AboutSection from '../components/AboutSection.astro';
 import CommandHeader from '../components/CommandHeader.astro';
 import ContactTerminal from '../components/ContactTerminal';
 import DemoBlocks from '../components/DemoBlocks.astro';
@@ -32,9 +33,10 @@ const content = siteContent.cs;
     </div>
     <FitSection content={content.audience} />
     <ServiceCatalog locale={content.layout.lang} content={content.systems} />
+    <AboutSection content={content.about} />
     <PricingSection content={content.pricing} />
     <DemoBlocks locale={content.layout.lang} content={content.demos} />
-    <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load />
+    <ContactTerminal locale={content.layout.lang} content={content.terminal} client:visible />
     <a class="back-to-top" href="#top" aria-label="Zpět nahoru"><span aria-hidden="true">↑</span></a>
   </main>
 </BaseLayout>

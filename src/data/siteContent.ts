@@ -162,9 +162,9 @@ export const siteContent = {
   cs: {
     layout: {
       lang: 'cs',
-      title: 'Radeq.cz | Praktická IT pomoc bez technické mlhy',
+      title: 'Tvorba webů pro živnostníky a malé firmy | Radeq.cz',
       description:
-        'Radeq.cz pomáhá živnostníkům, jednotlivcům, malým firmám a týmům s automatizací, AI, databázemi, weby a jednodušším provozem.',
+        'Weby, redesigny a audit webu pro živnostníky a malé firmy. Od 2 900 Kč za audit, od 25 000 Kč za startovací web. Jeden kontakt, předání s návodem.',
       path: '/',
       alternatePath: '/en/',
       alternateLabel: 'EN',
@@ -174,13 +174,14 @@ export const siteContent = {
       brandAria: 'Radeq.cz úvod',
       navAria: 'Hlavní menu',
       navItems: [
-        { href: '#about', label: 'Co řeším' },
+        { href: '#fit', label: 'Co řeším' },
         { href: '#services', label: 'Služby' },
+        { href: '#about', label: 'O mně' },
         { href: '#process', label: 'Jak pracuji' },
         { href: '#pricing', label: 'Ceny' },
         { href: '#terminal', label: 'Kontakt' },
       ],
-      cta: 'Chci zmapovat problém',
+      cta: 'Kontakt',
       styleLabel: 'Téma',
       themeLabel: 'Přepnout barevný režim',
       lightTheme: 'Světlý',
@@ -189,13 +190,13 @@ export const siteContent = {
     hero: {
       metaAria: 'Směr návrhu',
       meta: [],
-      title: 'Weby, formuláře a automatizace pro méně ruční práce.',
+      title: 'Web, který jasně vysvětlí vaši nabídku — a ušetří čas na zbytek.',
       lead:
-        'Tvořím jednoduché weby, formuláře, evidence, automatizace a AI pomocníky pro živnostníky, malé firmy a týmy, které chtějí mít víc přehledu a méně přepisování.',
+        'Dělám weby, formuláře a automatizace pro živnostníky a malé firmy. Jeden kontakt, srozumitelný výstup — vše předám s návodem.',
       proof: [
-        { label: 'Audit od 2 900 Kč', value: 'rychle zjistíme, co brzdí práci' },
-        { label: 'Web od 25 000 Kč', value: 'jasná nabídka, formulář a základní nastavení' },
-        { label: 'Výstup s návodem', value: 'předání bez závislosti na dodavateli' },
+        { label: 'Audit od 2 900 Kč', value: 'zjistíme, co řešit jako první, a odečteme to z realizace' },
+        { label: 'Web od 25 000 Kč', value: 'struktura, text, formulář a základní nastavení v jednom balíku' },
+        { label: 'Předání s návodem', value: 'web i data zůstanou vaše, bez závislosti na dodavateli' },
       ],
       actionsAria: 'Hlavní akce',
       actions: [
@@ -386,7 +387,7 @@ export const siteContent = {
           name: 'Startovací web / landing page',
           price: 'od 25 000 Kč',
           text: 'Pro jednoduchou prezentaci služby, nabídky nebo produktu.',
-          includes: ['struktura stránky', 'textové vedení', 'responzivní web', 'formulář', 'základní technické nastavení'],
+          includes: ['struktura stránky', 'textové vedení', 'responzivní web', 'formulář', 'základní technické nastavení', 'předání zdrojového kódu a návod k údržbě', 'pomoc s nastavením hostingu a domény'],
           output: 'Výstup: stránka, která vysvětluje nabídku a sbírá použitelné kontakty.',
         },
         {
@@ -517,8 +518,9 @@ export const siteContent = {
       brandAria: 'Radeq.cz home',
       navAria: 'Main menu',
       navItems: [
-        { href: '#about', label: 'What I solve' },
+        { href: '#fit', label: 'What I solve' },
         { href: '#services', label: 'Services' },
+        { href: '#about', label: 'About' },
         { href: '#process', label: 'How I work' },
         { href: '#pricing', label: 'Prices' },
         { href: '#terminal', label: 'Contact' },

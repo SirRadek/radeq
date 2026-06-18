@@ -25,6 +25,13 @@ const copy = lang === 'cs'
         { href: '/cookies/', label: 'Cookies' },
         { href: '/soukromi/', label: 'Soukromí' },
       ],
+      services: 'Stránky',
+      serviceLinks: [
+        { href: '/sluzby/', label: 'Služby' },
+        { href: '/portfolio/', label: 'Portfolio' },
+        { href: '/ukazky/', label: 'Ukázky' },
+        { href: '/kontakt/', label: 'Kontakt' },
+      ],
     }
   : {
       contact: 'Contact',
@@ -42,6 +49,13 @@ const copy = lang === 'cs'
         { href: '/gdpr/', label: 'GDPR' },
         { href: '/cookies/', label: 'Cookies' },
         { href: '/soukromi/', label: 'Privacy' },
+      ],
+      services: 'Pages',
+      serviceLinks: [
+        { href: '/sluzby/', label: 'Services' },
+        { href: '/portfolio/', label: 'Portfolio' },
+        { href: '/ukazky/', label: 'Examples' },
+        { href: '/kontakt/', label: 'Contact' },
       ],
     };
 ---
@@ -64,6 +78,9 @@ const copy = lang === 'cs'
       {copy.address.map((line) => <span>{line}</span>)}
     </address>
   </div>
+  <nav aria-label={copy.services}>
+    {copy.serviceLinks.map((link) => <a href={withBaseHref(link.href)}>{link.label}</a>)}
+  </nav>
   <nav aria-label={copy.legal}>
     {copy.links.map((link) => <a href={withBaseHref(link.href)}>{link.label}</a>)}
   </nav>

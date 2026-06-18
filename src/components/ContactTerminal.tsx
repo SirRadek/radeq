@@ -260,6 +260,10 @@ export default function ContactTerminal({ locale, content }: Props) {
               {status}
             </p>
           </div>
+          <p className="brief-form__privacy">
+            Odesláním souhlasíte se{' '}
+            <a href="/soukromi/" target="_blank" rel="noopener noreferrer">zpracováním osobních údajů</a>.
+          </p>
         </form>
 
       </div>

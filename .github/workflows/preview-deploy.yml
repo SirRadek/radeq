@@ -1,0 +1,55 @@
+name: Preview Deploy
+
+on:
+  push:
+    branches:
+      - 'autopilot/**'
+      - 'codex/**'
+
+concurrency:
+  group: preview-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-preview:
+    name: Build & deploy preview
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy preview Worker
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --env preview
+
+      - name: Report preview URL
+        if: success()
+        run: |
+          echo "## Preview deployed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** https://radeq-preview.${{ secrets.CLOUDFLARE_ACCOUNT_SUBDOMAIN }}.workers.dev" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "> Static content and navigation work in preview. Contact form (D1) is not bound to preview — form submissions will fail gracefully." >> $GITHUB_STEP_SUMMARY

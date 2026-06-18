@@ -1,9 +1,32 @@
-# wrangler.example.toml
-name = "radeq-static"
-pages_build_output_dir = "./dist"
-compatibility_date = "2026-05-10"
+# wrangler.example.toml — copy to wrangler.toml and fill in real values
+name = "radeq"
+main = "worker/index.ts"
+compatibility_date = "2026-06-11"
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+html_handling = "auto-trailing-slash"
+not_found_handling = "404-page"
 
 [[d1_databases]]
 binding = "LEADS_DB"
-database_name = "radeq-leads"
+database_name = "LEADS_DB"
 database_id = "replace-with-d1-database-id"
+
+[[send_email]]
+name = "EMAIL"
+destination_address = "poptavky@radeq.cz"
+allowed_sender_addresses = ["poptavky@radeq.cz"]
+
+# Preview environment — static content only; D1/email not bound (form fails gracefully).
+# Deployed by .github/workflows/preview-deploy.yml via: wrangler deploy --env preview
+# Preview URL: https://radeq-preview.<account-subdomain>.workers.dev
+[env.preview]
+name = "radeq-preview"
+
+[env.preview.assets]
+directory = "./dist"
+binding = "ASSETS"
+html_handling = "auto-trailing-slash"
+not_found_handling = "404-page"

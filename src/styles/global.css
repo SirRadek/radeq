@@ -6124,6 +6124,23 @@ html[data-style="variant-d"] .service-card {
   }
 }
 
+/* DT8: Alternate section rhythm */
+.section--alternate {
+  background: var(--panel-strong);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+/* Dark block option — k posouzení vlastníka z preview:
+.section--dark {
+  background: color-mix(in srgb, var(--text-main) 92%, transparent);
+  color: var(--panel-bg);
+  --text-main: var(--panel-bg);
+  --text-muted: color-mix(in srgb, var(--panel-bg) 72%, transparent);
+  --line: color-mix(in srgb, var(--panel-bg) 18%, transparent);
+}
+*/
+
 /* DT5: Section reveal via Intersection Observer */
 main section:not(.hero-section) {
   opacity: 0;

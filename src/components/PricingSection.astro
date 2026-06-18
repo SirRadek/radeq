@@ -8,30 +8,44 @@ interface Props {
 const { content } = Astro.props;
 ---
 
-<section class="pricing-section" id="pricing" aria-labelledby="pricing-title" data-section-signature="pricing">
-  <div class="section-heading pricing-section__heading">
-    <div>
-      {content.sectionCode && <p class="section-code">{content.sectionCode}</p>}
-      <h2 id="pricing-title">{content.title}</h2>
+<section class="pricing-section ds-section" id="pricing" aria-labelledby="pricing-title" data-section-signature="pricing">
+  <div class="pricing-section__inner">
+    <div class="pricing-section__heading">
+      <div>
+        <p class="ds-eyebrow">{content.sectionCode}</p>
+        <h2 class="ds-h2" id="pricing-title">{content.title}</h2>
+      </div>
+      <p class="ds-lead">{content.lead}</p>
     </div>
-    <p>{content.lead}</p>
-  </div>
-  <div class="pricing-grid">
-    {
-      content.items.map((item) => (
-        <article class:list={['pricing-card', item.featured && 'pricing-card--featured']}>
-          <div>
-            <span>{item.price}</span>
-            <h3>{item.name}</h3>
-            <p>{item.text}</p>
+
+    <div class="pricing-grid" aria-label={content.title}>
+      {content.items.map((item) => (
+        <article class:list={['pricing-card', 'ds-card', item.featured && 'pricing-card--featured']}>
+          {item.featured && <p class="pricing-card__ribbon">Doporučeno</p>}
+
+          <div class="pricing-card__body">
+            <p class="pricing-card__price">{item.price}</p>
+            <h3 class="pricing-card__title">{item.name}</h3>
+            <p class="pricing-card__text">{item.text}</p>
           </div>
-          <ul>
-            {item.includes.map((include) => <li>{include}</li>)}
+
+          <ul class="pricing-card__includes">
+            {item.includes.map((include) => (
+              <li>{include}</li>
+            ))}
           </ul>
-          <a href="#terminal" data-track={item.featured ? 'audit_click' : undefined}>{item.cta}</a>
+
+          <a
+            class:list={[item.featured ? 'button-primary' : 'button-secondary', 'pricing-card__cta']}
+            href="#terminal"
+            data-track={item.featured ? 'audit_click' : undefined}
+          >
+            {item.cta}
+          </a>
         </article>
-      ))
-    }
+      ))}
+    </div>
+
+    {content.note && <p class="pricing-section__note">{content.note}</p>}
   </div>
-  {content.note && <p class="pricing-section__note">{content.note}</p>}
 </section>

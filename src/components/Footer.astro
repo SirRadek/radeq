@@ -1,0 +1,45 @@
+---
+import type { SiteContent } from '../data/siteContent';
+import type { Locale } from '../data/locales';
+
+interface Props {
+  content: SiteContent['header'];
+  locale: Locale;
+}
+
+const { content } = Astro.props;
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const resolveHref = (href: string) => href.startsWith('/') ? `${basePath}${href}` : href;
+---
+<footer class="site-footer ds-bleed">
+  <div class="site-footer__inner">
+    <div class="site-footer__grid">
+      <div>
+        <p class="site-footer__brand">Radeq.cz</p>
+        <p class="site-footer__tagline">Digitální studio pro přesná rozhraní, promyšlený obsah a řemeslně dotažený web.</p>
+      </div>
+
+      <nav aria-label="Navigace v patičce">
+        <p class="site-footer__heading">Navigace</p>
+        <div class="site-footer__links">
+          {content.navItems.map((item) => (
+            <a class="site-footer__link" href={resolveHref(item.href)}>{item.label}</a>
+          ))}
+        </div>
+      </nav>
+
+      <div>
+        <p class="site-footer__heading">Spojení</p>
+        <div class="site-footer__links">
+          <a class="site-footer__link" href={resolveHref('#terminal')}>Napsat poptávku</a>
+          <a class="site-footer__link" href={resolveHref('#pricing')}>Ceník a spolupráce</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <span>© 2026 Radeq.cz</span>
+      <span class="site-footer__note">Klidná technika, přesné detaily, žádný zbytečný šum.</span>
+    </div>
+  </div>
+</footer>

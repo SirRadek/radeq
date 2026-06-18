@@ -7,6 +7,8 @@ import PricingSection from '../components/PricingSection.astro';
 import ServiceCatalog from '../components/ServiceCatalog.astro';
 import { siteContent } from '../data/siteContent';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Footer from '../components/Footer.astro';
+import AudienceBand from '../components/AudienceBand.astro';
 
 const content = siteContent.cs;
 ---
@@ -28,46 +30,50 @@ const content = siteContent.cs;
   <main>
     <div class="proposal-stage" id="services">
       <HeroSection content={content.hero} />
+      <AudienceBand content={content.audience} />
       <ServiceCatalog locale={content.layout.lang} content={content.systems} />
     </div>
-    <PricingSection content={content.pricing} />
     <section class="about-services" id="about" aria-labelledby="about-title" data-section-signature="about-services">
+  <div class="about-services__inner ds-section">
+    <div class="about-services__left">
       <div class="about-services__intro">
-        <p class="section-code">{content.about.sectionCode}</p>
-        <h2 id="about-title">{content.about.title}</h2>
-        <p>{content.about.lead}</p>
+        <p class="ds-eyebrow">{content.about.sectionCode}</p>
+        <h2 class="ds-h2" id="about-title">{content.about.title}</h2>
+        <p class="ds-lead">{content.about.lead}</p>
       </div>
-      <div class="about-services__profile">
-        <p class="section-code">{content.about.profileTitle}</p>
+
+      <div class="about-services__profile" aria-labelledby="about-profile-title">
+        <p class="ds-eyebrow">{content.about.profileTitle}</p>
         <p>{content.about.profileText}</p>
         <dl>
-          {
-            content.about.principles.map((principle) => (
-              <div>
-                <dt>{principle.label}</dt>
-                <dd>{principle.value}</dd>
-              </div>
-            ))
-          }
+          {content.about.principles.map((principle) => (
+            <div>
+              <dt>{principle.label}</dt>
+              <dd>{principle.value}</dd>
+            </div>
+          ))}
         </dl>
       </div>
-      <div class="about-services__services">
-        <p class="section-code">{content.about.servicesTitle}</p>
-      </div>
-      <div class="about-services__grid" aria-label={content.about.servicesTitle}>
-        {
-          content.about.items.map((item) => (
-            <article>
-              <span>{item.label}</span>
-              <h3>{item.title}</h3>
-              <p>{item.text}</p>
-            </article>
-          ))
-        }
+    </div>
+
+    <div class="about-services__right" aria-labelledby="about-services-title">
+      <p class="ds-eyebrow" id="about-services-title">{content.about.servicesTitle}</p>
+      <div class="about-services__grid">
+        {content.about.items.map((item) => (
+          <article class="about-service-card ds-card">
+            <span>{item.label}</span>
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+          </article>
+        ))}
       </div>
       <p class="about-services__note">{content.about.note}</p>
-    </section>
+    </div>
+  </div>
+</section>
     <HandoffStandard content={content.handoff} />
+    <PricingSection content={content.pricing} />
     <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load />
   </main>
+  <Footer content={content.header} locale={content.layout.lang} />
 </BaseLayout>

@@ -8,13 +8,18 @@ interface Props {
 const { content } = Astro.props;
 ---
 
-<section class="handoff-section" id="handoff" aria-labelledby="handoff-title">
-  <div>
-    {content.sectionCode && <p class="section-code">{content.sectionCode}</p>}
-    <h2 id="handoff-title">{content.title}</h2>
-    <p>{content.lead}</p>
+<section class="handoff-section ds-section ds-bleed" id="handoff" aria-labelledby="handoff-title">
+  <div class="handoff-section__inner">
+    <div class="handoff-section__heading">
+      <p class="ds-eyebrow">{content.sectionCode}</p>
+      <h2 class="handoff-section__title" id="handoff-title">{content.title}</h2>
+      <p class="handoff-section__lead">{content.lead}</p>
+    </div>
+
+    <ul class="handoff-list" aria-label={content.title}>
+      {content.items.map((item) => (
+        <li>{item}</li>
+      ))}
+    </ul>
   </div>
-  <ul class="handoff-list" data-cat-platform="handoff-list">
-    {content.items.map((item) => <li>{item}</li>)}
-  </ul>
 </section>

@@ -7,20 +7,18 @@ interface Props {
 
 const { content } = Astro.props;
 ---
-
-<section class="audience-band" aria-labelledby="audience-title">
-  <div>
-    {content.sectionCode && <p class="section-code">{content.sectionCode}</p>}
-    <h2 id="audience-title">{content.title}</h2>
+<section class="audience-band ds-section" aria-labelledby="audience-title">
+  <div class="audience-heading">
+    {content.sectionCode && <p class="ds-eyebrow">{content.sectionCode}</p>}
+    <h2 id="audience-title" class="ds-h2">{content.title}</h2>
   </div>
-  <div class="audience-grid" data-cat-platform="audience-grid">
-    {
-      content.items.map((track) => (
-        <article>
-          <h3>{track.title}</h3>
-          <p>{track.signal}</p>
-        </article>
-      ))
-    }
+
+  <div class="audience-grid">
+    {content.items.map((track) => (
+      <article class="audience-card ds-card">
+        <h3>{track.title}</h3>
+        <p>{track.signal}</p>
+      </article>
+    ))}
   </div>
 </section>

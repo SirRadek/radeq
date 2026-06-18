@@ -1,0 +1,239 @@
+:root {
+  --font-display: "Plus Jakarta Sans", var(--font-sans);
+}
+
+/* Opus review guard: the full-bleed .statement-band uses width:100vw, which can
+   add a horizontal scrollbar equal to the vertical scrollbar width. clip avoids
+   that without breaking position:sticky (unlike overflow:hidden). */
+html,
+body {
+  overflow-x: clip;
+}
+
+h1,
+h2,
+.hero-section h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.hero-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.hero-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-section h1 {
+  max-width: 11ch;
+  font-size: clamp(2.9rem, 5.6vw, 5rem);
+  line-height: 0.96;
+  text-wrap: balance;
+}
+
+.hero-section::after {
+  content: "";
+  position: absolute;
+  inset: -12% -8% auto auto;
+  z-index: 0;
+  width: min(52vw, 42rem);
+  aspect-ratio: 1.15;
+  pointer-events: none;
+  opacity: 0.18;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--accent) 22%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 22%, transparent) 1px, transparent 1px),
+    radial-gradient(circle at 72% 28%, color-mix(in srgb, var(--accent) 18%, transparent) 0 2px, transparent 3px);
+  background-size: 3rem 3rem, 3rem 3rem, 8rem 8rem;
+  mask-image: radial-gradient(circle at 62% 38%, #000 0 48%, transparent 74%);
+  transform: translate3d(0, 0, 0) rotate(-1deg);
+}
+
+html[data-motion-ready="true"] .hero-section::after {
+  animation: redesign-blueprint-drift 24s ease-in-out infinite alternate;
+}
+
+@keyframes redesign-blueprint-drift {
+  from {
+    transform: translate3d(0, 0, 0) rotate(-1deg);
+    background-position: 0 0, 0 0, 0 0;
+  }
+  to {
+    transform: translate3d(-1.25rem, 0.75rem, 0) rotate(1deg);
+    background-position: 1.5rem 1.5rem, 1.5rem 1.5rem, 2rem 1rem;
+  }
+}
+
+html[data-motion-ready="true"] main > *,
+html[data-motion-ready="true"] .hero-section,
+html[data-motion-ready="true"] .pricing-section,
+html[data-motion-ready="true"] .about-services,
+html[data-motion-ready="true"] .statement-band {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html[data-motion-ready="true"] main > *:nth-child(2) {
+  transition-delay: 90ms;
+}
+
+html[data-motion-ready="true"] main > *:nth-child(3) {
+  transition-delay: 160ms;
+}
+
+html[data-motion-ready="true"] main > *:nth-child(4) {
+  transition-delay: 230ms;
+}
+
+@starting-style {
+  html[data-motion-ready="true"] main > *,
+  html[data-motion-ready="true"] .hero-section,
+  html[data-motion-ready="true"] .pricing-section,
+  html[data-motion-ready="true"] .about-services,
+  html[data-motion-ready="true"] .statement-band {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+:where(.service-card, .pricing-card, .about-card, .service-catalog article, .pricing-section article, .about-services article) {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+:where(.service-card, .pricing-card, .about-card, .service-catalog article, .pricing-section article, .about-services article):hover {
+  transform: translateY(-4px);
+  box-shadow: 0 1.1rem 2.4rem color-mix(in srgb, var(--text-main) 13%, transparent);
+}
+
+.button-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  border-radius: 999px;
+  padding-inline: 1.35rem;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent) 92%, #ffffff 8%), var(--accent)) border-box;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background-position 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.button-primary::after {
+  content: "\2192";
+  display: inline-block;
+  font-family: var(--font-mono);
+  line-height: 1;
+  transform: translateX(0);
+  transition: transform 0.2s ease;
+}
+
+.button-primary:hover {
+  background-position: 100% 50%;
+  box-shadow: 0 0.75rem 1.5rem color-mix(in srgb, var(--accent) 22%, transparent);
+  transform: translateY(-1px);
+}
+
+.button-primary:hover::after {
+  transform: translateX(4px);
+}
+
+.statement-band {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  margin-block: clamp(4rem, 8vw, 7rem);
+  color: #f7fbef;
+  background:
+    linear-gradient(135deg, rgba(172, 214, 116, 0.12), transparent 36%),
+    #122017;
+}
+
+.statement-band__inner {
+  width: min(100% - 2rem, var(--max-width));
+  margin-inline: auto;
+  padding-block: clamp(4rem, 8vw, 7.5rem);
+  display: grid;
+  gap: 1.35rem;
+}
+
+.statement-band .section-code {
+  color: #cceea3;
+}
+
+.statement-band h2 {
+  max-width: 12ch;
+  color: #f7fbef;
+  font-size: clamp(2.45rem, 6vw, 5rem);
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.statement-band p:not(.section-code) {
+  max-width: 42rem;
+  color: #d8e6d3;
+  font-size: clamp(1.05rem, 2vw, 1.28rem);
+  line-height: 1.65;
+}
+
+.statement-band .button-primary {
+  width: fit-content;
+  margin-top: 0.65rem;
+  border-color: #d8f7a5;
+  color: #122017;
+  background: #d8f7a5;
+  box-shadow: none;
+}
+
+.statement-band .button-primary:hover {
+  border-color: #ffffff;
+  background: #ffffff;
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.24);
+}
+
+@media (max-width: 760px) {
+  .hero-section h1,
+  .statement-band h2 {
+    max-width: 100%;
+  }
+
+  .hero-section::after {
+    inset: 4rem -45% auto auto;
+    width: 34rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-motion-ready="true"] main > *,
+  html[data-motion-ready="true"] .hero-section,
+  html[data-motion-ready="true"] .pricing-section,
+  html[data-motion-ready="true"] .about-services,
+  html[data-motion-ready="true"] .statement-band,
+  :where(.service-card, .pricing-card, .about-card, .service-catalog article, .pricing-section article, .about-services article),
+  .button-primary,
+  .button-primary::after {
+    transition: none;
+  }
+
+  html[data-motion-ready="true"] .hero-section::after {
+    animation: none;
+  }
+
+  :where(.service-card, .pricing-card, .about-card, .service-catalog article, .pricing-section article, .about-services article):hover,
+  .button-primary:hover {
+    transform: none;
+  }
+}

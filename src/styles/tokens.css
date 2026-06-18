@@ -1,0 +1,47 @@
+/* Design direction: Řemeslná preciznost
+ * Extends global.css — loaded after it in BaseLayout.
+ * Adds new tokens and utilities without duplicating existing vars. */
+
+:root {
+  --size-display: clamp(3rem, 6vw, 5.5rem);
+  --weight-display: 800;
+  --space-section: clamp(5rem, 8vw, 8rem);
+  --space-flow: clamp(2rem, 3.5vw, 3.5rem);
+  --reveal-duration: 480ms;
+  --reveal-easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Typography utilities (DT2) */
+.text-display {
+  font-size: var(--size-display);
+  font-weight: var(--weight-display);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.text-section {
+  font-size: clamp(1.85rem, 2.7vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.text-lead {
+  font-size: clamp(1.05rem, 1.4vw, 1.3rem);
+  line-height: 1.55;
+}
+
+/* DT4: Terracotta accent — k posouzení vlastníka z preview.
+   Vlastník se rozhodl pro zelenou paletu (variant-a green #257a3e).
+   Odkomentovat a zvolit variantu pro aktivaci terracotty:
+
+html[data-theme="light"][data-style="variant-a"] {
+  --accent: #C4521A;
+  --page-bg: #fbf7ec;
+  --panel-bg: #fffdf7;
+  --panel-strong: #efe4cc;
+  --line: #decfae;
+  --line-strong: #a8894d;
+  --text-main: #1a1710;
+  --text-muted: #645a45;
+}
+*/

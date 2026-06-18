@@ -65,5 +65,19 @@ const alternateUrl = alternatePath ? new URL(`${basePath}${alternatePath}`, site
     <MeasurementTracker client:load />
     <MotionOrchestrator client:load />
     <slot />
+    <script>
+      const revealObs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-revealed');
+              revealObs.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.08 },
+      );
+      document.querySelectorAll('main section:not(.hero-section)').forEach((el) => revealObs.observe(el));
+    </script>
   </body>
 </html>

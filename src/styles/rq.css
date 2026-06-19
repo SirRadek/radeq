@@ -1113,12 +1113,14 @@ html[data-motion-ready] main section {
   }
 
   html[data-rq-motion="on"] .rq-marquee__track {
-    animation: rq-marquee var(--rq-marquee-duration, 24s) linear infinite;
+    --rq-marquee-duration-current: var(--rq-marquee-duration, 24s);
+    animation: rq-marquee var(--rq-marquee-duration-current) linear infinite;
   }
 
   html[data-rq-motion="on"] .rq-marquee:hover .rq-marquee__track,
   html[data-rq-motion="on"] .rq-marquee:focus-within .rq-marquee__track {
-    animation-play-state: paused;
+    --rq-marquee-duration-current: calc(var(--rq-marquee-duration, 24s) * 3);
+    animation-play-state: running;
   }
 }
 
@@ -1758,12 +1760,14 @@ html[data-rq-motion="on"] .rq-process__blueprint[data-rq-reveal].is-in .rq-proce
   white-space: nowrap;
   will-change: transform;
   transform: translate3d(0, 0, 0);
-  animation: rq-marquee-run 28s linear infinite;
+  --rq-marquee-duration-current: var(--rq-marquee-duration, 28s);
+  animation: rq-marquee-run var(--rq-marquee-duration-current) linear infinite;
 }
 
 .rq-marquee:hover .rq-marquee__track,
 .rq-marquee:focus-within .rq-marquee__track {
-  animation-play-state: paused;
+  --rq-marquee-duration-current: calc(var(--rq-marquee-duration, 28s) * 3);
+  animation-play-state: running;
 }
 
 .rq-marquee__item {

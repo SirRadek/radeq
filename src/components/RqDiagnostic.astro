@@ -197,6 +197,11 @@ const items = [
     min-width: 0;
   }
 
+  .rq-diagnostic.is-enhanced .rq-diagnostic__output {
+    height: clamp(30rem, 44vw, 38rem);
+    overflow: hidden;
+  }
+
   .rq-diagnostic__panel {
     padding: clamp(20px, 4vw, 34px);
     border: 1px solid var(--rq-line);
@@ -214,6 +219,11 @@ const items = [
   }
 
   .rq-diagnostic.is-enhanced .rq-diagnostic__panel:not([hidden]) {
+    height: 100%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    mask-image: linear-gradient(180deg, transparent 0, #000 1.5rem, #000 calc(100% - 1.5rem), transparent 100%);
     animation: rq-diagnostic-fade 180ms var(--rq-ease);
   }
 
@@ -364,6 +374,9 @@ const items = [
 
         if (panel) {
           panel.hidden = !isActive;
+          if (isActive) {
+            panel.scrollTop = 0;
+          }
         }
       });
 

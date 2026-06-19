@@ -1470,3 +1470,183 @@ html[data-motion-ready] main section {
     transform: none;
   }
 }
+
+/* ===== V2 Vlna 2c: ukázky bento + ceník emphasis ===== */
+.rq-ukazky-teaser {
+  overflow: clip;
+}
+
+.rq-ukazky-teaser__inner {
+  overflow: visible;
+}
+
+.rq-ukazky-bento {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.9fr);
+  grid-template-areas:
+    "featured booking"
+    "featured shop";
+  gap: clamp(1rem, 2vw, 1.5rem);
+  align-items: stretch;
+  max-width: 100%;
+  overflow: visible;
+}
+
+.rq-ukazky-bento-card {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 15rem;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: clamp(1.25rem, 2.4vw, 2rem);
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.rq-ukazky-bento-card--featured {
+  grid-area: featured;
+  min-height: clamp(25rem, 42vw, 34rem);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.rq-ukazky-bento-card--booking {
+  grid-area: booking;
+}
+
+.rq-ukazky-bento-card--shop {
+  grid-area: shop;
+}
+
+.rq-ukazky-bento-card:hover,
+.rq-ukazky-bento-card:focus-visible {
+  transform: translateY(-0.25rem);
+  box-shadow: 0 1.25rem 2.75rem rgba(32, 24, 24, 0.14);
+}
+
+.rq-ukazky-bento-card:focus-visible {
+  outline: 3px solid rgba(124, 37, 58, 0.35);
+  outline-offset: 4px;
+}
+
+.rq-ukazky-bento-card__badge {
+  align-self: flex-start;
+  max-width: 100%;
+  border: 1px solid rgba(124, 37, 58, 0.24);
+  border-radius: 999px;
+  padding: 0.32rem 0.62rem;
+  color: #7c253a;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+  overflow-wrap: anywhere;
+}
+
+.rq-ukazky-bento-card__kicker {
+  color: rgba(45, 34, 34, 0.72);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.rq-ukazky-bento-card__title {
+  color: #241b1b;
+  font-size: clamp(1.35rem, 2vw, 1.9rem);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.rq-ukazky-bento-card--featured .rq-ukazky-bento-card__title {
+  font-size: clamp(1.8rem, 3.4vw, 3rem);
+  max-width: 12ch;
+}
+
+.rq-ukazky-bento-card__text {
+  max-width: 44rem;
+  color: rgba(45, 34, 34, 0.78);
+  line-height: 1.55;
+}
+
+.rq-ukazky-bento-card__link {
+  margin-top: 0.25rem;
+  color: #7c253a;
+  font-weight: 800;
+}
+
+.rq-ukazky-bento[data-rq-reveal] .rq-ukazky-bento-card {
+  transition-delay: 0ms;
+}
+
+.rq-ukazky-bento[data-rq-reveal] .rq-ukazky-bento-card:nth-child(2) {
+  transition-delay: 60ms;
+}
+
+.rq-ukazky-bento[data-rq-reveal] .rq-ukazky-bento-card:nth-child(3) {
+  transition-delay: 120ms;
+}
+
+.rq-price-card--featured {
+  position: relative;
+  z-index: 1;
+  padding: clamp(1.5rem, 2.6vw, 2.25rem);
+  border: 2px solid #7c253a;
+  box-shadow: 0 1.25rem 3rem rgba(65, 31, 42, 0.16);
+  transform: translateY(-0.35rem) scale(1.04);
+  transform-origin: center;
+  overflow: hidden;
+}
+
+.rq-price-card--featured .rq-price-card__badge,
+.rq-price-card--featured .rq-badge {
+  border-color: #7c253a;
+  background: #7c253a;
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 0.5rem 1.25rem rgba(124, 37, 58, 0.18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rq-ukazky-bento-card,
+  .rq-ukazky-bento[data-rq-reveal] .rq-ukazky-bento-card {
+    transition: none;
+    transition-delay: 0ms;
+  }
+
+  .rq-ukazky-bento-card:hover,
+  .rq-ukazky-bento-card:focus-visible {
+    transform: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .rq-ukazky-teaser,
+  .rq-ukazky-bento {
+    overflow: clip;
+  }
+
+  .rq-ukazky-bento {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "featured"
+      "booking"
+      "shop";
+  }
+
+  .rq-ukazky-bento-card,
+  .rq-ukazky-bento-card--featured {
+    min-height: 15rem;
+    padding: 1.25rem;
+  }
+
+  .rq-ukazky-bento-card--featured .rq-ukazky-bento-card__title {
+    max-width: 100%;
+  }
+
+  .rq-price-card--featured {
+    width: 100%;
+    max-width: 100%;
+    transform: none;
+  }
+}

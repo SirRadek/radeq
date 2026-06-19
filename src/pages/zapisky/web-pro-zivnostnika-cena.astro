@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RqHeader from '../../components/RqHeader.astro';
+import RqFooter from '../../components/RqFooter.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',label:'Služby'},{href:base+'/#jak-pracuji',label:'Jak pracuji'},{href:base+'/#ceny',label:'Ceny'},{href:base+'/ukazky/',label:'Ukázky'},{href:base+'/#kontakt',label:'Kontakt'}];
+---
+
+<BaseLayout title="Kolik stojí web pro živnostníka a co v ceně má být" description="Praktický článek o ceně webu pro živnostníka, rozdílu mezi startovní cenou a celkovým rozsahem práce a o tom, co si připravit před poptávkou.">
+  <RqHeader content={{ navItems: nav, cta: 'Chci zmapovat problém' }} alternateLabel="EN" alternatePath="/en/" />
+
+  <main class="rq-section">
+    <article class="rq-shell rq-article rq-prose">
+      <p class="rq-eyebrow">Zápisky</p>
+      <h1>Kolik stojí web pro živnostníka a co v ceně má být</h1>
+
+      <p>
+        Otázka na cenu webu je rozumná. Problém je, že samotná částka bez kontextu moc neříká.
+        Web pro živnostníka může být jednoduchá vizitka, která vysvětlí službu a přivede poptávku.
+        Může to být také menší prezentační web s více obory, ukázkami práce, formulářem, měřením,
+        základní optimalizací a texty, které je potřeba nejdřív dát dohromady. Obě věci se mohou
+        jmenovat stejně, ale práce za nimi je jiná.
+      </p>
+
+      <h2>Proč se často uvádí cena „od“</h2>
+      <p>
+        Cena „od“ není automaticky trik. U poctivé nabídky znamená spodní hranici pro jasně
+        omezený rozsah: několik stránek, běžný design bez složitých funkcí, připravené podklady a
+        žádné napojení na interní systémy. Jakmile chybí texty, je potřeba upravit strukturu nabídky,
+        řešit více jazyků, rezervační formulář, katalog nebo migraci starého obsahu, nejde už o stejný
+        rozsah práce.
+      </p>
+      <p>
+        Důležité je ptát se, co přesně je v ceně. Levná nabídka může být dobrá, když víte, že
+        potřebujete jednoduchý start a jste smíření s omezeními. Může být ale drahá, pokud nezahrnuje
+        základní věci: čitelné texty, mobilní zobrazení, rychlost, technické nastavení, měření a možnost
+        web později rozumně spravovat.
+      </p>
+
+      <h2>Co by mělo být v rozumné ceně</h2>
+      <p>
+        U menšího firemního webu bych očekával alespoň krátké zmapování cíle, návrh struktury,
+        úpravu nebo vedení textů, responzivní zpracování, základní SEO nastavení, kontaktní prvky,
+        kontrolu výkonu a předání přístupů. Není nutné dělat z malého webu velký projekt, ale neměl
+        by vzniknout jen jako sada hezkých obrazovek bez obchodního smyslu.
+      </p>
+      <p>
+        Velkou část hodnoty často netvoří samotné klikání v editoru. Je to rozhodnutí, co na webu
+        má být, co tam být nemá, jak pojmenovat službu, jak vést návštěvníka ke kontaktu a jak
+        nevytvořit řešení, které se za půl roku špatně upravuje. To jsou věci, které se v ceníku těžko
+        popisují jednou položkou, ale v provozu jsou znát.
+      </p>
+
+      <h2>Kdy je dražší web zbytečný</h2>
+      <p>
+        Ne každý živnostník potřebuje robustní řešení. Pokud ověřujete novou službu, máte jeden
+        jasný obor a nepotřebujete pravidelně publikovat, může stačit menší web s dobrou strukturou.
+        V takové situaci je lepší utratit méně, ale chytře: jasná nabídka, důvěryhodné reference,
+        rychlý kontakt a technicky čisté provedení. Rozpočet má jít do toho, co pomůže rozhodování
+        zákazníka.
+      </p>
+
+      <h2>Praktický checklist před poptávkou</h2>
+      <ul>
+        <li>Sepište, jaké služby opravdu chcete na webu nabízet.</li>
+        <li>Vyberte hlavní akci návštěvníka: zavolat, napsat, objednat konzultaci nebo poslat poptávku.</li>
+        <li>Připravte existující logo, fotky, reference a přístupy k doméně nebo hostingu.</li>
+        <li>Rozmyslete si, kdo bude web po spuštění upravovat.</li>
+        <li>Ujasněte si, zda potřebujete jen češtinu, nebo také další jazyk.</li>
+        <li>Požádejte dodavatele, aby oddělil cenu za vytvoření, texty, provoz a následnou správu.</li>
+      </ul>
+
+      <h2>Jak poznat férovou nabídku</h2>
+      <p>
+        Férová nabídka nemusí být nejdelší. Měla by ale popsat rozsah, výstupy, předpoklady a to,
+        co v ceně není. Pokud dodavatel umí vysvětlit, proč něco doporučuje a proč něco naopak
+        nedělat, je to dobré znamení. U menšího webu nechcete složitost pro složitost. Chcete
+        použitelný základ, který pomůže získat důvěru a dá se rozvíjet bez zbytečných nákladů.
+      </p>
+
+      <p class="rq-cta-line"><a class="rq-button" href={base + '/#kontakt'}>Chcete to probrat? Napište mi.</a></p>
+    </article>
+  </main>
+
+  <RqFooter navItems={nav} />
+</BaseLayout>

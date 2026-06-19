@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RqHeader from '../../components/RqHeader.astro';
+import RqFooter from '../../components/RqFooter.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',label:'Služby'},{href:base+'/#jak-pracuji',label:'Jak pracuji'},{href:base+'/#ceny',label:'Ceny'},{href:base+'/ukazky/',label:'Ukázky'},{href:base+'/#kontakt',label:'Kontakt'}];
+---
+
+<BaseLayout title="Vlastní e-shop, nebo Shoptet? Kdy se co vyplatí" description="Poctivé srovnání vlastního e-shopu a platformy Shoptet pro menší firmy. Kdy dává smysl hotové řešení a kdy vlastní vývoj.">
+  <RqHeader content={{ navItems: nav, cta: 'Chci zmapovat problém' }} alternateLabel="EN" alternatePath="/en/" />
+
+  <main class="rq-section">
+    <article class="rq-shell rq-article rq-prose">
+      <p class="rq-eyebrow">Zápisky</p>
+      <h1>Vlastní e-shop, nebo Shoptet? Kdy se co vyplatí</h1>
+
+      <p>
+        Vlastní e-shop zní lákavě. Máte kontrolu nad vzhledem, funkcemi i napojením na provoz.
+        Jenže kontrola něco stojí: peníze, čas, údržbu a odpovědnost. U menší firmy proto není
+        otázka, jestli je vlastní řešení technicky lepší. Správná otázka zní, jestli se vám jeho výhody
+        opravdu vrátí v provozu.
+      </p>
+
+      <h2>Kdy doporučím Shoptet</h2>
+      <p>
+        Shoptet nebo podobná zavedená platforma dává smysl, když prodáváte běžné produkty,
+        nepotřebujete složitou logiku cen, skladů nebo konfigurace a chcete se rychle dostat do
+        prodeje. Pro menší sortiment, ověřování trhu, lokální značku nebo e-shop navázaný na kamenný
+        provoz bývá hotová platforma často rozumnější než vývoj na míru.
+      </p>
+      <p>
+        Důvod není jen cena. Hotová platforma řeší velkou část nepříjemných provozních detailů:
+        objednávky, dopravu, platby, fakturaci přes doplňky, administraci produktů, běžné šablony a
+        aktualizace. Neznamená to, že je bez práce. Znamená to, že peníze můžete dát spíš do obsahu,
+        produktových fotek, kategorií, důvěryhodnosti a obchodního provozu.
+      </p>
+
+      <h2>Kdy začíná dávat smysl vlastní řešení</h2>
+      <p>
+        Vlastní e-shop se obhajuje lépe ve chvíli, kdy vás hotová platforma omezuje v samotném
+        podnikání. Typicky jde o specifickou konfiguraci produktů, napojení na interní systém, zvláštní
+        B2B ceny, složitou dostupnost, více skladů, vlastní zákaznickou zónu nebo obsahový model,
+        který běžná šablona neumí dobře pojmout.
+      </p>
+      <p>
+        Dalším důvodem může být výkon a dlouhodobá kontrola. Pokud e-shop stojí na unikátním
+        procesu, má větší tým, jasné datové potřeby a pravidelný rozvoj, pak vlastní řešení nemusí být
+        luxus. Může to být provozní nástroj. Takový projekt ale potřebuje zadání, rozpočet, plán údržby
+        a člověka, který bude rozhodovat o prioritách.
+      </p>
+
+      <h2>Skryté náklady vlastního e-shopu</h2>
+      <p>
+        U vlastního řešení se často podcení věci, které nejsou vidět na první obrazovce: administrace,
+        importy, e-maily, zabezpečení, aktualizace, zálohy, monitoring, chybové stavy plateb, změny
+        dopravců a legislativní úpravy. To všechno se musí navrhnout, vyrobit, otestovat a spravovat.
+        Pokud na to není rozpočet, vlastní e-shop se může změnit v drahý závazek.
+      </p>
+      <p>
+        U platformy zase platíte měsíční poplatky a žijete s jejími mantinely. Někdy narazíte na limit
+        šablony, doplňku nebo datového modelu. To ale nemusí být špatně. Mantinely umí chránit před
+        nápady, které by stály hodně peněz a nepřinesly odpovídající výsledek.
+      </p>
+
+      <h2>Praktický checklist pro rozhodnutí</h2>
+      <ul>
+        <li>Máte běžné produkty, nebo složitou konfiguraci a cenotvorbu?</li>
+        <li>Potřebujete rychle začít prodávat, nebo budujete dlouhodobý systém?</li>
+        <li>Máte člověka, který bude řešit obsah, produkty a provoz e-shopu?</li>
+        <li>Je hlavní omezení vzhled, nebo skutečná obchodní logika?</li>
+        <li>Umíte popsat napojení na sklad, účetnictví, CRM nebo jiné systémy?</li>
+        <li>Počítáte s rozpočtem na údržbu, nejen na první spuštění?</li>
+      </ul>
+
+      <h2>Moje praktické pravidlo</h2>
+      <p>
+        Pokud se dá obchod rozumně provozovat na Shoptetu, často doporučím začít tam. Ne proto,
+        že by vlastní řešení nebylo zajímavé, ale protože menší firma obvykle potřebuje nejdřív
+        prodávat, učit se z objednávek a zlepšovat nabídku. Vlastní vývoj má přijít ve chvíli, kdy už
+        víte, proč ho potřebujete, a umíte jeho přínos obhájit proti provozním nákladům.
+      </p>
+      <p>
+        Dobré technické rozhodnutí není nejdražší ani nejvíc originální. Je to takové, které odpovídá
+        fázi firmy, schopnostem týmu a skutečnému způsobu prodeje.
+      </p>
+
+      <p class="rq-cta-line"><a class="rq-button" href={base + '/#kontakt'}>Chcete to probrat? Napište mi.</a></p>
+    </article>
+  </main>
+
+  <RqFooter navItems={nav} />
+</BaseLayout>

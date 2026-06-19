@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RqHeader from '../../components/RqHeader.astro';
+import RqFooter from '../../components/RqFooter.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',label:'Služby'},{href:base+'/#jak-pracuji',label:'Jak pracuji'},{href:base+'/#ceny',label:'Ceny'},{href:base+'/ukazky/',label:'Ukázky'},{href:base+'/#kontakt',label:'Kontakt'}];
+
+const articles = [
+  {
+    href: base + '/zapisky/web-pro-zivnostnika-cena/',
+    title: 'Kolik stojí web pro živnostníka a co v ceně má být',
+    text: 'Praktický pohled na cenu webu, rozdíl mezi levnou šablonou a poctivou prací, a seznam věcí, které je dobré připravit před poptávkou.'
+  },
+  {
+    href: base + '/zapisky/vlastni-eshop-nebo-shoptet/',
+    title: 'Vlastní e-shop, nebo Shoptet? Kdy se co vyplatí',
+    text: 'Střízlivé srovnání pronajaté platformy a vlastního řešení. Bez dogmat, s důrazem na provoz, náklady a reálné potřeby menší firmy.'
+  },
+  {
+    href: base + '/zapisky/jak-se-staram-o-web-po-predani/',
+    title: 'Jak se starám o web, když je hotovo',
+    text: 'Co má obsahovat rozumná správa webu po předání, jak vypadá servisní protokol a proč dobrá péče nemá vytvářet závislost na dodavateli.'
+  }
+];
+---
+
+<BaseLayout title="Zápisky | Poznámky z praxe" description="Evergreen poznámky z praxe o webech, e-shopech a péči po předání. Prakticky, česky a bez zbytečného marketingu.">
+  <RqHeader content={{ navItems: nav, cta: 'Chci zmapovat problém' }} alternateLabel="EN" alternatePath="/en/" />
+
+  <main class="rq-section">
+    <section class="rq-shell rq-stack">
+      <div class="rq-prose">
+        <p class="rq-eyebrow">Zápisky</p>
+        <h1>Poznámky z praxe</h1>
+        <p>
+          Píšu o věcech, které se opakují u menších firem, živnostníků a provozních webů: cena,
+          rozhodování mezi hotovou platformou a vlastním řešením, péče po spuštění a praktické
+          dopady technických voleb. Nejsou to novinky ani rychlé komentáře. Jsou to poznámky,
+          ke kterým se má dát vracet i za rok.
+        </p>
+        <p>
+          Publikuju jen tehdy, když mám co říct z praxe. Cílem není prodávat za každou cenu, ale
+          pomoct vám lépe se rozhodnout ještě před tím, než začnete poptávat dodavatele nebo měnit
+          existující web.
+        </p>
+      </div>
+
+      <div class="rq-grid rq-grid--cards">
+        {articles.map((article) => (
+          <article class="rq-card">
+            <h2>{article.title}</h2>
+            <p>{article.text}</p>
+            <a class="rq-link" href={article.href}>Číst článek</a>
+          </article>
+        ))}
+      </div>
+    </section>
+  </main>
+
+  <RqFooter navItems={nav} />
+</BaseLayout>

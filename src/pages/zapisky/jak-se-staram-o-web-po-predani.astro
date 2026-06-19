@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RqHeader from '../../components/RqHeader.astro';
+import RqFooter from '../../components/RqFooter.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',label:'Služby'},{href:base+'/#jak-pracuji',label:'Jak pracuji'},{href:base+'/#ceny',label:'Ceny'},{href:base+'/ukazky/',label:'Ukázky'},{href:base+'/#kontakt',label:'Kontakt'}];
+---
+
+<BaseLayout title="Jak se starám o web, když je hotovo" description="Jak má vypadat péče o web po předání: servisní protokol, aktualizace, zálohy, drobné úpravy a správa bez závislosti na dodavateli.">
+  <RqHeader content={{ navItems: nav, cta: 'Chci zmapovat problém' }} alternateLabel="EN" alternatePath="/en/" />
+
+  <main class="rq-section">
+    <article class="rq-shell rq-article rq-prose">
+      <p class="rq-eyebrow">Zápisky</p>
+      <h1>Jak se starám o web, když je hotovo</h1>
+
+      <p>
+        Spuštěním webu práce nekončí. V lepším případě začíná běžný provoz: drobné úpravy textů,
+        nové fotky, změny kontaktů, kontrola formulářů, aktualizace, zálohy a občasné rozhodnutí,
+        jestli má smysl přidat další stránku nebo funkci. U menších firem je důležité, aby péče po
+        předání nebyla složitá, ale aby existovala.
+      </p>
+
+      <h2>Co znamená hotový web</h2>
+      <p>
+        Hotový web pro mě není jen stav, kdy se stránka zobrazí v prohlížeči. Má mít předané
+        přístupy, jasně popsaný provoz, základní měření, funkční kontaktní cesty a dohodu, kdo řeší
+        úpravy. Pokud klient neví, kde je doména, hosting, repozitář, administrace nebo analytika,
+        projekt není předaný dobře.
+      </p>
+      <p>
+        Dobrý dodavatel nemá držet klienta v nejistotě. Má pomoct nastavit takový provoz, aby web
+        šel spravovat, rozvíjet a v případě potřeby převzít i někým jiným. To není oslabení spolupráce.
+        Je to projev férového vztahu.
+      </p>
+
+      <h2>Servisní protokol v praxi</h2>
+      <p>
+        U webů, o které se starám dlouhodobě, dávám přednost jednoduchému servisnímu protokolu.
+        Nemusí to být složitý dokument. Stačí jasný přehled: co se kontroluje, jak často, kdo má
+        přístupy, kde jsou zálohy, jak se hlásí požadavky a co je běžná úprava oproti nové zakázce.
+        Díky tomu se neztrácí čas pokaždé, když je potřeba změnit telefon, přidat službu nebo ověřit,
+        proč nepřišla poptávka.
+      </p>
+      <p>
+        Do pravidelné péče obvykle patří kontrola dostupnosti, základní aktualizace, zálohování,
+        drobné textové změny, kontrola formulářů, řešení technických chyb a doporučení, když web
+        začne narážet na limit původního řešení. U statických nebo jednodušších webů může být péče
+        lehčí. U redakčních systémů a e-shopů je potřeba být důslednější.
+      </p>
+
+      <h2>Předplatné není pojistka na všechno</h2>
+      <p>
+        Měsíční správa dává smysl, když web pravidelně používáte a nechcete řešit každý drobný
+        zásah jako novou zakázku. Zároveň by ale mělo být jasné, co předplatné obsahuje. Není fér
+        tvářit se, že v malé paušální částce je neomezený vývoj, redesign, nové funkce i okamžitá
+        dostupnost kdykoli.
+      </p>
+      <p>
+        Rozumné předplatné pokrývá provozní klid a menší změny. Větší rozvoj má mít vlastní zadání,
+        odhad a prioritu. Tím se chrání obě strany: klient ví, za co platí, a dodavatel nemusí schovávat
+        rozsah práce do nejasných slibů.
+      </p>
+
+      <h2>Bez závislosti na jednom dodavateli</h2>
+      <p>
+        Nechci stavět weby tak, aby klient nemohl odejít. Přístupy mají být předané, důležité služby
+        mají být vedené na klienta a technické řešení má být srozumitelné. Když spolupráce funguje,
+        klient zůstává kvůli kvalitě práce, ne proto, že nemá jinou možnost.
+      </p>
+      <p>
+        Prakticky to znamená používat běžné technologie, dokumentovat nestandardní části a oddělit
+        vlastnictví domény, hostingu a účtů od osoby dodavatele. U menší firmy je to zásadní. Web
+        má být aktivum firmy, ne rukojmí konkrétního člověka.
+      </p>
+
+      <h2>Praktický checklist po předání</h2>
+      <ul>
+        <li>Máte přístup k doméně, hostingu, administraci a měření?</li>
+        <li>Víte, kde jsou zálohy a jak často vznikají?</li>
+        <li>Je jasné, kdo řeší drobné změny a v jaké době?</li>
+        <li>Fungují kontaktní formuláře, e-maily a telefonní odkazy?</li>
+        <li>Máte popsané, co je běžná správa a co už je nový rozvoj?</li>
+        <li>Existuje stručný přehled technologií a důležitých účtů?</li>
+      </ul>
+
+      <h2>Provozní klid je součást kvality</h2>
+      <p>
+        Web nemusí být po spuštění neustále předělávaný. Měl by ale mít základní péči a jasného
+        vlastníka provozu. Díky tomu se malé problémy neřeší až ve chvíli, kdy přestanou chodit
+        poptávky nebo se web rozbije před důležitou kampaní. Dobrá správa je nenápadná, ale v
+        dlouhodobém provozu má velkou hodnotu.
+      </p>
+
+      <p class="rq-cta-line"><a class="rq-button" href={base + '/#kontakt'}>Chcete to probrat? Napište mi.</a></p>
+    </article>
+  </main>
+
+  <RqFooter navItems={nav} />
+</BaseLayout>

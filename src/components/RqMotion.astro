@@ -1,0 +1,104 @@
+---
+---
+
+<script is:inline>
+  (() => {
+    if (window.__rqMotionIsland) return;
+    window.__rqMotionIsland = true;
+
+    const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    const root = document.documentElement;
+    root.dataset.rqMotion = 'on';
+
+    const revealItems = Array.from(document.querySelectorAll('[data-rq-reveal]'));
+
+    if ('IntersectionObserver' in window) {
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-in');
+            revealObserver.unobserve(entry.target);
+          });
+        },
+        { threshold: 0.15, rootMargin: '0px 0px -8% 0px' }
+      );
+
+      revealItems.forEach((item) => revealObserver.observe(item));
+    } else {
+      revealItems.forEach((item) => item.classList.add('is-in'));
+    }
+
+    const supportsFinePointer = window.matchMedia?.('(pointer: fine)').matches;
+
+    if (supportsFinePointer) {
+      document.querySelectorAll('[data-rq-magnetic]').forEach((item) => {
+        item.addEventListener('pointermove', (event) => {
+          const rect = item.getBoundingClientRect();
+          const x = event.clientX - rect.left - rect.width / 2;
+          const y = event.clientY - rect.top - rect.height / 2;
+          const moveX = Math.max(-6, Math.min(6, x * 0.08));
+          const moveY = Math.max(-6, Math.min(6, y * 0.08));
+          item.style.transform = `translate3d(${moveX}px, ${moveY}px, 0)`;
+        });
+
+        item.addEventListener('pointerleave', () => {
+          item.style.transform = '';
+        });
+      });
+    }
+
+    const countItems = Array.from(document.querySelectorAll('[data-rq-count]'));
+
+    const animateCount = (item) => {
+      if (item.dataset.rqCountDone === 'true') return;
+      item.dataset.rqCountDone = 'true';
+
+      const targetRaw = item.getAttribute('data-rq-count') || '0';
+      const target = Number(targetRaw.replace(',', '.'));
+      if (!Number.isFinite(target)) return;
+
+      const originalText = item.textContent || '';
+      const suffix = originalText.replace(/^\s*[+-]?[\d\s.,]+/, '');
+      const decimals = targetRaw.includes('.') || targetRaw.includes(',') ? targetRaw.split(/[.,]/)[1]?.length || 0 : 0;
+      const duration = 900;
+      const start = performance.now();
+
+      const tick = (now) => {
+        const progress = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = target * eased;
+        item.textContent = `${value.toFixed(decimals)}${suffix}`;
+
+        if (progress < 1) {
+          requestAnimationFrame(tick);
+        } else {
+          item.textContent = `${target.toFixed(decimals)}${suffix}`;
+        }
+      };
+
+      requestAnimationFrame(tick);
+    };
+
+    if (countItems.length) {
+      if ('IntersectionObserver' in window) {
+        const countObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              animateCount(entry.target);
+              countObserver.unobserve(entry.target);
+            });
+          },
+          { threshold: 0.3, rootMargin: '0px 0px -8% 0px' }
+        );
+
+        countItems.forEach((item) => countObserver.observe(item));
+      } else {
+        countItems.forEach(animateCount);
+      }
+    }
+  })();
+</script>

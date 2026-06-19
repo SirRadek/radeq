@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import RqHeader from '../components/RqHeader.astro';
 import RqFooter from '../components/RqFooter.astro';
 import RqGuide from '../components/RqGuide.astro';
+import RqMotion from '../components/RqMotion.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const nav = [
@@ -21,12 +22,12 @@ const nav = [
   <main>
     <section class="rq-section rq-hero" id="top" style="--rq-reveal-index: 0">
       <div class="rq-hero__copy">
-        <p class="rq-eyebrow">Racionální digitalizace</p>
-        <h1 class="rq-display">Weby, data a automatizace, které vám uvolní ruce.</h1>
-        <p class="rq-lead">Jeden technik s okem analytika a precizností testera. Navrhnu, postavím, otestuji a předám tak, že v tom nezůstanete sami.</p>
+        <p class="rq-eyebrow" data-rq-reveal style="--rq-i:0">Racionální digitalizace</p>
+        <h1 class="rq-display" data-rq-reveal style="--rq-i:1">Weby, data a automatizace, které vám uvolní ruce.</h1>
+        <p class="rq-lead" data-rq-reveal style="--rq-i:2">Jeden technik s okem analytika a precizností testera. Navrhnu, postavím, otestuji a předám tak, že v tom nezůstanete sami.</p>
       </div>
 
-      <div class="rq-proof-rail" aria-label="Důkazy a orientační ceny">
+      <div class="rq-proof-rail" data-rq-reveal style="--rq-i:3" aria-label="Důkazy a orientační ceny">
         <div class="rq-proof-rail__item">
           <p class="rq-proof-rail__label">Web od 9 900 Kč</p>
           <p class="rq-proof-rail__text">rychlý web, co vodí poptávky</p>
@@ -41,8 +42,8 @@ const nav = [
         </div>
       </div>
 
-      <div class="rq-hero__actions">
-        <a class="rq-btn rq-btn--primary" href="#kontakt">Domluvit 15min konzultaci</a>
+      <div class="rq-hero__actions" data-rq-reveal style="--rq-i:4">
+        <a class="rq-btn rq-btn--primary" href="#kontakt" data-rq-magnetic>Domluvit 15min konzultaci</a>
         <a class="rq-btn rq-btn--ghost" href="#sluzby">Podívat se na ukázky</a>
         <p class="rq-hero__micro">Nezávazně. Ozvu se do 1 pracovního dne.</p>
       </div>
@@ -50,9 +51,9 @@ const nav = [
 
 
 <section id="co-resim" class="rq-section rq-pain">
-  <p class="rq-eyebrow">Co řeším</p>
+  <p class="rq-eyebrow" data-rq-reveal>Co řeším</p>
   <h2 class="rq-h2">Poznáte se v některém z těchto bodů?</h2>
-  <div class="rq-pain__grid" aria-label="Typické problémy, které řeším">
+  <div class="rq-pain__grid" data-rq-reveal aria-label="Typické problémy, které řeším">
     <article class="rq-card rq-pain__card">
       <p>Poptávky se ztrácí v e-mailech a ručně je přepisuju.</p>
       <a class="rq-pain__link" href="#sluzby">Zobrazit vhodné řešení</a>
@@ -82,9 +83,9 @@ const nav = [
 
 <section id="sluzby" class="rq-section rq-bleed rq-offers">
   <div class="rq-bleed__inner">
-    <p class="rq-eyebrow">Služby</p>
+    <p class="rq-eyebrow" data-rq-reveal>Služby</p>
     <h2 class="rq-h2">Co vám zjednoduším</h2>
-    <div class="rq-offers__grid" aria-label="Služby a orientační ceny">
+    <div class="rq-offers__grid" data-rq-reveal aria-label="Služby a orientační ceny">
       <article class="rq-card rq-offer">
         <p class="rq-offer__price">od 9 900 Kč</p>
         <h3>Web a redesign</h3>
@@ -130,7 +131,7 @@ const nav = [
 </section>
 
 <section id="jak-pracuji" class="rq-section rq-process">
-  <p class="rq-eyebrow">Jak pracuji</p>
+  <p class="rq-eyebrow" data-rq-reveal>Jak pracuji</p>
   <h2 class="rq-h2">Nejdřív měřím, pak stavím.</h2>
   <div class="rq-process__steps" aria-label="Postup spolupráce">
     <article class="rq-card rq-step">
@@ -155,11 +156,11 @@ const nav = [
 
 
 <section class="rq-section rq-pricing" id="ceny" aria-labelledby="ceny-title">
-  <p class="rq-eyebrow">Ceny</p>
+  <p class="rq-eyebrow" data-rq-reveal>Ceny</p>
   <h2 class="rq-h2" id="ceny-title">Orientační ceny bez překvapení.</h2>
   <p class="rq-lead">Péče po spuštění pro menší weby, e-shopy a automatizace. Vybereme jen rozsah, který dává smysl.</p>
 
-  <div class="rq-pricing-grid" aria-label="Tarify péče po spuštění">
+  <div class="rq-pricing-grid" data-rq-reveal aria-label="Tarify péče po spuštění">
     <article class="rq-card rq-price-card">
       <h3 class="rq-price-card__title">Klid</h3>
       <p class="rq-price-card__price">2 500 Kč<span>/měs.</span></p>
@@ -188,10 +189,10 @@ const nav = [
 
 <section class="rq-bleed rq-ukazky-teaser" id="ukazky-teaser" aria-labelledby="ukazky-teaser-title">
   <div class="rq-section rq-ukazky-teaser__inner">
-    <p class="rq-eyebrow">Ukázky</p>
+    <p class="rq-eyebrow" data-rq-reveal>Ukázky</p>
     <h2 class="rq-h2" id="ukazky-teaser-title">Co umím postavit</h2>
 
-    <div class="rq-ukazky-grid">
+    <div class="rq-ukazky-grid" data-rq-reveal>
       <a class="rq-card rq-ukazky-card" href={base + "/ukazky/instalater/"}>
         <span class="rq-sample-badge">VZOROVÝ PROJEKT</span>
         <h3>Web pro instalatéra</h3>
@@ -215,7 +216,7 @@ const nav = [
 
 <section class="rq-section rq-contact" id="kontakt" aria-labelledby="kontakt-title">
   <div class="rq-contact__copy">
-    <p class="rq-eyebrow">Kontakt</p>
+    <p class="rq-eyebrow" data-rq-reveal>Kontakt</p>
     <h2 class="rq-h2" id="kontakt-title">Napište, co vás pálí</h2>
     <p class="rq-lead">Stačí stručně popsat, co chcete zjednodušit — ozvu se a doptám se. Odpovídám do 1 pracovního dne.</p>
   </div>
@@ -301,4 +302,5 @@ const nav = [
   })} />
   <RqFooter navItems={nav} />
   <RqGuide />
+<RqMotion />
 </BaseLayout>

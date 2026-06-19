@@ -1,0 +1,413 @@
+---
+const items = [
+  {
+    id: 'poptavky',
+    problem: 'Lidi chodí na web, ale nepoptávají.',
+    cause: 'Nejasná nabídka a slabé výzvy k akci; návštěvník neví, co má udělat.',
+    verify: 'cestu od příchodu ke kontaktu, srozumitelnost nabídky a jestli se vůbec měří.',
+    step: 'krátký audit a úprava struktury + jasné CTA.',
+    service: 'Web a redesign / Audit',
+  },
+  {
+    id: 'rychlost',
+    problem: 'Web je pomalý.',
+    cause: 'těžké šablony a skripty, neoptimalizované načítání.',
+    verify: 'Core Web Vitals, váhu stránky a co blokuje vykreslení.',
+    step: 'rychlostní audit a optimalizace nebo lehčí web.',
+    service: 'Audit / Redesign',
+  },
+  {
+    id: 'rucni-prace',
+    problem: 'Všechno přepisuju ručně.',
+    cause: 'nepropojené nástroje — maily, tabulky, formuláře.',
+    verify: 'kde vzniká ruční práce a kolik času bere.',
+    step: 'navrhnout nejmenší automatizaci jednoho toku.',
+    service: 'Automatizace procesů',
+  },
+  {
+    id: 'mereni',
+    problem: 'Nevím, co na webu měřit.',
+    cause: 'chybí jednoduché měření cílů (poptávka, telefon).',
+    verify: 'co je vlastně cíl a jestli se dnes sleduje.',
+    step: 'nastavit přehledné měření bez přehnané analytiky.',
+    service: 'Data a AI / Audit',
+  },
+  {
+    id: 'zacatek',
+    problem: 'Nevím, kde začít.',
+    cause: 'moc možností a žádná priorita.',
+    verify: 'současný stav a co nejvíc brzdí práci.',
+    step: 'krátký audit, který dá jasné pořadí kroků.',
+    service: 'Audit',
+  },
+];
+---
+
+<section class="rq-section rq-diagnostic" id="diagnostika" aria-labelledby="diagnostika-title" data-rq-diagnostic data-rq-reveal>
+  <div class="rq-diagnostic__inner">
+    <div class="rq-diagnostic__head">
+      <p class="rq-eyebrow">Od problému k řešení</p>
+      <h2 class="rq-h2" id="diagnostika-title">Vyberte, co vás trápí — ukážu první krok.</h2>
+      <p class="rq-lead">Krátká diagnóza převede běžný symptom na pravděpodobnou příčinu, ověření a první praktický krok.</p>
+    </div>
+
+    <div class="rq-diagnostic__grid">
+      <div class="rq-diagnostic__tabs" role="tablist" aria-label="Diagnostický panel">
+        {items.map((item, index) => (
+          <button class="rq-diagnostic__tab" id={`rq-diagnostic-tab-${item.id}`} type="button" role="tab" aria-selected={index === 0 ? 'true' : 'false'} aria-controls={`rq-diagnostic-panel-${item.id}`} data-rq-diagnostic-tab>
+            <span class="rq-diagnostic__tab-copy">
+              <span class="rq-diagnostic__tab-kicker">Problém {index + 1}</span>
+              <span class="rq-diagnostic__tab-title">{item.problem}</span>
+            </span>
+            <span class="rq-flag rq-diagnostic__state" aria-hidden={index === 0 ? 'false' : 'true'}>Diagnóza</span>
+          </button>
+        ))}
+      </div>
+
+      <div class="rq-diagnostic__output" aria-live="polite">
+        {items.map((item, index) => (
+          <article class="rq-diagnostic__panel" id={`rq-diagnostic-panel-${item.id}`} role="tabpanel" aria-labelledby={`rq-diagnostic-tab-${item.id}`} tabindex="0" data-rq-diagnostic-panel>
+            <div class="rq-diagnostic__panel-top">
+              <span class="rq-flag">Diagnóza</span>
+              <p class="rq-diagnostic__count">{String(index + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}</p>
+            </div>
+            <h3>{item.problem}</h3>
+            <dl class="rq-diagnostic__findings">
+              <div>
+                <dt>Pravděpodobná příčina</dt>
+                <dd>{item.cause}</dd>
+              </div>
+              <div>
+                <dt>Co ověřím</dt>
+                <dd>{item.verify}</dd>
+              </div>
+              <div>
+                <dt>První praktický krok</dt>
+                <dd>{item.step}</dd>
+              </div>
+            </dl>
+            <div class="rq-diagnostic__actions">
+              <a class="rq-diagnostic__service" href="#sluzby">Tohle typicky řeším přes: <strong>{item.service}</strong></a>
+              <a class="rq-btn rq-btn--primary" href="#kontakt">Probrat to</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .rq-diagnostic {
+    background: var(--rq-bg-sunken, var(--rq-bg));
+    color: var(--rq-ink);
+    overflow-x: clip;
+  }
+
+  .rq-diagnostic__inner {
+    width: min(1120px, calc(100% - 32px));
+    margin: 0 auto;
+  }
+
+  .rq-diagnostic__head {
+    max-width: 760px;
+  }
+
+  .rq-diagnostic__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(18px, 3vw, 32px);
+    align-items: start;
+    margin-top: clamp(28px, 5vw, 48px);
+  }
+
+  .rq-diagnostic__tabs {
+    display: grid;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .rq-diagnostic__tab {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    width: 100%;
+    min-width: 0;
+    min-height: 76px;
+    padding: 16px;
+    border: 1px solid var(--rq-line);
+    border-radius: var(--rq-r);
+    background: var(--rq-surface);
+    color: var(--rq-ink);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 180ms var(--rq-ease), background-color 180ms var(--rq-ease), box-shadow 180ms var(--rq-ease), transform 180ms var(--rq-ease);
+  }
+
+  .rq-diagnostic__tab:hover,
+  .rq-diagnostic__tab:focus-visible {
+    border-color: var(--rq-burgundy);
+    outline: 0;
+    box-shadow: 0 0 0 4px var(--rq-burgundy-tint);
+  }
+
+  .rq-diagnostic__tab[aria-selected='true'] {
+    border-color: var(--rq-burgundy-strong);
+    background: linear-gradient(90deg, var(--rq-burgundy-tint), var(--rq-surface) 58%);
+    box-shadow: inset 4px 0 0 var(--rq-lime);
+  }
+
+  .rq-diagnostic__tab-copy {
+    display: grid;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .rq-diagnostic__tab-kicker,
+  .rq-diagnostic__count {
+    color: var(--rq-ink-2);
+    font-family: var(--rq-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .rq-diagnostic__tab-title {
+    overflow-wrap: anywhere;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .rq-diagnostic__state {
+    flex: 0 0 auto;
+    background: var(--rq-lime);
+    color: var(--rq-lime-ink);
+    border-color: transparent;
+    opacity: 0;
+  }
+
+  .rq-diagnostic__tab[aria-selected='true'] .rq-diagnostic__state {
+    opacity: 1;
+  }
+
+  .rq-diagnostic__output,
+  .rq-diagnostic__panel {
+    min-width: 0;
+  }
+
+  .rq-diagnostic__panel {
+    padding: clamp(20px, 4vw, 34px);
+    border: 1px solid var(--rq-line);
+    border-radius: var(--rq-r);
+    background: var(--rq-surface);
+    box-shadow: 0 18px 60px rgba(42, 53, 8, 0.08);
+  }
+
+  .rq-diagnostic__panel + .rq-diagnostic__panel {
+    margin-top: 16px;
+  }
+
+  .rq-diagnostic.is-enhanced .rq-diagnostic__panel[hidden] {
+    display: none;
+  }
+
+  .rq-diagnostic.is-enhanced .rq-diagnostic__panel:not([hidden]) {
+    animation: rq-diagnostic-fade 180ms var(--rq-ease);
+  }
+
+  .rq-diagnostic__panel:focus-visible {
+    outline: 3px solid var(--rq-lime);
+    outline-offset: 4px;
+  }
+
+  .rq-diagnostic__panel-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .rq-diagnostic__panel h3 {
+    margin: 0;
+    color: var(--rq-burgundy-strong);
+    font-family: var(--rq-display);
+    font-size: clamp(1.35rem, 2vw, 1.9rem);
+    line-height: 1.12;
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .rq-diagnostic__findings {
+    display: grid;
+    gap: 14px;
+    margin: 24px 0 0;
+  }
+
+  .rq-diagnostic__findings div {
+    display: grid;
+    gap: 6px;
+    padding-top: 14px;
+    border-top: 1px solid var(--rq-line);
+  }
+
+  .rq-diagnostic__findings dt {
+    color: var(--rq-burgundy-strong);
+    font-weight: 800;
+  }
+
+  .rq-diagnostic__findings dd {
+    margin: 0;
+    color: var(--rq-ink-2);
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  .rq-diagnostic__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .rq-diagnostic__service {
+    color: var(--rq-burgundy-strong);
+    font-weight: 700;
+    text-decoration-color: var(--rq-lime);
+    text-decoration-thickness: 3px;
+    text-underline-offset: 4px;
+    overflow-wrap: anywhere;
+  }
+
+  .rq-diagnostic__service:focus-visible,
+  .rq-diagnostic__actions .rq-btn:focus-visible {
+    outline: 3px solid var(--rq-lime);
+    outline-offset: 4px;
+  }
+
+  @keyframes rq-diagnostic-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @media (max-width: 820px) {
+    .rq-diagnostic__inner {
+      width: min(100% - 24px, 1120px);
+    }
+
+    .rq-diagnostic__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .rq-diagnostic__tab {
+      min-height: 68px;
+      padding: 14px;
+    }
+
+    .rq-diagnostic__actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .rq-diagnostic__actions .rq-btn {
+      justify-content: center;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .rq-diagnostic__tab,
+    .rq-diagnostic__panel-top {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .rq-diagnostic__state {
+      align-self: flex-start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rq-diagnostic__tab,
+    .rq-diagnostic.is-enhanced .rq-diagnostic__panel:not([hidden]) {
+      animation: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const root = document.querySelector('[data-rq-diagnostic]');
+
+  if (root) {
+    const tabs = Array.from(root.querySelectorAll('[data-rq-diagnostic-tab]'));
+    const panels = Array.from(root.querySelectorAll('[data-rq-diagnostic-panel]'));
+
+    root.classList.add('is-enhanced');
+
+    const activateTab = (nextTab, shouldFocus = true) => {
+      tabs.forEach((tab) => {
+        const isActive = tab === nextTab;
+        const panelId = tab.getAttribute('aria-controls');
+        const panel = panelId ? root.querySelector(`#${CSS.escape(panelId)}`) : null;
+        const state = tab.querySelector('.rq-diagnostic__state');
+
+        tab.setAttribute('aria-selected', String(isActive));
+        tab.tabIndex = isActive ? 0 : -1;
+
+        if (state) {
+          state.setAttribute('aria-hidden', String(!isActive));
+        }
+
+        if (panel) {
+          panel.hidden = !isActive;
+        }
+      });
+
+      if (shouldFocus) {
+        nextTab.focus();
+      }
+    };
+
+    const moveTab = (currentTab, direction) => {
+      const currentIndex = tabs.indexOf(currentTab);
+      const nextIndex = (currentIndex + direction + tabs.length) % tabs.length;
+      activateTab(tabs[nextIndex]);
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.tabIndex = index === 0 ? 0 : -1;
+
+      tab.addEventListener('click', () => activateTab(tab, false));
+
+      tab.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+          event.preventDefault();
+          moveTab(tab, 1);
+        }
+
+        if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+          event.preventDefault();
+          moveTab(tab, -1);
+        }
+
+        if (event.key === 'Home') {
+          event.preventDefault();
+          activateTab(tabs[0]);
+        }
+
+        if (event.key === 'End') {
+          event.preventDefault();
+          activateTab(tabs[tabs.length - 1]);
+        }
+      });
+    });
+
+    panels.forEach((panel, index) => {
+      panel.hidden = index !== 0;
+    });
+  }
+</script>

@@ -4,6 +4,7 @@ import RqHeader from '../components/RqHeader.astro';
 import RqFooter from '../components/RqFooter.astro';
 import RqGuide from '../components/RqGuide.astro';
 import RqMotion from '../components/RqMotion.astro';
+import RqDiagnostic from '../components/RqDiagnostic.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const nav = [
@@ -96,6 +97,8 @@ const nav = [
     </div>
   </div>
 </section>
+
+<RqDiagnostic />
 
 <section id="sluzby" class="rq-section rq-bleed rq-services-bento" aria-labelledby="rq-sluzby-title">
   <div class="rq-bleed__inner">

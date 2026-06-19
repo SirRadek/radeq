@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import RqHeader from '../components/RqHeader.astro';
 import RqFooter from '../components/RqFooter.astro';
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const nav = [
   { href: '#co-resim', label: 'Co řeším' },
   { href: '#sluzby', label: 'Služby' },
@@ -45,14 +46,206 @@ const nav = [
       </div>
     </section>
 
-    <section class="rq-section rq-contact-preview" id="kontakt" style="--rq-reveal-index: 1">
-      <div class="rq-contact-preview__inner">
-        <p class="rq-eyebrow">Kontakt</p>
-        <h2 class="rq-h2">Napište, co vás pálí</h2>
-        <p class="rq-lead">Stačí stručně popsat problém, web, tabulku nebo proces, který vám bere čas. Ozvu se s dalším rozumným krokem.</p>
-        <a class="rq-btn rq-btn--primary" href="mailto:info@radeq.cz?subject=Poptavka%20z%20RadeQ.cz">Napsat poptávku</a>
-      </div>
-    </section>
+
+<section id="co-resim" class="rq-section rq-pain">
+  <p class="rq-eyebrow">Co řeším</p>
+  <h2 class="rq-h2">Poznáte se v některém z těchto bodů?</h2>
+  <div class="rq-pain__grid" aria-label="Typické problémy, které řeším">
+    <article class="rq-card rq-pain__card">
+      <p>Poptávky se ztrácí v e-mailech a ručně je přepisuju.</p>
+      <a class="rq-pain__link" href="#kontakt">Pojďme to probrat</a>
+    </article>
+    <article class="rq-card rq-pain__card">
+      <p>Web nevysvětluje nabídku a nevodí zákazníky.</p>
+      <a class="rq-pain__link" href="#kontakt">Pojďme to probrat</a>
+    </article>
+    <article class="rq-card rq-pain__card">
+      <p>Data přepisuju mezi tabulkami pořád dokola.</p>
+      <a class="rq-pain__link" href="#kontakt">Pojďme to probrat</a>
+    </article>
+    <article class="rq-card rq-pain__card">
+      <p>Potřebuju jednoduchou evidenci nebo přehled.</p>
+      <a class="rq-pain__link" href="#kontakt">Pojďme to probrat</a>
+    </article>
+    <article class="rq-card rq-pain__card">
+      <p>Chci využít AI prakticky a bezpečně.</p>
+      <a class="rq-pain__link" href="#kontakt">Pojďme to probrat</a>
+    </article>
+    <article class="rq-card rq-pain__card">
+      <p>Nevím, kde začít, ale vím, že mě to brzdí.</p>
+      <a class="rq-pain__link" href="#kontakt">Pojďme to probrat</a>
+    </article>
+  </div>
+</section>
+
+<section id="sluzby" class="rq-section rq-bleed rq-offers">
+  <div class="rq-bleed__inner">
+    <p class="rq-eyebrow">Služby</p>
+    <h2 class="rq-h2">Co vám zjednoduším</h2>
+    <div class="rq-offers__grid" aria-label="Služby a orientační ceny">
+      <article class="rq-card rq-offer">
+        <p class="rq-offer__price">od 9 900 Kč</p>
+        <h3>Web a redesign</h3>
+        <p>Rychlý web, co vysvětlí nabídku a vodí poptávky.</p>
+        <small>od = funkční minimum; rozsah a složitost cenu zvyšují</small>
+        <a class="rq-offer__link" href="#kontakt">Mám zájem</a>
+      </article>
+      <article class="rq-card rq-offer">
+        <p class="rq-offer__price">od 19 900 Kč</p>
+        <h3>E-shop</h3>
+        <p>Malý, čistý a vlastněný obchod bez balastu.</p>
+        <small>od = funkční minimum; rozsah a složitost cenu zvyšují</small>
+        <a class="rq-offer__link" href="#kontakt">Mám zájem</a>
+      </article>
+      <article class="rq-card rq-offer">
+        <p class="rq-offer__price">od 12 000 Kč</p>
+        <h3>Automatizace procesů</h3>
+        <p>Propojím to, co děláte ručně.</p>
+        <small>od = funkční minimum; rozsah a složitost cenu zvyšují</small>
+        <a class="rq-offer__link" href="#kontakt">Mám zájem</a>
+      </article>
+      <article class="rq-card rq-offer">
+        <p class="rq-offer__price">od 15 000 Kč</p>
+        <h3>Data a AI pomocníci</h3>
+        <p>Přehled v datech + AI nasazená prakticky.</p>
+        <small>od = funkční minimum; rozsah a složitost cenu zvyšují</small>
+        <a class="rq-offer__link" href="#kontakt">Mám zájem</a>
+      </article>
+      <article class="rq-card rq-offer">
+        <p class="rq-offer__price">4 900 Kč</p>
+        <h3>Audit webu nebo procesu</h3>
+        <p>Zmapuju, co brzdí; odečtu z realizace.</p>
+        <small>od = funkční minimum; rozsah a složitost cenu zvyšují</small>
+        <a class="rq-offer__link" href="#kontakt">Mám zájem</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="jak-pracuji" class="rq-section rq-process">
+  <p class="rq-eyebrow">Jak pracuji</p>
+  <h2 class="rq-h2">Nejdřív měřím, pak stavím.</h2>
+  <div class="rq-process__steps" aria-label="Postup spolupráce">
+    <article class="rq-card rq-step">
+      <span class="rq-step__num">1</span>
+      <h3>Pojmenujeme problém</h3>
+    </article>
+    <article class="rq-card rq-step">
+      <span class="rq-step__num">2</span>
+      <h3>Vybereme nejmenší funkční řešení</h3>
+    </article>
+    <article class="rq-card rq-step">
+      <span class="rq-step__num">3</span>
+      <h3>Postavím, otestuji a předám</h3>
+    </article>
+  </div>
+  <article class="rq-guarantee">
+    <p class="rq-eyebrow">Servisní protokol &amp; Testerova záruka</p>
+    <h3>Každá zakázka má jasný výstup a ověřený výkon.</h3>
+    <p>U každé zakázky dostanete servisní protokol — co bylo, co se změnilo, proč, jaký to má dopad a co dál (i co nemá smysl). Web předávám až po otestování; pokud nemá výkon 90+/100, vracím 15 % z ceny.</p>
+  </article>
+</section>
+
+
+<section class="rq-section rq-pricing" id="ceny" aria-labelledby="ceny-title">
+  <p class="rq-eyebrow">Ceny</p>
+  <h2 class="rq-h2" id="ceny-title">Orientační ceny bez překvapení.</h2>
+  <p class="rq-lead">Péče po spuštění pro menší weby, e-shopy a automatizace. Vybereme jen rozsah, který dává smysl.</p>
+
+  <div class="rq-pricing-grid" aria-label="Tarify péče po spuštění">
+    <article class="rq-card rq-price-card">
+      <h3 class="rq-price-card__title">Klid</h3>
+      <p class="rq-price-card__price">2 500 Kč<span>/měs.</span></p>
+      <p class="rq-price-card__text">provoz, zálohy, drobné úpravy (1 h), máte komu zavolat</p>
+      <a class="rq-btn rq-btn--ghost" href="#kontakt">Mám zájem</a>
+    </article>
+
+    <article class="rq-card rq-price-card rq-price-card--featured">
+      <span class="rq-price-card__badge">Doporučeno</span>
+      <h3 class="rq-price-card__title">Růst</h3>
+      <p class="rq-price-card__price">6 000 Kč<span>/měs.</span></p>
+      <p class="rq-price-card__text">vše z Klidu + SEO/výkon hlídání, měsíční report, 3 h vývoje</p>
+      <a class="rq-btn rq-btn--primary" href="#kontakt">Mám zájem</a>
+    </article>
+
+    <article class="rq-card rq-price-card">
+      <h3 class="rq-price-card__title">Partner</h3>
+      <p class="rq-price-card__price">15 000 Kč<span>/měs.</span></p>
+      <p class="rq-price-card__text">vše z Růstu + průběžná automatizace/AI, 10 h, prioritní support</p>
+      <a class="rq-btn rq-btn--ghost" href="#kontakt">Mám zájem</a>
+    </article>
+  </div>
+
+  <p class="rq-pricing-note">Nechcete paušál? Bloky hodin 5/15/40 h (od 1 100 Kč/h). Audit lze odečíst z realizace.</p>
+</section>
+
+<section class="rq-bleed rq-ukazky-teaser" id="ukazky-teaser" aria-labelledby="ukazky-teaser-title">
+  <div class="rq-section rq-ukazky-teaser__inner">
+    <p class="rq-eyebrow">Ukázky</p>
+    <h2 class="rq-h2" id="ukazky-teaser-title">Co umím postavit</h2>
+
+    <div class="rq-ukazky-grid">
+      <a class="rq-card rq-ukazky-card" href={base + "/ukazky/instalater/"}>
+        <span class="rq-sample-badge">VZOROVÝ PROJEKT</span>
+        <h3>Web pro instalatéra</h3>
+        <p>lokální SEO + telefonní poptávky</p>
+      </a>
+
+      <a class="rq-card rq-ukazky-card" href={base + "/ukazky/sluzba/"}>
+        <span class="rq-sample-badge">VZOROVÝ PROJEKT</span>
+        <h3>Web s rezervací</h3>
+        <p>objednání termínu + budování důvěry</p>
+      </a>
+
+      <a class="rq-card rq-ukazky-card" href={base + "/ukazky/eshop/"}>
+        <span class="rq-sample-badge">VZOROVÝ PROJEKT</span>
+        <h3>Malý e-shop</h3>
+        <p>čistý katalog + košík bez balastu</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="rq-section rq-contact" id="kontakt" aria-labelledby="kontakt-title">
+  <div class="rq-contact__copy">
+    <p class="rq-eyebrow">Kontakt</p>
+    <h2 class="rq-h2" id="kontakt-title">Napište, co vás pálí</h2>
+    <p class="rq-lead">Popište současný stav a co chcete zjednodušit. Ozvu se s dalším krokem a orientačním rozsahem.</p>
+  </div>
+
+  <form class="rq-contact-form" method="post" action={base + "/api/lead"}>
+    <div class="rq-form-field">
+      <label for="rq-lead-name">Jméno</label>
+      <input id="rq-lead-name" name="name" type="text" autocomplete="name" required />
+    </div>
+
+    <div class="rq-form-field">
+      <label for="rq-lead-email">E-mail</label>
+      <input id="rq-lead-email" name="email" type="email" autocomplete="email" required />
+    </div>
+
+    <div class="rq-form-field">
+      <label for="rq-lead-current">Co dnes používáte?</label>
+      <select id="rq-lead-current" name="current_system">
+        <option value="Web">Web</option>
+        <option value="E-mail">E-mail</option>
+        <option value="Tabulky">Tabulky</option>
+        <option value="Formulář">Formulář</option>
+        <option value="Jiné">Jiné</option>
+      </select>
+    </div>
+
+    <div class="rq-form-field">
+      <label for="rq-lead-need">Co potřebujete zjednodušit?</label>
+      <textarea id="rq-lead-need" name="message" rows="6" required></textarea>
+    </div>
+
+    <button class="rq-btn rq-btn--primary" type="submit">Odeslat poptávku</button>
+  </form>
+
+  <p class="rq-contact-note">Nebo napište na <a href="mailto:info@radeq.cz">info@radeq.cz</a>.</p>
+</section>
+
   </main>
 
   <RqFooter navItems={nav} />

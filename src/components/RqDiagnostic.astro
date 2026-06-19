@@ -59,7 +59,6 @@ const items = [
               <span class="rq-diagnostic__tab-kicker">Problém {index + 1}</span>
               <span class="rq-diagnostic__tab-title">{item.problem}</span>
             </span>
-            <span class="rq-flag rq-diagnostic__state" aria-hidden={index === 0 ? 'false' : 'true'}>Rozbor</span>
           </button>
         ))}
       </div>
@@ -99,13 +98,18 @@ const items = [
 
 <style>
   .rq-diagnostic {
+    width: 100vw;
+    max-width: 100vw;
+    margin-inline: calc(50% - 50vw);
+    padding-inline: 0;
     background: var(--rq-bg-sunken, var(--rq-bg));
     color: var(--rq-ink);
     overflow-x: clip;
   }
 
   .rq-diagnostic__inner {
-    width: min(1120px, calc(100% - 32px));
+    width: min(calc(100% - 2rem), var(--rq-maxw, 1120px));
+    max-width: var(--rq-maxw, 1120px);
     margin: 0 auto;
   }
 
@@ -180,18 +184,6 @@ const items = [
     line-height: 1.25;
   }
 
-  .rq-diagnostic__state {
-    flex: 0 0 auto;
-    background: var(--rq-lime);
-    color: var(--rq-lime-ink);
-    border-color: transparent;
-    opacity: 0;
-  }
-
-  .rq-diagnostic__tab[aria-selected='true'] .rq-diagnostic__state {
-    opacity: 1;
-  }
-
   .rq-diagnostic__output,
   .rq-diagnostic__panel {
     min-width: 0;
@@ -223,7 +215,6 @@ const items = [
     overflow-y: auto;
     overscroll-behavior: contain;
     scrollbar-gutter: stable;
-    mask-image: linear-gradient(180deg, transparent 0, #000 1.5rem, #000 calc(100% - 1.5rem), transparent 100%);
     animation: rq-diagnostic-fade 180ms var(--rq-ease);
   }
 
@@ -334,10 +325,6 @@ const items = [
       align-items: flex-start;
       flex-direction: column;
     }
-
-    .rq-diagnostic__state {
-      align-self: flex-start;
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -363,14 +350,9 @@ const items = [
         const isActive = tab === nextTab;
         const panelId = tab.getAttribute('aria-controls');
         const panel = panelId ? root.querySelector(`#${CSS.escape(panelId)}`) : null;
-        const state = tab.querySelector('.rq-diagnostic__state');
 
         tab.setAttribute('aria-selected', String(isActive));
         tab.tabIndex = isActive ? 0 : -1;
-
-        if (state) {
-          state.setAttribute('aria-hidden', String(!isActive));
-        }
 
         if (panel) {
           panel.hidden = !isActive;

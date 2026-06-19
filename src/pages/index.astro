@@ -15,6 +15,16 @@ const nav = [
   { href: '/ukazky/', label: 'Ukázky' },
   { href: '#kontakt', label: 'Kontakt' },
 ];
+
+const symptoms = [
+  'pomalý web',
+  'poptávky se ztrácí v mailu',
+  'ruční přepisování do Excelu',
+  'nejasné CTA',
+  'web nevodí zákazníky',
+  'žádné měření',
+  'chaos v nástrojích',
+];
 ---
 
 <BaseLayout title="RadeQ.cz - Racionální digitalizace" description="Weby, data a automatizace pro živnostníky, malé firmy a spolky.">
@@ -51,7 +61,22 @@ const nav = [
     </section>
 
 
-<section class="rq-marquee rq-bleed" aria-label="Typické symptomy před úpravou webu a procesů"><div class="rq-marquee__viewport"><div class="rq-marquee__track"><span class="rq-marquee__item">pomalý web <span class="rq-marquee__dot">•</span> poptávky se ztrácí v mailu <span class="rq-marquee__dot">•</span> ruční přepisování do Excelu <span class="rq-marquee__dot">•</span> nejasné CTA <span class="rq-marquee__dot">•</span> web nevodí zákazníky <span class="rq-marquee__dot">•</span> žádné měření <span class="rq-marquee__dot">•</span> chaos v nástrojích</span><span class="rq-marquee__item" aria-hidden="true">pomalý web <span class="rq-marquee__dot">•</span> poptávky se ztrácí v mailu <span class="rq-marquee__dot">•</span> ruční přepisování do Excelu <span class="rq-marquee__dot">•</span> nejasné CTA <span class="rq-marquee__dot">•</span> web nevodí zákazníky <span class="rq-marquee__dot">•</span> žádné měření <span class="rq-marquee__dot">•</span> chaos v nástrojích</span></div></div></section>
+<section class="rq-marquee rq-bleed" aria-label="Typické symptomy před úpravou webu a procesů" data-rq-marquee>
+  <div class="rq-marquee__viewport">
+    <div class="rq-marquee__track" data-rq-marquee-track>
+      {[0, 1].map((groupIndex) => (
+        <span class="rq-marquee__group" data-rq-marquee-group={groupIndex === 0 ? 'true' : undefined} aria-hidden={groupIndex === 1 ? 'true' : undefined}>
+          {symptoms.map((symptom) => (
+            <>
+              <span class="rq-marquee__item">{symptom}</span>
+              <span class="rq-marquee__sep" aria-hidden="true">•</span>
+            </>
+          ))}
+        </span>
+      ))}
+    </div>
+  </div>
+</section>
 
 <section id="co-resim" class="rq-statement rq-problem-wall" aria-labelledby="rq-problem-wall-title">
   <div class="rq-statement__inner rq-problem-wall__inner">
@@ -108,7 +133,6 @@ const nav = [
     <h2 id="rq-sluzby-title" class="rq-h2">Co vám zjednoduším</h2>
     <div class="rq-services-bento__grid" data-rq-reveal aria-label="Služby a orientační ceny">
       <article class="rq-offer rq-service-tile rq-service-tile--featured rq-hoverable" style="--rq-i: 0;">
-        <a class="rq-offer__cover" href="#kontakt" aria-label="Web a redesign — napsat poptávku"></a>
         <p class="rq-offer__price">od 9 900 Kč</p>
         <h3>Web a redesign</h3>
         <p>Rychlý web, co vysvětlí nabídku a vodí poptávky.</p>
@@ -116,7 +140,6 @@ const nav = [
       </article>
 
       <article class="rq-offer rq-service-tile rq-service-tile--shop rq-hoverable" style="--rq-i: 1;">
-        <a class="rq-offer__cover" href="#kontakt" aria-label="E-shop — napsat poptávku"></a>
         <p class="rq-offer__price">od 19 900 Kč</p>
         <h3>E-shop</h3>
         <p>Malý, čistý a vlastněný obchod bez balastu.</p>
@@ -124,7 +147,6 @@ const nav = [
       </article>
 
       <article class="rq-offer rq-service-tile rq-service-tile--automation rq-hoverable" style="--rq-i: 2;">
-        <a class="rq-offer__cover" href="#kontakt" aria-label="Automatizace procesů — napsat poptávku"></a>
         <p class="rq-offer__price">od 12 000 Kč</p>
         <h3>Automatizace procesů</h3>
         <p>Propojím to, co děláte ručně.</p>
@@ -132,7 +154,6 @@ const nav = [
       </article>
 
       <article class="rq-offer rq-service-tile rq-service-tile--data rq-hoverable" style="--rq-i: 3;">
-        <a class="rq-offer__cover" href="#kontakt" aria-label="Data a AI pomocníci — napsat poptávku"></a>
         <p class="rq-offer__price">od 15 000 Kč</p>
         <h3>Data a AI pomocníci</h3>
         <p>Přehled v datech + AI nasazená prakticky.</p>
@@ -140,13 +161,15 @@ const nav = [
       </article>
 
       <article class="rq-offer rq-service-tile rq-service-tile--audit rq-hoverable" style="--rq-i: 4;">
-        <a class="rq-offer__cover" href="#kontakt" aria-label="Audit webu nebo procesu — napsat poptávku"></a>
         <span class="rq-flag">Nízkorizikový start</span>
         <p class="rq-offer__price">4 900 Kč</p>
         <h3>Audit webu nebo procesu</h3>
         <p>Zmapuju, co brzdí; odečtu z realizace.</p>
         <p class="rq-offer__incl">V ceně: technický stav, SEO základ, rychlost, formuláře, seznam priorit.</p>
       </article>
+    </div>
+    <div class="rq-services-bento__cta">
+      <a class="rq-btn rq-btn--primary" href="#kontakt">Domluvit nezávazný rozbor</a>
     </div>
   </div>
 </section>

@@ -50,6 +50,89 @@
       });
     }
 
+    const marqueeRoots = Array.from(document.querySelectorAll('[data-rq-marquee]'));
+
+    marqueeRoots.forEach((marquee) => {
+      const track = marquee.querySelector('[data-rq-marquee-track]');
+      const group = marquee.querySelector('[data-rq-marquee-group]');
+      if (!track || !group) return;
+
+      let x = 0;
+      let frame = 0;
+      let isVisible = false;
+      let currentSpeed = 0.42;
+      let targetSpeed = 0.42;
+
+      const getGroupWidth = () => group.getBoundingClientRect().width;
+
+      const tick = () => {
+        const width = getGroupWidth();
+
+        if (width > 0) {
+          currentSpeed += (targetSpeed - currentSpeed) * 0.08;
+          x = (x + currentSpeed) % width;
+          track.style.transform = `translate3d(${-x}px, 0, 0)`;
+        }
+
+        frame = isVisible ? requestAnimationFrame(tick) : 0;
+      };
+
+      const start = () => {
+        if (frame) return;
+        frame = requestAnimationFrame(tick);
+      };
+
+      const stop = () => {
+        if (!frame) return;
+        cancelAnimationFrame(frame);
+        frame = 0;
+      };
+
+      marquee.addEventListener('mouseenter', () => {
+        targetSpeed = 0.14;
+      });
+
+      marquee.addEventListener('mouseleave', () => {
+        targetSpeed = 0.42;
+      });
+
+      marquee.addEventListener('focusin', () => {
+        targetSpeed = 0.14;
+      });
+
+      marquee.addEventListener('focusout', () => {
+        targetSpeed = 0.42;
+      });
+
+      window.addEventListener('resize', () => {
+        const width = getGroupWidth();
+        if (width > 0) {
+          x %= width;
+        }
+      });
+
+      if ('IntersectionObserver' in window) {
+        const marqueeObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              isVisible = entry.isIntersecting;
+              if (isVisible) {
+                start();
+              } else {
+                stop();
+              }
+            });
+          },
+          { threshold: 0, rootMargin: '120px 0px' }
+        );
+
+        marqueeObserver.observe(marquee);
+      } else {
+        isVisible = true;
+        start();
+      }
+    });
+
     const countItems = Array.from(document.querySelectorAll('[data-rq-count]'));
 
     const animateCount = (item) => {

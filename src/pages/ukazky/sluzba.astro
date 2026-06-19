@@ -1,0 +1,1096 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const days = [
+  { day: 'Po', date: '22. 6.', aria: 'Vybrat pondělí 22. června' },
+  { day: 'Út', date: '23. 6.', aria: 'Vybrat úterý 23. června' },
+  { day: 'St', date: '24. 6.', aria: 'Vybrat středu 24. června' },
+  { day: 'Čt', date: '25. 6.', aria: 'Vybrat čtvrtek 25. června' },
+  { day: 'Pá', date: '26. 6.', aria: 'Vybrat pátek 26. června' }
+];
+
+const slots = ['8:00', '9:30', '11:00', '13:00', '15:30', '17:00'];
+
+const steps = [
+  ['01', 'Vstupní vyšetření', 'Nejdřív si v klidu projdeme, kdy bolest vzniká, co ji zhoršuje a jaký výsledek od terapie potřebujete.'],
+  ['02', 'Srozumitelný plán', 'Dostanete vysvětlení nálezu a konkrétní postup bez strašení, zbytečných slibů a tlaku.'],
+  ['03', 'Terapie v ordinaci', 'Kombinuji manuální techniky, aktivní pohyb, dech a nácvik poloh, které vašemu tělu sedí.'],
+  ['04', 'Cviky domů', 'Odcházíte s krátkým plánem cviků, který jde zařadit do běžného dne a dá se dlouhodobě udržet.']
+];
+
+const services = [
+  ['Vstupní vyšetření', 'Rozhovor, funkční diagnostika, pohybové testy a jasný plán další péče.', '800 Kč / 60 min'],
+  ['Manuální terapie', 'Šetrná práce s měkkými tkáněmi, klouby a dechem podle aktuálního nálezu.', '700 Kč / 50 min'],
+  ['Terapie bolesti zad', 'Cílená péče pro krční, hrudní i bederní oblast včetně prevence návratu bolesti.', '700 Kč / 50 min'],
+  ['Rehabilitace po úrazu', 'Postupný návrat k běžnému pohybu po zranění, operaci nebo delší pauze.', '700 Kč / 50 min'],
+  ['Poradenství', 'Úprava pracovního místa, pohybové návyky a jednoduchý domácí plán.', '450 Kč / 30 min']
+];
+
+const reviews = [
+  ['Po letech sedavé práce jsem konečně pochopila, co moje záda potřebují. Cviky byly jednoduché a účinné.', 'Martina, 38 let'],
+  ['Klára mi všechno vysvětlila lidsky a bez strašení. Po pár návštěvách jsem se vrátil k běhu.', 'Petr, 44 let'],
+  ['Oceňuji klidný přístup, přesný plán a možnost objednat si termín online bez telefonování.', 'Lenka, 52 let']
+];
+
+const faqs = [
+  ['Berete pojišťovny?', 'Tato ukázková ordinace je koncipovaná jako přímá platba klientem. Doklad pro případné proplacení zaměstnavatelem nebo pojišťovnou lze vystavit.'],
+  ['Potřebuji doporučení od lékaře?', 'Na běžnou fyzioterapii doporučení nepotřebujete. Pokud máte čerstvý úraz, neurologické příznaky nebo výrazné zhoršení stavu, je vhodné nejdřív kontaktovat lékaře.'],
+  ['Jak dlouho terapie trvá?', 'Vstupní vyšetření trvá přibližně 60 minut, navazující terapie obvykle 50 minut. Kratší konzultace trvá 30 minut.'],
+  ['Co si vzít s sebou?', 'Pohodlné oblečení, ve kterém se můžete hýbat, případně lékařské zprávy nebo výsledky vyšetření, pokud je máte k dispozici.']
+];
+---
+
+<BaseLayout
+  title="Fyzioterapie Klára Veselá | Bolesti zad a online rezervace"
+  description="Modelový web fyzioterapie s online rezervací, službami, FAQ, recenzemi a důvěryhodnou lokální prezentací."
+>
+  <div class="kv-page">
+    <div class="kv-demo-banner" role="banner">
+      <p>Vzorová ukázka studia RadeQ — takhle může vypadat váš web.</p>
+      <a href={base + '/'} aria-label="Zpět na RadeQ.cz">← Zpět na RadeQ.cz</a>
+    </div>
+
+    <main class="kv-shell">
+      <header class="kv-header" aria-label="Hlavní navigace ukázkového webu">
+        <a class="kv-brand" href="#top" aria-label="Fyzioterapie Klára Veselá">
+          <span class="kv-mark" aria-hidden="true">KV</span>
+          <span>
+            <strong>Fyzioterapie Klára Veselá</strong>
+            <small>Praha 7 · individuální péče</small>
+          </span>
+        </a>
+        <nav class="kv-nav" aria-label="Sekce stránky">
+          <a href="#sluzby">Služby</a>
+          <a href="#rezervace">Rezervace</a>
+          <a href="#kontakt">Kontakt</a>
+        </nav>
+      </header>
+
+      <section class="kv-hero" id="top">
+        <div class="kv-hero-copy">
+          <p class="kv-kicker">fyzioterapie bez spěchu a šablon</p>
+          <h1>Zbavte se chronické bolesti zad. Fyzioterapie s respektem k vašemu tělu.</h1>
+          <p>
+            Individuální přístup, pečlivá diagnostika a terapie, která hledá příčinu obtíží.
+            Společně nastavíme plán, kterému budete rozumět a který zvládnete i doma.
+          </p>
+          <div class="kv-actions">
+            <a class="kv-button kv-button-primary" href="#rezervace">Najít volný termín</a>
+            <a class="kv-button kv-button-secondary" href="#kontakt">Konzultovat problém</a>
+          </div>
+        </div>
+        <div class="kv-hero-visual" aria-label="Klidná ordinace fyzioterapie">
+          <div class="kv-photo" role="img" aria-label="Ilustrační blok ordinace fyzioterapeutky"></div>
+          <div class="kv-note">
+            <strong>První návštěva začíná vyšetřením, ne univerzálním cvičebním plánem.</strong>
+            <span>Bolest zad · rehabilitace · prevence návratu obtíží</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="kv-trust" aria-label="Důvody důvěry">
+        <div><strong>10+ let praxe</strong><span>ortopedie, neurologie, sport</span></div>
+        <div><strong>Online rezervace</strong><span>volné termíny bez čekání na telefon</span></div>
+        <div><strong>Cviky domů</strong><span>krátký plán po každé návštěvě</span></div>
+      </section>
+
+      <section class="kv-section kv-process" aria-labelledby="jak-pracuji">
+        <div class="kv-heading">
+          <span>Jak pracuji</span>
+          <h2 id="jak-pracuji">Nejdřív porozumět tělu, potom začít měnit pohyb.</h2>
+        </div>
+        <div class="kv-steps">
+          {steps.map(([number, title, text]) => (
+            <article class="kv-step">
+              <span>{number}</span>
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="kv-section" id="sluzby" aria-labelledby="sluzby-title">
+        <div class="kv-heading kv-heading-narrow">
+          <span>Mé služby</span>
+          <h2 id="sluzby-title">Fyzioterapie pro běžný život, práci i návrat ke sportu.</h2>
+        </div>
+        <div class="kv-service-grid">
+          {services.map(([title, text, price]) => (
+            <article class="kv-service">
+              <h3>{title}</h3>
+              <p>{text}</p>
+              <strong>{price}</strong>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="kv-booking" id="rezervace" aria-labelledby="rezervace-title">
+        <div class="kv-booking-copy">
+          <span>Online objednání</span>
+          <h2 id="rezervace-title">Najděte si termín, který vám sedí.</h2>
+          <p>
+            Rezervační rozhraní je v této ukázce pouze vizuální mock. Na reálném webu může být
+            napojené na kalendář, e-mailové potvrzení nebo CRM.
+          </p>
+        </div>
+        <div class="kv-booking-panel" aria-label="Ukázka rezervačního formuláře">
+          <div class="kv-booking-block">
+            <h3>1. Vyberte den</h3>
+            <div class="kv-day-picker" role="group" aria-label="Výběr dne návštěvy">
+              {days.map((item, index) => (
+                <button class:list={['kv-day', { 'is-active': index === 1 }]} type="button" aria-label={item.aria} aria-pressed={index === 1 ? 'true' : 'false'}>
+                  <span>{item.day}</span>
+                  <strong>{item.date}</strong>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div class="kv-booking-block">
+            <h3>2. Dostupné časy</h3>
+            <div class="kv-slot-grid" role="group" aria-label="Dostupné časové sloty">
+              {slots.map((slot, index) => (
+                <button class:list={['kv-slot', { 'is-active': index === 2 }]} type="button" aria-label={`Vybrat čas ${slot}`} aria-pressed={index === 2 ? 'true' : 'false'}>
+                  {slot}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <form class="kv-form" aria-label="Kontaktní údaje pro rezervaci">
+            <label>
+              Jméno a příjmení
+              <input type="text" name="name" autocomplete="name" placeholder="Např. Jana Nováková" />
+            </label>
+            <label>
+              Telefon
+              <input type="tel" name="phone" autocomplete="tel" placeholder="+420 777 123 456" />
+            </label>
+            <label>
+              Poznámka k obtížím
+              <textarea name="note" rows="4" placeholder="Kde vás bolí záda a jak dlouho problém trvá?"></textarea>
+            </label>
+            <button class="kv-button kv-button-primary kv-button-full" type="button">Rezervovat termín</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="kv-section" aria-labelledby="recenze-title">
+        <div class="kv-heading kv-heading-narrow">
+          <span>Recenze</span>
+          <h2 id="recenze-title">Krátké zkušenosti klientů.</h2>
+        </div>
+        <div class="kv-review-grid">
+          {reviews.map(([quote, author]) => (
+            <figure class="kv-review">
+              <blockquote>„{quote}“</blockquote>
+              <figcaption>{author}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+
+      <section class="kv-section kv-faq" aria-labelledby="faq-title">
+        <div class="kv-heading">
+          <span>FAQ</span>
+          <h2 id="faq-title">Časté otázky před první návštěvou.</h2>
+        </div>
+        <div class="kv-faq-list">
+          {faqs.map(([question, answer]) => (
+            <details>
+              <summary>{question}</summary>
+              <p>{answer}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section class="kv-location" id="kontakt" aria-labelledby="kontakt-title">
+        <div class="kv-contact">
+          <span>Kde mě najdete</span>
+          <h2 id="kontakt-title">Fyzioterapie Klára Veselá</h2>
+          <address>
+            U Klidného parku 18<br />
+            170 00 Praha 7
+          </address>
+          <p>
+            Ordinace je 4 minuty pěšky od tramvajové zastávky Letenské náměstí. Vstup je bezbariérový,
+            čekárna je hned za recepcí.
+          </p>
+          <div class="kv-contact-links">
+            <a href="tel:+420777123456">+420 777 123 456</a>
+            <a href="mailto:ordinace@klaravesela.cz">ordinace@klaravesela.cz</a>
+          </div>
+        </div>
+        <div class="kv-map" role="img" aria-label="Mapa umístění ordinace v Praze 7">
+          <span>Praha 7</span>
+          <strong>U Klidného parku 18</strong>
+        </div>
+      </section>
+    </main>
+
+    <footer class="kv-footer">
+      <div>
+        <strong>Fyzioterapie Klára Veselá</strong>
+        <span>Bolesti zad · rehabilitace · prevence</span>
+      </div>
+      <address>
+        U Klidného parku 18, Praha 7<br />
+        +420 777 123 456
+      </address>
+    </footer>
+  </div>
+</BaseLayout>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  .kv-page {
+    min-width: 320px;
+    min-height: 100vh;
+    overflow-x: clip;
+    background: #fbf8f1;
+    color: #253229;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .kv-demo-banner {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    min-height: 38px;
+    padding: 7px 16px;
+    border-bottom: 1px solid rgba(58, 73, 61, 0.14);
+    background: rgba(255, 253, 248, 0.96);
+    color: #39483d;
+    font-size: 0.86rem;
+    backdrop-filter: blur(14px);
+  }
+
+  .kv-demo-banner p,
+  .kv-page h1,
+  .kv-page h2,
+  .kv-page h3,
+  .kv-page p,
+  .kv-page blockquote {
+    margin: 0;
+  }
+
+  .kv-demo-banner a {
+    color: #7a4a2f;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .kv-shell {
+    width: min(1160px, calc(100% - 36px));
+    margin: 0 auto;
+  }
+
+  .kv-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 22px 0;
+  }
+
+  .kv-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    color: #253229;
+    text-decoration: none;
+  }
+
+  .kv-mark {
+    display: inline-grid;
+    flex: 0 0 auto;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 16px;
+    background: #6e8a6f;
+    color: #fffdf8;
+    font-size: 0.92rem;
+    font-weight: 900;
+  }
+
+  .kv-brand strong,
+  .kv-brand small {
+    display: block;
+  }
+
+  .kv-brand strong {
+    font-size: 1rem;
+    line-height: 1.15;
+  }
+
+  .kv-brand small {
+    margin-top: 3px;
+    color: #667166;
+    font-size: 0.8rem;
+  }
+
+  .kv-nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .kv-nav a {
+    border-radius: 999px;
+    padding: 10px 13px;
+    color: #405145;
+    font-size: 0.92rem;
+    font-weight: 750;
+    text-decoration: none;
+  }
+
+  .kv-nav a:hover,
+  .kv-nav a:focus-visible {
+    background: #edf2e8;
+    color: #25342a;
+  }
+
+  .kv-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(320px, 0.72fr);
+    gap: clamp(26px, 5vw, 64px);
+    align-items: center;
+    min-height: calc(100vh - 176px);
+    padding: 44px 0 68px;
+  }
+
+  .kv-hero-copy,
+  .kv-hero-visual,
+  .kv-note,
+  .kv-booking-copy,
+  .kv-booking-panel,
+  .kv-booking-block,
+  .kv-form,
+  .kv-footer div {
+    display: grid;
+  }
+
+  .kv-hero-copy {
+    gap: 24px;
+  }
+
+  .kv-kicker,
+  .kv-heading span,
+  .kv-booking-copy span,
+  .kv-contact span {
+    color: #7a4a2f;
+    font-size: 0.84rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .kv-page h1 {
+    max-width: 780px;
+    color: #1f2b24;
+    font-size: clamp(2.45rem, 6.2vw, 5.6rem);
+    font-weight: 820;
+    letter-spacing: 0;
+    line-height: 0.98;
+  }
+
+  .kv-page h2 {
+    color: #243027;
+    font-size: clamp(2rem, 4vw, 3.55rem);
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1.04;
+  }
+
+  .kv-page h3 {
+    color: #26332b;
+    font-size: 1.08rem;
+    line-height: 1.25;
+  }
+
+  .kv-page p {
+    color: #526056;
+    line-height: 1.7;
+  }
+
+  .kv-hero-copy > p:not(.kv-kicker) {
+    max-width: 660px;
+    color: #4c5b50;
+    font-size: clamp(1.05rem, 2vw, 1.2rem);
+  }
+
+  .kv-actions,
+  .kv-contact-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .kv-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    padding: 13px 20px;
+    font-size: 0.98rem;
+    font-weight: 850;
+    line-height: 1.1;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .kv-button-primary {
+    background: #7a4a2f;
+    color: #fffdf8;
+    box-shadow: 0 14px 32px rgba(122, 74, 47, 0.22);
+  }
+
+  .kv-button-secondary {
+    border-color: rgba(91, 111, 93, 0.32);
+    background: #fffdf8;
+    color: #314035;
+  }
+
+  .kv-button-full {
+    width: 100%;
+  }
+
+  .kv-button:hover,
+  .kv-button:focus-visible,
+  .kv-page button:hover,
+  .kv-page button:focus-visible,
+  .kv-page a:focus-visible,
+  .kv-page summary:focus-visible,
+  .kv-page input:focus-visible,
+  .kv-page textarea:focus-visible {
+    outline: 3px solid rgba(122, 74, 47, 0.28);
+    outline-offset: 3px;
+  }
+
+  .kv-hero-visual {
+    gap: 18px;
+  }
+
+  .kv-photo {
+    position: relative;
+    min-height: 520px;
+    overflow: hidden;
+    border-radius: 34px;
+    background:
+      radial-gradient(circle at 42% 24%, rgba(255, 253, 248, 0.88) 0 10%, transparent 11%),
+      linear-gradient(145deg, rgba(110, 138, 111, 0.2), rgba(122, 74, 47, 0.16)),
+      #d9e2d2;
+    box-shadow: 0 28px 70px rgba(68, 82, 66, 0.18);
+  }
+
+  .kv-photo::before {
+    content: "";
+    position: absolute;
+    inset: 11% 16% 0;
+    border-radius: 44% 44% 0 0;
+    background: linear-gradient(180deg, rgba(255, 253, 248, 0.76), rgba(245, 231, 211, 0.92));
+  }
+
+  .kv-photo::after {
+    content: "";
+    position: absolute;
+    right: 9%;
+    bottom: 9%;
+    width: 38%;
+    aspect-ratio: 1;
+    border-radius: 28px;
+    background:
+      linear-gradient(135deg, transparent 46%, rgba(255, 253, 248, 0.9) 47% 53%, transparent 54%),
+      #8ea18a;
+  }
+
+  .kv-note {
+    gap: 8px;
+    border: 1px solid rgba(91, 111, 93, 0.18);
+    border-radius: 24px;
+    padding: 18px;
+    background: #fffdf8;
+  }
+
+  .kv-note strong {
+    color: #29372e;
+    font-size: 1.04rem;
+    line-height: 1.35;
+  }
+
+  .kv-note span {
+    color: #69776b;
+    line-height: 1.5;
+  }
+
+  .kv-trust {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    overflow: hidden;
+    border: 1px solid rgba(91, 111, 93, 0.18);
+    border-radius: 28px;
+    background: rgba(91, 111, 93, 0.18);
+  }
+
+  .kv-trust div {
+    display: grid;
+    gap: 7px;
+    min-height: 116px;
+    padding: 22px;
+    background: #fffdf8;
+  }
+
+  .kv-trust strong {
+    color: #26332b;
+    font-size: 1.08rem;
+  }
+
+  .kv-trust span {
+    color: #5c695f;
+    line-height: 1.45;
+  }
+
+  .kv-section {
+    padding: clamp(72px, 10vw, 116px) 0;
+  }
+
+  .kv-heading {
+    display: grid;
+    grid-template-columns: 0.34fr minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+    margin-bottom: 34px;
+  }
+
+  .kv-heading-narrow {
+    grid-template-columns: 1fr;
+    max-width: 760px;
+  }
+
+  .kv-steps,
+  .kv-service-grid,
+  .kv-review-grid {
+    display: grid;
+    gap: 14px;
+  }
+
+  .kv-steps {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .kv-step,
+  .kv-service,
+  .kv-review {
+    border: 1px solid rgba(91, 111, 93, 0.16);
+    border-radius: 24px;
+    background: #fffdf8;
+  }
+
+  .kv-step {
+    display: grid;
+    align-content: start;
+    gap: 14px;
+    min-height: 248px;
+    padding: 22px;
+  }
+
+  .kv-step > span {
+    display: inline-grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    background: #edf2e8;
+    color: #5d765e;
+    font-weight: 900;
+  }
+
+  .kv-service-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .kv-service {
+    display: grid;
+    grid-column: span 2;
+    gap: 14px;
+    min-height: 224px;
+    padding: 24px;
+  }
+
+  .kv-service:nth-child(4),
+  .kv-service:nth-child(5) {
+    grid-column: span 3;
+  }
+
+  .kv-service strong {
+    align-self: end;
+    color: #6b432d;
+    font-size: 1rem;
+  }
+
+  .kv-booking {
+    display: grid;
+    grid-template-columns: minmax(0, 0.72fr) minmax(360px, 1fr);
+    gap: clamp(24px, 5vw, 58px);
+    align-items: start;
+    margin: 32px 0;
+    border-radius: 36px;
+    padding: clamp(24px, 5vw, 48px);
+    background: #e8efe3;
+  }
+
+  .kv-booking-copy {
+    position: sticky;
+    top: 72px;
+    gap: 18px;
+  }
+
+  .kv-booking-panel {
+    gap: 24px;
+    border: 1px solid rgba(69, 90, 71, 0.14);
+    border-radius: 28px;
+    padding: clamp(18px, 3vw, 28px);
+    background: #fffdf8;
+    box-shadow: 0 24px 54px rgba(75, 93, 73, 0.14);
+  }
+
+  .kv-booking-block {
+    gap: 12px;
+  }
+
+  .kv-day-picker,
+  .kv-slot-grid {
+    display: grid;
+    gap: 10px;
+  }
+
+  .kv-day-picker {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .kv-slot-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .kv-day,
+  .kv-slot {
+    min-width: 0;
+    border: 1px solid rgba(91, 111, 93, 0.22);
+    border-radius: 18px;
+    background: #fbf8f1;
+    color: #304037;
+    font: inherit;
+    font-weight: 850;
+    cursor: pointer;
+  }
+
+  .kv-day {
+    display: grid;
+    gap: 4px;
+    min-height: 76px;
+    padding: 12px 8px;
+  }
+
+  .kv-day span {
+    color: #68766b;
+    font-size: 0.82rem;
+  }
+
+  .kv-day strong {
+    color: inherit;
+    font-size: 0.98rem;
+  }
+
+  .kv-slot {
+    min-height: 52px;
+    padding: 13px 10px;
+  }
+
+  .kv-day.is-active,
+  .kv-slot.is-active {
+    border-color: #6e8a6f;
+    background: #6e8a6f;
+    color: #fffdf8;
+  }
+
+  .kv-day.is-active span {
+    color: rgba(255, 253, 248, 0.82);
+  }
+
+  .kv-form {
+    gap: 14px;
+  }
+
+  .kv-form label {
+    display: grid;
+    gap: 7px;
+    color: #324239;
+    font-size: 0.92rem;
+    font-weight: 800;
+  }
+
+  .kv-form input,
+  .kv-form textarea {
+    width: 100%;
+    border: 1px solid rgba(91, 111, 93, 0.24);
+    border-radius: 16px;
+    background: #fbf8f1;
+    color: #26332b;
+    font: inherit;
+    font-size: 1rem;
+  }
+
+  .kv-form input {
+    min-height: 48px;
+    padding: 12px 14px;
+  }
+
+  .kv-form textarea {
+    min-height: 112px;
+    padding: 13px 14px;
+    resize: vertical;
+  }
+
+  .kv-form input::placeholder,
+  .kv-form textarea::placeholder {
+    color: #818a81;
+  }
+
+  .kv-review-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .kv-review {
+    display: grid;
+    gap: 18px;
+    min-height: 220px;
+    padding: 24px;
+  }
+
+  .kv-review blockquote {
+    color: #33443a;
+    font-size: 1.03rem;
+    line-height: 1.65;
+  }
+
+  .kv-review figcaption {
+    align-self: end;
+    color: #7a4a2f;
+    font-weight: 850;
+  }
+
+  .kv-faq {
+    display: grid;
+    grid-template-columns: minmax(0, 0.54fr) minmax(0, 1fr);
+    gap: 34px;
+    align-items: start;
+  }
+
+  .kv-faq .kv-heading {
+    grid-template-columns: 1fr;
+    margin-bottom: 0;
+  }
+
+  .kv-faq-list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .kv-faq details {
+    border: 1px solid rgba(91, 111, 93, 0.16);
+    border-radius: 20px;
+    background: #fffdf8;
+  }
+
+  .kv-faq summary {
+    cursor: pointer;
+    padding: 18px 20px;
+    color: #26332b;
+    font-weight: 850;
+  }
+
+  .kv-faq details p {
+    padding: 0 20px 20px;
+  }
+
+  .kv-location {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(320px, 1fr);
+    gap: 18px;
+    padding: 0 0 84px;
+  }
+
+  .kv-contact,
+  .kv-map {
+    border-radius: 30px;
+  }
+
+  .kv-contact {
+    display: grid;
+    gap: 18px;
+    padding: clamp(24px, 4vw, 36px);
+    background: #26332b;
+    color: #fffdf8;
+  }
+
+  .kv-contact h2,
+  .kv-contact p,
+  .kv-contact span,
+  .kv-contact address,
+  .kv-contact a {
+    color: #fffdf8;
+  }
+
+  .kv-contact span {
+    opacity: 0.78;
+  }
+
+  .kv-page address {
+    font-style: normal;
+    line-height: 1.65;
+  }
+
+  .kv-contact-links a {
+    border: 1px solid rgba(255, 253, 248, 0.22);
+    border-radius: 999px;
+    padding: 11px 14px;
+    color: inherit;
+    font-weight: 850;
+    text-decoration: none;
+  }
+
+  .kv-map {
+    position: relative;
+    display: grid;
+    place-content: center;
+    gap: 10px;
+    min-height: 420px;
+    overflow: hidden;
+    border: 1px solid rgba(91, 111, 93, 0.16);
+    background:
+      linear-gradient(90deg, rgba(91, 111, 93, 0.1) 1px, transparent 1px),
+      linear-gradient(0deg, rgba(91, 111, 93, 0.1) 1px, transparent 1px),
+      #edf2e8;
+    background-size: 54px 54px;
+    color: #26332b;
+    text-align: center;
+  }
+
+  .kv-map::before {
+    content: "";
+    position: absolute;
+    inset: 18%;
+    border: 18px solid rgba(122, 74, 47, 0.15);
+    border-right-color: transparent;
+    border-radius: 48% 54% 46% 50%;
+    transform: rotate(-12deg);
+  }
+
+  .kv-map::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 28px;
+    height: 28px;
+    border: 8px solid #7a4a2f;
+    border-radius: 999px 999px 999px 0;
+    background: #fffdf8;
+    transform: translate(-50%, -76%) rotate(-45deg);
+  }
+
+  .kv-map span,
+  .kv-map strong {
+    position: relative;
+    z-index: 1;
+  }
+
+  .kv-map span {
+    color: #6f7d70;
+    font-weight: 850;
+  }
+
+  .kv-map strong {
+    font-size: 1.45rem;
+  }
+
+  .kv-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 28px max(18px, calc((100% - 1160px) / 2));
+    border-top: 1px solid rgba(91, 111, 93, 0.16);
+    background: #fffdf8;
+    color: #4d5c50;
+  }
+
+  .kv-footer div {
+    gap: 4px;
+  }
+
+  .kv-footer strong {
+    color: #26332b;
+  }
+
+  @media (max-width: 920px) {
+    .kv-shell {
+      width: min(100% - 28px, 720px);
+    }
+
+    .kv-header,
+    .kv-footer {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .kv-nav {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .kv-hero,
+    .kv-booking,
+    .kv-faq,
+    .kv-location,
+    .kv-heading {
+      grid-template-columns: 1fr;
+    }
+
+    .kv-hero {
+      min-height: auto;
+      padding-top: 22px;
+    }
+
+    .kv-photo {
+      min-height: 420px;
+    }
+
+    .kv-booking-copy {
+      position: static;
+    }
+
+    .kv-steps,
+    .kv-review-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .kv-service-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .kv-service,
+    .kv-service:nth-child(4),
+    .kv-service:nth-child(5) {
+      grid-column: auto;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .kv-demo-banner {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 2px;
+      padding: 8px 14px;
+      font-size: 0.78rem;
+    }
+
+    .kv-shell {
+      width: min(100% - 22px, 430px);
+    }
+
+    .kv-nav {
+      overflow-x: auto;
+      justify-content: flex-start;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+
+    .kv-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .kv-nav a {
+      flex: 0 0 auto;
+    }
+
+    .kv-page h1 {
+      font-size: clamp(2.28rem, 13vw, 3.45rem);
+      line-height: 1;
+    }
+
+    .kv-page h2 {
+      font-size: clamp(1.82rem, 9vw, 2.55rem);
+    }
+
+    .kv-actions,
+    .kv-contact-links {
+      flex-direction: column;
+    }
+
+    .kv-button,
+    .kv-contact-links a {
+      width: 100%;
+    }
+
+    .kv-photo {
+      min-height: 340px;
+      border-radius: 24px;
+    }
+
+    .kv-trust,
+    .kv-steps,
+    .kv-service-grid,
+    .kv-review-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .kv-trust div,
+    .kv-step,
+    .kv-service,
+    .kv-review {
+      min-height: auto;
+    }
+
+    .kv-booking {
+      margin-inline: -2px;
+      border-radius: 26px;
+      padding: 18px;
+    }
+
+    .kv-booking-panel {
+      border-radius: 22px;
+      padding: 16px;
+    }
+
+    .kv-day-picker,
+    .kv-slot-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .kv-location {
+      padding-bottom: 48px;
+    }
+
+    .kv-map {
+      min-height: 300px;
+    }
+  }
+</style>

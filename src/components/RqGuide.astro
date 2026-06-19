@@ -1,0 +1,545 @@
+---
+---
+
+<div class="rq-guide" data-rq-guide>
+  <button
+    class="rq-guide__toggle"
+    type="button"
+    aria-controls="rq-guide-panel"
+    aria-expanded="false"
+    data-rq-toggle
+  >
+    <span class="rq-guide__toggle-icon" aria-hidden="true">?</span>
+    <span class="rq-guide__toggle-label">Průvodce</span>
+  </button>
+
+  <section
+    id="rq-guide-panel"
+    class="rq-guide__panel"
+    role="dialog"
+    aria-modal="false"
+    aria-labelledby="rq-guide-title"
+    hidden
+    data-rq-panel
+  >
+    <header class="rq-guide__header">
+      <div>
+        <p class="rq-guide__eyebrow">RadeQ</p>
+        <h2 id="rq-guide-title" class="rq-guide__title">RadeQ průvodce</h2>
+      </div>
+      <button class="rq-guide__close" type="button" aria-label="Zavřít průvodce" data-rq-close>
+        <span aria-hidden="true">×</span>
+      </button>
+    </header>
+
+    <div class="rq-guide__body">
+      <p class="rq-guide__intro">Pomůžu vám najít, co potřebujete. Vyberte téma:</p>
+
+      <div class="rq-guide__quick-actions" aria-label="Rychlá témata">
+        <button class="rq-guide__chip" type="button" data-rq-topic="ceny">Kolik to stojí</button>
+        <button class="rq-guide__chip" type="button" data-rq-topic="sluzby">Jaké služby nabízíte</button>
+        <button class="rq-guide__chip" type="button" data-rq-topic="spoluprace">Jak probíhá spolupráce</button>
+        <button class="rq-guide__chip" type="button" data-rq-topic="kontakt">Chci poptávku</button>
+      </div>
+
+      <div class="rq-guide__messages" aria-live="polite" data-rq-messages>
+        <div class="rq-guide__message rq-guide__message--guide">
+          <p>Vyberte téma nebo napište krátký dotaz.</p>
+        </div>
+      </div>
+
+      <form class="rq-guide__form" data-rq-form>
+        <label class="rq-guide__label" for="rq-guide-input">Váš dotaz</label>
+        <div class="rq-guide__input-row">
+          <input
+            id="rq-guide-input"
+            class="rq-guide__input"
+            type="text"
+            name="rq-guide-query"
+            autocomplete="off"
+            placeholder="Např. cena webu"
+            data-rq-input
+          />
+          <button class="rq-guide__send" type="submit">Odeslat</button>
+        </div>
+      </form>
+    </div>
+  </section>
+</div>
+
+<style>
+  .rq-guide {
+    --rq-wine: #6f1731;
+    --rq-wine-dark: #4d0f22;
+    --rq-wine-soft: #f7edf1;
+    --rq-text: #21171a;
+    --rq-muted: #6d5a61;
+    --rq-border: rgba(111, 23, 49, 0.18);
+    --rq-panel: #fffafc;
+    position: fixed;
+    right: max(16px, env(safe-area-inset-right));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    z-index: 80;
+    font-family: inherit;
+  }
+
+  .rq-guide *,
+  .rq-guide *::before,
+  .rq-guide *::after {
+    box-sizing: border-box;
+  }
+
+  .rq-guide__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    max-width: calc(100vw - 32px);
+    border: 1px solid rgba(255, 255, 255, 0.26);
+    border-radius: 999px;
+    padding: 8px 14px 8px 8px;
+    color: #ffffff;
+    background: var(--rq-wine);
+    box-shadow: 0 14px 34px rgba(61, 18, 31, 0.22);
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+  }
+
+  .rq-guide__toggle:hover,
+  .rq-guide__toggle:focus-visible {
+    background: var(--rq-wine-dark);
+  }
+
+  .rq-guide__toggle:focus-visible,
+  .rq-guide__close:focus-visible,
+  .rq-guide__chip:focus-visible,
+  .rq-guide__send:focus-visible,
+  .rq-guide__link:focus-visible,
+  .rq-guide__input:focus-visible {
+    outline: 3px solid rgba(111, 23, 49, 0.28);
+    outline-offset: 2px;
+  }
+
+  .rq-guide__toggle-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    color: var(--rq-wine);
+    background: #ffffff;
+    line-height: 1;
+  }
+
+  .rq-guide__toggle-label {
+    white-space: nowrap;
+  }
+
+  .rq-guide__panel {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 12px);
+    width: min(376px, calc(100vw - 32px));
+    max-height: min(680px, calc(100vh - 96px));
+    overflow: hidden;
+    border: 1px solid var(--rq-border);
+    border-radius: 8px;
+    color: var(--rq-text);
+    background: var(--rq-panel);
+    box-shadow: 0 24px 60px rgba(43, 24, 31, 0.22);
+  }
+
+  .rq-guide__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px;
+    color: #ffffff;
+    background: var(--rq-wine);
+  }
+
+  .rq-guide__eyebrow {
+    margin: 0 0 2px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0;
+    opacity: 0.78;
+  }
+
+  .rq-guide__title {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
+
+  .rq-guide__close {
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 999px;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    font: inherit;
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  .rq-guide__close:hover {
+    background: rgba(255, 255, 255, 0.18);
+  }
+
+  .rq-guide__body {
+    display: grid;
+    gap: 14px;
+    max-height: calc(min(680px, calc(100vh - 96px)) - 72px);
+    overflow: auto;
+    padding: 16px;
+  }
+
+  .rq-guide__intro {
+    margin: 0;
+    color: var(--rq-muted);
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .rq-guide__quick-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .rq-guide__chip,
+  .rq-guide__send,
+  .rq-guide__link {
+    min-height: 42px;
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .rq-guide__chip {
+    width: 100%;
+    border: 1px solid var(--rq-border);
+    padding: 10px 12px;
+    color: var(--rq-wine-dark);
+    background: #ffffff;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .rq-guide__chip:hover {
+    background: var(--rq-wine-soft);
+  }
+
+  .rq-guide__messages {
+    display: grid;
+    gap: 10px;
+    min-height: 54px;
+  }
+
+  .rq-guide__message {
+    max-width: 100%;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14px;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+
+  .rq-guide__message p {
+    margin: 0;
+  }
+
+  .rq-guide__message--guide {
+    border: 1px solid var(--rq-border);
+    color: var(--rq-text);
+    background: #ffffff;
+  }
+
+  .rq-guide__message--user {
+    justify-self: end;
+    color: #ffffff;
+    background: var(--rq-wine);
+  }
+
+  .rq-guide__answer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .rq-guide__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    border: 1px solid var(--rq-border);
+    padding: 8px 10px;
+    color: var(--rq-wine-dark);
+    background: var(--rq-wine-soft);
+    text-decoration: none;
+  }
+
+  .rq-guide__link:hover {
+    color: #ffffff;
+    background: var(--rq-wine);
+  }
+
+  .rq-guide__form {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+  }
+
+  .rq-guide__label {
+    color: var(--rq-muted);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .rq-guide__input-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+
+  .rq-guide__input {
+    min-width: 0;
+    min-height: 44px;
+    width: 100%;
+    border: 1px solid var(--rq-border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--rq-text);
+    background: #ffffff;
+    font: inherit;
+  }
+
+  .rq-guide__send {
+    border: 0;
+    padding: 10px 12px;
+    color: #ffffff;
+    background: var(--rq-wine);
+    cursor: pointer;
+  }
+
+  .rq-guide__send:hover {
+    background: var(--rq-wine-dark);
+  }
+
+  @media (max-width: 420px) {
+    .rq-guide {
+      right: 12px;
+      bottom: 12px;
+    }
+
+    .rq-guide__panel {
+      width: calc(100vw - 24px);
+      max-height: calc(100vh - 88px);
+    }
+
+    .rq-guide__input-row {
+      grid-template-columns: 1fr;
+    }
+
+    .rq-guide__send {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .rq-guide__toggle,
+    .rq-guide__panel,
+    .rq-guide__chip,
+    .rq-guide__send,
+    .rq-guide__link {
+      transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+    }
+
+    .rq-guide__toggle:hover {
+      transform: translateY(-1px);
+    }
+  }
+</style>
+
+<script>
+  // Preview na GitHub Pages je kurátorovaný client-side průvodce; v produkci na Cloudflare lze napojit Workers AI.
+  const rqGuideTopics = {
+    ceny: {
+      text: 'Audit od 4 900 Kč, web od 9 900 Kč, e-shop od 19 900 Kč, automatizace od 12 000 Kč. Měsíční správa od 2 500 Kč. Přesně po krátké domluvě.',
+      href: '#ceny',
+      label: 'Přejít na ceny',
+      followups: [
+        { key: 'kontakt', label: 'Chci poptávku' },
+        { key: 'sluzby', label: 'Služby' }
+      ]
+    },
+    sluzby: {
+      text: 'Weby a redesign, e-shopy, automatizace procesů, práce s daty a AI, audit.',
+      href: '#sluzby',
+      label: 'Přejít na služby',
+      followups: [
+        { key: 'ceny', label: 'Ceny' },
+        { key: 'spoluprace', label: 'Postup' }
+      ]
+    },
+    spoluprace: {
+      text: 'Pojmenujeme problém → nejmenší funkční řešení → postavím, otestuji a předám (se servisním protokolem).',
+      href: '#jak-pracuji',
+      label: 'Jak pracuji',
+      followups: [
+        { key: 'kontakt', label: 'Chci poptávku' },
+        { key: 'ceny', label: 'Ceny' }
+      ]
+    },
+    kontakt: {
+      text: 'Napište pár vět, co řešíte. Ozvat se můžete i na info@radeq.cz.',
+      href: '#kontakt',
+      label: 'Přejít na kontakt',
+      followups: [
+        { key: 'sluzby', label: 'Služby' },
+        { key: 'spoluprace', label: 'Postup' }
+      ]
+    }
+  };
+
+  const rqGuideFallback = {
+    text: 'Tohle radši napište do poptávky — Radek odpoví přesně.',
+    href: '#kontakt',
+    label: 'Napsat poptávku'
+  };
+
+  const rqNormalize = (value) => value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim();
+
+  const rqMatchTopic = (query) => {
+    const text = rqNormalize(query);
+    if (!text) return null;
+    if (/\b(cen|cena|ceny|kolik|stoj|rozpocet|audit|sprava|eshop|e-shop|web)\b/.test(text)) return 'ceny';
+    if (/\b(sluz|nabiz|delate|redesign|automatiz|data|ai|eshop|e-shop)\b/.test(text)) return 'sluzby';
+    if (/\b(jak|postup|spoluprac|probiha|predani|test|reseni)\b/.test(text)) return 'spoluprace';
+    if (/\b(kontakt|poptav|napsat|email|mail|info)\b/.test(text)) return 'kontakt';
+    return null;
+  };
+
+  document.querySelectorAll('[data-rq-guide]').forEach((root) => {
+    const toggle = root.querySelector('[data-rq-toggle]');
+    const panel = root.querySelector('[data-rq-panel]');
+    const close = root.querySelector('[data-rq-close]');
+    const messages = root.querySelector('[data-rq-messages]');
+    const form = root.querySelector('[data-rq-form]');
+    const input = root.querySelector('[data-rq-input]');
+    let lastFocused = null;
+
+    const focusableSelector = 'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    const addMessage = (text, type = 'guide') => {
+      const message = document.createElement('div');
+      message.className = `rq-guide__message rq-guide__message--${type}`;
+      const paragraph = document.createElement('p');
+      paragraph.textContent = text;
+      message.append(paragraph);
+      messages.append(message);
+      messages.scrollTop = messages.scrollHeight;
+      return message;
+    };
+
+    const addAnswerActions = (message, topic) => {
+      const actions = document.createElement('div');
+      actions.className = 'rq-guide__answer-actions';
+
+      const mainLink = document.createElement('a');
+      mainLink.className = 'rq-guide__link';
+      mainLink.href = topic.href;
+      mainLink.textContent = topic.label;
+      actions.append(mainLink);
+
+      if (topic.followups) {
+        topic.followups.forEach((followup) => {
+          const button = document.createElement('button');
+          button.className = 'rq-guide__chip';
+          button.type = 'button';
+          button.textContent = followup.label;
+          button.addEventListener('click', () => showTopic(followup.key));
+          actions.append(button);
+        });
+      }
+
+      message.append(actions);
+    };
+
+    const showTopic = (key) => {
+      const topic = rqGuideTopics[key] || rqGuideFallback;
+      const message = addMessage(topic.text, 'guide');
+      addAnswerActions(message, topic);
+    };
+
+    const openPanel = () => {
+      lastFocused = document.activeElement;
+      panel.hidden = false;
+      toggle.setAttribute('aria-expanded', 'true');
+      requestAnimationFrame(() => close.focus());
+    };
+
+    const closePanel = () => {
+      panel.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+      if (lastFocused instanceof HTMLElement) lastFocused.focus();
+    };
+
+    toggle.addEventListener('click', () => {
+      if (panel.hidden) openPanel();
+      else closePanel();
+    });
+
+    close.addEventListener('click', closePanel);
+
+    root.querySelectorAll('[data-rq-topic]').forEach((button) => {
+      button.addEventListener('click', () => showTopic(button.dataset.rqTopic));
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const query = input.value.trim();
+      if (!query) return;
+      addMessage(query, 'user');
+      input.value = '';
+      const topicKey = rqMatchTopic(query);
+      showTopic(topicKey || 'fallback');
+    });
+
+    panel.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closePanel();
+        return;
+      }
+
+      if (event.key !== 'Tab') return;
+      const focusable = Array.from(panel.querySelectorAll(focusableSelector)).filter((element) => element instanceof HTMLElement && !element.hidden);
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+  });
+</script>

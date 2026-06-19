@@ -30,7 +30,7 @@ const logoMask = `${base}/brand/radeq-logo-b-mask.png`;
       {alternateLabel && alternatePath && (
         <a class="rq-site-header__alt" href={resolve(alternatePath)}>{alternateLabel}</a>
       )}
-      <a class="rq-btn rq-btn--primary" href={resolve("/#kontakt")}>{content.cta}</a>
+      {content.cta && <a class="rq-btn rq-btn--primary" href={resolve("/#kontakt")}>{content.cta}</a>}
     </div>
   </div>
 </header>

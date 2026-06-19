@@ -59,7 +59,7 @@ const items = [
               <span class="rq-diagnostic__tab-kicker">Problém {index + 1}</span>
               <span class="rq-diagnostic__tab-title">{item.problem}</span>
             </span>
-            <span class="rq-flag rq-diagnostic__state" aria-hidden={index === 0 ? 'false' : 'true'}>Diagnóza</span>
+            <span class="rq-flag rq-diagnostic__state" aria-hidden={index === 0 ? 'false' : 'true'}>Rozbor</span>
           </button>
         ))}
       </div>
@@ -68,7 +68,7 @@ const items = [
         {items.map((item, index) => (
           <article class="rq-diagnostic__panel" id={`rq-diagnostic-panel-${item.id}`} role="tabpanel" aria-labelledby={`rq-diagnostic-tab-${item.id}`} tabindex="0" data-rq-diagnostic-panel>
             <div class="rq-diagnostic__panel-top">
-              <span class="rq-flag">Diagnóza</span>
+              <span class="rq-flag">Rozbor</span>
               <p class="rq-diagnostic__count">{String(index + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}</p>
             </div>
             <h3>{item.problem}</h3>
@@ -88,7 +88,7 @@ const items = [
             </dl>
             <div class="rq-diagnostic__actions">
               <a class="rq-diagnostic__service" href="#sluzby">Tohle typicky řeším přes: <strong>{item.service}</strong></a>
-              <a class="rq-btn rq-btn--primary" href="#kontakt">Probrat to</a>
+              <a class="rq-btn rq-btn--primary" href="#kontakt">Napsat poptávku</a>
             </div>
           </article>
         ))}

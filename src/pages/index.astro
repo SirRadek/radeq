@@ -1,73 +1,59 @@
 ---
-import CommandHeader from '../components/CommandHeader.astro';
-import ContactTerminal from '../components/ContactTerminal';
-import HandoffStandard from '../components/HandoffStandard.astro';
-import HeroSection from '../components/HeroSection.astro';
-import PricingSection from '../components/PricingSection.astro';
-import ServiceCatalog from '../components/ServiceCatalog.astro';
-import { siteContent } from '../data/siteContent';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import RqHeader from '../components/RqHeader.astro';
+import RqFooter from '../components/RqFooter.astro';
 
-const content = siteContent.cs;
+const nav = [
+  { href: '#co-resim', label: 'Co řeším' },
+  { href: '#sluzby', label: 'Služby' },
+  { href: '#jak-pracuji', label: 'Jak pracuji' },
+  { href: '#ceny', label: 'Ceny' },
+  { href: '/ukazky/', label: 'Ukázky' },
+  { href: '#kontakt', label: 'Kontakt' },
+];
 ---
 
-<BaseLayout
-  title={content.layout.title}
-  description={content.layout.description}
-  lang={content.layout.lang}
-  alternatePath={content.layout.alternatePath}
-  alternateLang="en"
->
-  <CommandHeader
-    content={content.header}
-    alternatePath={content.layout.alternatePath}
-    alternateLabel={content.layout.alternateLabel}
-    locale={content.layout.lang}
-    showStyleToggle={false}
-  />
+<BaseLayout title="RadeQ.cz - Racionální digitalizace" description="Weby, data a automatizace pro živnostníky, malé firmy a spolky.">
+  <RqHeader content={{ navItems: nav, cta: 'Chci zmapovat problém' }} alternateLabel="EN" alternatePath="/en/" />
+
   <main>
-    <div class="proposal-stage" id="services">
-      <HeroSection content={content.hero} />
-      <ServiceCatalog locale={content.layout.lang} content={content.systems} />
-    </div>
-    <PricingSection content={content.pricing} />
-    <section class="about-services" id="about" aria-labelledby="about-title" data-section-signature="about-services">
-      <div class="about-services__intro">
-        <p class="section-code">{content.about.sectionCode}</p>
-        <h2 id="about-title">{content.about.title}</h2>
-        <p>{content.about.lead}</p>
+    <section class="rq-section rq-hero" id="top" style="--rq-reveal-index: 0">
+      <div class="rq-hero__copy">
+        <p class="rq-eyebrow">Racionální digitalizace</p>
+        <h1 class="rq-display">Weby, data a automatizace, které vám uvolní ruce.</h1>
+        <p class="rq-lead">Jeden technik s okem analytika a precizností testera. Navrhnu, postavím, otestuji a předám tak, že v tom nezůstanete sami.</p>
       </div>
-      <div class="about-services__profile">
-        <p class="section-code">{content.about.profileTitle}</p>
-        <p>{content.about.profileText}</p>
-        <dl>
-          {
-            content.about.principles.map((principle) => (
-              <div>
-                <dt>{principle.label}</dt>
-                <dd>{principle.value}</dd>
-              </div>
-            ))
-          }
-        </dl>
+
+      <div class="rq-proof-rail" aria-label="Důkazy a orientační ceny">
+        <div class="rq-proof-rail__item">
+          <p class="rq-proof-rail__label">Web od 9 900 Kč</p>
+          <p class="rq-proof-rail__text">rychlý web, co vodí poptávky</p>
+        </div>
+        <div class="rq-proof-rail__item">
+          <p class="rq-proof-rail__label">Audit od 4 900 Kč</p>
+          <p class="rq-proof-rail__text">zmapuju, co brzdí, odečtu z realizace</p>
+        </div>
+        <div class="rq-proof-rail__item">
+          <p class="rq-proof-rail__label">Postavím · změřím · předám</p>
+          <p class="rq-proof-rail__text">bez závislosti na dodavateli</p>
+        </div>
       </div>
-      <div class="about-services__services">
-        <p class="section-code">{content.about.servicesTitle}</p>
+
+      <div class="rq-hero__actions">
+        <a class="rq-btn rq-btn--primary" href="#kontakt">Chci zmapovat problém</a>
+        <a class="rq-btn rq-btn--ghost" href="#sluzby">Co umím zjednodušit</a>
       </div>
-      <div class="about-services__grid" aria-label={content.about.servicesTitle}>
-        {
-          content.about.items.map((item) => (
-            <article>
-              <span>{item.label}</span>
-              <h3>{item.title}</h3>
-              <p>{item.text}</p>
-            </article>
-          ))
-        }
-      </div>
-      <p class="about-services__note">{content.about.note}</p>
     </section>
-    <HandoffStandard content={content.handoff} />
-    <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load />
+
+    <section class="rq-section rq-contact-preview" id="kontakt" style="--rq-reveal-index: 1">
+      <div class="rq-contact-preview__inner">
+        <p class="rq-eyebrow">Kontakt</p>
+        <h2 class="rq-h2">Napište, co vás pálí</h2>
+        <p class="rq-lead">Stačí stručně popsat problém, web, tabulku nebo proces, který vám bere čas. Ozvu se s dalším rozumným krokem.</p>
+        <a class="rq-btn rq-btn--primary" href="mailto:info@radeq.cz?subject=Poptavka%20z%20RadeQ.cz">Napsat poptávku</a>
+      </div>
+    </section>
   </main>
+
+  <RqFooter navItems={nav} />
 </BaseLayout>

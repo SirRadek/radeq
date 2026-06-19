@@ -1,0 +1,42 @@
+---
+const { navItems } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const logoMask = `${base}/brand/radeq-logo-b-mask.png`;
+---
+
+<footer class="rq-site-footer rq-bleed">
+  <div class="rq-site-footer__inner">
+    <div class="rq-site-footer__grid">
+      <div>
+        <a
+          class="rq-site-footer__logo rq-logo"
+          href={base || "/"}
+          style={`--rq-logo-mask:url("${logoMask}")`}
+          aria-label="RadeQ.cz"
+        >
+          <span role="img" aria-label="RadeQ.cz"></span>
+        </a>
+        <p class="rq-site-footer__tagline">Racionální digitalizace pro živnostníky, malé firmy a spolky. Postavím, změřím, předám.</p>
+      </div>
+
+      <div>
+        <h2 class="rq-site-footer__title">Navigace</h2>
+        <nav class="rq-site-footer__links" aria-label="Navigace v patičce">
+          {navItems.map((item) => (
+            <a class="rq-site-footer__link" href={item.href}>{item.label}</a>
+          ))}
+        </nav>
+      </div>
+
+      <div>
+        <h2 class="rq-site-footer__title">Spojení</h2>
+        <div class="rq-site-footer__links">
+          <a class="rq-site-footer__link" href="#kontakt">Napsat poptávku</a>
+          <a class="rq-site-footer__link" href="#ceny">Ceník</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="rq-site-footer__bottom">© 2026 RadeQ.cz</div>
+  </div>
+</footer>

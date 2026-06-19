@@ -1,6 +1,11 @@
 ---
 const { content, alternateLabel, alternatePath } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const resolve = (h) => {
+  if (!h || !h.startsWith("/")) return h;
+  if (base && (h === base || h.startsWith(base + "/"))) return h;
+  return base + h;
+};
 const logoMask = `${base}/brand/radeq-logo-b-mask.png`;
 ---
 
@@ -17,15 +22,15 @@ const logoMask = `${base}/brand/radeq-logo-b-mask.png`;
 
     <nav class="rq-site-nav" aria-label="Hlavní navigace">
       {content.navItems.map((item) => (
-        <a class="rq-site-nav__link" href={item.href}>{item.label}</a>
+        <a class="rq-site-nav__link" href={resolve(item.href)}>{item.label}</a>
       ))}
     </nav>
 
     <div class="rq-site-header__actions">
       {alternateLabel && alternatePath && (
-        <a class="rq-site-header__alt" href={alternatePath}>{alternateLabel}</a>
+        <a class="rq-site-header__alt" href={resolve(alternatePath)}>{alternateLabel}</a>
       )}
-      <a class="rq-btn rq-btn--primary" href="#kontakt">{content.cta}</a>
+      <a class="rq-btn rq-btn--primary" href={resolve("/#kontakt")}>{content.cta}</a>
     </div>
   </div>
 </header>

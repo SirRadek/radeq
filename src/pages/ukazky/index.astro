@@ -1,50 +1,107 @@
 ---
-import CommandHeader from '../../components/CommandHeader.astro';
-import ContactTerminal from '../../components/ContactTerminal';
-import { siteContent } from '../../data/siteContent';
-import { showcaseExamples, showcaseHub } from '../../data/showcaseExamples';
-import { withBaseHref } from '../../lib/links';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import RqHeader from '../../components/RqHeader.astro';
+import RqFooter from '../../components/RqFooter.astro';
+import RqGuide from '../../components/RqGuide.astro';
 
-const content = siteContent.cs;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const nav = [
+  { href: base + '/#co-resim', label: 'Co řeším' },
+  { href: base + '/#sluzby', label: 'Služby' },
+  { href: base + '/#jak-pracuji', label: 'Jak pracuji' },
+  { href: base + '/#ceny', label: 'Ceny' },
+  { href: base + '/ukazky/', label: 'Ukázky' },
+  { href: base + '/#kontakt', label: 'Kontakt' },
+];
+
+const ukazky = [
+  {
+    href: base + '/ukazky/instalater/',
+    name: 'Web pro instalatéra',
+    pro: 'Řemeslník v terénu',
+    co: 'Lokální SEO, výrazné telefonní CTA, orientační ceník a rychlé načítání — web, který přivádí poptávky z mobilu.',
+  },
+  {
+    href: base + '/ukazky/sluzba/',
+    name: 'Web s rezervací',
+    pro: 'Služba na čas (fyzio, kadeřnictví, poradna)',
+    co: 'Budování důvěry, přehled služeb a jednoduché online objednání termínu.',
+  },
+  {
+    href: base + '/ukazky/eshop/',
+    name: 'Malý e-shop',
+    pro: 'Lokální výrobce nebo prodejce',
+    co: 'Čistý katalog s filtrem, varianty, košík — malý vlastněný obchod bez zbytečného balastu.',
+  },
+];
 ---
 
-<BaseLayout title={showcaseHub.title} description={showcaseHub.description} lang={content.layout.lang}>
-  <CommandHeader
-    content={content.header}
-    locale={content.layout.lang}
-    homePath="/"
-    showStyleToggle={false}
-  />
+<BaseLayout
+  title="Ukázkové projekty | RadeQ.cz"
+  description="Modelové weby, které ukazují rozsah a styl práce RadeQ.cz — web pro řemeslníka, web s rezervací a malý e-shop."
+  lang="cs"
+>
+  <RqHeader content={{ navItems: nav, cta: 'Konzultace zdarma' }} alternateLabel="EN" alternatePath="/en/" />
+
   <main>
-    <section class="showcase-hero" id="top" aria-labelledby="showcase-title">
-      <p class="section-code">Ukázky</p>
-      <h1 id="showcase-title">{showcaseHub.h1}</h1>
-      <p>{showcaseHub.summary}</p>
-    </section>
+    <section class="rq-section" id="top">
+      <p class="rq-eyebrow">Ukázky</p>
+      <h1 class="rq-display">Ukázkové projekty</h1>
+      <p class="rq-lead">
+        Modelové weby, které ukazují rozsah a styl práce — než přibydou veřejné reference.
+        Každý je živý a rozkliknutelný; jde o vzorové projekty, ne o skutečné provozovatele.
+      </p>
 
-    <section class="showcase-grid-section" aria-label="Přehled ukázek">
-      <div class="showcase-card-grid">
-        {
-          showcaseExamples.map((example) => (
-            <article class="showcase-card">
-              <p class="section-code">{example.eyebrow}</p>
-              <h2>{example.h1}</h2>
-              <p>{example.promise}</p>
-              <ul>
-                {example.proofTags.map((tag) => (
-                  <li>{tag}</li>
-                ))}
-              </ul>
-              <a class="button-secondary" href={withBaseHref(`/ukazky/${example.slug}/`)}>
-                Otevřít ukázku
-              </a>
-            </article>
-          ))
-        }
+      <div class="rq-ukazky-grid">
+        {ukazky.map((u) => (
+          <article class="rq-card rq-ukazka">
+            <span class="rq-ukazka__badge">Vzorový projekt</span>
+            <h2 class="rq-ukazka__name">{u.name}</h2>
+            <p class="rq-ukazka__pro">Pro koho: {u.pro}</p>
+            <p class="rq-ukazka__co">{u.co}</p>
+            <a class="rq-btn rq-btn--ghost" href={u.href}>Otevřít ukázku</a>
+          </article>
+        ))}
       </div>
-    </section>
 
-    <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load />
+      <p class="rq-ukazky-note">
+        Chcete podobný web? <a href={base + '/#kontakt'}>Napište mi</a> — probereme rozsah a orientační cenu.
+      </p>
+    </section>
   </main>
+
+  <RqFooter navItems={nav} />
+  <RqGuide />
 </BaseLayout>
+
+<style>
+  .rq-ukazky-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+    gap: 1.1rem;
+    margin-top: clamp(1.6rem, 3vw, 2.4rem);
+  }
+  .rq-ukazka {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: clamp(1.2rem, 2vw, 1.6rem);
+  }
+  .rq-ukazka__badge {
+    align-self: flex-start;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    background: var(--rq-burgundy-tint);
+    color: var(--rq-burgundy-strong);
+    font-family: var(--rq-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .rq-ukazka__name { margin: 0.2rem 0 0; }
+  .rq-ukazka__pro { margin: 0; color: var(--rq-ink-2); font-size: 0.86rem; }
+  .rq-ukazka__co { margin: 0; color: var(--rq-ink-2); line-height: 1.55; }
+  .rq-ukazka .rq-btn { margin-top: auto; align-self: flex-start; }
+  .rq-ukazky-note { margin-top: clamp(1.6rem, 3vw, 2.4rem); color: var(--rq-ink-2); }
+  .rq-ukazky-note a { color: var(--rq-burgundy); }
+</style>

@@ -25,11 +25,13 @@ export const GET: APIRoute = ({ site }) => {
   const moduleIds = getModuleOptions('cs').map((moduleOption) => moduleOption.id);
   const showcasePaths = ['/ukazky/', ...showcaseExamples.map((example) => `/ukazky/${example.slug}/`)];
   const routePagePaths = ['/kontakt/', '/sluzby/', '/portfolio/', '/soukromi/'];
+  const rqV1Paths = ['/ukazky/instalater/', '/ukazky/sluzba/', '/ukazky/eshop/', '/zapisky/', '/zapisky/web-pro-zivnostnika-cena/', '/zapisky/vlastni-eshop-nebo-shoptet/', '/zapisky/jak-se-staram-o-web-po-predani/'];
   const paths = [
     '/',
     '/en/',
     ...routePagePaths,
     ...showcasePaths,
+    ...rqV1Paths,
     ...moduleIds.map((moduleId) => `/demo/${moduleId}/`),
     ...moduleIds.map((moduleId) => `/en/demo/${moduleId}/`),
   ];

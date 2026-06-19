@@ -16,7 +16,7 @@ const nav = [
 ---
 
 <BaseLayout title="RadeQ.cz - Racionální digitalizace" description="Weby, data a automatizace pro živnostníky, malé firmy a spolky.">
-  <RqHeader content={{ navItems: nav, cta: 'Chci zmapovat problém' }} alternateLabel="EN" alternatePath="/en/" />
+  <RqHeader content={{ navItems: nav, cta: 'Konzultace zdarma' }} alternateLabel="EN" alternatePath="/en/" />
 
   <main>
     <section class="rq-section rq-hero" id="top" style="--rq-reveal-index: 0">
@@ -42,8 +42,9 @@ const nav = [
       </div>
 
       <div class="rq-hero__actions">
-        <a class="rq-btn rq-btn--primary" href="#kontakt">Chci zmapovat problém</a>
-        <a class="rq-btn rq-btn--ghost" href="#sluzby">Co umím zjednodušit</a>
+        <a class="rq-btn rq-btn--primary" href="#kontakt">Domluvit 15min konzultaci</a>
+        <a class="rq-btn rq-btn--ghost" href="#sluzby">Podívat se na ukázky</a>
+        <p class="rq-hero__micro">Nezávazně. Ozvu se do 1 pracovního dne.</p>
       </div>
     </section>
 
@@ -54,27 +55,27 @@ const nav = [
   <div class="rq-pain__grid" aria-label="Typické problémy, které řeším">
     <article class="rq-card rq-pain__card">
       <p>Poptávky se ztrácí v e-mailech a ručně je přepisuju.</p>
-      <a class="rq-pain__link" href="#kontakt">Pojďme to probrat</a>
+      <a class="rq-pain__link" href="#sluzby">Zobrazit vhodné řešení</a>
     </article>
     <article class="rq-card rq-pain__card">
       <p>Web nevysvětluje nabídku a nevodí zákazníky.</p>
-      <a class="rq-pain__link" href="#kontakt">Pojďme to probrat</a>
+      <a class="rq-pain__link" href="#sluzby">Zobrazit vhodné řešení</a>
     </article>
     <article class="rq-card rq-pain__card">
       <p>Data přepisuju mezi tabulkami pořád dokola.</p>
-      <a class="rq-pain__link" href="#kontakt">Pojďme to probrat</a>
+      <a class="rq-pain__link" href="#sluzby">Zobrazit vhodné řešení</a>
     </article>
     <article class="rq-card rq-pain__card">
       <p>Potřebuju jednoduchou evidenci nebo přehled.</p>
-      <a class="rq-pain__link" href="#kontakt">Pojďme to probrat</a>
+      <a class="rq-pain__link" href="#sluzby">Zobrazit vhodné řešení</a>
     </article>
     <article class="rq-card rq-pain__card">
       <p>Chci využít AI prakticky a bezpečně.</p>
-      <a class="rq-pain__link" href="#kontakt">Pojďme to probrat</a>
+      <a class="rq-pain__link" href="#sluzby">Zobrazit vhodné řešení</a>
     </article>
     <article class="rq-card rq-pain__card">
       <p>Nevím, kde začít, ale vím, že mě to brzdí.</p>
-      <a class="rq-pain__link" href="#kontakt">Pojďme to probrat</a>
+      <a class="rq-pain__link" href="#sluzby">Zobrazit vhodné řešení</a>
     </article>
   </div>
 </section>
@@ -88,6 +89,7 @@ const nav = [
         <p class="rq-offer__price">od 9 900 Kč</p>
         <h3>Web a redesign</h3>
         <p>Rychlý web, co vysvětlí nabídku a vodí poptávky.</p>
+        <p class="rq-offer__incl">V ceně: jednostránkový web, formulář, základní SEO, měření, předání.</p>
         <small>od = funkční minimum; rozsah a složitost cenu zvyšují</small>
         <a class="rq-offer__link" href="#kontakt">Mám zájem</a>
       </article>
@@ -95,6 +97,7 @@ const nav = [
         <p class="rq-offer__price">od 19 900 Kč</p>
         <h3>E-shop</h3>
         <p>Malý, čistý a vlastněný obchod bez balastu.</p>
+        <p class="rq-offer__incl">V ceně: katalog, košík, doprava/platba dle platformy, předání.</p>
         <small>od = funkční minimum; rozsah a složitost cenu zvyšují</small>
         <a class="rq-offer__link" href="#kontakt">Mám zájem</a>
       </article>
@@ -102,6 +105,7 @@ const nav = [
         <p class="rq-offer__price">od 12 000 Kč</p>
         <h3>Automatizace procesů</h3>
         <p>Propojím to, co děláte ručně.</p>
+        <p class="rq-offer__incl">V ceně: analýza procesu, jeden funkční tok, dokumentace, předání.</p>
         <small>od = funkční minimum; rozsah a složitost cenu zvyšují</small>
         <a class="rq-offer__link" href="#kontakt">Mám zájem</a>
       </article>
@@ -109,6 +113,7 @@ const nav = [
         <p class="rq-offer__price">od 15 000 Kč</p>
         <h3>Data a AI pomocníci</h3>
         <p>Přehled v datech + AI nasazená prakticky.</p>
+        <p class="rq-offer__incl">V ceně: sběr/čištění dat, jednoduchý přehled nebo AI nad schválenými podklady.</p>
         <small>od = funkční minimum; rozsah a složitost cenu zvyšují</small>
         <a class="rq-offer__link" href="#kontakt">Mám zájem</a>
       </article>
@@ -116,6 +121,7 @@ const nav = [
         <p class="rq-offer__price">4 900 Kč</p>
         <h3>Audit webu nebo procesu</h3>
         <p>Zmapuju, co brzdí; odečtu z realizace.</p>
+        <p class="rq-offer__incl">V ceně: technický stav, SEO základ, rychlost, formuláře, seznam priorit.</p>
         <small>od = funkční minimum; rozsah a složitost cenu zvyšují</small>
         <a class="rq-offer__link" href="#kontakt">Mám zájem</a>
       </article>
@@ -143,7 +149,7 @@ const nav = [
   <article class="rq-guarantee">
     <p class="rq-eyebrow">Servisní protokol &amp; Testerova záruka</p>
     <h3>Každá zakázka má jasný výstup a ověřený výkon.</h3>
-    <p>U každé zakázky dostanete servisní protokol — co bylo, co se změnilo, proč, jaký to má dopad a co dál (i co nemá smysl). Web předávám až po otestování; pokud nemá výkon 90+/100, vracím 15 % z ceny.</p>
+    <p>U každé zakázky dostanete servisní protokol — co bylo, co se změnilo, proč a co dál (i co nemá smysl). Před předáním web otestuji: formuláře, mobil, rychlost, základní SEO a měření. Cílím na rychlé načítání podle metrik Googlu (Lighthouse 90+ u statických prezentačních webů); konkrétní technický cíl zapíšu do protokolu předem — když ho při předání nesplním, vrátím 15 % z ceny nebo to bez příplatku doladím.</p>
   </article>
 </section>
 
@@ -211,7 +217,7 @@ const nav = [
   <div class="rq-contact__copy">
     <p class="rq-eyebrow">Kontakt</p>
     <h2 class="rq-h2" id="kontakt-title">Napište, co vás pálí</h2>
-    <p class="rq-lead">Popište současný stav a co chcete zjednodušit. Ozvu se s dalším krokem a orientačním rozsahem.</p>
+    <p class="rq-lead">Stačí stručně popsat, co chcete zjednodušit — ozvu se a doptám se. Odpovídám do 1 pracovního dne.</p>
   </div>
 
   <form class="rq-contact-form" method="post" action={base + "/api/leads"} id="rq-lead-form">
@@ -246,7 +252,7 @@ const nav = [
     <p class="rq-form-status" id="rq-lead-status" role="status" aria-live="polite"></p>
   </form>
 
-  <p class="rq-contact-note">Nebo napište na <a href="mailto:info@radeq.cz">info@radeq.cz</a>.</p>
+  <p class="rq-contact-note">Nebo rovnou zavolejte: <a href="tel:+420000000000">+420 [DOPLNIT TELEFON]</a> · napište na <a href="mailto:info@radeq.cz">info@radeq.cz</a></p>
 
   <script is:inline define:vars={{ leadsUrl: base + "/api/leads" }}>
     (() => {
@@ -283,6 +289,16 @@ const nav = [
 
   </main>
 
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "RadeQ.cz",
+    "description": "Weby, e-shopy, automatizace procesů a práce s daty pro živnostníky a malé firmy.",
+    "url": "https://radeq.cz",
+    "areaServed": "CZ",
+    "founder": { "@type": "Person", "name": "Radek [PŘÍJMENÍ]" },
+    "knowsAbout": ["tvorba webů", "e-shopy", "automatizace procesů", "práce s daty", "AI pomocníci", "SEO"]
+  })} />
   <RqFooter navItems={nav} />
   <RqGuide />
 </BaseLayout>

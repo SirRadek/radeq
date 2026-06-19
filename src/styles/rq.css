@@ -900,3 +900,7 @@ html[data-motion-ready] main section {
 
 .rq-hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden}
 .rq-form-status{margin-top:.6rem;color:var(--rq-ink-2);font-size:.95rem}
+
+
+.rq-hero__micro{margin:.7rem 0 0;color:var(--rq-ink-2);font-size:.9rem}
+.rq-offer__incl{margin:.4rem 0 0;color:var(--rq-ink-2);font-size:.82rem;line-height:1.45}

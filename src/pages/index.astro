@@ -214,7 +214,7 @@ const nav = [
     <p class="rq-lead">Popište současný stav a co chcete zjednodušit. Ozvu se s dalším krokem a orientačním rozsahem.</p>
   </div>
 
-  <form class="rq-contact-form" method="post" action={base + "/api/lead"}>
+  <form class="rq-contact-form" method="post" action={base + "/api/leads"} id="rq-lead-form">
     <div class="rq-form-field">
       <label for="rq-lead-name">Jméno</label>
       <input id="rq-lead-name" name="name" type="text" autocomplete="name" required />
@@ -227,7 +227,7 @@ const nav = [
 
     <div class="rq-form-field">
       <label for="rq-lead-current">Co dnes používáte?</label>
-      <select id="rq-lead-current" name="current_system">
+      <select id="rq-lead-current" name="project_type">
         <option value="Web">Web</option>
         <option value="E-mail">E-mail</option>
         <option value="Tabulky">Tabulky</option>
@@ -241,10 +241,44 @@ const nav = [
       <textarea id="rq-lead-need" name="message" rows="6" required></textarea>
     </div>
 
+    <div class="rq-hp" aria-hidden="true"><label>Toto pole nevyplňujte<input type="text" name="honeypot" tabindex="-1" autocomplete="off" /></label></div>
     <button class="rq-btn rq-btn--primary" type="submit">Odeslat poptávku</button>
+    <p class="rq-form-status" id="rq-lead-status" role="status" aria-live="polite"></p>
   </form>
 
   <p class="rq-contact-note">Nebo napište na <a href="mailto:info@radeq.cz">info@radeq.cz</a>.</p>
+
+  <script is:inline define:vars={{ leadsUrl: base + "/api/leads" }}>
+    (() => {
+      const form = document.getElementById("rq-lead-form");
+      const statusEl = document.getElementById("rq-lead-status");
+      if (!form) return;
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const fd = new FormData(form);
+        if (fd.get("honeypot")) return;
+        const payload = {
+          name: fd.get("name") || "", email: fd.get("email") || "",
+          project_type: fd.get("project_type") || "", message: fd.get("message") || "",
+          company: "", audience: "", deadline: "", current_url: "", budget_range: "",
+          honeypot: "", source_path: location.pathname + location.search,
+          referrer: document.referrer || "", locale: "cs"
+        };
+        statusEl.textContent = "Odesílám…";
+        try {
+          const r = await fetch(leadsUrl, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
+          const ct = r.headers.get("content-type") || "";
+          if (!ct.includes("application/json")) throw new Error("nojson");
+          const res = await r.json();
+          if (!r.ok || !res.ok) throw new Error((res.details && res.details.join(" ")) || res.error || "fail");
+          form.reset();
+          statusEl.textContent = "Děkuji, poptávka odeslána. Ozvu se co nejdřív.";
+        } catch (err) {
+          statusEl.innerHTML = 'Odeslání teď neproběhlo. Napište prosím na <a href="mailto:info@radeq.cz">info@radeq.cz</a>.';
+        }
+      });
+    })();
+  </script>
 </section>
 
   </main>

@@ -1326,3 +1326,147 @@ html[data-motion-ready] main section {
 .rq-problem-wall [data-rq-reveal] .rq-problem-wall__tile {
   transition-delay: calc(var(--rq-i, 0) * 70ms);
 }
+
+
+/* ===== V2 Vlna 2b: Služby bento ===== */
+.rq-services-bento {
+  overflow: hidden;
+}
+
+.rq-services-bento .rq-bleed__inner {
+  overflow: hidden;
+}
+
+.rq-services-bento__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr) minmax(0, 1fr);
+  grid-template-areas:
+    "web web shop"
+    "web web automation"
+    "data audit audit";
+  gap: clamp(0.9rem, 2vw, 1.35rem);
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.rq-service-tile {
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  min-height: 100%;
+  padding: clamp(1.15rem, 2.2vw, 1.65rem);
+  border: 1px solid color-mix(in srgb, var(--rq-ink, #201615) 14%, transparent);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--rq-paper, #fffaf4) 90%, white);
+  box-shadow: 0 18px 50px rgba(32, 22, 21, 0.08);
+  transform: translateZ(0);
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease, background-color 220ms ease;
+  transition-delay: calc(var(--rq-i, 0) * 55ms);
+}
+
+.rq-service-tile--featured {
+  grid-area: web;
+  padding: clamp(1.4rem, 3vw, 2.35rem);
+  border-color: color-mix(in srgb, var(--rq-wine, #7b2332) 42%, transparent);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--rq-wine, #7b2332) 10%, transparent), transparent 52%),
+    color-mix(in srgb, var(--rq-paper, #fffaf4) 94%, white);
+  box-shadow: 0 24px 70px rgba(123, 35, 50, 0.16);
+}
+
+.rq-service-tile--shop { grid-area: shop; }
+.rq-service-tile--automation { grid-area: automation; }
+.rq-service-tile--data { grid-area: data; }
+.rq-service-tile--audit { grid-area: audit; }
+
+.rq-service-tile h3,
+.rq-service-tile p {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.rq-service-tile .rq-offer__price {
+  margin: 0;
+  color: var(--rq-wine, #7b2332);
+  font-size: clamp(1.45rem, 2.5vw, 2rem);
+  line-height: 1.05;
+  font-weight: 800;
+}
+
+.rq-service-tile--featured .rq-offer__price {
+  font-size: clamp(1.9rem, 4vw, 3.1rem);
+}
+
+.rq-service-tile h3 {
+  margin: 0;
+  font-size: clamp(1.18rem, 2vw, 1.55rem);
+  line-height: 1.12;
+}
+
+.rq-service-tile--featured h3 {
+  font-size: clamp(1.55rem, 3vw, 2.25rem);
+}
+
+.rq-service-tile p:not(.rq-offer__price):not(.rq-offer__incl) {
+  margin: 0;
+}
+
+.rq-service-tile .rq-offer__incl {
+  margin: 0;
+  color: color-mix(in srgb, var(--rq-ink, #201615) 72%, transparent);
+}
+
+.rq-service-tile .rq-offer__link {
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+.rq-flag {
+  align-self: flex-start;
+  max-width: 100%;
+  padding: 0.32rem 0.55rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, #b7f24a 76%, white);
+  color: #223300;
+  font-size: 0.78rem;
+  line-height: 1;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.rq-hoverable:hover,
+.rq-hoverable:focus-within {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--rq-wine, #7b2332) 36%, transparent);
+  box-shadow: 0 26px 76px rgba(32, 22, 21, 0.13);
+}
+
+@media (max-width: 860px) {
+  .rq-services-bento__grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "web"
+      "shop"
+      "automation"
+      "data"
+      "audit";
+  }
+
+  .rq-service-tile,
+  .rq-service-tile--featured {
+    padding: clamp(1rem, 5vw, 1.45rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rq-service-tile {
+    transition: none;
+  }
+
+  .rq-hoverable:hover,
+  .rq-hoverable:focus-within {
+    transform: none;
+  }
+}

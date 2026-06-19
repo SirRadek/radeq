@@ -1650,3 +1650,76 @@ html[data-motion-ready] main section {
     transform: none;
   }
 }
+
+/* ===== V2 Vlna 3b: Blueprint Q line ===== */
+.rq-process {
+  overflow-x: clip;
+}
+
+.rq-process__blueprint {
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.rq-process__line {
+  position: absolute;
+  inset: 1.15rem 0 auto;
+  width: 100%;
+  height: 7.5rem;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.rq-process__line-path {
+  fill: none;
+  stroke: var(--rq-burgundy);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.72;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+.rq-process__steps {
+  position: relative;
+  z-index: 1;
+}
+
+.rq-step__num {
+  position: relative;
+  z-index: 2;
+}
+
+html[data-rq-motion="on"] .rq-process__blueprint[data-rq-reveal] .rq-process__line-path {
+  stroke-dashoffset: 1;
+}
+
+html[data-rq-motion="on"] .rq-process__blueprint[data-rq-reveal].is-in .rq-process__line-path {
+  animation: rq-blueprint-draw 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes rq-blueprint-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-rq-motion="on"] .rq-process__blueprint[data-rq-reveal] .rq-process__line-path,
+  html[data-rq-motion="on"] .rq-process__blueprint[data-rq-reveal].is-in .rq-process__line-path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .rq-process__blueprint {
+    overflow: visible;
+  }
+
+  .rq-process__line {
+    display: none;
+  }
+}

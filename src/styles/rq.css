@@ -12,7 +12,8 @@
   --rq-carbon-2: #242018;
   --rq-on-dark: #F1EDE4;
   --rq-on-dark-2: #C9BFB1;
-  --rq-maxw: 1140px;
+  --rq-maxw: 1280px;
+  --rq-maxw-wide: 1440px;
   --rq-pad: clamp(4rem, 8vw, 7.5rem);
   --rq-r: 14px;
   --rq-r-pill: 999px;
@@ -2022,5 +2023,104 @@ h2 + p {
 @media (min-width: 768px) {
   .rq-br-desktop {
     display: inline;
+  }
+}
+
+
+/* ===== V3 Wave 5a ===== */
+
+/* RadeQ.cz V3 - Vlna 8: responzivita do 4K */
+@media (min-width: 2200px) {
+  html {
+    font-size: 106.25%;
+  }
+}
+
+@media (min-width: 3200px) {
+  html {
+    font-size: 112.5%;
+  }
+}
+
+.rq-display {
+  font-size: clamp(2.6rem, 4.8vw, 5.75rem);
+}
+
+.rq-h2 {
+  font-size: clamp(2.1rem, 3.6vw, 3.25rem);
+}
+
+.rq-problem-wall,
+.rq-services-bento,
+.rq-pricing,
+.rq-ukazky-teaser,
+.rq-diagnostic {
+  --rq-maxw: var(--rq-maxw-wide);
+}
+
+.rq-problem-wall,
+.rq-statement,
+.rq-site-footer,
+.rq-marquee,
+.rq-bleed {
+  width: 100vw;
+  max-width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  overflow-x: clip;
+}
+
+.rq-problem-wall__inner,
+.rq-statement__inner,
+.rq-bleed__inner,
+.rq-ukazky-teaser__inner,
+.rq-diagnostic__inner {
+  width: min(calc(100% - 2rem), var(--rq-maxw));
+  max-width: var(--rq-maxw);
+  margin-inline: auto;
+}
+
+.rq-problem-wall__head,
+.rq-diagnostic__head,
+.rq-pricing-note,
+.rq-ukazky-teaser .rq-lead,
+.rq-services-bento .rq-lead,
+.rq-pricing .rq-lead,
+.rq-diagnostic .rq-lead,
+.rq-problem-wall :where(p, li, dd),
+.rq-statement :where(p, li, dd) {
+  max-width: 62ch;
+}
+
+.rq-offers__grid,
+.rq-pricing-grid,
+.rq-ukazky-grid,
+.rq-ukazky-bento,
+.rq-diagnostic__grid,
+.rq-problem-wall__grid {
+  min-width: 0;
+}
+
+@media (min-width: 1440px) {
+  .rq-offers__grid {
+    gap: clamp(1.1rem, 1.25vw, 1.75rem);
+  }
+
+  .rq-pricing-grid,
+  .rq-ukazky-grid,
+  .rq-ukazky-bento,
+  .rq-diagnostic__grid {
+    gap: clamp(1.25rem, 1.6vw, 2rem);
+  }
+}
+
+@supports not (overflow: clip) {
+  html,
+  body,
+  .rq-problem-wall,
+  .rq-statement,
+  .rq-site-footer,
+  .rq-marquee,
+  .rq-bleed {
+    overflow-x: hidden;
   }
 }

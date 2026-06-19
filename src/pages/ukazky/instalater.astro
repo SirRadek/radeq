@@ -1,0 +1,653 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const pageTitle = 'Instalatér Novák | Voda, odpady a topení Kolín';
+const pageDescription = 'Modelový web instalatéra pro Kolín a okolí: opravy vody, WC, bojlerů a topení s rychlou domluvou a orientační cenou předem.';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <div class="demo-banner" role="note">
+    <p>Vzorová ukázka studia RadeQ — takhle může vypadat váš web.</p>
+    <a href={base + '/'} aria-label="Zpět na hlavní web RadeQ.cz">← Zpět na RadeQ.cz</a>
+  </div>
+
+  <main class="plumber-site">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Instalatér Novák · Kolín a okolí</p>
+        <h1 id="hero-title">Instalatér pro Kolín a okolí, který přijede a řekne to na rovinu.</h1>
+        <p class="lead">Opravy vody, WC, bojlerů a topení bez zbytečného čekání. Rychlá domluva, férové jednání a orientační cena ještě před výjezdem.</p>
+        <div class="hero-actions" aria-label="Hlavní kontaktní možnosti">
+          <a class="button primary" href="tel:+420777123456">Zavolat: 777 123 456</a>
+          <a class="button secondary" href="#poptavka">Popsat problém</a>
+        </div>
+      </div>
+      <div class="hero-panel" aria-label="Rychlé informace">
+        <div>
+          <strong>Dnes řeším</strong>
+          <span>havárie vody, ucpané odpady, netěsnosti a výměny armatur</span>
+        </div>
+        <div>
+          <strong>Působnost</strong>
+          <span>Kolín, Kutná Hora, Velim, Pečky, Týnec nad Labem a okolní obce</span>
+        </div>
+        <div>
+          <strong>Domluva</strong>
+          <span>telefonicky nebo krátkou zprávou přes formulář</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="sluzby-title">
+      <div class="section-head">
+        <p class="eyebrow">Služby</p>
+        <h2 id="sluzby-title">Co umím rychle vyřešit</h2>
+      </div>
+      <div class="service-grid">
+        <article class="service-card">
+          <h3>Opravy vody</h3>
+          <p>Kapající kohoutky, prasklé hadičky, netěsnosti, výměna ventilů a baterií.</p>
+        </article>
+        <article class="service-card">
+          <h3>Odpady a WC</h3>
+          <p>Ucpané odpady, protékající WC, výměna splachování a drobné opravy sanity.</p>
+        </article>
+        <article class="service-card">
+          <h3>Bojlery</h3>
+          <p>Zapojení, výměna pojistných ventilů, kontrola úniků a základní servis.</p>
+        </article>
+        <article class="service-card">
+          <h3>Topení</h3>
+          <p>Odvzdušnění radiátorů, výměna ventilů, drobné opravy rozvodů a konzultace.</p>
+        </article>
+        <article class="service-card">
+          <h3>Menší rekonstrukce</h3>
+          <p>Úpravy rozvodů v koupelně, kuchyni nebo technické místnosti podle domluvy.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="split-section" aria-labelledby="hned-title">
+      <div>
+        <p class="eyebrow">Kdy volat hned</p>
+        <h2 id="hned-title">Situace, kde se nevyplatí čekat</h2>
+        <p>U vody a topení je důležité nejdřív zastavit škodu. Po telefonu vám řeknu první krok a domluvíme, jestli je nutný okamžitý výjezd.</p>
+      </div>
+      <ul class="urgent-list">
+        <li>Teče voda ze zdi, pod dřezem nebo u bojleru.</li>
+        <li>Nejde topení a radiátory zůstávají studené.</li>
+        <li>WC protéká, nejde spláchnout nebo se vrací odpad.</li>
+        <li>Praskla hadička, ventil nejde zavřít nebo kape spoj.</li>
+      </ul>
+    </section>
+
+    <section class="split-section area-section" aria-labelledby="pusobnost-title">
+      <div>
+        <p class="eyebrow">Působnost</p>
+        <h2 id="pusobnost-title">Kolín + okolní obce</h2>
+        <p>Nejčastěji jezdím po Kolíně a blízkém okolí. U vzdálenějších míst se domluvíme podle času, rozsahu práce a dostupnosti materiálu.</p>
+      </div>
+      <div class="map-box" role="img" aria-label="Orientační oblast působnosti: Kolín a okolní obce">
+        <span>Kolín</span>
+        <strong>+ okolní obce</strong>
+        <small>Velim · Pečky · Týnec nad Labem · Kutná Hora</small>
+      </div>
+    </section>
+
+    <section class="section price-section" aria-labelledby="cenik-title">
+      <div class="section-head">
+        <p class="eyebrow">Orientační ceník</p>
+        <h2 id="cenik-title">Cena předem, bez mlžení</h2>
+      </div>
+      <div class="price-grid">
+        <div class="price-item">
+          <span>Příjezd po Kolíně</span>
+          <strong>od 350 Kč</strong>
+        </div>
+        <div class="price-item">
+          <span>Hodinová sazba</span>
+          <strong>od 600 Kč</strong>
+        </div>
+        <div class="price-item">
+          <span>Výměna baterie nebo ventilu</span>
+          <strong>orientačně od 900 Kč</strong>
+        </div>
+        <div class="price-item">
+          <span>Čištění běžného odpadu</span>
+          <strong>orientačně od 1 200 Kč</strong>
+        </div>
+      </div>
+      <p class="price-note">Konečná cena dle rozsahu, materiálu a urgentnosti. Před prací vždy řeknu orientační odhad.</p>
+    </section>
+
+    <section class="section" aria-labelledby="faq-title">
+      <div class="section-head">
+        <p class="eyebrow">FAQ</p>
+        <h2 id="faq-title">Časté otázky</h2>
+      </div>
+      <div class="faq-list">
+        <details>
+          <summary>Přijedete o víkendu?</summary>
+          <p>Podle dostupnosti a naléhavosti. U havárie vody se snažím najít nejbližší možný termín.</p>
+        </details>
+        <details>
+          <summary>Dáte cenu předem?</summary>
+          <p>Ano. Po popisu problému řeknu orientační odhad a před prací upřesním, co cenu ovlivní.</p>
+        </details>
+        <details>
+          <summary>Vystavíte fakturu?</summary>
+          <p>Ano, fakturu vystavím. Údaje doplníme při domluvě zakázky.</p>
+        </details>
+        <details>
+          <summary>Mám nejdřív poslat fotku?</summary>
+          <p>Fotka často pomůže. Nejrychlejší je zavolat a domluvit, co poslat a kam.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="contact-section" id="poptavka" aria-labelledby="poptavka-title">
+      <div class="contact-copy">
+        <p class="eyebrow">Poptávka</p>
+        <h2 id="poptavka-title">Popište problém, ozvu se zpět</h2>
+        <p>Pro rychlé řešení volejte. Pokud nejde o havárii, pošlete krátký popis a ideálně doplňte, kde v Kolíně nebo okolí se práce týká.</p>
+        <a class="phone-link" href="tel:+420777123456">777 123 456</a>
+      </div>
+      <form class="contact-form" method="post" action="#poptavka">
+        <div class="field">
+          <label for="name">Jméno</label>
+          <input id="name" name="name" type="text" autocomplete="name" required />
+        </div>
+        <div class="field">
+          <label for="phone">Telefon</label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required />
+        </div>
+        <div class="field">
+          <label for="message">Popis problému</label>
+          <textarea id="message" name="message" rows="5" required></textarea>
+        </div>
+        <button class="button primary form-button" type="submit">Odeslat poptávku</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="plumber-footer">
+    <strong>Instalatér Novák</strong>
+    <span>IČO: 12345678</span>
+    <a href="tel:+420777123456">777 123 456</a>
+    <span>Kolín a okolí</span>
+  </footer>
+
+  <a class="mobile-call" href="tel:+420777123456" aria-label="Zavolat instalatérovi Novákovi">Zavolat: 777 123 456</a>
+</BaseLayout>
+
+<style>
+  .demo-banner {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    min-height: 42px;
+    padding: 0.55rem 1rem;
+    color: #102033;
+    background: #f5f8fc;
+    border-bottom: 1px solid #d7e3f1;
+    font: 600 0.9rem/1.35 system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  .demo-banner p {
+    margin: 0;
+  }
+
+  .demo-banner a {
+    color: #0b5fbd;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .plumber-site,
+  .plumber-footer {
+    color: #132235;
+    background: #ffffff;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  .plumber-site {
+    overflow-x: clip;
+  }
+
+  .hero,
+  .section,
+  .split-section,
+  .contact-section,
+  .plumber-footer {
+    width: min(1120px, calc(100% - 2rem));
+    margin-inline: auto;
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: center;
+    padding: clamp(3rem, 8vw, 6.5rem) 0 clamp(2.5rem, 6vw, 5rem);
+  }
+
+  .eyebrow {
+    margin: 0 0 0.75rem;
+    color: #1f6feb;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  h1,
+  h2,
+  h3,
+  p {
+    overflow-wrap: anywhere;
+  }
+
+  h1 {
+    max-width: 820px;
+    margin: 0;
+    color: #0b1726;
+    font-size: clamp(2.35rem, 6vw, 4.85rem);
+    line-height: 0.98;
+    letter-spacing: 0;
+  }
+
+  h2 {
+    margin: 0;
+    color: #0b1726;
+    font-size: clamp(1.75rem, 3vw, 2.6rem);
+    line-height: 1.08;
+    letter-spacing: 0;
+  }
+
+  h3 {
+    margin: 0 0 0.55rem;
+    color: #0b1726;
+    font-size: 1.08rem;
+    line-height: 1.25;
+  }
+
+  .lead {
+    max-width: 690px;
+    margin: 1.25rem 0 0;
+    color: #405064;
+    font-size: clamp(1.05rem, 2vw, 1.22rem);
+    line-height: 1.65;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1.75rem;
+  }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0.85rem 1.15rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-weight: 800;
+    line-height: 1.2;
+    text-decoration: none;
+  }
+
+  .primary {
+    color: #ffffff;
+    background: #1f6feb;
+    box-shadow: 0 12px 28px rgba(31, 111, 235, 0.22);
+  }
+
+  .secondary {
+    color: #102033;
+    background: #ffffff;
+    border-color: #b9c9dc;
+  }
+
+  .hero-panel {
+    display: grid;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: #eef5ff;
+    border: 1px solid #c9ddf6;
+    border-radius: 8px;
+  }
+
+  .hero-panel div {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #c9ddf6;
+  }
+
+  .hero-panel div:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .hero-panel strong,
+  .hero-panel span {
+    display: block;
+  }
+
+  .hero-panel strong {
+    margin-bottom: 0.25rem;
+    color: #0b1726;
+  }
+
+  .hero-panel span {
+    color: #405064;
+    line-height: 1.5;
+  }
+
+  .section,
+  .split-section,
+  .contact-section {
+    padding: clamp(2.5rem, 6vw, 4.5rem) 0;
+    border-top: 1px solid #e3eaf3;
+  }
+
+  .section-head {
+    max-width: 720px;
+    margin-bottom: 1.4rem;
+  }
+
+  .service-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.8rem;
+  }
+
+  .service-card {
+    min-height: 170px;
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #d9e3ef;
+    border-radius: 8px;
+  }
+
+  .service-card p,
+  .split-section p,
+  .price-note,
+  .faq-list p,
+  .contact-copy p {
+    margin: 0;
+    color: #405064;
+    line-height: 1.6;
+  }
+
+  .split-section,
+  .contact-section {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: start;
+  }
+
+  .urgent-list {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .urgent-list li {
+    padding: 0.9rem 1rem;
+    background: #f7fbff;
+    border-left: 4px solid #1f6feb;
+    border-radius: 6px;
+    color: #132235;
+    font-weight: 650;
+  }
+
+  .map-box {
+    display: grid;
+    place-items: center;
+    min-height: 260px;
+    padding: 1.5rem;
+    text-align: center;
+    background: linear-gradient(135deg, #eef5ff, #f8fbff);
+    border: 1px solid #c9ddf6;
+    border-radius: 8px;
+  }
+
+  .map-box span {
+    color: #1f6feb;
+    font-weight: 900;
+    font-size: 2rem;
+  }
+
+  .map-box strong {
+    color: #0b1726;
+    font-size: 1.25rem;
+  }
+
+  .map-box small {
+    color: #405064;
+    line-height: 1.5;
+  }
+
+  .price-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.8rem;
+  }
+
+  .price-item {
+    display: grid;
+    gap: 0.6rem;
+    align-content: space-between;
+    min-height: 138px;
+    padding: 1rem;
+    background: #0f2338;
+    border-radius: 8px;
+  }
+
+  .price-item span {
+    color: #d8e5f5;
+    line-height: 1.45;
+  }
+
+  .price-item strong {
+    color: #ffffff;
+    font-size: 1.15rem;
+    line-height: 1.25;
+  }
+
+  .price-note {
+    margin-top: 1rem;
+  }
+
+  .faq-list {
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  details {
+    padding: 1rem;
+    border: 1px solid #d9e3ef;
+    border-radius: 8px;
+    background: #ffffff;
+  }
+
+  summary {
+    cursor: pointer;
+    color: #0b1726;
+    font-weight: 800;
+  }
+
+  details p {
+    margin-top: 0.75rem;
+  }
+
+  .contact-section {
+    margin-bottom: 2rem;
+    padding: clamp(1.5rem, 4vw, 2rem);
+    background: #eef5ff;
+    border: 1px solid #c9ddf6;
+    border-radius: 8px;
+  }
+
+  .phone-link {
+    display: inline-flex;
+    margin-top: 1rem;
+    color: #0b5fbd;
+    font-size: 1.6rem;
+    font-weight: 900;
+    text-decoration: none;
+  }
+
+  .contact-form {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .field {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  label {
+    color: #132235;
+    font-weight: 750;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    min-width: 0;
+    padding: 0.85rem 0.9rem;
+    color: #102033;
+    background: #ffffff;
+    border: 1px solid #aebed1;
+    border-radius: 6px;
+    font: inherit;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  input:focus,
+  textarea:focus,
+  .button:focus-visible,
+  .demo-banner a:focus-visible,
+  .phone-link:focus-visible,
+  .mobile-call:focus-visible {
+    outline: 3px solid #ffbf47;
+    outline-offset: 3px;
+  }
+
+  .form-button {
+    width: fit-content;
+    cursor: pointer;
+    font: inherit;
+  }
+
+  .plumber-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 0 2rem;
+    color: #405064;
+    border-top: 1px solid #e3eaf3;
+  }
+
+  .plumber-footer strong {
+    color: #0b1726;
+  }
+
+  .plumber-footer a {
+    color: #0b5fbd;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .mobile-call {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    left: 1rem;
+    z-index: 25;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    color: #ffffff;
+    background: #1f6feb;
+    border-radius: 6px;
+    box-shadow: 0 14px 30px rgba(16, 32, 51, 0.28);
+    font-weight: 900;
+    text-decoration: none;
+  }
+
+  @media (max-width: 980px) {
+    .hero,
+    .split-section,
+    .contact-section {
+      grid-template-columns: 1fr;
+    }
+
+    .service-grid,
+    .price-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 680px) {
+    .demo-banner {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .hero,
+    .section,
+    .split-section,
+    .contact-section,
+    .plumber-footer {
+      width: min(100% - 1rem, 1120px);
+    }
+
+    .hero {
+      padding-top: 2.25rem;
+    }
+
+    .hero-actions,
+    .button,
+    .form-button {
+      width: 100%;
+    }
+
+    .service-grid,
+    .price-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .service-card,
+    .price-item {
+      min-height: auto;
+    }
+
+    .plumber-footer {
+      padding-bottom: 5.25rem;
+    }
+
+    .mobile-call {
+      display: inline-flex;
+    }
+  }
+</style>

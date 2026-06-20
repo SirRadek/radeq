@@ -537,6 +537,7 @@ html[data-motion-ready] main section {
 .rq-pain__card p,
 .rq-offer p,
 .rq-step h3,
+.rq-step__sub,
 .rq-guarantee p,
 .rq-guarantee h3 {
   overflow-wrap: anywhere;
@@ -604,6 +605,39 @@ html[data-motion-ready] main section {
   line-height: 1.55;
 }
 
+.rq-offer__result {
+  font-weight: 750;
+}
+
+.rq-offer__outputs {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  color: var(--rq-ink-2);
+  line-height: 1.45;
+  list-style: none;
+}
+
+.rq-offer__outputs li {
+  position: relative;
+  min-width: 0;
+  padding-left: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.rq-offer__outputs li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.68em;
+  width: 0.38rem;
+  height: 0.38rem;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.78;
+}
+
 .rq-offer small {
   display: block;
   margin-top: auto;
@@ -639,6 +673,13 @@ html[data-motion-ready] main section {
   font-family: var(--rq-display);
   font-size: 1.3rem;
   font-weight: 800;
+}
+
+.rq-step__sub {
+  margin: -0.55rem 0 0;
+  color: var(--rq-ink-2);
+  font-size: 0.95rem;
+  line-height: 1.45;
 }
 
 .rq-guarantee {
@@ -1399,7 +1440,8 @@ html[data-motion-ready] main section {
 .rq-service-tile--audit { grid-area: audit; }
 
 .rq-service-tile h3,
-.rq-service-tile p {
+.rq-service-tile p,
+.rq-service-tile .rq-offer__outputs {
   min-width: 0;
   overflow-wrap: anywhere;
 }
@@ -1428,6 +1470,23 @@ html[data-motion-ready] main section {
 
 .rq-service-tile p:not(.rq-offer__price):not(.rq-offer__incl) {
   margin: 0;
+}
+
+.rq-service-tile .rq-offer__result {
+  color: color-mix(in srgb, var(--rq-wine, #7b2332) 84%, var(--rq-ink, #201615));
+  font-size: clamp(1rem, 1.45vw, 1.12rem);
+  line-height: 1.45;
+}
+
+.rq-service-tile .rq-offer__outputs {
+  gap: 0.5rem;
+  color: color-mix(in srgb, var(--rq-ink, #201615) 76%, transparent);
+  font-size: 0.95rem;
+}
+
+.rq-service-tile--featured .rq-offer__outputs,
+.rq-service-tile--audit .rq-offer__outputs {
+  color: color-mix(in srgb, var(--rq-ink, #201615) 82%, transparent);
 }
 
 .rq-service-tile .rq-offer__incl {

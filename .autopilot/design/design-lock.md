@@ -72,7 +72,7 @@ Ceník (3 tarify) → Ukázky teaser → Kontakt (env-aware: prod `/api/leads`, 
 | O2 | **Ceník** „od 9 900" (současné) vs „typicky od–do" + audit jako vstup (§7.5) | zůstává „od" (tvá dřívější volba) |
 | O3 | **Akcent** vínová (locked) vs terakota A/B (rethink §2.2) | vínová (nepřeotvírat bez tvého slova) |
 | O4 | **`/en/`** ponechat vs zrušit (CZ cílovka) | čeká — doporučení: zrušit bez důkazu poptávky |
-| O5 | **Signature animace** — bake-off (Codex vs Antigravity), 1 vítěz pro v1 | čeká (task #48) |
+| O5 | **Signature animace** — provider model ROZHODNUT 2026-06-21: **Codex implementuje, Antigravity navrhuje koncepty** (potvrzeno bake-offem: agy = silnější/ambicióznější návrh ale nespolehlivá autonomní implementace; Codex = spolehlivě doveze na ostro). Směr = **agy „diagnostický graf" koncept** (větev `autopilot/anim-agy`), právě se brainstormem ladí → Codex postaví finální. Zbývá owner: vybrat finální vizuál + kam ho sloučit. | rozhodnuto (model); ladí se |
 | O6 | **Production cutover** — kdy/podle čeho redesign přejde z preview na ostrou radeq.cz | čeká — bez plánu = „věčné preview" |
 
 ## 9. Escape hatch (jak se LOCKED smí znovu otevřít)

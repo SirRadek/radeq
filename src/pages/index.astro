@@ -32,6 +32,33 @@ const symptoms = [
 
   <main>
     <section class="rq-section rq-hero" id="top" style="--rq-reveal-index: 0">
+      <svg class="rq-hero__diagnostic" data-rq-hero-signal viewBox="0 0 760 520" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="rq-hero-diagnostic-gradient" x1="74" y1="382" x2="682" y2="92" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="var(--rq-burgundy)" stop-opacity=".34" />
+            <stop offset=".48" stop-color="var(--rq-burgundy)" stop-opacity=".76" />
+            <stop offset="1" stop-color="var(--rq-lime)" stop-opacity=".88" />
+          </linearGradient>
+        </defs>
+        <g class="rq-hero__diagnostic-grid">
+          <path d="M96 86H664M96 196H664M96 306H664M96 416H664" />
+          <path d="M140 54V454M292 54V454M444 54V454M596 54V454" />
+        </g>
+        <path class="rq-hero__diagnostic-branch" pathLength="1" d="M292 312L292 210L452 210L452 118L628 118" />
+        <path class="rq-hero__diagnostic-ghost" pathLength="1" d="M74 382C158 318 210 408 292 312C354 240 404 264 452 206C526 118 600 188 682 92" />
+        <path class="rq-hero__diagnostic-trace" pathLength="1" stroke="url(#rq-hero-diagnostic-gradient)" d="M74 382C158 318 210 408 292 312C354 240 404 264 452 206C526 118 600 188 682 92" />
+        <g class="rq-hero__diagnostic-nodes">
+          <circle cx="74" cy="382" r="7" />
+          <circle cx="292" cy="312" r="6" />
+          <circle cx="452" cy="206" r="6" />
+          <circle cx="682" cy="92" r="8" />
+        </g>
+        <g class="rq-hero__diagnostic-signal">
+          <circle class="rq-hero__diagnostic-pulse" cx="682" cy="92" r="22" />
+          <circle class="rq-hero__diagnostic-core" cx="682" cy="92" r="6" />
+        </g>
+      </svg>
+
       <div class="rq-hero__copy">
         <p class="rq-eyebrow" data-rq-reveal style="--rq-i:0">Racionální digitalizace</p>
         <h1 class="rq-display" data-rq-reveal style="--rq-i:1">Weby, data a automatizace,<br class="rq-br-desktop" /> které vám uvolní ruce.</h1>

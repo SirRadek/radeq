@@ -31,6 +31,93 @@
       revealItems.forEach((item) => item.classList.add('is-in'));
     }
 
+    const heroSignals = Array.from(document.querySelectorAll('[data-rq-hero-signal]'));
+    const supportsViewTimeline = typeof CSS !== 'undefined' && (
+      CSS.supports?.('animation-timeline: view()') ||
+      CSS.supports?.('animation-timeline', 'view()')
+    );
+
+    heroSignals.forEach((signal) => {
+      const hero = signal.closest('.rq-hero') || signal;
+      const markIn = () => signal.classList.add('is-in');
+
+      if (supportsViewTimeline) {
+        if ('IntersectionObserver' in window) {
+          const enterObserver = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                markIn();
+                enterObserver.unobserve(entry.target);
+              });
+            },
+            { threshold: 0.1, rootMargin: '0px 0px -8% 0px' }
+          );
+
+          enterObserver.observe(hero);
+        } else {
+          markIn();
+        }
+
+        return;
+      }
+
+      let isVisible = false;
+      let frame = 0;
+
+      const clamp = (value) => Math.max(0, Math.min(1, value));
+
+      const updateHeroSignal = () => {
+        frame = 0;
+
+        if (!isVisible) return;
+
+        const rect = hero.getBoundingClientRect();
+        const progress = clamp(-rect.top / Math.max(1, rect.height * 0.85));
+        const signalLift = Math.sin(progress * Math.PI);
+
+        signal.style.setProperty('--rq-hero-scrub-x', `${(-18 * progress).toFixed(2)}px`);
+        signal.style.setProperty('--rq-hero-scrub-y', `${(-24 * progress).toFixed(2)}px`);
+        signal.style.setProperty('--rq-hero-dot-x', `${(-8 + 24 * progress).toFixed(2)}px`);
+        signal.style.setProperty('--rq-hero-dot-y', `${(8 - 20 * progress).toFixed(2)}px`);
+        signal.style.setProperty('--rq-hero-dot-scale', (0.94 + 0.14 * signalLift).toFixed(3));
+        signal.style.setProperty('--rq-hero-dot-opacity', (0.58 + 0.34 * signalLift).toFixed(3));
+      };
+
+      const requestHeroSignalUpdate = () => {
+        if (!isVisible || frame) return;
+        frame = requestAnimationFrame(updateHeroSignal);
+      };
+
+      const setVisible = (visible) => {
+        isVisible = visible;
+
+        if (visible) {
+          markIn();
+          requestHeroSignalUpdate();
+        } else if (frame) {
+          cancelAnimationFrame(frame);
+          frame = 0;
+        }
+      };
+
+      window.addEventListener('scroll', requestHeroSignalUpdate, { passive: true });
+      window.addEventListener('resize', requestHeroSignalUpdate);
+
+      if ('IntersectionObserver' in window) {
+        const signalObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => setVisible(entry.isIntersecting));
+          },
+          { threshold: 0, rootMargin: '120px 0px' }
+        );
+
+        signalObserver.observe(hero);
+      } else {
+        setVisible(true);
+      }
+    });
+
     const supportsFinePointer = window.matchMedia?.('(pointer: fine)').matches;
 
     if (supportsFinePointer) {

@@ -37,15 +37,18 @@ Formát na fázi: **Co řešíme · Jak dlouho · Jak probíhá · Co z toho má
 | **Stavba** | web/e-shop/automatizace, obsah, mobil, základ SEO | dny (úpravy) až ~2 týdny | viditelný postup na preview, včas zachytíte chyby | funkční řešení |
 | **Test** | mobil/prohlížeče, rychlost, formuláře, scénáře | 1–3 dny | méně chyb po spuštění, ověřený výkon | **Protokol o testování (Lighthouse)** |
 | **Předání** | spuštění, přístupy, zaškolení, co dál | ~1 den | plnou kontrolu, víte na koho se obrátit | předávací poznámky + návod |
-*Celkem: navrhujeme uvést **„typicky 2–4 týdny od poptávky ke spuštění (dle rozsahu)"** — top nákupní otázka.
+*Celkem: uvést **„typicky 2–4 týdny od poptávky ke spuštění"**.
+**DISCLAIMER (owner 2026-06-21):** délky jsou **orientační pro BĚŽNÝ projekt — větší zakázky podle
+domluvy.** Tuhle větu zobrazit u timeline, ať to nevypadá jako závazek na velké projekty.
 
-**Trust hooky (POTVRĎ, které jsou reálné — neslibovat, co nedodržíš):**
-- Rozbor „bez závazků; když se nedomluvíme, rozbor vám zůstává" *(agy návrh)*
-- Stavba „platba po částech, druhá až po schválení prototypu" *(agy návrh)*
-- Test „**servisní protokol + Lighthouse**" *(už existuje na webu — reálné)*
-- Předání „krátké video návod + **30 dní podpory** po předání" *(agy návrh — potvrď rozsah/„zdarma")*
+**Trust hooky — POTVRZENO vlastníkem 2026-06-21 (reálné závazky):**
+- Rozbor „bez závazků; když se nedomluvíme, rozbor vám zůstává" ✅
+- Stavba „platba po částech, druhá až po schválení prototypu" ✅
+- Test „**servisní protokol + Lighthouse**" ✅ (už na webu)
+- Předání „**po předání dle domluvy: 30 dní podpory, NEBO návod/video**" ✅ (jedno NEBO druhé dle
+  domluvy — NEslibovat oboje napevno; formulace „dle domluvy")
 - Celek: „**jeden člověk od rozboru po test** — nic se neztratí mezi rolemi", „každá fáze má výstup",
-  „test před předáním", „po předání nezmizím".
+  „test před předáním", „po předání nezmizím". ✅
 
 ## Slova POZOR (Codex) — důvěra ano, fanfáry ne
 Vyhnout se „garance"/„100% jistota" bez přesné definice. Místo toho: *„Ověřím hlavní scénáře před
@@ -65,7 +68,7 @@ statický · mobil akordeon funkční · klávesnice/ARIA OK.
 1. **Délky fází + celkový timeline** — potvrď/uprav čísla výše.
 2. **Trust hooky** — řekni, které jsou reálné závazky (zvlášť „30 dní podpory", „platba po částech",
    „rozbor zdarma když se nedomluvíme").
-3. **Název sekce:** „Cesta k výsledku" / „Jak to probíhá" / „Jak se z problému stane ověřené řešení".
+3. **Název sekce:** ✅ POTVRZENO — **„Jak to bude probíhat"**.
 
 ## Záložní vizuální koncepty (agy) — kdyby owner chtěl jiný charakter
 „Technický výkres" (CAD, kóty — doporučený) · „Klientský deník" (editorial osa) · „Kancelářský

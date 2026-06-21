@@ -184,4 +184,57 @@
       }
     }
   })();
+
+// --- Anim bake-off [AGY]: scroll scrub fallback ---
+(function() {
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const supportsCSSScroll = window.CSS && CSS.supports && CSS.supports('animation-timeline', 'view()');
+
+  // Pokud uživatel nechce pohyb nebo prohlížeč umí scroll nativně v CSS, JS nic nedělá
+  if (prefersReduced || supportsCSSScroll) return;
+
+  const hero = document.getElementById('top');
+  const visual = hero ? hero.querySelector('.rq-hero__visual') : null;
+  if (!hero || !visual) return;
+
+  let isVisible = false;
+  let ticking = false;
+
+  // Sledování viditelnosti sekce pro maximální výkon (pouštíme scroll event pouze když je Hero vidět)
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      isVisible = entry.isIntersecting;
+    });
+  }, { threshold: 0 });
+
+  observer.observe(hero);
+
+  function updateScroll() {
+    if (!isVisible) {
+      ticking = false;
+      return;
+    }
+
+    const rect = hero.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+
+    // Výpočet relativního posunu elementu v rámci celého průchodu viewportem
+    const totalDist = rect.height + viewportHeight;
+    const currentDist = viewportHeight - rect.top;
+
+    let progress = currentDist / totalDist;
+    progress = Math.max(0, Math.min(1, progress));
+
+    // Zápis progresu do CSS proměnné pro plynulý scrubbing
+    visual.style.setProperty('--rq-scroll-progress', progress.toFixed(4));
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking && isVisible) {
+      window.requestAnimationFrame(updateScroll);
+      ticking = true;
+    }
+  }, { passive: true });
+})();
 </script>

@@ -2184,3 +2184,211 @@ h2 + p {
     overflow-x: hidden;
   }
 }
+
+
+/* ===== Anim bake-off [AGY] ===== */
+/* --- HERO DIAGNOSTIC VISUAL --- */
+.rq-hero {
+  position: relative;
+  overflow: hidden; /* Ochrana před horizontálním přetečením */
+}
+
+/* Kontejner vizuálu */
+.rq-hero__visual {
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 45%;
+  max-width: 580px;
+  aspect-ratio: 6 / 4;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.rq-hero-svg {
+  width: 100%;
+  height: 100%;
+ overflow: visible;
+}
+
+/* --- VÝCHOZÍ STAV (no-JS safe / static) --- */
+.rq-hero-svg__track {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 0;
+  opacity: 0.85;
+}
+.rq-hero-svg__grid,
+.rq-hero-svg__dots circle,
+.rq-hero-svg__endpoint {
+  opacity: 1;
+  transform: none;
+}
+.rq-hero-svg__ring {
+  transform-origin: 550px 200px;
+  animation: rq-ring-pulse-static 3s infinite ease-in-out;
+}
+.rq-hero-svg__pulse-group {
+  display: none; /* Nechcemezaseknutý statický puls na začátku křivky */
+}
+
+@keyframes rq-ring-pulse-static {
+  0%, 100% { transform: scale(0.85); opacity: 0.2; }
+  50% { transform: scale(1.15); opacity: 0.5; }
+}
+
+/* --- ANIMOVANÝ STAV (při html[data-rq-motion="on"]) --- */
+html[data-rq-motion="on"] .rq-hero-svg__pulse-group {
+  display: block;
+  offset-path: path('M 60 300 C 140 300, 180 80, 260 220 C 320 320, 400 120, 480 200 H 550');
+  offset-rotate: auto;
+  offset-distance: 0%;
+opacity: 0;
+  animation: rq-pulse-entrance 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  animation-delay: 2.2s; /* Zobrazí se bezprostředně po dokreslení čáry */
+}
+
+html[data-rq-motion="on"] .rq-hero-svg__track {
+  stroke-dashoffset: 1000;
+  animation: rq-draw-track 2.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.4s;
+}
+
+html[data-rq-motion="on"] .rq-hero-svg__grid {
+  opacity: 0;
+  animation: rq-fade-in-grid 1.8s ease forwards;
+  animation-delay: 0.1s;
+}
+
+html[data-rq-motion="on"] .rq-hero-svg__dots circle {
+  opacity: 0;
+  transform: scale(0);
+  animation: rq-dot-appear 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+html[data-rq-motion="on"] .rq-hero-svg__dots circle:nth-child(1){ animation-delay: 0.6s; transform-origin: 120px 140px; }
+html[data-rq-motion="on"] .rq-hero-svg__dots circle:nth-child(2) { animation-delay: 0.8s; transform-origin: 150px 270px; }
+html[data-rq-motion="on"] .rq-hero-svg__dots circle:nth-child(3) { animation-delay: 1.0s; transform-origin: 250px 120px; }
+html[data-rq-motion="on"] .rq-hero-svg__dots circle:nth-child(4) { animation-delay: 1.2s; transform-origin: 280px 320px; }
+html[data-rq-motion="on"] .rq-hero-svg__dots circle:nth-child(5) { animation-delay: 1.4s; transform-origin: 350px 160px; }
+
+html[data-rq-motion="on"] .rq-hero-svg__endpoint {
+  transform: scale(0);
+  transform-origin: 550px 200px;
+  animation: rq-scale-up-point 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: 2.0s;
+}
+
+html[data-rq-motion="on"] .rq-hero-svg__ring {
+  transform: scale(0);
+  transform-origin: 550px 200px;
+  animation: rq-pulse-ring 2.4s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  animation-delay: 2.4s;
+}
+
+/* Klíčové snímky pro úvodní vykreslení */
+@keyframes rq-draw-track {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes rq-fade-in-grid {
+  to { opacity: 1; }
+}
+@keyframes rq-dot-appear {
+  to { opacity: 0.35; transform: scale(1); }
+}
+@keyframes rq-scale-up-point {
+  to { transform: scale(1); }
+}
+@keyframes rq-pulse-ring {
+  0% { transform: scale(0.6); opacity: 0; }
+  50% { opacity: 0.45; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+@keyframes rq-pulse-entrance {
+  to { opacity: 1; }
+}
+
+/* --- SCROLL-DRIVEN ANIMACE (CSS native) --- */
+@supports (animation-timeline: view()) {
+  html[data-rq-motion="on"] .rq-hero-svg__pulse-group {
+    /* Nahradí úvodní statické umístění plynulým pohybem při scrollu */
+    animation: rq-scroll-signal linear both;
+    animation-timeline: view(block);
+    animation-range: entry 100% exit 0%;
+  }
+
+  html[data-rq-motion="on"] .rq-hero__visual {
+    /* Klidný 3D parallax posun celého grafu */
+    animation: rq-scroll-parallax linear both;
+    animation-timeline: view(block);
+    animation-range: entry 100% exit 0%;
+  }
+}
+
+@keyframes rq-scroll-signal {
+  from { offset-distance: 0%; }
+  to { offset-distance: 100%; }
+}
+
+@keyframes rq-scroll-parallax {
+  from { transform: translateY(-50%) translateY(20px); }
+  to { transform: translateY(-50%) translateY(-20px); }
+}
+
+/* --- SCROLL-DRIVEN ANIMACE (JS fallback proměnná) --- */
+@supports not (animation-timeline: view()) {
+  html[data-rq-motion="on"] .rq-hero-svg__pulse-group {
+    offset-distance: calc(var(--rq-scroll-progress, 0) * 100%);
+  }
+  html[data-rq-motion="on"] .rq-hero__visual {
+    transform: translateY(-50%) translateY(calc((var(--rq-scroll-progress, 0.5) - 0.5) * -40px));
+  }
+}
+
+/* --- RESPONZIVITA --- */
+@media (max-width: 1023px) {
+  .rq-hero__visual {
+    right: 50%;
+    transform: translate(50%, -50%);
+    width: 85%;
+    max-width: 460px;
+    opacity: 0.12; /* Na tabletech podkreslí text, neruší čitelnost */
+    z-index: 0;
+  }
+  @supports not (animation-timeline: view()) {
+    html[data-rq-motion="on"] .rq-hero__visual {
+      transform: translate(50%, -50%) translateY(calc((var(--rq-scroll-progress, 0.5) - 0.5) * -20px));
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .rq-hero__visual {
+    display: none; /* Úplné skrytí na telefonech zamezí jakémukoliv přetečení a šetří baterii */
+  }
+}
+
+/* --- SNÍŽENÝ POHYB (Acessibility) --- */
+@media (prefers-reduced-motion: reduce) {
+  .rq-hero-svg__track,
+  .rq-hero-svg__grid,
+  .rq-hero-svg__dots circle,
+  .rq-hero-svg__endpoint,
+  .rq-hero-svg__ring,
+  .rq-hero-svg__pulse-group,
+  .rq-hero__visual {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+  .rq-hero-svg__pulse-group {
+    display: none !important; /* Odstraní pohybující se element */
+  }
+  .rq-hero-svg__ring {
+    opacity: 0.3 !important;
+  }
+  .rq-hero__visual {
+    transform: translateY(-50%) !important;
+  }
+}

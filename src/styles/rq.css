@@ -1015,21 +1015,11 @@ html[data-motion-ready] main section {
 .rq-hero {
   position: relative;
   isolation: isolate;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .rq-hero::before {
-  content: "";
-  position: absolute;
-  inset: -18% -10% auto auto;
-  width: min(54rem, 86vw);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(122, 31, 43, .2) 0%, rgba(122, 31, 43, .1) 34%, rgba(122, 31, 43, 0) 70%);
-  filter: blur(34px);
-  opacity: .72;
-  pointer-events: none;
-  z-index: -1;
+  content: none;
 }
 
 .rq-card,
@@ -2182,5 +2172,303 @@ h2 + p {
   .rq-marquee,
   .rq-bleed {
     overflow-x: hidden;
+  }
+}
+
+/* ===== Hero signature: shared journey -> verified result ===== */
+.rq-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 560px);
+  align-items: center;
+  gap: clamp(32px, 6vw, 96px);
+  overflow: visible;
+}
+
+.rq-hero::before,
+.rq-hero::after {
+  content: none;
+}
+
+.rq-hero__content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  min-width: 0;
+  gap: 2rem;
+}
+
+.rq-hero__visual {
+  width: clamp(360px, 34vw, 560px);
+  max-width: 100%;
+  align-self: end;
+  justify-self: end;
+  margin-bottom: clamp(0rem, 1.5vw, 1.1rem);
+  overflow: clip;
+  overflow-clip-margin: 28px;
+  pointer-events: none;
+}
+
+.rq-hero-signature {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.rq-hero-signature__trace {
+  fill: none;
+  stroke: color-mix(in srgb, var(--rq-burgundy) 72%, var(--rq-ink) 28%);
+  stroke-width: clamp(2.4px, 0.34vw, 3.6px);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-opacity: 0.76;
+  vector-effect: non-scaling-stroke;
+}
+
+.rq-hero-signature__stage {
+  opacity: 1;
+  transform: translate(0, 0);
+  transform-box: view-box;
+  transform-origin: center;
+}
+
+.rq-hero-signature__point {
+  fill: color-mix(in srgb, var(--rq-burgundy) 64%, var(--rq-ink) 36%);
+  opacity: 0.72;
+}
+
+.rq-hero-signature__stage-label {
+  fill: var(--rq-ink-2);
+  font-family: var(--rq-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  opacity: 0.58;
+  pointer-events: none;
+}
+
+.rq-hero-signature__stage--start .rq-hero-signature__stage-label {
+  fill: color-mix(in srgb, var(--rq-burgundy) 72%, var(--rq-ink-2) 28%);
+  opacity: 0.76;
+}
+
+.rq-hero-signature__pulse {
+  opacity: 0;
+  transform-box: view-box;
+}
+
+.rq-hero-signature__pulse circle {
+  fill: color-mix(in srgb, var(--rq-burgundy) 52%, var(--rq-bg) 48%);
+  stroke: color-mix(in srgb, var(--rq-burgundy) 70%, var(--rq-ink) 30%);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.rq-hero-signature__endpoint {
+  color: var(--rq-lime);
+  opacity: 1;
+  transform-box: view-box;
+  transform-origin: 548px 56px;
+}
+
+.rq-hero-signature__cross {
+  stroke: currentColor;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-opacity: 0.78;
+  vector-effect: non-scaling-stroke;
+}
+
+.rq-hero-signature__end-dot {
+  fill: currentColor;
+}
+
+.rq-hero-signature__label {
+  fill: currentColor;
+  font-family: var(--rq-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__trace {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+}
+
+.rq-motion-ready [data-rq-hero-signature].is-signature-drawing .rq-hero-signature__trace {
+  animation: rq-hero-signature-draw 2s cubic-bezier(0.2, 0.8, 0.18, 1) forwards;
+}
+
+.rq-motion-ready [data-rq-hero-signature].is-signature-drawing:not(.is-signature-visible) .rq-hero-signature__trace {
+  animation-play-state: paused;
+}
+
+.rq-motion-ready [data-rq-hero-signature].is-signature-done .rq-hero-signature__trace {
+  animation: none;
+  stroke-dasharray: none;
+  stroke-dashoffset: 0;
+}
+
+.rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__stage {
+  opacity: 0.42;
+  transform: translate(var(--rq-chaos-x, 0), var(--rq-chaos-y, 0));
+  transition: transform 640ms cubic-bezier(0.19, 1, 0.22, 1), opacity 360ms ease-out;
+}
+
+.rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__stage-label {
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 340ms ease-out, transform 420ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__stage.is-snapped {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+.rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__stage.is-snapped .rq-hero-signature__stage-label {
+  opacity: 0.58;
+  transform: translateY(0);
+}
+
+.rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__stage--start.is-snapped .rq-hero-signature__stage-label {
+  opacity: 0.76;
+}
+
+.rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__endpoint {
+  opacity: 0;
+  transform: translateY(8px) scale(0.96);
+}
+
+.rq-motion-ready [data-rq-hero-signature].is-signature-drawing .rq-hero-signature__stage,
+.rq-motion-ready [data-rq-hero-signature].is-signature-drawing .rq-hero-signature__endpoint,
+.rq-motion-ready [data-rq-hero-signature].is-signature-done.is-signature-visible .rq-hero-signature__pulse {
+  will-change: transform, opacity;
+}
+
+.rq-motion-ready [data-rq-hero-signature].is-signature-done .rq-hero-signature__endpoint {
+  animation: rq-hero-endpoint-beat 540ms cubic-bezier(0.2, 0.8, 0.18, 1) forwards;
+}
+
+.rq-motion-ready [data-rq-hero-signature].is-signature-done.is-signature-visible .rq-hero-signature__pulse {
+  opacity: 0.62;
+  transition: opacity 180ms ease-out;
+}
+
+@keyframes rq-hero-signature-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes rq-hero-endpoint-beat {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+
+  62% {
+    opacity: 1;
+    transform: translateY(0) scale(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 1040px) and (min-width: 768px) {
+  .rq-hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rq-hero__content,
+  .rq-hero__visual {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .rq-hero__content {
+    max-width: 760px;
+  }
+
+  .rq-hero__visual {
+    z-index: 0;
+    width: min(54vw, 520px);
+    align-self: center;
+    justify-self: end;
+    margin-bottom: 0;
+    opacity: 0.22;
+  }
+
+  .rq-hero-signature__trace {
+    stroke-opacity: 0.44;
+  }
+
+  .rq-hero-signature__point,
+  .rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__stage.is-snapped .rq-hero-signature__point {
+    opacity: 0.44;
+  }
+
+  .rq-hero-signature__stage-label,
+  .rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__stage.is-snapped .rq-hero-signature__stage-label {
+    opacity: 0.34;
+  }
+
+  .rq-hero-signature__stage--start .rq-hero-signature__stage-label,
+  .rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__stage--start.is-snapped .rq-hero-signature__stage-label {
+    opacity: 0.5;
+  }
+
+  .rq-hero-signature__endpoint {
+    opacity: 0.7;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .rq-hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rq-hero__visual {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rq-hero-signature__trace {
+    animation: none !important;
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+
+  .rq-hero-signature__stage,
+  .rq-hero-signature__point,
+  .rq-hero-signature__stage-label,
+  .rq-hero-signature__endpoint,
+  .rq-hero-signature__pulse {
+    animation: none !important;
+    opacity: 1;
+    transform: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+
+  .rq-hero-signature__stage-label {
+    opacity: 0.58;
+  }
+
+  .rq-hero-signature__stage--start .rq-hero-signature__stage-label {
+    opacity: 0.76;
+  }
+
+  .rq-hero-signature__pulse {
+    opacity: 0;
+  }
+}
+
+@supports not (overflow: clip) {
+  .rq-hero__visual {
+    overflow: hidden;
   }
 }

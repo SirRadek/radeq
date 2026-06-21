@@ -50,6 +50,146 @@
       });
     }
 
+    const setupHeroSignature = () => {
+      const hero = document.querySelector('[data-rq-hero-signature]');
+      if (!hero || !('IntersectionObserver' in window)) return;
+
+      const svg = hero.querySelector('[data-rq-hero-svg]');
+      const path = svg?.querySelector('#rq-hero-path');
+      const pulse = hero.querySelector('[data-rq-signature-pulse]');
+      const visual = hero.querySelector('[data-rq-hero-visual]');
+      const stages = Array.from(hero.querySelectorAll('[data-rq-snap-at]'));
+      const widthQuery = window.matchMedia?.('(min-width: 768px)');
+
+      if (!svg || !path || !pulse || !visual || !widthQuery?.matches || typeof path.getTotalLength !== 'function') return;
+
+      const totalLength = path.getTotalLength();
+      const drawDuration = 2000;
+      let isVisible = false;
+      let hasStarted = false;
+      let isDone = false;
+      let drawFrame = 0;
+      let pulseFrame = 0;
+      let drawProgress = 0;
+      let lastDrawTime = 0;
+
+      const clamp = (value) => Math.max(0, Math.min(1, value));
+
+      const snapStages = (progress) => {
+        stages.forEach((stage) => {
+          const at = Number(stage.getAttribute('data-rq-snap-at') || '1');
+          if (progress >= at) stage.classList.add('is-snapped');
+        });
+      };
+
+      const stopDrawFrame = () => {
+        if (!drawFrame) return;
+        cancelAnimationFrame(drawFrame);
+        drawFrame = 0;
+        lastDrawTime = 0;
+      };
+
+      const updatePulse = () => {
+        pulseFrame = 0;
+        if (!isVisible || !isDone || !widthQuery.matches) return;
+
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 1;
+        const pageY = window.scrollY || window.pageYOffset || 0;
+        const heroTop = hero.getBoundingClientRect().top + pageY;
+        const travel = Math.max(1, hero.offsetHeight - viewportHeight * 0.2);
+        const progress = clamp((pageY - heroTop) / travel);
+        const point = path.getPointAtLength(totalLength * progress);
+        pulse.setAttribute('transform', `translate(${point.x} ${point.y})`);
+      };
+
+      const requestPulse = () => {
+        if (pulseFrame || !isVisible || !isDone || !widthQuery.matches) return;
+        pulseFrame = requestAnimationFrame(updatePulse);
+      };
+
+      const finishDraw = () => {
+        if (isDone) return;
+        isDone = true;
+        stopDrawFrame();
+        snapStages(1);
+        hero.classList.remove('is-signature-drawing');
+        hero.classList.add('is-signature-done');
+        requestPulse();
+      };
+
+      const drawTick = (now) => {
+        if (!isVisible || !widthQuery.matches) {
+          stopDrawFrame();
+          return;
+        }
+
+        if (!lastDrawTime) lastDrawTime = now;
+        drawProgress = clamp(drawProgress + (now - lastDrawTime) / drawDuration);
+        lastDrawTime = now;
+        snapStages(drawProgress);
+
+        if (drawProgress >= 1) {
+          finishDraw();
+          return;
+        }
+
+        drawFrame = requestAnimationFrame(drawTick);
+      };
+
+      const startDraw = () => {
+        if (isDone || drawFrame || !widthQuery.matches) return;
+
+        if (!hasStarted) {
+          hasStarted = true;
+          root.classList.add('rq-motion-ready');
+          hero.classList.add('is-signature-drawing');
+        }
+
+        drawFrame = requestAnimationFrame(drawTick);
+      };
+
+      const heroObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            isVisible = entry.isIntersecting;
+            hero.classList.toggle('is-signature-visible', isVisible && widthQuery.matches);
+
+            if (isVisible && widthQuery.matches) {
+              startDraw();
+              requestPulse();
+            } else {
+              stopDrawFrame();
+              if (pulseFrame) {
+                cancelAnimationFrame(pulseFrame);
+                pulseFrame = 0;
+              }
+            }
+          });
+        },
+        { threshold: 0, rootMargin: '0px' }
+      );
+
+      heroObserver.observe(hero);
+      window.addEventListener('scroll', requestPulse, { passive: true });
+      window.addEventListener('resize', requestPulse, { passive: true });
+
+      widthQuery.addEventListener?.('change', () => {
+        if (!widthQuery.matches) {
+          stopDrawFrame();
+          hero.classList.remove('is-signature-visible');
+          return;
+        }
+
+        if (isVisible) {
+          hero.classList.add('is-signature-visible');
+          startDraw();
+          requestPulse();
+        }
+      });
+    };
+
+    setupHeroSignature();
+
     const marqueeRoots = Array.from(document.querySelectorAll('[data-rq-marquee]'));
 
     marqueeRoots.forEach((marquee) => {

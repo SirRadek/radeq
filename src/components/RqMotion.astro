@@ -56,12 +56,12 @@
 
       const svg = hero.querySelector('[data-rq-hero-svg]');
       const path = svg?.querySelector('#rq-hero-path');
-      const pulse = hero.querySelector('[data-rq-signature-pulse]');
+      const token = hero.querySelector('[data-rq-signature-token]');
       const visual = hero.querySelector('[data-rq-hero-visual]');
       const stages = Array.from(hero.querySelectorAll('[data-rq-snap-at]'));
       const widthQuery = window.matchMedia?.('(min-width: 768px)');
 
-      if (!svg || !path || !pulse || !visual || !widthQuery?.matches || typeof path.getTotalLength !== 'function') return;
+      if (!svg || !path || !token || !visual || !widthQuery?.matches || typeof path.getTotalLength !== 'function') return;
 
       const totalLength = path.getTotalLength();
       const drawDuration = 2000;
@@ -69,11 +69,15 @@
       let hasStarted = false;
       let isDone = false;
       let drawFrame = 0;
-      let pulseFrame = 0;
       let drawProgress = 0;
       let lastDrawTime = 0;
 
       const clamp = (value) => Math.max(0, Math.min(1, value));
+
+      const setTokenPosition = (progress) => {
+        const point = path.getPointAtLength(totalLength * clamp(progress));
+        token.setAttribute('transform', `translate(${point.x} ${point.y})`);
+      };
 
       const snapStages = (progress) => {
         stages.forEach((stage) => {
@@ -89,32 +93,14 @@
         lastDrawTime = 0;
       };
 
-      const updatePulse = () => {
-        pulseFrame = 0;
-        if (!isVisible || !isDone || !widthQuery.matches) return;
-
-        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 1;
-        const pageY = window.scrollY || window.pageYOffset || 0;
-        const heroTop = hero.getBoundingClientRect().top + pageY;
-        const travel = Math.max(1, hero.offsetHeight - viewportHeight * 0.2);
-        const progress = clamp((pageY - heroTop) / travel);
-        const point = path.getPointAtLength(totalLength * progress);
-        pulse.setAttribute('transform', `translate(${point.x} ${point.y})`);
-      };
-
-      const requestPulse = () => {
-        if (pulseFrame || !isVisible || !isDone || !widthQuery.matches) return;
-        pulseFrame = requestAnimationFrame(updatePulse);
-      };
-
       const finishDraw = () => {
         if (isDone) return;
         isDone = true;
         stopDrawFrame();
         snapStages(1);
+        setTokenPosition(1);
         hero.classList.remove('is-signature-drawing');
         hero.classList.add('is-signature-done');
-        requestPulse();
       };
 
       const drawTick = (now) => {
@@ -127,6 +113,7 @@
         drawProgress = clamp(drawProgress + (now - lastDrawTime) / drawDuration);
         lastDrawTime = now;
         snapStages(drawProgress);
+        setTokenPosition(drawProgress);
 
         if (drawProgress >= 1) {
           finishDraw();
@@ -143,10 +130,13 @@
           hasStarted = true;
           root.classList.add('rq-motion-ready');
           hero.classList.add('is-signature-drawing');
+          setTokenPosition(0);
         }
 
         drawFrame = requestAnimationFrame(drawTick);
       };
+
+      setTokenPosition(0);
 
       const heroObserver = new IntersectionObserver(
         (entries) => {
@@ -156,13 +146,8 @@
 
             if (isVisible && widthQuery.matches) {
               startDraw();
-              requestPulse();
             } else {
               stopDrawFrame();
-              if (pulseFrame) {
-                cancelAnimationFrame(pulseFrame);
-                pulseFrame = 0;
-              }
             }
           });
         },
@@ -170,8 +155,6 @@
       );
 
       heroObserver.observe(hero);
-      window.addEventListener('scroll', requestPulse, { passive: true });
-      window.addEventListener('resize', requestPulse, { passive: true });
 
       widthQuery.addEventListener?.('change', () => {
         if (!widthQuery.matches) {
@@ -183,7 +166,6 @@
         if (isVisible) {
           hero.classList.add('is-signature-visible');
           startDraw();
-          requestPulse();
         }
       });
     };

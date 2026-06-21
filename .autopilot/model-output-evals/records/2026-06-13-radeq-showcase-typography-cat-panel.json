@@ -1,0 +1,180 @@
+{
+  "record_version": "v0.1",
+  "eval_id": "radeq-showcase-typography-cat-panel-2026-06-13",
+  "created": "2026-06-13",
+  "project": {
+    "slug": "radeq",
+    "name": "Radeq.cz",
+    "control_plane": false
+  },
+  "task": {
+    "task_type": "development",
+    "summary": "Compact the /ukazky typography and homepage cat entry panel after owner feedback from the GitHub Pages preview.",
+    "risk_level": "medium"
+  },
+  "phase": "learning_immediate_loop",
+  "state": "accepted",
+  "model_or_worker": {
+    "provider": "openai",
+    "name": "Codex GPT-5 desktop session",
+    "role": "frontend implementer, verifier, GitHub preview publisher, and governance recorder"
+  },
+  "reasoning_profile": {
+    "route": "subscription_interactive",
+    "reasoning_effort": "high",
+    "change_policy": "GitHub Pages preview branch only. No Cloudflare deploy, DNS mutation, mailbox change, D1 migration, production lead write, checkout/payment, or model-backed chatbot change."
+  },
+  "token_efficiency_profile": {
+    "mode": "caveman",
+    "context_scope": "Owner feedback, current product branch, targeted stylesheet/test files, Browser QA metrics, GitHub Pages workflow result, and governance records.",
+    "caveman_applied": true
+  },
+  "provider_best_practice_sources": [
+    "autopilot-supervisor-base",
+    "decision-mesh-policy",
+    "openai-evals",
+    "openai-prompt-engineering",
+    "prompt-library-policy"
+  ],
+  "input_packet_summary": {
+    "summary": "Owner said the showcase pages used too-large, poorly formatted text, and the cat still took too much space on entry.",
+    "allowed_context": [
+      "Radeq product repository",
+      "current GitHub preview branch",
+      "local Browser plugin QA",
+      "Autopilot Radeq work-log and eval records"
+    ],
+    "forbidden_context": [
+      "Cloudflare production mutation",
+      "DNS mutation",
+      "mailbox mutation",
+      "customer or lead data",
+      "LLM/RAG/API chatbot implementation",
+      "checkout or payment implementation"
+    ],
+    "source_pointers": [
+      "docs/projects/radeq/work-log.md",
+      "C:/Users/sirok/Documents/Projects/radeq/src/styles/global.css",
+      "C:/Users/sirok/Documents/Projects/radeq/tests/showcase-examples.spec.ts",
+      "C:/Users/sirok/Documents/Projects/radeq/tests/smoke.spec.ts",
+      "https://sirradek.github.io/radeq/ukazky/?v=1efc86b"
+    ]
+  },
+  "output_pointer": {
+    "kind": "local_file",
+    "pointer": "C:/Users/sirok/Documents/Projects/radeq@1efc86b",
+    "summary": "Reduced /ukazky typography/card density, shrank the desktop cat panel, hid the cat panel on mobile entry, and added regression tests."
+  },
+  "verification_evidence": [
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "npm.cmd run typecheck: 0 errors, 0 warnings, 0 hints.",
+      "source_pointer": "local command"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "npm.cmd test: 11 files and 58 tests passed.",
+      "source_pointer": "local command"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "npm.cmd run build completed with known Vite large chunk warning.",
+      "source_pointer": "local command"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "DEPLOY_TARGET=github-pages npm.cmd run build completed with known Vite large chunk warning.",
+      "source_pointer": "local command"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "npm.cmd run test:e2e -- tests/showcase-examples.spec.ts passed: 7 Playwright tests.",
+      "source_pointer": "local command"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "npm.cmd run test:e2e -- tests/smoke.spec.ts passed: 9 Playwright tests.",
+      "source_pointer": "local command"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "npm.cmd run test:e2e passed: 23 Playwright tests.",
+      "source_pointer": "local command"
+    },
+    {
+      "type": "manual_review",
+      "status": "passed",
+      "evidence": "Browser plugin QA found no console warnings/errors or horizontal overflow; local mobile /ukazky H1 was about 28 px and first card began around y=366 px; desktop homepage cat panel was about 279 x 210 px; mobile homepage cat panel was display:none.",
+      "source_pointer": "local Browser plugin session"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "GitHub Pages workflow run 27459705079 completed successfully from commit 1efc86bf54aa94f9635a99b31f94a9416292d3b5.",
+      "source_pointer": "https://github.com/SirRadek/radeq/actions/runs/27459705079"
+    },
+    {
+      "type": "manual_review",
+      "status": "passed",
+      "evidence": "Public GitHub Pages /, /ukazky/, and /ukazky/chatbot/ returned HTTP 200; public mobile /ukazky preview had no console warnings/errors, no overflow, and H1 about 28 px.",
+      "source_pointer": "https://sirradek.github.io/radeq/ukazky/?v=1efc86b"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "git diff --check passed with only LF-to-CRLF working-copy notices.",
+      "source_pointer": "local command"
+    }
+  ],
+  "score_by_dimension": {
+    "task_fit": 96,
+    "instruction_following": 95,
+    "source_grounding": 91,
+    "format_contract": 92,
+    "verification_readiness": 97,
+    "privacy_safety": 98,
+    "handoff_clarity": 95,
+    "token_efficiency": 88,
+    "workflow_compatibility": 95
+  },
+  "failure_labels": [],
+  "prompt_or_input_delta": {
+    "changed": true,
+    "summary": "Owner feedback changed the implementation emphasis from adding route coverage to tightening first-viewport layout and typography on the existing preview branch.",
+    "changed_fields": [
+      "showcase typography scale",
+      "showcase card density",
+      "homepage cat entry panel",
+      "responsive regression tests",
+      "GitHub Pages preview verification"
+    ],
+    "rollback_path": "Revert product commit 1efc86b and this governance commit, or redeploy previous GitHub Pages preview commit dbb59d5."
+  },
+  "rerun_count": 1,
+  "accepted_state": "accepted",
+  "source_pointers": [
+    "docs/autopilot/model-output-evaluation-operating-model.md",
+    "src/data/delivery-system/modelOutputEvaluation.ts",
+    "prompt-library/source-catalog.json",
+    "C:/Users/sirok/Documents/Projects/radeq/src/styles/global.css",
+    "C:/Users/sirok/Documents/Projects/radeq/tests/showcase-examples.spec.ts",
+    "C:/Users/sirok/Documents/Projects/radeq/tests/smoke.spec.ts",
+    "docs/projects/radeq/work-log.md",
+    "https://sirradek.github.io/radeq/ukazky/?v=1efc86b"
+  ],
+  "privacy_review": {
+    "redacted_context_only": true,
+    "raw_output_stored": false,
+    "raw_prompt_stored": false,
+    "raw_logs_stored": false,
+    "secrets_or_customer_data_stored": false,
+    "reviewer": "codex-supervisor"
+  }
+}

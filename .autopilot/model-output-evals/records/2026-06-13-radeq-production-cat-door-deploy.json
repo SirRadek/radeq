@@ -1,0 +1,158 @@
+{
+  "record_version": "v0.1",
+  "eval_id": "radeq-production-cat-door-deploy-2026-06-13",
+  "created": "2026-06-13",
+  "project": {
+    "slug": "radeq",
+    "name": "Radeq.cz",
+    "control_plane": false
+  },
+  "task": {
+    "task_type": "deployment",
+    "summary": "Deploy the approved cat-door launcher version of Radeq.cz to the live radeq.cz Cloudflare Worker.",
+    "risk_level": "high"
+  },
+  "phase": "deployment_verification",
+  "state": "accepted",
+  "model_or_worker": {
+    "provider": "openai",
+    "name": "Codex GPT-5 desktop session",
+    "role": "deployment operator, verifier, and governance recorder"
+  },
+  "reasoning_profile": {
+    "route": "subscription_interactive",
+    "reasoning_effort": "medium",
+    "change_policy": "Owner explicitly approved production deployment to radeq.cz. Cloudflare Worker deploy was allowed. No DNS mutation, mailbox mutation, D1 migration, production lead submission, checkout/payment, model-backed chatbot, GitHub merge, or GitHub production release was performed."
+  },
+  "token_efficiency_profile": {
+    "mode": "caveman",
+    "context_scope": "Radeq product branch, Wrangler config, Cloudflare docs for deploy/keep-vars, dry-run/deploy output, public HTTP checks, live mobile Playwright check, and Autopilot records.",
+    "caveman_applied": true
+  },
+  "provider_best_practice_sources": [
+    "cloudflare-wrangler-skill",
+    "cloudflare-workers-official-docs",
+    "decision-mesh-policy",
+    "autopilot-supervisor-base"
+  ],
+  "input_packet_summary": {
+    "summary": "Owner requested deployment of the already-pushed cat-door launcher branch to the live radeq.cz domain.",
+    "allowed_context": [
+      "Radeq product checkout",
+      "Cloudflare Wrangler OAuth session",
+      "Cloudflare Worker radeq production deployment",
+      "public production URL checks",
+      "local governance records"
+    ],
+    "forbidden_context": [
+      "raw API tokens",
+      "secrets",
+      "DNS mutation",
+      "mailbox/provider mutation",
+      "production lead payload submission",
+      "GitHub merge"
+    ],
+    "source_pointers": [
+      "C:/Users/sirok/Documents/Projects/radeq/wrangler.toml",
+      "C:/Users/sirok/Documents/Projects/radeq/worker/index.ts",
+      "docs/projects/radeq/work-log.md",
+      "docs/projects/radeq/decision-mesh/rules.yaml"
+    ]
+  },
+  "output_pointer": {
+    "kind": "cloudflare_worker_version",
+    "pointer": "Cloudflare Worker radeq version 20bc4a38-c5c0-41a9-a979-ff57cafbb54f",
+    "summary": "Live radeq.cz serves product commit 7d62255 with the cat-door launcher and current static public pages."
+  },
+  "verification_evidence": [
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "npm.cmd run build passed for production root build with the known Vite large chunk warning.",
+      "source_pointer": "local command"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "npx.cmd wrangler@latest deploy --dry-run --keep-vars passed and showed ASSETS, LEADS_DB, and EMAIL bindings.",
+      "source_pointer": "local command"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "npx.cmd wrangler@latest deploy --keep-vars uploaded 24 new or modified static assets and deployed Worker radeq version 20bc4a38-c5c0-41a9-a979-ff57cafbb54f.",
+      "source_pointer": "Cloudflare Worker radeq"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "Live HTTP checks returned 200 for /, /ukazky/, /ukazky/chatbot/, /ukazky/automatizace/, /ukazky/nabidka-eshop/, and /sitemap.xml.",
+      "source_pointer": "https://radeq.cz/"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "OPTIONS https://radeq.cz/api/leads returned 204 with POST, OPTIONS. No production lead insert was submitted.",
+      "source_pointer": "https://radeq.cz/api/leads"
+    },
+    {
+      "type": "manual_review",
+      "status": "passed",
+      "evidence": "Live mobile Playwright check at 390 x 920 found trigger label Otevrit kocici vstup, aria-pressed=false, panel about 94 x 112 px, no H1 overlap, no horizontal overflow, and canonical https://radeq.cz/.",
+      "source_pointer": "https://radeq.cz/?v=7d62255"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "wrangler deployments list --name radeq showed version 20bc4a38-c5c0-41a9-a979-ff57cafbb54f at 100% traffic.",
+      "source_pointer": "Cloudflare Worker radeq deployments list"
+    }
+  ],
+  "score_by_dimension": {
+    "task_fit": 97,
+    "instruction_following": 95,
+    "source_grounding": 92,
+    "format_contract": 92,
+    "verification_readiness": 96,
+    "privacy_safety": 94,
+    "handoff_clarity": 96,
+    "token_efficiency": 88,
+    "workflow_compatibility": 94
+  },
+  "failure_labels": [
+    {
+      "label": "initial_api_token_auth_failure",
+      "resolution": "Removed the insufficient CLOUDFLARE_API_TOKEN from the deployment process and used the local Wrangler OAuth session with account ID set for the process."
+    }
+  ],
+  "prompt_or_input_delta": {
+    "changed": true,
+    "summary": "Owner changed the previous GitHub-only staging boundary to explicit production deployment on radeq.cz.",
+    "changed_fields": [
+      "Cloudflare Worker production deployment",
+      "live public verification",
+      "rollback path"
+    ],
+    "rollback_path": "Rollback Cloudflare Worker radeq from version 20bc4a38-c5c0-41a9-a979-ff57cafbb54f to the previous deployment/version, or redeploy previous product commit 1efc86b."
+  },
+  "rerun_count": 1,
+  "accepted_state": "accepted",
+  "source_pointers": [
+    "docs/autopilot/model-output-evaluation-operating-model.md",
+    "src/data/delivery-system/modelOutputEvaluation.ts",
+    "prompt-library/source-catalog.json",
+    "docs/projects/radeq/work-log.md",
+    "docs/projects/radeq/decision-mesh/rules.yaml",
+    "C:/Users/sirok/Documents/Projects/radeq/wrangler.toml",
+    "C:/Users/sirok/Documents/Projects/radeq/worker/index.ts",
+    "https://radeq.cz/"
+  ],
+  "privacy_review": {
+    "redacted_context_only": true,
+    "raw_output_stored": false,
+    "raw_prompt_stored": false,
+    "raw_logs_stored": false,
+    "secrets_or_customer_data_stored": false,
+    "reviewer": "codex-supervisor"
+  }
+}

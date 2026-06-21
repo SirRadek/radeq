@@ -6,10 +6,85 @@
     if (window.__rqMotionIsland) return;
     window.__rqMotionIsland = true;
 
+    const root = document.documentElement;
+
+    const setupJourney = () => {
+      const roots = Array.from(document.querySelectorAll('[data-rq-journey]'));
+
+      roots.forEach((journey) => {
+        const steps = Array.from(journey.querySelectorAll('[data-rq-journey-step]'));
+        if (!steps.length) return;
+
+        const mobileQuery = window.matchMedia?.('(max-width: 760px)');
+        const hoverQuery = window.matchMedia?.('(hover: hover) and (pointer: fine)');
+        let lockedIndex = 0;
+
+        const isMobile = () => Boolean(mobileQuery?.matches);
+        const canHover = () => Boolean(hoverQuery?.matches);
+
+        const setActive = (index, options = {}) => {
+          if (!steps[index]) return;
+          if (options.lock) lockedIndex = index;
+
+          steps.forEach((step, stepIndex) => {
+            const isActive = stepIndex === index;
+            const summary = step.querySelector('[data-rq-journey-summary]');
+
+            step.classList.toggle('is-active', isActive);
+            step.open = isMobile() ? isActive : true;
+
+            if (!summary) return;
+            summary.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+            if (isActive) {
+              summary.setAttribute('aria-current', 'step');
+            } else {
+              summary.removeAttribute('aria-current');
+            }
+          });
+        };
+
+        journey.classList.add('is-enhanced');
+        setActive(0, { lock: true });
+
+        steps.forEach((step, index) => {
+          const summary = step.querySelector('[data-rq-journey-summary]');
+          if (!summary) return;
+
+          summary.addEventListener('click', (event) => {
+            event.preventDefault();
+            setActive(index, { lock: true });
+          });
+
+          summary.addEventListener('pointerenter', () => {
+            if (!isMobile() && canHover()) setActive(index);
+          });
+
+          summary.addEventListener('focusin', () => {
+            setActive(index);
+          });
+        });
+
+        journey.addEventListener('pointerleave', () => {
+          if (!isMobile() && canHover()) setActive(lockedIndex);
+        });
+
+        journey.addEventListener('focusout', () => {
+          window.setTimeout(() => {
+            if (!journey.contains(document.activeElement)) setActive(lockedIndex);
+          }, 0);
+        });
+
+        mobileQuery?.addEventListener?.('change', () => {
+          setActive(lockedIndex, { lock: true });
+        });
+      });
+    };
+
+    setupJourney();
+
     const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) return;
 
-    const root = document.documentElement;
     root.dataset.rqMotion = 'on';
 
     const revealItems = Array.from(document.querySelectorAll('[data-rq-reveal]'));

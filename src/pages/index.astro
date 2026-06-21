@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import RqHeader from '../components/RqHeader.astro';
 import RqFooter from '../components/RqFooter.astro';
 import RqGuide from '../components/RqGuide.astro';
+import RqJourney from '../components/RqJourney.astro';
 import RqMotion from '../components/RqMotion.astro';
 import RqDiagnostic from '../components/RqDiagnostic.astro';
 
@@ -10,7 +11,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const nav = [
   { href: '#co-resim', label: 'Co řeším' },
   { href: '#sluzby', label: 'Služby' },
-  { href: '#jak-pracuji', label: 'Jak pracuji' },
+  { href: '#jak-pracuji', label: 'Postup' },
   { href: '#ceny', label: 'Ceny' },
   { href: '/ukazky/', label: 'Ukázky' },
   { href: '#kontakt', label: 'Kontakt' },
@@ -243,18 +244,7 @@ const symptoms = [
 </section>
 
 <section id="jak-pracuji" class="rq-section rq-process">
-  <p class="rq-eyebrow">Jak pracuji</p>
-  <h2 class="rq-h2">Nejdřív měřím, pak stavím.</h2>
-  <div class="rq-process__blueprint" data-rq-reveal>
-    <svg class="rq-process__line" viewBox="0 0 960 120" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-      <path class="rq-process__line-path" pathLength="1" d="M80 62 C190 18 265 98 365 58 S560 28 635 62 S780 104 882 52" />
-    </svg>
-    <div class="rq-process__steps" aria-label="Postup spolupráce">
-      <article class="rq-card rq-step"><span class="rq-step__num">1</span><h3>Pojmenuju problém</h3><p class="rq-step__sub">co přesně brzdí a proč.</p></article>
-      <article class="rq-card rq-step"><span class="rq-step__num">2</span><h3>Vyberu nejmenší funkční řešení</h3><p class="rq-step__sub">bez zbytečností.</p></article>
-      <article class="rq-card rq-step"><span class="rq-step__num">3</span><h3>Postavím, otestuji a předám</h3><p class="rq-step__sub">se servisním protokolem.</p></article>
-    </div>
-  </div>
+  <RqJourney />
   <article class="rq-guarantee">
     <p class="rq-eyebrow">Servisní protokol &amp; Testerova záruka</p>
     <h3>Každá zakázka má jasný výstup a ověřený výkon.</h3>

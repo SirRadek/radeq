@@ -1,0 +1,171 @@
+---
+const phases = [
+  {
+    id: 'rozbor',
+    number: '01',
+    title: 'Rozbor',
+    duration: '1–3 dny',
+    solve: 'co nefunguje, kdo to používá, kde se ztrácí čas a důvěra.',
+    process: 'krátký hovor, projdu web/proces, doptám se na cíl.',
+    benefit: 'jasně pojmenovaný problém a priority bez mlhy.',
+    tags: [
+      { label: 'Výstup', value: 'rozbor' },
+      { label: 'Vaše role', value: 'dáte přístup/podklady.' },
+      { label: 'Moje role', value: 'rozeberu a změřím.' },
+      { label: 'Trust', value: 'bez závazků — když se nedomluvíme, rozbor vám zůstává.' },
+    ],
+  },
+  {
+    id: 'navrh',
+    number: '02',
+    title: 'Návrh',
+    duration: '2–5 dní',
+    solve: 'co vznikne, pro koho, v jakém pořadí a co se dělat NEbude.',
+    process: 'připravím strukturu + texty, projdeme a schválíte.',
+    benefit: 'konkrétní plán, cenu a termín předem — méně překvapení.',
+    tags: [
+      { label: 'Výstup', value: 'návrh' },
+      { label: 'Vaše role', value: 'potvrdíte směr.' },
+      { label: 'Moje role', value: 'navrhnu.' },
+    ],
+  },
+  {
+    id: 'stavba',
+    number: '03',
+    title: 'Stavba',
+    duration: 'dny (úpravy) až ~2 týdny',
+    solve: 'web / e-shop / automatizace, obsah, mobil, základ SEO.',
+    process: 'stavím po částech, průběžně ukazuju na preview — žádná černá skříňka.',
+    benefit: 'funkční řešení k vyzkoušení, chyby se zachytí včas.',
+    tags: [
+      { label: 'Výstup', value: 'funkční řešení' },
+      { label: 'Vaše role', value: 'připomínkujete.' },
+      { label: 'Moje role', value: 'postavím.' },
+      { label: 'Trust', value: 'platba po částech — druhá až po schválení prototypu.' },
+    ],
+  },
+  {
+    id: 'test',
+    number: '04',
+    title: 'Test',
+    duration: '1-3 dny',
+    solve: 'mobil/prohlížeče, rychlost, formuláře, reálné scénáře.',
+    process: 'projedu testovací checklist, ověřím výkon a funkčnost.',
+    benefit: 'méně chyb po spuštění, ověřený výkon.',
+    tags: [
+      { label: 'Výstup', value: 'Protokol o testování (Lighthouse).', strong: true },
+      { label: 'Vaše role', value: 'potvrdíte hlavní scénáře.' },
+      { label: 'Moje role', value: 'testuji.' },
+    ],
+  },
+  {
+    id: 'predani',
+    number: '05',
+    title: 'Předání',
+    duration: '~1 den',
+    solve: 'spuštění, přístupy, zaškolení, co dál.',
+    process: 'nasadím na vaši doménu, předám návod.',
+    benefit: 'plná kontrola a víte, na koho se obrátit.',
+    tags: [
+      { label: 'Výstup', value: 'předávací poznámky + návod' },
+      { label: 'Vaše role', value: 'převezmete přístupy.' },
+      { label: 'Moje role', value: 'nasadím a předám.' },
+      { label: 'Trust', value: 'po předání dle domluvy: 30 dní podpory, nebo návod/video.' },
+    ],
+    final: true,
+  },
+];
+
+const trustPoints = [
+  'Jeden člověk od rozboru po test — nic se neztratí mezi rolemi.',
+  'Každá fáze má hmatatelný výstup.',
+  'Test je před předáním, ne až po stížnosti.',
+];
+---
+
+<div class="rq-journey" data-rq-journey>
+  <div class="rq-journey__header" data-rq-reveal>
+    <p class="rq-eyebrow">Postup</p>
+    <h2 class="rq-h2">Jak to bude probíhat</h2>
+  </div>
+
+  <div class="rq-journey__checkpoints" aria-label="Fáze spolupráce">
+    {phases.map((phase, index) => (
+      <details
+        class:list={[
+          'rq-journey-step',
+          { 'rq-journey-step--final': phase.final, 'is-active': index === 0 },
+        ]}
+        data-rq-journey-step
+        data-rq-step-index={index}
+        open
+      >
+        <summary
+          id={`rq-journey-summary-${phase.id}`}
+          class="rq-journey-step__summary"
+          aria-controls={`rq-journey-panel-${phase.id}`}
+          aria-expanded="true"
+          aria-current={index === 0 ? 'step' : undefined}
+          data-rq-journey-summary
+        >
+          <span class="rq-journey-step__dot" aria-hidden="true"></span>
+          <span class="rq-journey-step__copy">
+            <span class="rq-journey-step__number">{phase.number}</span>
+            <span class="rq-journey-step__title">{phase.title}</span>
+            <span class="rq-journey-step__duration">{phase.duration}</span>
+          </span>
+        </summary>
+
+        <div
+          id={`rq-journey-panel-${phase.id}`}
+          class="rq-journey-step__panel"
+          role="region"
+          aria-labelledby={`rq-journey-summary-${phase.id}`}
+          data-rq-journey-panel
+        >
+          <div class="rq-journey-panel__topline">
+            <span>{phase.number}</span>
+            <h3>{phase.title}</h3>
+          </div>
+
+          <dl class="rq-journey-panel__grid">
+            <div>
+              <dt>Co řešíme</dt>
+              <dd>{phase.solve}</dd>
+            </div>
+            <div>
+              <dt>Jak dlouho</dt>
+              <dd>{phase.duration}.</dd>
+            </div>
+            <div>
+              <dt>Jak probíhá</dt>
+              <dd>{phase.process}</dd>
+            </div>
+            <div>
+              <dt>Co z toho máte</dt>
+              <dd>{phase.benefit}</dd>
+            </div>
+          </dl>
+
+          <ul class="rq-journey-tags" aria-label={`Výstupy a role: ${phase.title}`}>
+            {phase.tags.map((tag) => (
+              <li>
+                <span>{tag.label}</span>
+                {tag.strong ? <strong>{tag.value}</strong> : tag.value}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </details>
+    ))}
+  </div>
+
+  <div class="rq-journey__timeline" data-rq-reveal>
+    <p>Typicky 2–4 týdny od poptávky ke spuštění.</p>
+    <small>Orientačně pro běžný projekt — větší zakázky podle domluvy.</small>
+  </div>
+
+  <ul class="rq-journey-trust" aria-label="Důležité jistoty procesu" data-rq-reveal>
+    {trustPoints.map((point) => <li>{point}</li>)}
+  </ul>
+</div>

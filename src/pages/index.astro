@@ -31,7 +31,8 @@ const symptoms = [
   <RqHeader content={{ navItems: nav }} alternateLabel="EN" alternatePath="/en/" />
 
   <main>
-    <section class="rq-section rq-hero" id="top" style="--rq-reveal-index: 0">
+    <section class="rq-section rq-hero" id="top" style="--rq-reveal-index: 0" data-rq-hero-signature>
+      <div class="rq-hero__content">
       <div class="rq-hero__copy">
         <p class="rq-eyebrow" data-rq-reveal style="--rq-i:0">Racionální digitalizace</p>
         <h1 class="rq-display" data-rq-reveal style="--rq-i:1">Weby, data a automatizace,<br class="rq-br-desktop" /> které vám uvolní ruce.</h1>
@@ -57,6 +58,33 @@ const symptoms = [
         <a class="rq-btn rq-btn--primary" href="#kontakt" data-rq-magnetic>Napsat poptávku</a>
         <a class="rq-btn rq-btn--ghost" href="#ukazky-teaser">Ukázky práce</a>
         <p class="rq-hero__micro">Nezávazně. Ozvu se do 1 pracovního dne.</p>
+      </div>
+      </div>
+
+      <div class="rq-hero__visual" data-rq-hero-visual aria-hidden="true">
+        <svg class="rq-hero-signature" viewBox="0 0 560 420" aria-hidden="true" focusable="false" data-rq-hero-svg>
+          <defs>
+            <path id="rq-hero-path" pathLength="1000" d="M46 252 C76 214 98 198 128 190 C158 182 168 154 202 146 C238 138 252 177 292 176 C326 175 330 234 356 234 C394 234 397 204 438 210 C474 215 482 304 502 346" />
+          </defs>
+          <use class="rq-hero-signature__trace" href="#rq-hero-path"></use>
+          <g class="rq-hero-signature__points" data-rq-signature-points>
+            <circle class="rq-hero-signature__point" cx="46" cy="252" r="4.8" data-rq-snap-at="0.04" style="--rq-chaos-x: 12px; --rq-chaos-y: -68px;"></circle>
+            <circle class="rq-hero-signature__point" cx="128" cy="190" r="4.2" data-rq-snap-at="0.18" style="--rq-chaos-x: -54px; --rq-chaos-y: 28px;"></circle>
+            <circle class="rq-hero-signature__point" cx="202" cy="146" r="4.4" data-rq-snap-at="0.33" style="--rq-chaos-x: 30px; --rq-chaos-y: -44px;"></circle>
+            <circle class="rq-hero-signature__point" cx="292" cy="176" r="4.1" data-rq-snap-at="0.50" style="--rq-chaos-x: -38px; --rq-chaos-y: 64px;"></circle>
+            <circle class="rq-hero-signature__point" cx="356" cy="234" r="4.5" data-rq-snap-at="0.66" style="--rq-chaos-x: 48px; --rq-chaos-y: -24px;"></circle>
+            <circle class="rq-hero-signature__point" cx="438" cy="210" r="4.3" data-rq-snap-at="0.80" style="--rq-chaos-x: -24px; --rq-chaos-y: -58px;"></circle>
+          </g>
+          <g class="rq-hero-signature__pulse" data-rq-signature-pulse>
+            <circle cx="0" cy="0" r="5"></circle>
+          </g>
+          <g class="rq-hero-signature__endpoint" data-rq-signature-end>
+            <line class="rq-hero-signature__cross" x1="502" y1="326" x2="502" y2="366"></line>
+            <line class="rq-hero-signature__cross" x1="482" y1="346" x2="522" y2="346"></line>
+            <circle class="rq-hero-signature__end-dot" cx="502" cy="346" r="6.5"></circle>
+            <text class="rq-hero-signature__label" x="492" y="386" text-anchor="end">[VAL_PASSED]</text>
+          </g>
+        </svg>
       </div>
     </section>
 

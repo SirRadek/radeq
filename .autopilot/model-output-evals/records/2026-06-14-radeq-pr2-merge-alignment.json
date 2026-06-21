@@ -1,0 +1,135 @@
+{
+  "record_version": "v0.1",
+  "eval_id": "radeq-pr2-merge-alignment-2026-06-14",
+  "created": "2026-06-14",
+  "project": {
+    "slug": "radeq",
+    "name": "Radeq.cz",
+    "control_plane": false
+  },
+  "task": {
+    "task_type": "repository_alignment",
+    "summary": "Merge the verified Radeq preview PR into the default branch after the live radeq.cz production deployment.",
+    "risk_level": "medium"
+  },
+  "phase": "post_deploy_alignment",
+  "state": "accepted",
+  "model_or_worker": {
+    "provider": "openai",
+    "name": "Codex GPT-5 desktop session",
+    "role": "GitHub operator, verifier, and governance recorder"
+  },
+  "reasoning_profile": {
+    "route": "subscription_interactive",
+    "reasoning_effort": "medium",
+    "change_policy": "Owner approved the recommended PR merge. GitHub PR state and default branch were mutated. No Cloudflare deploy, DNS mutation, mailbox mutation, D1 migration, production lead submission, checkout/payment, or model-backed chatbot change was performed."
+  },
+  "token_efficiency_profile": {
+    "mode": "caveman",
+    "context_scope": "PR #2 state, live production HTTP checks, GitHub merge result, GitHub Pages workflow result, and Autopilot records.",
+    "caveman_applied": true
+  },
+  "provider_best_practice_sources": [
+    "github-skill",
+    "decision-mesh-policy",
+    "autopilot-supervisor-base"
+  ],
+  "input_packet_summary": {
+    "summary": "Owner said Proved after the previous recommendation to check the live site and merge PR #2 so default branch matches production.",
+    "allowed_context": [
+      "Radeq GitHub PR #2",
+      "Radeq product checkout",
+      "public production URL checks",
+      "GitHub Actions workflow result",
+      "local governance records"
+    ],
+    "forbidden_context": [
+      "Cloudflare production redeploy",
+      "DNS mutation",
+      "mailbox/provider mutation",
+      "production lead payload submission",
+      "checkout/payment implementation",
+      "model-backed chatbot implementation"
+    ],
+    "source_pointers": [
+      "https://github.com/SirRadek/radeq/pull/2",
+      "https://github.com/SirRadek/radeq/actions/runs/27489406889",
+      "https://radeq.cz/"
+    ]
+  },
+  "output_pointer": {
+    "kind": "git_merge_commit",
+    "pointer": "SirRadek/radeq@473b2fb0f4cd3f824f83697f23ff62fabcb6f8f1",
+    "summary": "PR #2 merged into branch new with deployed commit 7d62255 preserved in history."
+  },
+  "verification_evidence": [
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "gh pr view showed PR #2 was mergeable with mergeStateStatus CLEAN before merge.",
+      "source_pointer": "local gh command"
+    },
+    {
+      "type": "manual_review",
+      "status": "passed",
+      "evidence": "Live checks before merge returned 200 for / and /ukazky/, and OPTIONS /api/leads returned 204 with POST, OPTIONS.",
+      "source_pointer": "https://radeq.cz/"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "gh pr ready marked PR #2 ready for review from draft.",
+      "source_pointer": "https://github.com/SirRadek/radeq/pull/2"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "gh pr merge --merge merged PR #2 into new with merge commit 473b2fb0f4cd3f824f83697f23ff62fabcb6f8f1.",
+      "source_pointer": "https://github.com/SirRadek/radeq/pull/2"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "GitHub Pages workflow run 27489406889 completed successfully on branch new.",
+      "source_pointer": "https://github.com/SirRadek/radeq/actions/runs/27489406889"
+    }
+  ],
+  "score_by_dimension": {
+    "task_fit": 97,
+    "instruction_following": 95,
+    "source_grounding": 93,
+    "format_contract": 92,
+    "verification_readiness": 94,
+    "privacy_safety": 98,
+    "handoff_clarity": 96,
+    "token_efficiency": 90,
+    "workflow_compatibility": 95
+  },
+  "failure_labels": [],
+  "prompt_or_input_delta": {
+    "changed": true,
+    "summary": "Owner approved moving from GitHub preview/production deploy completion to repository alignment by merging PR #2.",
+    "changed_fields": [
+      "PR draft state",
+      "default branch history",
+      "GitHub Pages workflow"
+    ],
+    "rollback_path": "Revert merge commit 473b2fb0f4cd3f824f83697f23ff62fabcb6f8f1 on branch new."
+  },
+  "rerun_count": 1,
+  "accepted_state": "accepted",
+  "source_pointers": [
+    "docs/projects/radeq/work-log.md",
+    "https://github.com/SirRadek/radeq/pull/2",
+    "https://github.com/SirRadek/radeq/actions/runs/27489406889",
+    "https://radeq.cz/"
+  ],
+  "privacy_review": {
+    "redacted_context_only": true,
+    "raw_output_stored": false,
+    "raw_prompt_stored": false,
+    "raw_logs_stored": false,
+    "secrets_or_customer_data_stored": false,
+    "reviewer": "codex-supervisor"
+  }
+}

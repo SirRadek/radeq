@@ -8,15 +8,15 @@ plane.
 Source: migrated from the autopilot control plane (`SirRadek/autopilot`,
 backup branch `backup/local-radeq-artifacts-9c8685e`) on 2026-06-21.
 
-## Not yet migrated (follow-up)
+## Contents
 
-Still in the control plane, pending an owner decision and the gated cleanup pass:
+- `architecture.md`, `work-log.md` — radeq architecture record and work log.
+- `decision-mesh/` — radeq project Decision Mesh (edges, rules, nodes).
+- `model-output-evals/records/` — radeq advisory model-output eval records.
+- `design/` — radeq design history: baseline screenshots, concept and mascot
+  images, matrix/cyber prototypes, motion preview, and the visual-pro mission.
 
-- radeq model-output-eval records (`model-output-evals/records/*radeq*.json`) —
-  borderline: control-plane advisory audit evidence vs. radeq decision history.
-- radeq design baseline assets (`docs/autopilot/radeq-*`, baseline screenshots,
-  concept and mascot images) — binaries.
+## Control-plane cleanup
 
-The control-plane copies are not deleted yet; per the control-plane cleanup
-policy, removal is gated on re-validating the cleanup map against the canonical
-autopilot repo first.
+The control-plane copies in `SirRadek/autopilot` are removed once this import is
+merged and the cleanup map is re-validated against the canonical autopilot repo.

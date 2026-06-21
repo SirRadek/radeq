@@ -1,0 +1,178 @@
+{
+  "record_version": "v0.1",
+  "eval_id": "radeq-cat-door-launcher-2026-06-13",
+  "created": "2026-06-13",
+  "project": {
+    "slug": "radeq",
+    "name": "Radeq.cz",
+    "control_plane": false
+  },
+  "task": {
+    "task_type": "development",
+    "summary": "Convert the homepage cat mascot from a visible panel launch affordance into an explicit labeled door/avatar launcher with on/off behavior.",
+    "risk_level": "medium"
+  },
+  "phase": "learning_immediate_loop",
+  "state": "accepted",
+  "model_or_worker": {
+    "provider": "openai",
+    "name": "Codex GPT-5 desktop session",
+    "role": "frontend implementer, verifier, GitHub preview publisher, and governance recorder"
+  },
+  "reasoning_profile": {
+    "route": "subscription_interactive",
+    "reasoning_effort": "high",
+    "change_policy": "GitHub Pages preview branch only. No Cloudflare deploy, DNS mutation, mailbox change, D1 migration, production lead write, checkout/payment, or model-backed chatbot change."
+  },
+  "token_efficiency_profile": {
+    "mode": "caveman",
+    "context_scope": "Owner launcher feedback, Radeq product branch, CoreIsland component, localized content, CSS, smoke tests, Browser QA metrics, GitHub Pages workflow result, and governance records.",
+    "caveman_applied": true
+  },
+  "provider_best_practice_sources": [
+    "frontend-design-skill",
+    "browser-plugin-qa",
+    "decision-mesh-policy",
+    "autopilot-supervisor-base"
+  ],
+  "input_packet_summary": {
+    "summary": "Owner required the cat to start only from an icon/avatar-like control, with an on/off toggle, suggested as a door with a label that opens and lets the cat enter.",
+    "allowed_context": [
+      "Radeq product repository",
+      "current GitHub preview branch",
+      "local Browser plugin QA",
+      "Autopilot Radeq work-log, project mesh, and eval records"
+    ],
+    "forbidden_context": [
+      "Cloudflare production mutation",
+      "DNS mutation",
+      "mailbox mutation",
+      "customer or lead data",
+      "LLM/RAG/API chatbot implementation",
+      "checkout or payment implementation"
+    ],
+    "source_pointers": [
+      "docs/projects/radeq/work-log.md",
+      "docs/projects/radeq/decision-mesh/nodes/three_d_mascot_addon.yaml",
+      "docs/projects/radeq/decision-mesh/rules.yaml",
+      "C:/Users/sirok/Documents/Projects/radeq/src/components/CoreIsland.tsx",
+      "C:/Users/sirok/Documents/Projects/radeq/src/data/siteContent.ts",
+      "C:/Users/sirok/Documents/Projects/radeq/src/styles/global.css",
+      "C:/Users/sirok/Documents/Projects/radeq/tests/smoke.spec.ts"
+    ]
+  },
+  "output_pointer": {
+    "kind": "git_commit",
+    "pointer": "C:/Users/sirok/Documents/Projects/radeq@7d62255bec8f73338aa38a52113d538a26d385c6",
+    "summary": "Door/avatar cat launcher, explicit enable/disable behavior, canvas host-size fix, reduced-motion dismiss behavior, and regression tests."
+  },
+  "verification_evidence": [
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "npm.cmd run typecheck: 0 errors, 0 warnings, 0 hints.",
+      "source_pointer": "local command"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "npm.cmd test: 11 files and 58 tests passed.",
+      "source_pointer": "local command"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "npm.cmd run build completed with known Vite large chunk warning.",
+      "source_pointer": "local command"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "DEPLOY_TARGET=github-pages npm.cmd run build completed with known Vite large chunk warning.",
+      "source_pointer": "local command"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "npm.cmd run test:e2e -- tests/smoke.spec.ts passed: 9 Playwright tests.",
+      "source_pointer": "local command"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "npm.cmd run test:e2e passed: 23 Playwright tests.",
+      "source_pointer": "local command"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "git diff --check passed with only LF-to-CRLF working-copy notices.",
+      "source_pointer": "local command"
+    },
+    {
+      "type": "manual_review",
+      "status": "passed",
+      "evidence": "Browser plugin local QA confirmed the desktop canvas box matches its host after launch, second click removes the canvas and resets aria-pressed=false, and mobile has no H1 overlap or horizontal overflow.",
+      "source_pointer": "local Browser plugin session"
+    },
+    {
+      "type": "command",
+      "status": "passed",
+      "evidence": "GitHub Pages workflow run 27460159291 completed successfully from commit 7d62255bec8f73338aa38a52113d538a26d385c6.",
+      "source_pointer": "https://github.com/SirRadek/radeq/actions/runs/27460159291"
+    },
+    {
+      "type": "manual_review",
+      "status": "passed",
+      "evidence": "Public GitHub Pages preview returned HTTP 200 and mobile Browser QA found no horizontal overflow, no H1 overlap, panel about 94 x 112 px, and trigger label Otevrit kocici vstup.",
+      "source_pointer": "https://sirradek.github.io/radeq/?v=7d62255"
+    }
+  ],
+  "score_by_dimension": {
+    "task_fit": 96,
+    "instruction_following": 96,
+    "source_grounding": 92,
+    "format_contract": 92,
+    "verification_readiness": 98,
+    "privacy_safety": 98,
+    "handoff_clarity": 95,
+    "token_efficiency": 88,
+    "workflow_compatibility": 96
+  },
+  "failure_labels": [],
+  "prompt_or_input_delta": {
+    "changed": true,
+    "summary": "Owner feedback changed the cat boundary from compacting a panel to requiring a user-controlled door/avatar launcher with explicit off behavior.",
+    "changed_fields": [
+      "mascot launch contract",
+      "launcher visual design",
+      "disable behavior",
+      "canvas host sizing",
+      "mobile first-viewport behavior",
+      "Decision Mesh 3D mascot boundary"
+    ],
+    "rollback_path": "Revert product commit 7d62255 and this governance update, or redeploy previous GitHub Pages preview commit 1efc86b."
+  },
+  "rerun_count": 1,
+  "accepted_state": "accepted",
+  "source_pointers": [
+    "docs/autopilot/model-output-evaluation-operating-model.md",
+    "src/data/delivery-system/modelOutputEvaluation.ts",
+    "prompt-library/source-catalog.json",
+    "docs/projects/radeq/decision-mesh/nodes/three_d_mascot_addon.yaml",
+    "docs/projects/radeq/decision-mesh/rules.yaml",
+    "C:/Users/sirok/Documents/Projects/radeq/src/components/CoreIsland.tsx",
+    "C:/Users/sirok/Documents/Projects/radeq/src/data/siteContent.ts",
+    "C:/Users/sirok/Documents/Projects/radeq/src/styles/global.css",
+    "C:/Users/sirok/Documents/Projects/radeq/tests/smoke.spec.ts",
+    "https://sirradek.github.io/radeq/?v=7d62255"
+  ],
+  "privacy_review": {
+    "redacted_context_only": true,
+    "raw_output_stored": false,
+    "raw_prompt_stored": false,
+    "raw_logs_stored": false,
+    "secrets_or_customer_data_stored": false,
+    "reviewer": "codex-supervisor"
+  }
+}

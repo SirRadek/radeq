@@ -68,12 +68,30 @@ const symptoms = [
           </defs>
           <use class="rq-hero-signature__trace" href="#rq-hero-path"></use>
           <g class="rq-hero-signature__points" data-rq-signature-points>
-            <circle class="rq-hero-signature__point" cx="46" cy="252" r="4.8" data-rq-snap-at="0.04" style="--rq-chaos-x: 12px; --rq-chaos-y: -68px;"></circle>
-            <circle class="rq-hero-signature__point" cx="128" cy="190" r="4.2" data-rq-snap-at="0.18" style="--rq-chaos-x: -54px; --rq-chaos-y: 28px;"></circle>
-            <circle class="rq-hero-signature__point" cx="202" cy="146" r="4.4" data-rq-snap-at="0.33" style="--rq-chaos-x: 30px; --rq-chaos-y: -44px;"></circle>
-            <circle class="rq-hero-signature__point" cx="292" cy="176" r="4.1" data-rq-snap-at="0.50" style="--rq-chaos-x: -38px; --rq-chaos-y: 64px;"></circle>
-            <circle class="rq-hero-signature__point" cx="356" cy="234" r="4.5" data-rq-snap-at="0.66" style="--rq-chaos-x: 48px; --rq-chaos-y: -24px;"></circle>
-            <circle class="rq-hero-signature__point" cx="438" cy="210" r="4.3" data-rq-snap-at="0.80" style="--rq-chaos-x: -24px; --rq-chaos-y: -58px;"></circle>
+            <g class="rq-hero-signature__stage rq-hero-signature__stage--start" data-rq-snap-at="0.04" style="--rq-chaos-x: 12px; --rq-chaos-y: -68px;">
+              <circle class="rq-hero-signature__point" cx="46" cy="252" r="4.8"></circle>
+              <text class="rq-hero-signature__stage-label" x="54" y="238">Váš problém</text>
+            </g>
+            <g class="rq-hero-signature__stage" data-rq-snap-at="0.18" style="--rq-chaos-x: -54px; --rq-chaos-y: 28px;">
+              <circle class="rq-hero-signature__point" cx="128" cy="190" r="4.2"></circle>
+              <text class="rq-hero-signature__stage-label" x="128" y="170" text-anchor="middle">Rozbor</text>
+            </g>
+            <g class="rq-hero-signature__stage" data-rq-snap-at="0.33" style="--rq-chaos-x: 30px; --rq-chaos-y: -44px;">
+              <circle class="rq-hero-signature__point" cx="202" cy="146" r="4.4"></circle>
+              <text class="rq-hero-signature__stage-label" x="210" y="126">Návrh</text>
+            </g>
+            <g class="rq-hero-signature__stage" data-rq-snap-at="0.50" style="--rq-chaos-x: -38px; --rq-chaos-y: 64px;">
+              <circle class="rq-hero-signature__point" cx="292" cy="176" r="4.1"></circle>
+              <text class="rq-hero-signature__stage-label" x="292" y="157" text-anchor="middle">Stavba</text>
+            </g>
+            <g class="rq-hero-signature__stage" data-rq-snap-at="0.66" style="--rq-chaos-x: 48px; --rq-chaos-y: -24px;">
+              <circle class="rq-hero-signature__point" cx="356" cy="234" r="4.5"></circle>
+              <text class="rq-hero-signature__stage-label" x="363" y="258">Test</text>
+            </g>
+            <g class="rq-hero-signature__stage" data-rq-snap-at="0.80" style="--rq-chaos-x: -24px; --rq-chaos-y: -58px;">
+              <circle class="rq-hero-signature__point" cx="438" cy="210" r="4.3"></circle>
+              <text class="rq-hero-signature__stage-label" x="432" y="190" text-anchor="middle">Předání</text>
+            </g>
           </g>
           <g class="rq-hero-signature__pulse" data-rq-signature-pulse>
             <circle cx="0" cy="0" r="5"></circle>
@@ -82,7 +100,7 @@ const symptoms = [
             <line class="rq-hero-signature__cross" x1="502" y1="326" x2="502" y2="366"></line>
             <line class="rq-hero-signature__cross" x1="482" y1="346" x2="522" y2="346"></line>
             <circle class="rq-hero-signature__end-dot" cx="502" cy="346" r="6.5"></circle>
-            <text class="rq-hero-signature__label" x="492" y="386" text-anchor="end">[VAL_PASSED]</text>
+            <text class="rq-hero-signature__label" x="492" y="386" text-anchor="end">Výsledek · ověřeno</text>
           </g>
         </svg>
       </div>

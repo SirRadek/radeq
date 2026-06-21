@@ -58,7 +58,7 @@
       const path = svg?.querySelector('#rq-hero-path');
       const pulse = hero.querySelector('[data-rq-signature-pulse]');
       const visual = hero.querySelector('[data-rq-hero-visual]');
-      const points = Array.from(hero.querySelectorAll('[data-rq-snap-at]'));
+      const stages = Array.from(hero.querySelectorAll('[data-rq-snap-at]'));
       const widthQuery = window.matchMedia?.('(min-width: 768px)');
 
       if (!svg || !path || !pulse || !visual || !widthQuery?.matches || typeof path.getTotalLength !== 'function') return;
@@ -75,10 +75,10 @@
 
       const clamp = (value) => Math.max(0, Math.min(1, value));
 
-      const snapPoints = (progress) => {
-        points.forEach((point) => {
-          const at = Number(point.getAttribute('data-rq-snap-at') || '1');
-          if (progress >= at) point.classList.add('is-snapped');
+      const snapStages = (progress) => {
+        stages.forEach((stage) => {
+          const at = Number(stage.getAttribute('data-rq-snap-at') || '1');
+          if (progress >= at) stage.classList.add('is-snapped');
         });
       };
 
@@ -93,9 +93,11 @@
         pulseFrame = 0;
         if (!isVisible || !isDone || !widthQuery.matches) return;
 
-        const rect = hero.getBoundingClientRect();
-        const range = window.innerHeight + rect.height;
-        const progress = range > 0 ? clamp((window.innerHeight - rect.top) / range) : 1;
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 1;
+        const pageY = window.scrollY || window.pageYOffset || 0;
+        const heroTop = hero.getBoundingClientRect().top + pageY;
+        const travel = Math.max(1, hero.offsetHeight - viewportHeight * 0.2);
+        const progress = clamp((pageY - heroTop) / travel);
         const point = path.getPointAtLength(totalLength * progress);
         pulse.setAttribute('transform', `translate(${point.x} ${point.y})`);
       };
@@ -109,7 +111,7 @@
         if (isDone) return;
         isDone = true;
         stopDrawFrame();
-        snapPoints(1);
+        snapStages(1);
         hero.classList.remove('is-signature-drawing');
         hero.classList.add('is-signature-done');
         requestPulse();
@@ -124,7 +126,7 @@
         if (!lastDrawTime) lastDrawTime = now;
         drawProgress = clamp(drawProgress + (now - lastDrawTime) / drawDuration);
         lastDrawTime = now;
-        snapPoints(drawProgress);
+        snapStages(drawProgress);
 
         if (drawProgress >= 1) {
           finishDraw();

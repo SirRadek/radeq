@@ -2175,7 +2175,7 @@ h2 + p {
   }
 }
 
-/* ===== Hero signature: chaos -> best-fit -> verified ===== */
+/* ===== Hero signature: shared journey -> verified result ===== */
 .rq-hero {
   grid-template-columns: minmax(0, 1fr) minmax(360px, 560px);
   align-items: center;
@@ -2223,12 +2223,31 @@ h2 + p {
   vector-effect: non-scaling-stroke;
 }
 
+.rq-hero-signature__stage {
+  opacity: 1;
+  transform: translate(0, 0);
+  transform-box: view-box;
+  transform-origin: center;
+}
+
 .rq-hero-signature__point {
   fill: color-mix(in srgb, var(--rq-burgundy) 64%, var(--rq-ink) 36%);
   opacity: 0.72;
-  transform: translate(0, 0);
-  transform-box: fill-box;
-  transform-origin: center;
+}
+
+.rq-hero-signature__stage-label {
+  fill: var(--rq-ink-2);
+  font-family: var(--rq-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  opacity: 0.58;
+  pointer-events: none;
+}
+
+.rq-hero-signature__stage--start .rq-hero-signature__stage-label {
+  fill: color-mix(in srgb, var(--rq-burgundy) 72%, var(--rq-ink-2) 28%);
+  opacity: 0.76;
 }
 
 .rq-hero-signature__pulse {
@@ -2265,9 +2284,9 @@ h2 + p {
 .rq-hero-signature__label {
   fill: currentColor;
   font-family: var(--rq-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
 }
 
 .rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__trace {
@@ -2289,15 +2308,30 @@ h2 + p {
   stroke-dashoffset: 0;
 }
 
-.rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__point {
+.rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__stage {
   opacity: 0.42;
   transform: translate(var(--rq-chaos-x, 0), var(--rq-chaos-y, 0));
   transition: transform 640ms cubic-bezier(0.19, 1, 0.22, 1), opacity 360ms ease-out;
 }
 
-.rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__point.is-snapped {
-  opacity: 0.76;
+.rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__stage-label {
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 340ms ease-out, transform 420ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__stage.is-snapped {
+  opacity: 1;
   transform: translate(0, 0);
+}
+
+.rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__stage.is-snapped .rq-hero-signature__stage-label {
+  opacity: 0.58;
+  transform: translateY(0);
+}
+
+.rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__stage--start.is-snapped .rq-hero-signature__stage-label {
+  opacity: 0.76;
 }
 
 .rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__endpoint {
@@ -2305,7 +2339,7 @@ h2 + p {
   transform: translateY(8px) scale(0.96);
 }
 
-.rq-motion-ready [data-rq-hero-signature].is-signature-drawing .rq-hero-signature__point,
+.rq-motion-ready [data-rq-hero-signature].is-signature-drawing .rq-hero-signature__stage,
 .rq-motion-ready [data-rq-hero-signature].is-signature-drawing .rq-hero-signature__endpoint,
 .rq-motion-ready [data-rq-hero-signature].is-signature-done.is-signature-visible .rq-hero-signature__pulse {
   will-change: transform, opacity;
@@ -2372,8 +2406,18 @@ h2 + p {
   }
 
   .rq-hero-signature__point,
-  .rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__point.is-snapped {
+  .rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__stage.is-snapped .rq-hero-signature__point {
     opacity: 0.44;
+  }
+
+  .rq-hero-signature__stage-label,
+  .rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__stage.is-snapped .rq-hero-signature__stage-label {
+    opacity: 0.34;
+  }
+
+  .rq-hero-signature__stage--start .rq-hero-signature__stage-label,
+  .rq-motion-ready [data-rq-hero-signature] .rq-hero-signature__stage--start.is-snapped .rq-hero-signature__stage-label {
+    opacity: 0.5;
   }
 
   .rq-hero-signature__endpoint {
@@ -2398,7 +2442,9 @@ h2 + p {
     stroke-dashoffset: 0 !important;
   }
 
+  .rq-hero-signature__stage,
   .rq-hero-signature__point,
+  .rq-hero-signature__stage-label,
   .rq-hero-signature__endpoint,
   .rq-hero-signature__pulse {
     animation: none !important;
@@ -2406,6 +2452,14 @@ h2 + p {
     transform: none !important;
     transition: none !important;
     will-change: auto !important;
+  }
+
+  .rq-hero-signature__stage-label {
+    opacity: 0.58;
+  }
+
+  .rq-hero-signature__stage--start .rq-hero-signature__stage-label {
+    opacity: 0.76;
   }
 
   .rq-hero-signature__pulse {

@@ -98,13 +98,13 @@ const trustPoints = [
         ]}
         data-rq-journey-step
         data-rq-step-index={index}
-        open
+        open={index === 0}
       >
         <summary
           id={`rq-journey-summary-${phase.id}`}
           class="rq-journey-step__summary"
           aria-controls={`rq-journey-panel-${phase.id}`}
-          aria-expanded="true"
+          aria-expanded={index === 0 ? 'true' : 'false'}
           aria-current={index === 0 ? 'step' : undefined}
           data-rq-journey-summary
         >
@@ -160,9 +160,46 @@ const trustPoints = [
     ))}
   </div>
 
-  <div class="rq-journey__timeline" data-rq-reveal>
-    <p>Typicky 2–4 týdny od poptávky ke spuštění.</p>
-    <small>Orientačně pro běžný projekt — větší zakázky podle domluvy.</small>
+  <div class="rq-journey__timeline rq-journey-line" data-rq-reveal>
+    <div class="rq-journey-line__copy">
+      <p>Typicky 2–4 týdny od poptávky ke spuštění.</p>
+      <small>Orientačně pro běžný projekt — větší zakázky podle domluvy.</small>
+    </div>
+
+    <div class="rq-journey-line__track" role="group" aria-label="Fáze spolupráce">
+      <div class="rq-journey-line__flow">
+        <div class="rq-journey-line__rail" aria-hidden="true"></div>
+        <span class="rq-journey-line__cap rq-journey-line__cap--start" aria-hidden="true">
+          <span>Váš problém</span>
+          <span class="rq-journey-line__cap-dot"></span>
+        </span>
+
+        {phases.map((phase, index) => (
+          <button
+            class:list={['rq-journey-node', { 'is-active': index === 0 }]}
+            type="button"
+            aria-controls={`rq-journey-panel-${phase.id}`}
+            aria-current={index === 0 ? 'step' : undefined}
+            aria-expanded={index === 0 ? 'true' : 'false'}
+            aria-label={phase.title}
+            data-rq-journey-node
+            data-rq-target-index={index}
+            tabindex={index === 0 ? '0' : '-1'}
+          >
+            <span class="rq-journey-node__label">
+              <span class="rq-journey-node__number">{phase.number}</span>
+              <span class="rq-journey-node__title">{phase.title}</span>
+            </span>
+            <span class="rq-journey-node__dot" aria-hidden="true"></span>
+          </button>
+        ))}
+
+        <span class="rq-journey-line__cap rq-journey-line__cap--end" aria-hidden="true">
+          <span>Výsledek · ověřeno</span>
+          <span class="rq-journey-line__cap-dot"></span>
+        </span>
+      </div>
+    </div>
   </div>
 
   <ul class="rq-journey-trust" aria-label="Důležité jistoty procesu" data-rq-reveal>

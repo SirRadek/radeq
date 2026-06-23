@@ -10,28 +10,74 @@
 
     const setupJourney = () => {
       const roots = Array.from(document.querySelectorAll('[data-rq-journey]'));
+      const reducedMotionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
 
       roots.forEach((journey) => {
         const steps = Array.from(journey.querySelectorAll('[data-rq-journey-step]'));
+        const nodes = Array.from(journey.querySelectorAll('[data-rq-journey-node]'));
         if (!steps.length) return;
 
         const mobileQuery = window.matchMedia?.('(max-width: 760px)');
         const hoverQuery = window.matchMedia?.('(hover: hover) and (pointer: fine)');
-        let lockedIndex = 0;
+        const initialIndex = Math.max(
+          0,
+          steps.findIndex((step) => step.open || step.classList.contains('is-active'))
+        );
+        let activeIndex = initialIndex;
+        let lockedIndex = initialIndex;
+        let focusIndex = initialIndex;
+        let isSyncing = false;
+        let syncTimer = 0;
 
         const isMobile = () => Boolean(mobileQuery?.matches);
         const canHover = () => Boolean(hoverQuery?.matches);
+        const getNodeIndex = (node) => Number(node.getAttribute('data-rq-target-index') || '0');
+
+        const syncNodes = () => {
+          nodes.forEach((node) => {
+            const nodeIndex = getNodeIndex(node);
+            const isActive = nodeIndex === activeIndex;
+
+            node.classList.toggle('is-active', isActive);
+            node.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+            node.tabIndex = nodeIndex === focusIndex ? 0 : -1;
+
+            if (isActive) {
+              node.setAttribute('aria-current', 'step');
+            } else {
+              node.removeAttribute('aria-current');
+            }
+          });
+        };
+
+        const scrollPanelIntoView = (index) => {
+          const panel = steps[index]?.querySelector('[data-rq-journey-panel]');
+          if (!panel) return;
+
+          window.requestAnimationFrame(() => {
+            panel.scrollIntoView({
+              behavior: reducedMotionQuery?.matches ? 'auto' : 'smooth',
+              block: 'nearest',
+              inline: 'nearest',
+            });
+          });
+        };
 
         const setActive = (index, options = {}) => {
           if (!steps[index]) return;
+          if (syncTimer) window.clearTimeout(syncTimer);
+
+          activeIndex = index;
           if (options.lock) lockedIndex = index;
+          if (!options.preserveFocus) focusIndex = index;
+          isSyncing = true;
 
           steps.forEach((step, stepIndex) => {
             const isActive = stepIndex === index;
             const summary = step.querySelector('[data-rq-journey-summary]');
 
             step.classList.toggle('is-active', isActive);
-            step.open = isMobile() ? isActive : true;
+            step.open = isActive;
 
             if (!summary) return;
             summary.setAttribute('aria-expanded', isActive ? 'true' : 'false');
@@ -41,10 +87,26 @@
               summary.removeAttribute('aria-current');
             }
           });
+
+          syncNodes();
+
+          syncTimer = window.setTimeout(() => {
+            isSyncing = false;
+            syncTimer = 0;
+          }, 0);
+
+          if (options.scroll) scrollPanelIntoView(index);
+        };
+
+        const moveNodeFocus = (index) => {
+          if (!nodes.length) return;
+          focusIndex = (index + nodes.length) % nodes.length;
+          syncNodes();
+          nodes[focusIndex]?.focus();
         };
 
         journey.classList.add('is-enhanced');
-        setActive(0, { lock: true });
+        setActive(initialIndex, { lock: true });
 
         steps.forEach((step, index) => {
           const summary = step.querySelector('[data-rq-journey-summary]');
@@ -55,12 +117,52 @@
             setActive(index, { lock: true });
           });
 
+          step.addEventListener('toggle', () => {
+            if (isSyncing) return;
+            if (step.open) {
+              setActive(index, { lock: true });
+            } else if (activeIndex === index) {
+              step.open = true;
+            }
+          });
+
           summary.addEventListener('pointerenter', () => {
             if (!isMobile() && canHover()) setActive(index);
           });
 
           summary.addEventListener('focusin', () => {
             setActive(index);
+          });
+        });
+
+        nodes.forEach((node) => {
+          const nodeIndex = getNodeIndex(node);
+
+          node.addEventListener('click', () => {
+            setActive(nodeIndex, { lock: true, scroll: true });
+          });
+
+          node.addEventListener('focus', () => {
+            focusIndex = nodeIndex;
+            syncNodes();
+          });
+
+          node.addEventListener('keydown', (event) => {
+            const keyActions = {
+              ArrowLeft: () => moveNodeFocus(focusIndex - 1),
+              ArrowUp: () => moveNodeFocus(focusIndex - 1),
+              ArrowRight: () => moveNodeFocus(focusIndex + 1),
+              ArrowDown: () => moveNodeFocus(focusIndex + 1),
+              Home: () => moveNodeFocus(0),
+              End: () => moveNodeFocus(nodes.length - 1),
+              Enter: () => setActive(focusIndex, { lock: true, scroll: true }),
+              ' ': () => setActive(focusIndex, { lock: true, scroll: true }),
+            };
+
+            const action = keyActions[event.key];
+            if (!action) return;
+            event.preventDefault();
+            action();
           });
         });
 
@@ -124,128 +226,6 @@
         });
       });
     }
-
-    const setupHeroSignature = () => {
-      const hero = document.querySelector('[data-rq-hero-signature]');
-      if (!hero || !('IntersectionObserver' in window)) return;
-
-      const svg = hero.querySelector('[data-rq-hero-svg]');
-      const path = svg?.querySelector('#rq-hero-path');
-      const token = hero.querySelector('[data-rq-signature-token]');
-      const visual = hero.querySelector('[data-rq-hero-visual]');
-      const stages = Array.from(hero.querySelectorAll('[data-rq-snap-at]'));
-      const widthQuery = window.matchMedia?.('(min-width: 768px)');
-
-      if (!svg || !path || !token || !visual || !widthQuery?.matches || typeof path.getTotalLength !== 'function') return;
-
-      const totalLength = path.getTotalLength();
-      const drawDuration = 2000;
-      let isVisible = false;
-      let hasStarted = false;
-      let isDone = false;
-      let drawFrame = 0;
-      let drawProgress = 0;
-      let lastDrawTime = 0;
-
-      const clamp = (value) => Math.max(0, Math.min(1, value));
-
-      const setTokenPosition = (progress) => {
-        const point = path.getPointAtLength(totalLength * clamp(progress));
-        token.setAttribute('transform', `translate(${point.x} ${point.y})`);
-      };
-
-      const snapStages = (progress) => {
-        stages.forEach((stage) => {
-          const at = Number(stage.getAttribute('data-rq-snap-at') || '1');
-          if (progress >= at) stage.classList.add('is-snapped');
-        });
-      };
-
-      const stopDrawFrame = () => {
-        if (!drawFrame) return;
-        cancelAnimationFrame(drawFrame);
-        drawFrame = 0;
-        lastDrawTime = 0;
-      };
-
-      const finishDraw = () => {
-        if (isDone) return;
-        isDone = true;
-        stopDrawFrame();
-        snapStages(1);
-        setTokenPosition(1);
-        hero.classList.remove('is-signature-drawing');
-        hero.classList.add('is-signature-done');
-      };
-
-      const drawTick = (now) => {
-        if (!isVisible || !widthQuery.matches) {
-          stopDrawFrame();
-          return;
-        }
-
-        if (!lastDrawTime) lastDrawTime = now;
-        drawProgress = clamp(drawProgress + (now - lastDrawTime) / drawDuration);
-        lastDrawTime = now;
-        snapStages(drawProgress);
-        setTokenPosition(drawProgress);
-
-        if (drawProgress >= 1) {
-          finishDraw();
-          return;
-        }
-
-        drawFrame = requestAnimationFrame(drawTick);
-      };
-
-      const startDraw = () => {
-        if (isDone || drawFrame || !widthQuery.matches) return;
-
-        if (!hasStarted) {
-          hasStarted = true;
-          root.classList.add('rq-motion-ready');
-          hero.classList.add('is-signature-drawing');
-          setTokenPosition(0);
-        }
-
-        drawFrame = requestAnimationFrame(drawTick);
-      };
-
-      setTokenPosition(0);
-
-      const heroObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            isVisible = entry.isIntersecting;
-            hero.classList.toggle('is-signature-visible', isVisible && widthQuery.matches);
-
-            if (isVisible && widthQuery.matches) {
-              startDraw();
-            } else {
-              stopDrawFrame();
-            }
-          });
-        },
-        { threshold: 0, rootMargin: '0px' }
-      );
-
-      heroObserver.observe(hero);
-
-      widthQuery.addEventListener?.('change', () => {
-        if (!widthQuery.matches) {
-          stopDrawFrame();
-          hero.classList.remove('is-signature-visible');
-          return;
-        }
-
-        if (isVisible) {
-          hero.classList.add('is-signature-visible');
-          startDraw();
-        }
-      });
-    };
-
-    setupHeroSignature();
 
     const marqueeRoots = Array.from(document.querySelectorAll('[data-rq-marquee]'));
 

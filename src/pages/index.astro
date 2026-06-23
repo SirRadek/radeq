@@ -2,6 +2,7 @@
 import RqLayout from '../layouts/RqLayout.astro';
 import RqHeader from '../components/RqHeader.astro';
 import RqFooter from '../components/RqFooter.astro';
+import RqBeforeAfter from '../components/RqBeforeAfter.astro';
 import RqGuide from '../components/RqGuide.astro';
 import RqJourney from '../components/RqJourney.astro';
 import RqMotion from '../components/RqMotion.astro';
@@ -32,88 +33,47 @@ const symptoms = [
   <RqHeader content={{ navItems: nav }} alternateLabel="EN" alternatePath="/en/" />
 
   <main>
-    <section class="rq-section rq-hero" id="top" style="--rq-reveal-index: 0" data-rq-hero-signature>
+    <section class="rq-section rq-hero" id="top" style="--rq-reveal-index: 0">
       <div class="rq-hero__content">
-      <div class="rq-hero__copy">
-        <p class="rq-eyebrow" data-rq-reveal style="--rq-i:0">Racionální digitalizace</p>
-        <h1 class="rq-display" data-rq-reveal style="--rq-i:1">Weby, data a automatizace,<br class="rq-br-desktop" /> které vám uvolní ruce.</h1>
-        <p class="rq-hero__typewriter" data-rq-reveal style="--rq-i:2">
-          <span class="rq-hero__tw-prefix">Pro&nbsp;</span><span
-            class="rq-hero__tw-rotator"
-            data-rq-typewriter
-            data-rq-words="živnostníky|salony|malé firmy|lokální služby"
-          ><span class="rq-hero__tw-sizer" aria-hidden="true">lokální služby</span><span class="rq-hero__tw-text" aria-hidden="true">živnostníky</span></span>
-          <span class="rq-sr-only" data-rq-typewriter-live aria-live="polite">Pro živnostníky, salony, malé firmy a lokální služby.</span>
-        </p>
-        <p class="rq-lead" data-rq-reveal style="--rq-i:3">Pomůžu vám zjednodušit web, poptávky, evidenci nebo ruční práci v tabulkách. Navrhnu řešení, postavím ho, ověřím v praxi a předám tak, abyste ho zvládli používat bez závislosti na dodavateli.</p>
-        <p class="rq-hero__journey-note" data-rq-reveal style="--rq-i:4">Postup od problému k ověřenému výsledku.</p>
+        <div class="rq-hero__copy">
+          <p class="rq-eyebrow" data-rq-reveal style="--rq-i:0">Racionální digitalizace</p>
+          <h1 class="rq-display" data-rq-reveal style="--rq-i:1">Weby, data a automatizace,<br class="rq-br-desktop" /> které vám uvolní ruce.</h1>
+          <p class="rq-hero__typewriter" data-rq-reveal style="--rq-i:2">
+            <span class="rq-hero__tw-prefix">Pro&nbsp;</span><span
+              class="rq-hero__tw-rotator"
+              data-rq-typewriter
+              data-rq-words="živnostníky|salony|malé firmy|lokální služby"
+            ><span class="rq-hero__tw-sizer" aria-hidden="true">lokální služby</span><span class="rq-hero__tw-text" aria-hidden="true">živnostníky</span></span>
+            <span class="rq-sr-only" data-rq-typewriter-live aria-live="polite">Pro živnostníky, salony, malé firmy a lokální služby.</span>
+          </p>
+          <p class="rq-lead" data-rq-reveal style="--rq-i:3">Pomůžu vám zjednodušit web, poptávky, evidenci nebo ruční práci v tabulkách. Navrhnu řešení, postavím ho, ověřím v praxi a předám tak, abyste ho zvládli používat bez závislosti na dodavateli.</p>
+          <p class="rq-hero__journey-note" data-rq-reveal style="--rq-i:4">Postup od problému k ověřenému výsledku.</p>
+
+          <div class="rq-proof-rail" data-rq-reveal style="--rq-i:5" aria-label="Důkazy a orientační ceny">
+            <div class="rq-proof-rail__item">
+              <p class="rq-proof-rail__label">Web od 9 900 Kč</p>
+              <p class="rq-proof-rail__text">jasná nabídka a měřitelné poptávky</p>
+            </div>
+            <div class="rq-proof-rail__item">
+              <p class="rq-proof-rail__label">Audit od 4 900 Kč</p>
+              <p class="rq-proof-rail__text">zjistíte, co brzdí; audit odečtu z realizace</p>
+            </div>
+            <div class="rq-proof-rail__item">
+              <p class="rq-proof-rail__label">Postavím · změřím · předám</p>
+              <p class="rq-proof-rail__text">bez závislosti na dodavateli</p>
+            </div>
+          </div>
+
+          <div class="rq-hero__actions" data-rq-reveal style="--rq-i:6">
+            <a class="rq-btn rq-btn--primary" href="#kontakt" data-rq-magnetic>Napsat poptávku</a>
+            <a class="rq-btn rq-btn--ghost" href="#ukazky-teaser">Ukázky práce</a>
+            <p class="rq-hero__micro">Nezávazně. Ozvu se do 1 pracovního dne.</p>
+          </div>
+        </div>
       </div>
 
-      <div class="rq-proof-rail" data-rq-reveal style="--rq-i:5" aria-label="Důkazy a orientační ceny">
-        <div class="rq-proof-rail__item">
-          <p class="rq-proof-rail__label">Web od 9 900 Kč</p>
-          <p class="rq-proof-rail__text">jasná nabídka a měřitelné poptávky</p>
-        </div>
-        <div class="rq-proof-rail__item">
-          <p class="rq-proof-rail__label">Audit od 4 900 Kč</p>
-          <p class="rq-proof-rail__text">zjistíte, co brzdí; audit odečtu z realizace</p>
-        </div>
-        <div class="rq-proof-rail__item">
-          <p class="rq-proof-rail__label">Postavím · změřím · předám</p>
-          <p class="rq-proof-rail__text">bez závislosti na dodavateli</p>
-        </div>
-      </div>
-
-      <div class="rq-hero__actions" data-rq-reveal style="--rq-i:6">
-        <a class="rq-btn rq-btn--primary" href="#kontakt" data-rq-magnetic>Napsat poptávku</a>
-        <a class="rq-btn rq-btn--ghost" href="#ukazky-teaser">Ukázky práce</a>
-        <p class="rq-hero__micro">Nezávazně. Ozvu se do 1 pracovního dne.</p>
-      </div>
-      </div>
-
-      <div class="rq-hero__visual" data-rq-hero-visual aria-hidden="true">
-        <svg class="rq-hero-signature" viewBox="0 0 600 380" aria-hidden="true" focusable="false" data-rq-hero-svg>
-          <defs>
-            <path id="rq-hero-path" pathLength="1000" d="M46 316 C72 310 90 286 116 276 C146 264 160 244 190 232 C222 218 238 196 272 182 C306 168 324 148 360 134 C398 118 418 102 456 92 C494 82 518 64 548 56" />
-          </defs>
-          <use class="rq-hero-signature__trace" href="#rq-hero-path"></use>
-          <g class="rq-hero-signature__points" data-rq-signature-points>
-            <g class="rq-hero-signature__stage rq-hero-signature__stage--start" data-rq-snap-at="0.00" style="--rq-chaos-x: 18px; --rq-chaos-y: -44px;">
-              <circle class="rq-hero-signature__point" cx="46" cy="316" r="4.8"></circle>
-              <text class="rq-hero-signature__stage-label" x="54" y="296">Váš problém</text>
-            </g>
-            <g class="rq-hero-signature__stage" data-rq-snap-at="0.14" style="--rq-chaos-x: -38px; --rq-chaos-y: 30px;">
-              <circle class="rq-hero-signature__point" cx="116" cy="276" r="4.2"></circle>
-              <text class="rq-hero-signature__stage-label" x="116" y="256" text-anchor="middle">Rozbor</text>
-            </g>
-            <g class="rq-hero-signature__stage" data-rq-snap-at="0.30" style="--rq-chaos-x: 28px; --rq-chaos-y: -30px;">
-              <circle class="rq-hero-signature__point" cx="190" cy="232" r="4.4"></circle>
-              <text class="rq-hero-signature__stage-label" x="198" y="212">Návrh</text>
-            </g>
-            <g class="rq-hero-signature__stage" data-rq-snap-at="0.46" style="--rq-chaos-x: -34px; --rq-chaos-y: 36px;">
-              <circle class="rq-hero-signature__point" cx="272" cy="182" r="4.1"></circle>
-              <text class="rq-hero-signature__stage-label" x="272" y="162" text-anchor="middle">Stavba</text>
-            </g>
-            <g class="rq-hero-signature__stage" data-rq-snap-at="0.64" style="--rq-chaos-x: 36px; --rq-chaos-y: -22px;">
-              <circle class="rq-hero-signature__point" cx="360" cy="134" r="4.5"></circle>
-              <text class="rq-hero-signature__stage-label" x="368" y="116">Test</text>
-            </g>
-            <g class="rq-hero-signature__stage" data-rq-snap-at="0.83" style="--rq-chaos-x: -24px; --rq-chaos-y: 30px;">
-              <circle class="rq-hero-signature__point" cx="456" cy="92" r="4.3"></circle>
-              <text class="rq-hero-signature__stage-label" x="456" y="72" text-anchor="middle">Předání</text>
-            </g>
-          </g>
-          <g class="rq-hero-signature__token" transform="translate(548 56)" data-rq-signature-token>
-            <rect class="rq-hero-signature__token-bg" x="8" y="10" width="64" height="24" rx="4"></rect>
-            <text class="rq-hero-signature__token-text" x="40" y="26" text-anchor="middle">Řešení</text>
-          </g>
-          <g class="rq-hero-signature__endpoint" data-rq-signature-end>
-            <line class="rq-hero-signature__cross" x1="548" y1="38" x2="548" y2="74"></line>
-            <line class="rq-hero-signature__cross" x1="530" y1="56" x2="566" y2="56"></line>
-            <circle class="rq-hero-signature__end-dot" cx="548" cy="56" r="6.5"></circle>
-            <text class="rq-hero-signature__label" x="566" y="28" text-anchor="end"><tspan class="rq-hero-signature__label-main">Výsledek · </tspan><tspan class="rq-hero-signature__label-verified">ověřeno</tspan></text>
-          </g>
-        </svg>
+      <div class="rq-hero__panel" data-rq-reveal style="--rq-i:7">
+        <RqBeforeAfter />
       </div>
     </section>
 

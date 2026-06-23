@@ -43,7 +43,8 @@ const items = [
 ];
 ---
 
-<section class="rq-section rq-diagnostic" id="diagnostika" aria-labelledby="diagnostika-title" data-rq-diagnostic data-rq-reveal>
+<section class="rq-section rq-diagnostic is-links-on" id="diagnostika" aria-labelledby="diagnostika-title" data-rq-diagnostic data-rq-reveal>
+  <svg class="rq-diagnostic-links" data-rq-diagnostic-links width="0" height="0" aria-hidden="true" focusable="false"></svg>
   <div class="rq-diagnostic__inner">
     <div class="rq-diagnostic__head">
       <p class="rq-eyebrow">Od problému k řešení</p>
@@ -374,13 +375,141 @@ const items = [
     const tabs = Array.from(root.querySelectorAll('[data-rq-diagnostic-tab]'));
     const panels = Array.from(root.querySelectorAll('[data-rq-diagnostic-panel]'));
     const output = root.querySelector('.rq-diagnostic__output');
+    const linksSvg = root.querySelector('[data-rq-diagnostic-links]');
     const reducedMotionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
     const ROTATE_MS = 8000;
+    const LINK_DRAW_MS = 560;
 
     root.classList.add('is-enhanced');
     root.style.setProperty('--rq-rotate-duration', `${ROTATE_MS}ms`);
 
+    let linksInView = !('IntersectionObserver' in window);
+    let linkMeasureTimer = 0;
+    let linkShouldAnimate = false;
+    let linkAnimationTimer = 0;
+    let linksResizeObserver = null;
+    let linksIntersectionObserver = null;
+
+    const areLinksEnabled = () => Boolean(linksSvg && root.classList.contains('is-links-on'));
+
+    const clearDiagnosticLink = () => {
+      if (!linksSvg) return;
+      linksSvg.replaceChildren();
+      linksSvg.removeAttribute('viewBox');
+      linksSvg.removeAttribute('width');
+      linksSvg.removeAttribute('height');
+    };
+
+    const getActiveTab = () => {
+      const index = tabs.findIndex((tab) => tab.getAttribute('aria-selected') === 'true');
+      return index >= 0 ? tabs[index] : tabs[0];
+    };
+
+    const drawDiagnosticLink = (animate = true) => {
+      if (!areLinksEnabled() || !linksInView || !tabs.length) {
+        clearDiagnosticLink();
+        return;
+      }
+
+      const activeTab = getActiveTab();
+      if (!activeTab) {
+        clearDiagnosticLink();
+        return;
+      }
+
+      const svgRect = linksSvg.getBoundingClientRect();
+      const tabRect = activeTab.getBoundingClientRect();
+
+      if (svgRect.width <= 0 || svgRect.height <= 0 || tabRect.width <= 0 || tabRect.height <= 0) {
+        clearDiagnosticLink();
+        return;
+      }
+
+      const width = Math.round(svgRect.width);
+      const height = Math.round(svgRect.height);
+      const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+      const startX = clamp(width / 2, 1, width - 1);
+      const startY = 1;
+      const endX = clamp(tabRect.left + tabRect.width / 2 - svgRect.left, 1, width - 1);
+      const endY = clamp(tabRect.top - svgRect.top + Math.min(10, tabRect.height * 0.18), 1, height - 1);
+      const elbowY = clamp(startY + Math.min(72, Math.max(16, (endY - startY) * 0.55)), startY + 8, Math.max(startY + 8, endY - 8));
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+
+      linksSvg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+      linksSvg.setAttribute('width', String(width));
+      linksSvg.setAttribute('height', String(height));
+
+      line.setAttribute('points', `${startX},${startY} ${startX},${elbowY} ${endX},${elbowY} ${endX},${endY}`);
+      line.setAttribute('vector-effect', 'non-scaling-stroke');
+      linksSvg.replaceChildren(line);
+
+      if (linkAnimationTimer) {
+        window.clearTimeout(linkAnimationTimer);
+        linkAnimationTimer = 0;
+      }
+
+      if (!animate || reducedMotionQuery?.matches) return;
+
+      const length = line.getTotalLength();
+      line.style.strokeDasharray = `${length}`;
+      line.style.strokeDashoffset = `${length}`;
+      line.classList.add('is-drawing');
+      line.getBoundingClientRect();
+      line.style.strokeDashoffset = '0';
+
+      linkAnimationTimer = window.setTimeout(() => {
+        if (line.isConnected) {
+          line.classList.remove('is-drawing');
+          line.style.strokeDasharray = '';
+          line.style.strokeDashoffset = '';
+        }
+        linkAnimationTimer = 0;
+      }, LINK_DRAW_MS + 80);
+    };
+
+    const scheduleDiagnosticLink = (animate = true) => {
+      if (!areLinksEnabled()) {
+        clearDiagnosticLink();
+        return;
+      }
+
+      linkShouldAnimate = linkShouldAnimate || animate;
+      if (linkMeasureTimer) return;
+
+      linkMeasureTimer = window.setTimeout(() => {
+        const shouldAnimate = linkShouldAnimate;
+        linkMeasureTimer = 0;
+        linkShouldAnimate = false;
+        drawDiagnosticLink(shouldAnimate);
+      }, 0);
+    };
+
+    if (areLinksEnabled()) {
+      if ('ResizeObserver' in window) {
+        linksResizeObserver = new ResizeObserver(() => {
+          scheduleDiagnosticLink(false);
+        });
+        linksResizeObserver.observe(root);
+      }
+
+      if ('IntersectionObserver' in window) {
+        linksIntersectionObserver = new IntersectionObserver((entries) => {
+          linksInView = entries.some((entry) => entry.isIntersecting);
+          if (linksInView) {
+            scheduleDiagnosticLink(false);
+          } else {
+            clearDiagnosticLink();
+          }
+        });
+        linksIntersectionObserver.observe(root);
+      } else {
+        scheduleDiagnosticLink(false);
+      }
+    }
+
     const activateTab = (nextTab, shouldFocus = true) => {
+      const didChange = nextTab.getAttribute('aria-selected') !== 'true';
+
       tabs.forEach((tab) => {
         const isActive = tab === nextTab;
         const panelId = tab.getAttribute('aria-controls');
@@ -399,6 +528,10 @@ const items = [
 
       if (shouldFocus) {
         nextTab.focus();
+      }
+
+      if (didChange) {
+        scheduleDiagnosticLink(true);
       }
     };
 
@@ -547,10 +680,41 @@ const items = [
       scheduleRotate(ROTATE_MS);
     }
 
-    reducedMotionQuery?.addEventListener?.('change', (event) => {
+    const handleReducedMotionChange = (event) => {
       if (event.matches) disableAutoRotate();
-    });
+      scheduleDiagnosticLink(false);
+    };
 
-    window.addEventListener('pagehide', clearRotateTimer, { once: true });
+    const handleDiagnosticLinkResize = () => {
+      scheduleDiagnosticLink(false);
+    };
+
+    reducedMotionQuery?.addEventListener?.('change', handleReducedMotionChange);
+
+    const cleanupDiagnosticLinks = () => {
+      if (linkMeasureTimer) {
+        window.clearTimeout(linkMeasureTimer);
+        linkMeasureTimer = 0;
+      }
+
+      if (linkAnimationTimer) {
+        window.clearTimeout(linkAnimationTimer);
+        linkAnimationTimer = 0;
+      }
+
+      linksResizeObserver?.disconnect();
+      linksIntersectionObserver?.disconnect();
+      window.removeEventListener('resize', handleDiagnosticLinkResize);
+      reducedMotionQuery?.removeEventListener?.('change', handleReducedMotionChange);
+    };
+
+    if (areLinksEnabled()) {
+      window.addEventListener('resize', handleDiagnosticLinkResize, { passive: true });
+    }
+
+    window.addEventListener('pagehide', () => {
+      clearRotateTimer();
+      cleanupDiagnosticLinks();
+    }, { once: true });
   }
 </script>

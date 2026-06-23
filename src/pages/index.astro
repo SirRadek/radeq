@@ -86,32 +86,135 @@ const symptoms = [
       if (reduce) { textEl.textContent = words[0]; return; }
 
       const TYPE = 70, DEL = 38, HOLD = 1600, GAP = 320;
+      const MAX_CYCLES = 3;
+      const finalWord = words[words.length - 1];
+      const observeTarget = el.closest('.rq-hero__typewriter') || el;
+      const prefixEl = el.parentElement && el.parentElement.querySelector('.rq-hero__tw-prefix');
+      const livePrefix = prefixEl ? prefixEl.textContent.replace(/\s+/g, ' ') : '';
       let wi = 0, ci = words[0].length, deleting = true;
+      let cycles = 0;
+      let inView = false;
+      let stopped = false;
+      let timerId = 0;
+      let nextDelay = HOLD;
+      let observer = null;
+
+      function clearTimer() {
+        if (!timerId) return;
+        window.clearTimeout(timerId);
+        timerId = 0;
+      }
+
+      function disconnectObserver() {
+        if (!observer) return;
+        observer.disconnect();
+        observer = null;
+      }
+
+      function cleanup() {
+        clearTimer();
+        disconnectObserver();
+      }
+
+      function schedule(delay) {
+        nextDelay = delay;
+        clearTimer();
+        if (!inView || stopped || document.hidden) return;
+        timerId = window.setTimeout(() => {
+          timerId = 0;
+          tick();
+        }, delay);
+      }
+
+      function resume() {
+        if (timerId || stopped || document.hidden) return;
+        schedule(nextDelay);
+      }
+
+      function stopOnFinalWord() {
+        stopped = true;
+        deleting = false;
+        wi = words.length - 1;
+        ci = finalWord.length;
+        textEl.textContent = finalWord;
+        textEl.classList.add('is-rq-typewriter-done');
+        if (liveEl) liveEl.textContent = `${livePrefix}${finalWord}.`;
+        cleanup();
+      }
+
+      function maybeStopAfterCycle(word) {
+        if (word !== finalWord) return false;
+        cycles += 1;
+        if (cycles < MAX_CYCLES) return false;
+        stopOnFinalWord();
+        return true;
+      }
 
       function tick() {
+        if (!inView || stopped || document.hidden) return;
         const word = words[wi];
         if (!deleting) {
           ci += 1;
           textEl.textContent = word.slice(0, ci);
           if (ci >= word.length) {
             if (liveEl) liveEl.textContent = word;
+            if (maybeStopAfterCycle(word)) return;
             deleting = true;
-            return void setTimeout(tick, HOLD);
+            schedule(HOLD);
+            return;
           }
-          return void setTimeout(tick, TYPE);
+          schedule(TYPE);
+          return;
         }
         ci -= 1;
         textEl.textContent = word.slice(0, Math.max(ci, 0));
         if (ci <= 0) {
           deleting = false;
           wi = (wi + 1) % words.length;
-          return void setTimeout(tick, GAP);
+          schedule(GAP);
+          return;
         }
-        return void setTimeout(tick, DEL);
+        schedule(DEL);
+      }
+
+      function setInView(nextInView) {
+        if (stopped) return;
+        inView = nextInView;
+        if (!inView) {
+          clearTimer();
+          return;
+        }
+        resume();
+      }
+
+      function observeInView() {
+        if (stopped) return;
+        disconnectObserver();
+        if (!('IntersectionObserver' in window)) {
+          setInView(true);
+          return;
+        }
+        observer = new IntersectionObserver((entries) => {
+          const entry = entries[0];
+          setInView(Boolean(entry && entry.isIntersecting));
+        }, { rootMargin: '120px 0px' });
+        observer.observe(observeTarget);
       }
 
       // Start showing the SSR word, hold, then delete and cycle.
-      setTimeout(tick, HOLD);
+      observeInView();
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          inView = false;
+          cleanup();
+          return;
+        }
+        observeInView();
+      });
+      window.addEventListener('pagehide', () => {
+        inView = false;
+        cleanup();
+      });
     })();
   </script>
 

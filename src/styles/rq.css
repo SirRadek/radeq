@@ -2503,6 +2503,12 @@ h2 + p {
   animation: rq-tw-blink 1.05s steps(1, end) infinite;
 }
 
+.rq-hero__tw-text.is-rq-typewriter-done::after {
+  animation: none;
+  opacity: 0;
+  transition: opacity 420ms ease;
+}
+
 @keyframes rq-tw-blink {
   0%, 50% { opacity: 1; }
   50.01%, 100% { opacity: 0; }

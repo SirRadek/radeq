@@ -412,29 +412,6 @@ p {
   font-size: .9rem;
 }
 
-html[data-motion-ready] main section {
-  animation: rq-reveal .7s var(--rq-ease) both;
-  animation-delay: calc(var(--rq-reveal-index, 0) * 90ms);
-}
-
-@starting-style {
-  html[data-motion-ready] main section {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-}
-
-@keyframes rq-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @media (max-width: 860px) {
   .rq-site-header__inner {
     grid-template-columns: auto auto;
@@ -499,10 +476,6 @@ html[data-motion-ready] main section {
     animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
-  }
-
-  html[data-motion-ready] main section {
-    animation: none;
   }
 }
 

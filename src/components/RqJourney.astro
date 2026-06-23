@@ -89,85 +89,19 @@ const trustPoints = [
     <h2 class="rq-h2">Jak to bude probíhat</h2>
   </div>
 
-  <div class="rq-journey__checkpoints" aria-label="Fáze spolupráce">
-    {phases.map((phase, index) => (
-      <details
-        class:list={[
-          'rq-journey-step',
-          { 'rq-journey-step--final': phase.final, 'is-active': index === 0 },
-        ]}
-        data-rq-journey-step
-        data-rq-step-index={index}
-        open={index === 0}
-      >
-        <summary
-          id={`rq-journey-summary-${phase.id}`}
-          class="rq-journey-step__summary"
-          aria-controls={`rq-journey-panel-${phase.id}`}
-          aria-expanded={index === 0 ? 'true' : 'false'}
-          aria-current={index === 0 ? 'step' : undefined}
-          data-rq-journey-summary
-        >
-          <span class="rq-journey-step__dot" aria-hidden="true"></span>
-          <span class="rq-journey-step__copy">
-            <span class="rq-journey-step__number">{phase.number}</span>
-            <span class="rq-journey-step__title">{phase.title}</span>
-            <span class="rq-journey-step__duration">{phase.duration}</span>
-          </span>
-        </summary>
-
-        <div
-          id={`rq-journey-panel-${phase.id}`}
-          class="rq-journey-step__panel"
-          role="region"
-          aria-labelledby={`rq-journey-summary-${phase.id}`}
-          data-rq-journey-panel
-        >
-          <div class="rq-journey-panel__topline">
-            <span>{phase.number}</span>
-            <h3>{phase.title}</h3>
-          </div>
-
-          <dl class="rq-journey-panel__grid">
-            <div>
-              <dt>Co řešíme</dt>
-              <dd>{phase.solve}</dd>
-            </div>
-            <div>
-              <dt>Jak dlouho</dt>
-              <dd>{phase.duration}.</dd>
-            </div>
-            <div>
-              <dt>Jak probíhá</dt>
-              <dd>{phase.process}</dd>
-            </div>
-            <div>
-              <dt>Co z toho máte</dt>
-              <dd>{phase.benefit}</dd>
-            </div>
-          </dl>
-
-          <ul class="rq-journey-tags" aria-label={`Výstupy a role: ${phase.title}`}>
-            {phase.tags.map((tag) => (
-              <li>
-                <span>{tag.label}</span>
-                {tag.strong ? <strong>{tag.value}</strong> : tag.value}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </details>
-    ))}
-  </div>
-
   <div class="rq-journey__timeline rq-journey-line" data-rq-reveal>
     <div class="rq-journey-line__copy">
       <p>Typicky 2–4 týdny od poptávky ke spuštění.</p>
       <small>Orientačně pro běžný projekt — větší zakázky podle domluvy.</small>
     </div>
 
-    <div class="rq-journey-line__track" role="group" aria-label="Fáze spolupráce">
-      <div class="rq-journey-line__flow">
+    <div class="rq-journey-line__track">
+      <div
+        class="rq-journey-line__flow"
+        role="tablist"
+        aria-label="Fáze spolupráce"
+        aria-orientation="horizontal"
+      >
         <div class="rq-journey-line__rail" aria-hidden="true"></div>
         <span class="rq-journey-line__cap rq-journey-line__cap--start" aria-hidden="true">
           <span>Váš problém</span>
@@ -178,9 +112,10 @@ const trustPoints = [
           <button
             class:list={['rq-journey-node', { 'is-active': index === 0 }]}
             type="button"
+            role="tab"
+            id={`rq-journey-tab-${phase.id}`}
+            aria-selected={index === 0 ? 'true' : 'false'}
             aria-controls={`rq-journey-panel-${phase.id}`}
-            aria-current={index === 0 ? 'step' : undefined}
-            aria-expanded={index === 0 ? 'true' : 'false'}
             aria-label={phase.title}
             data-rq-journey-node
             data-rq-target-index={index}
@@ -200,6 +135,54 @@ const trustPoints = [
         </span>
       </div>
     </div>
+  </div>
+
+  <div class="rq-journey__panels">
+    {phases.map((phase, index) => (
+      <section
+        id={`rq-journey-panel-${phase.id}`}
+        class:list={['rq-journey-step__panel', { 'is-active': index === 0 }]}
+        role="tabpanel"
+        aria-labelledby={`rq-journey-tab-${phase.id}`}
+        aria-hidden={index === 0 ? 'false' : 'true'}
+        inert={index !== 0}
+        data-rq-journey-panel
+        data-rq-step-index={index}
+      >
+        <div class="rq-journey-panel__topline">
+          <span>{phase.number}</span>
+          <h3>{phase.title}</h3>
+        </div>
+
+        <dl class="rq-journey-panel__grid">
+          <div>
+            <dt>Co řešíme</dt>
+            <dd>{phase.solve}</dd>
+          </div>
+          <div>
+            <dt>Jak dlouho</dt>
+            <dd>{phase.duration}.</dd>
+          </div>
+          <div>
+            <dt>Jak probíhá</dt>
+            <dd>{phase.process}</dd>
+          </div>
+          <div>
+            <dt>Co z toho máte</dt>
+            <dd>{phase.benefit}</dd>
+          </div>
+        </dl>
+
+        <ul class="rq-journey-tags" aria-label={`Výstupy a role: ${phase.title}`}>
+          {phase.tags.map((tag) => (
+            <li>
+              <span>{tag.label}</span>
+              {tag.strong ? <strong>{tag.value}</strong> : tag.value}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
   </div>
 
   <ul class="rq-journey-trust" aria-label="Důležité jistoty procesu" data-rq-reveal>

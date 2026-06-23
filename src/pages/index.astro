@@ -2,7 +2,6 @@
 import RqLayout from '../layouts/RqLayout.astro';
 import RqHeader from '../components/RqHeader.astro';
 import RqFooter from '../components/RqFooter.astro';
-import RqBeforeAfter from '../components/RqBeforeAfter.astro';
 import RqGuide from '../components/RqGuide.astro';
 import RqJourney from '../components/RqJourney.astro';
 import RqMotion from '../components/RqMotion.astro';
@@ -48,33 +47,30 @@ const symptoms = [
           </p>
           <p class="rq-lead" data-rq-reveal style="--rq-i:3">Pomůžu vám zjednodušit web, poptávky, evidenci nebo ruční práci v tabulkách. Navrhnu řešení, postavím ho, ověřím v praxi a předám tak, abyste ho zvládli používat bez závislosti na dodavateli.</p>
           <p class="rq-hero__journey-note" data-rq-reveal style="--rq-i:4">Postup od problému k ověřenému výsledku.</p>
+        </div>
 
-          <div class="rq-proof-rail" data-rq-reveal style="--rq-i:5" aria-label="Důkazy a orientační ceny">
-            <div class="rq-proof-rail__item">
-              <p class="rq-proof-rail__label">Web od 9 900 Kč</p>
-              <p class="rq-proof-rail__text">jasná nabídka a měřitelné poptávky</p>
-            </div>
-            <div class="rq-proof-rail__item">
-              <p class="rq-proof-rail__label">Audit od 4 900 Kč</p>
-              <p class="rq-proof-rail__text">zjistíte, co brzdí; audit odečtu z realizace</p>
-            </div>
-            <div class="rq-proof-rail__item">
-              <p class="rq-proof-rail__label">Postavím · změřím · předám</p>
-              <p class="rq-proof-rail__text">bez závislosti na dodavateli</p>
-            </div>
+        <div class="rq-proof-rail" data-rq-reveal style="--rq-i:5" aria-label="Důkazy a orientační ceny">
+          <div class="rq-proof-rail__item">
+            <p class="rq-proof-rail__label">Web od 9 900 Kč</p>
+            <p class="rq-proof-rail__text">jasná nabídka a měřitelné poptávky</p>
           </div>
+          <div class="rq-proof-rail__item">
+            <p class="rq-proof-rail__label">Audit od 4 900 Kč</p>
+            <p class="rq-proof-rail__text">zjistíte, co brzdí; audit odečtu z realizace</p>
+          </div>
+          <div class="rq-proof-rail__item">
+            <p class="rq-proof-rail__label">Postavím · změřím · předám</p>
+            <p class="rq-proof-rail__text">bez závislosti na dodavateli</p>
+          </div>
+        </div>
 
-          <div class="rq-hero__actions" data-rq-reveal style="--rq-i:6">
-            <a class="rq-btn rq-btn--primary" href="#kontakt" data-rq-magnetic>Napsat poptávku</a>
-            <a class="rq-btn rq-btn--ghost" href="#ukazky-teaser">Ukázky práce</a>
-            <p class="rq-hero__micro">Nezávazně. Ozvu se do 1 pracovního dne.</p>
-          </div>
+        <div class="rq-hero__actions" data-rq-reveal style="--rq-i:6">
+          <a class="rq-btn rq-btn--primary" href="#kontakt" data-rq-magnetic>Napsat poptávku</a>
+          <a class="rq-btn rq-btn--ghost" href="#ukazky-teaser">Ukázky práce</a>
+          <p class="rq-hero__micro">Nezávazně. Ozvu se do 1 pracovního dne.</p>
         </div>
       </div>
 
-      <div class="rq-hero__panel" data-rq-reveal style="--rq-i:7">
-        <RqBeforeAfter />
-      </div>
     </section>
 
   <script is:inline>

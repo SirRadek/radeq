@@ -241,8 +241,8 @@ const symptoms = [
   <div class="rq-bleed__inner">
     <p class="rq-eyebrow">Služby</p>
     <h2 id="rq-sluzby-title" class="rq-h2">Co vám zjednoduším</h2>
-    <div class="rq-services-bento__grid" data-rq-reveal aria-label="Služby a orientační ceny">
-      <article class="rq-offer rq-service-tile rq-service-tile--featured rq-hoverable" style="--rq-i: 0;">
+    <div class="rq-services-bento__grid" data-rq-service-rotator data-rq-reveal aria-label="Služby a orientační ceny">
+      <article class="rq-offer rq-service-tile rq-hoverable is-featured" data-rq-slot="web" aria-current="true" style="--rq-i: 0;">
         <p class="rq-offer__price">od 9 900 Kč</p>
         <h3>Web a redesign</h3>
         <p class="rq-offer__result">Výsledek: web, který návštěvníkovi rychle vysvětlí nabídku a přivádí poptávky.</p>
@@ -253,7 +253,7 @@ const symptoms = [
         </ul>
       </article>
 
-      <article class="rq-offer rq-service-tile rq-service-tile--shop rq-hoverable" style="--rq-i: 1;">
+      <article class="rq-offer rq-service-tile rq-service-tile--shop rq-hoverable" data-rq-slot="shop" style="--rq-i: 1;">
         <p class="rq-offer__price">od 19 900 Kč</p>
         <h3>E-shop</h3>
         <p class="rq-offer__result">Výsledek: malý vlastněný obchod bez zbytečností, který sami utáhnete.</p>
@@ -264,7 +264,7 @@ const symptoms = [
         </ul>
       </article>
 
-      <article class="rq-offer rq-service-tile rq-service-tile--automation rq-hoverable" style="--rq-i: 2;">
+      <article class="rq-offer rq-service-tile rq-service-tile--automation rq-hoverable" data-rq-slot="automation" style="--rq-i: 2;">
         <p class="rq-offer__price">od 12 000 Kč</p>
         <h3>Automatizace procesů</h3>
         <p class="rq-offer__result">Výsledek: konec ručního přepisování — co děláte opakovaně, běží samo.</p>
@@ -275,7 +275,7 @@ const symptoms = [
         </ul>
       </article>
 
-      <article class="rq-offer rq-service-tile rq-service-tile--data rq-hoverable" style="--rq-i: 3;">
+      <article class="rq-offer rq-service-tile rq-service-tile--data rq-hoverable" data-rq-slot="data" style="--rq-i: 3;">
         <p class="rq-offer__price">od 15 000 Kč</p>
         <h3>Data a AI pomocníci</h3>
         <p class="rq-offer__result">Výsledek: přehled ve vlastních datech a AI nasazená prakticky a bezpečně.</p>
@@ -286,7 +286,7 @@ const symptoms = [
         </ul>
       </article>
 
-      <article class="rq-offer rq-service-tile rq-service-tile--audit rq-hoverable" style="--rq-i: 4;">
+      <article class="rq-offer rq-service-tile rq-service-tile--audit rq-hoverable" data-rq-slot="audit" style="--rq-i: 4;">
         <span class="rq-flag">Nízkorizikový start</span>
         <p class="rq-offer__price">4 900 Kč</p>
         <h3>Audit webu nebo procesu</h3>
@@ -303,6 +303,393 @@ const symptoms = [
     </div>
   </div>
 </section>
+
+<script is:inline>
+  (() => {
+    const grid = document.querySelector('[data-rq-service-rotator]');
+    if (!grid) return;
+
+    const tiles = Array.from(grid.querySelectorAll('.rq-service-tile'));
+    if (tiles.length < 2) return;
+
+    const ROTATION_MS = 20000;
+    const FLIP_MS = 620;
+    const FEATURED_SLOT = 'web';
+    const SLOTS = ['web', 'shop', 'automation', 'data', 'audit'];
+    const SMALL_SLOTS = SLOTS.filter((slot) => slot !== FEATURED_SLOT);
+    const FLIP_EASING = 'cubic-bezier(.25,1,.5,1)';
+    const initialFeatured = tiles.find((tile) => tile.classList.contains('is-featured')) || tiles[0];
+    const initialSlots = new Map(tiles.map((tile) => [tile, tile.dataset.rqSlot || '']));
+    const reduceQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    const mobileQuery = window.matchMedia?.('(max-width: 860px)');
+    const supportsAnimations = typeof tiles[0].animate === 'function';
+    const supportsProgressRing = typeof CSS !== 'undefined' && 'registerProperty' in CSS;
+    const slotOrders = permute(SMALL_SLOTS);
+
+    let observer = null;
+    let resizeTimer = 0;
+    let timerId = 0;
+    let timerStartedAt = 0;
+    let remainingMs = ROTATION_MS;
+    let inView = false;
+    let pointerPaused = false;
+    let focusPaused = false;
+    let isAnimating = false;
+    let userLocked = false;
+    let enhancementAvailable = false;
+
+    function permute(items) {
+      if (items.length <= 1) return [items.slice()];
+      return items.flatMap((item, index) => {
+        const rest = items.slice(0, index).concat(items.slice(index + 1));
+        return permute(rest).map((order) => [item].concat(order));
+      });
+    }
+
+    function canEnhance() {
+      return supportsAnimations && !reduceQuery?.matches && !mobileQuery?.matches;
+    }
+
+    function currentFeatured() {
+      return tiles.find((tile) => tile.classList.contains('is-featured')) || initialFeatured;
+    }
+
+    function setFeatured(tile) {
+      tiles.forEach((candidate) => {
+        const active = candidate === tile;
+        candidate.classList.toggle('is-featured', active);
+        if (active) {
+          candidate.setAttribute('aria-current', 'true');
+        } else {
+          candidate.removeAttribute('aria-current');
+        }
+      });
+    }
+
+    function resetToInitialState() {
+      tiles.forEach((tile) => {
+        const slot = initialSlots.get(tile);
+        if (slot) tile.dataset.rqSlot = slot;
+      });
+      setFeatured(initialFeatured);
+    }
+
+    function setInteractive(enabled) {
+      tiles.forEach((tile) => {
+        if (!enabled) {
+          tile.removeAttribute('role');
+          tile.removeAttribute('tabindex');
+          return;
+        }
+        tile.setAttribute('role', 'button');
+        tile.setAttribute('tabindex', '0');
+      });
+    }
+
+    function clearTimer() {
+      if (!timerId) return;
+      window.clearTimeout(timerId);
+      timerId = 0;
+    }
+
+    function pauseTimer() {
+      if (!timerId) return;
+      remainingMs = Math.max(0, remainingMs - (performance.now() - timerStartedAt));
+      clearTimer();
+    }
+
+    function scheduleTimer() {
+      if (timerId || !enhancementAvailable || userLocked || isAnimating || !inView || pointerPaused || focusPaused || document.hidden) return;
+      timerStartedAt = performance.now();
+      timerId = window.setTimeout(() => {
+        timerId = 0;
+        remainingMs = ROTATION_MS;
+        autoAdvance();
+      }, remainingMs);
+    }
+
+    function syncPauseState() {
+      const paused = !enhancementAvailable || userLocked || isAnimating || !inView || pointerPaused || focusPaused || document.hidden;
+      grid.classList.toggle('is-paused', paused);
+      if (paused) {
+        pauseTimer();
+      } else {
+        scheduleTimer();
+      }
+    }
+
+    function disconnectObserver() {
+      if (!observer) return;
+      observer.disconnect();
+      observer = null;
+    }
+
+    function observeGrid() {
+      disconnectObserver();
+      if (!('IntersectionObserver' in window)) {
+        inView = false;
+        syncPauseState();
+        return;
+      }
+      observer = new IntersectionObserver((entries) => {
+        const entry = entries[0];
+        inView = Boolean(entry && entry.isIntersecting);
+        syncPauseState();
+      }, { threshold: 0.15 });
+      observer.observe(grid);
+    }
+
+    function getNextTile() {
+      const active = currentFeatured();
+      const start = tiles.indexOf(active);
+      for (let offset = 1; offset < tiles.length; offset += 1) {
+        const candidate = tiles[(start + offset) % tiles.length];
+        if (candidate && candidate !== active) return candidate;
+      }
+      return null;
+    }
+
+    function applySwap(target) {
+      const active = currentFeatured();
+      if (!target || target === active) return false;
+
+      const releasedSlot = target.dataset.rqSlot || initialSlots.get(target);
+      active.dataset.rqSlot = releasedSlot;
+      target.dataset.rqSlot = FEATURED_SLOT;
+      setFeatured(target);
+      return true;
+    }
+
+    function reserveGridHeight() {
+      if (!enhancementAvailable) {
+        grid.style.minHeight = '';
+        return;
+      }
+
+      const width = grid.getBoundingClientRect().width;
+      if (!width) return;
+
+      grid.style.minHeight = '0px';
+
+      const clone = grid.cloneNode(true);
+      const cloneTiles = Array.from(clone.querySelectorAll('.rq-service-tile'));
+      clone.removeAttribute('data-rq-reveal');
+      clone.classList.remove('is-rotation-ready', 'is-paused', 'is-flipping', 'is-user-locked');
+      clone.style.position = 'absolute';
+      clone.style.left = '-10000px';
+      clone.style.top = '0';
+      clone.style.width = `${width}px`;
+      clone.style.minHeight = '0';
+      clone.style.visibility = 'hidden';
+      clone.style.pointerEvents = 'none';
+
+      document.body.appendChild(clone);
+      let maxHeight = grid.getBoundingClientRect().height;
+
+      cloneTiles.forEach((tile) => {
+        tile.removeAttribute('role');
+        tile.removeAttribute('tabindex');
+      });
+
+      cloneTiles.forEach((_, featuredIndex) => {
+        const smallIndices = cloneTiles
+          .map((tile, index) => index)
+          .filter((index) => index !== featuredIndex);
+
+        slotOrders.forEach((order) => {
+          cloneTiles.forEach((tile, index) => {
+            const active = index === featuredIndex;
+            tile.classList.toggle('is-featured', active);
+            tile.dataset.rqSlot = active ? FEATURED_SLOT : order[smallIndices.indexOf(index)];
+          });
+          maxHeight = Math.max(maxHeight, clone.getBoundingClientRect().height);
+        });
+      });
+
+      clone.remove();
+      grid.style.minHeight = `${Math.ceil(maxHeight)}px`;
+    }
+
+    function promoteTile(target) {
+      const active = currentFeatured();
+      if (!enhancementAvailable || !target || target === active || isAnimating) return;
+
+      isAnimating = true;
+      grid.classList.add('is-flipping');
+      syncPauseState();
+
+      const firstRects = new Map(tiles.map((tile) => [tile, tile.getBoundingClientRect()]));
+      applySwap(target);
+      const lastRects = new Map(tiles.map((tile) => [tile, tile.getBoundingClientRect()]));
+
+      const animations = tiles.map((tile) => {
+        const first = firstRects.get(tile);
+        const last = lastRects.get(tile);
+        if (!first || !last) return null;
+
+        const dx = first.left - last.left;
+        const dy = first.top - last.top;
+        const sx = first.width / Math.max(last.width, 1);
+        const sy = first.height / Math.max(last.height, 1);
+        const moved = Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5 || Math.abs(sx - 1) > 0.01 || Math.abs(sy - 1) > 0.01;
+        if (!moved) return null;
+
+        tile.style.transformOrigin = 'top left';
+        tile.classList.add('is-flip-animating');
+        return tile.animate([
+          { transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})` },
+          { transform: 'translate(0, 0) scale(1, 1)' },
+        ], {
+          duration: FLIP_MS,
+          easing: FLIP_EASING,
+          fill: 'both',
+        });
+      }).filter(Boolean);
+
+      const finish = () => {
+        tiles.forEach((tile) => {
+          tile.style.transformOrigin = '';
+          tile.classList.remove('is-flip-animating');
+        });
+        grid.classList.remove('is-flipping');
+        isAnimating = false;
+        remainingMs = ROTATION_MS;
+        syncPauseState();
+      };
+
+      if (!animations.length) {
+        finish();
+        return;
+      }
+
+      Promise.allSettled(animations.map((animation) => animation.finished)).then(finish);
+    }
+
+    function autoAdvance() {
+      if (!enhancementAvailable || userLocked || isAnimating || !inView || pointerPaused || focusPaused || document.hidden) {
+        syncPauseState();
+        return;
+      }
+      promoteTile(getNextTile());
+    }
+
+    function lockToTile(tile) {
+      if (!enhancementAvailable || !tile || tile === currentFeatured()) return;
+      userLocked = true;
+      clearTimer();
+      disconnectObserver();
+      grid.classList.add('is-user-locked', 'is-paused');
+      promoteTile(tile);
+    }
+
+    function configure() {
+      enhancementAvailable = canEnhance();
+      clearTimer();
+      disconnectObserver();
+      inView = false;
+      pointerPaused = false;
+      focusPaused = grid.contains(document.activeElement);
+      remainingMs = ROTATION_MS;
+
+      grid.classList.toggle('has-rq-progress-ring', supportsProgressRing && enhancementAvailable);
+      grid.classList.toggle('is-user-locked', userLocked && enhancementAvailable);
+      grid.classList.remove('is-flipping');
+
+      if (!enhancementAvailable) {
+        grid.classList.remove('is-rotation-ready', 'is-paused', 'has-rq-progress-ring', 'is-user-locked');
+        setInteractive(false);
+        resetToInitialState();
+        grid.style.minHeight = '';
+        return;
+      }
+
+      setInteractive(true);
+      reserveGridHeight();
+      grid.classList.add('is-rotation-ready', 'is-paused');
+
+      if (userLocked) return;
+      observeGrid();
+    }
+
+    function closestTile(event) {
+      const eventTarget = event.target instanceof Element ? event.target : null;
+      if (!eventTarget) return null;
+      const tile = eventTarget.closest('.rq-service-tile');
+      return tile && grid.contains(tile) ? tile : null;
+    }
+
+    function watchQuery(query) {
+      if (!query) return;
+      if (typeof query.addEventListener === 'function') {
+        query.addEventListener('change', configure);
+        return;
+      }
+      if (typeof query.addListener === 'function') {
+        query.addListener(configure);
+      }
+    }
+
+    grid.addEventListener('pointerenter', () => {
+      if (!enhancementAvailable || userLocked) return;
+      pointerPaused = true;
+      syncPauseState();
+    });
+
+    grid.addEventListener('pointerleave', () => {
+      if (!enhancementAvailable || userLocked) return;
+      pointerPaused = false;
+      syncPauseState();
+    });
+
+    grid.addEventListener('focusin', () => {
+      if (!enhancementAvailable || userLocked) return;
+      focusPaused = true;
+      syncPauseState();
+    });
+
+    grid.addEventListener('focusout', () => {
+      window.requestAnimationFrame(() => {
+        if (!enhancementAvailable || userLocked) return;
+        focusPaused = grid.contains(document.activeElement);
+        syncPauseState();
+      });
+    });
+
+    grid.addEventListener('click', (event) => {
+      const target = closestTile(event);
+      if (!target) return;
+      lockToTile(target);
+    });
+
+    grid.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      const target = closestTile(event);
+      if (!target) return;
+      event.preventDefault();
+      lockToTile(target);
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (!enhancementAvailable || userLocked) return;
+      syncPauseState();
+    });
+
+    window.addEventListener('resize', () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(configure, 160);
+    });
+
+    window.addEventListener('pagehide', () => {
+      clearTimer();
+      disconnectObserver();
+    });
+
+    watchQuery(reduceQuery);
+    watchQuery(mobileQuery);
+
+    configure();
+  })();
+</script>
 
 <section id="jak-pracuji" class="rq-section rq-process">
   <RqJourney />

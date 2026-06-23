@@ -1131,6 +1131,12 @@ p {
   }
 }
 
+@property --rq-progress {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
 /* ===== V2 Vlna 2b: Služby bento ===== */
 .rq-services-bento {
   overflow: hidden;
@@ -1159,6 +1165,7 @@ p {
 }
 
 .rq-service-tile {
+  position: relative;
   min-width: 0;
   overflow: hidden;
   display: flex;
@@ -1175,8 +1182,7 @@ p {
   transition-delay: calc(var(--rq-i, 0) * 55ms);
 }
 
-.rq-service-tile--featured {
-  grid-area: web;
+.rq-service-tile.is-featured {
   padding: clamp(1.4rem, 3vw, 2.35rem);
   border-color: color-mix(in srgb, var(--rq-wine, #7b2332) 42%, transparent);
   background:
@@ -1185,10 +1191,68 @@ p {
   box-shadow: 0 24px 70px rgba(123, 35, 50, 0.16);
 }
 
-.rq-service-tile--shop { grid-area: shop; }
-.rq-service-tile--automation { grid-area: automation; }
-.rq-service-tile--data { grid-area: data; }
-.rq-service-tile--audit { grid-area: audit; }
+.rq-service-tile[data-rq-slot="web"] { grid-area: web; }
+.rq-service-tile[data-rq-slot="shop"] { grid-area: shop; }
+.rq-service-tile[data-rq-slot="automation"] { grid-area: automation; }
+.rq-service-tile[data-rq-slot="data"] { grid-area: data; }
+.rq-service-tile[data-rq-slot="audit"] { grid-area: audit; }
+
+.rq-service-tile.is-featured::after {
+  content: "";
+  position: absolute;
+  right: clamp(1rem, 2vw, 1.55rem);
+  bottom: clamp(0.85rem, 1.8vw, 1.25rem);
+  left: clamp(1rem, 2vw, 1.55rem);
+  z-index: 1;
+  height: 2px;
+  border-radius: var(--rq-r-pill);
+  background: var(--rq-burgundy, #7A1F2B);
+  opacity: 0;
+  pointer-events: none;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: opacity 220ms ease;
+}
+
+.rq-services-bento__grid.is-rotation-ready .rq-service-tile.is-featured::after {
+  opacity: 0.78;
+  animation: rq-service-progress-line 20000ms linear infinite;
+}
+
+.rq-services-bento__grid.has-rq-progress-ring.is-rotation-ready .rq-service-tile.is-featured::after {
+  inset: 0;
+  width: auto;
+  height: auto;
+  padding: 2px;
+  border-radius: inherit;
+  background: conic-gradient(from -90deg, var(--rq-burgundy, #7A1F2B) var(--rq-progress, 0deg), transparent 0);
+  opacity: 1;
+  transform: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: rq-service-progress-ring 20000ms linear infinite;
+}
+
+.rq-services-bento__grid.is-paused .rq-service-tile.is-featured::after,
+.rq-services-bento__grid:hover .rq-service-tile.is-featured::after,
+.rq-services-bento__grid:focus-within .rq-service-tile.is-featured::after {
+  animation-play-state: paused;
+}
+
+.rq-services-bento__grid.is-user-locked.has-rq-progress-ring.is-rotation-ready .rq-service-tile.is-featured::after,
+.rq-services-bento__grid.is-user-locked .rq-service-tile.is-featured::after {
+  opacity: 0;
+}
+
+.rq-service-tile.is-flip-animating {
+  will-change: transform;
+}
 
 .rq-service-tile h3,
 .rq-service-tile p,
@@ -1205,7 +1269,7 @@ p {
   font-weight: 800;
 }
 
-.rq-service-tile--featured .rq-offer__price {
+.rq-service-tile.is-featured .rq-offer__price {
   font-size: clamp(1.9rem, 4vw, 3.1rem);
 }
 
@@ -1215,7 +1279,7 @@ p {
   line-height: 1.12;
 }
 
-.rq-service-tile--featured h3 {
+.rq-service-tile.is-featured h3 {
   font-size: clamp(1.55rem, 3vw, 2.25rem);
 }
 
@@ -1235,7 +1299,7 @@ p {
   font-size: 0.95rem;
 }
 
-.rq-service-tile--featured .rq-offer__outputs,
+.rq-service-tile.is-featured .rq-offer__outputs,
 .rq-service-tile--audit .rq-offer__outputs {
   color: color-mix(in srgb, var(--rq-ink, #201615) 82%, transparent);
 }
@@ -1270,6 +1334,23 @@ p {
   box-shadow: 0 26px 76px rgba(32, 22, 21, 0.13);
 }
 
+.rq-services-bento__grid.is-flipping .rq-hoverable:hover,
+.rq-services-bento__grid.is-flipping .rq-hoverable:focus-within {
+  transform: none;
+}
+
+@keyframes rq-service-progress-ring {
+  to {
+    --rq-progress: 360deg;
+  }
+}
+
+@keyframes rq-service-progress-line {
+  to {
+    transform: scaleX(1);
+  }
+}
+
 @media (max-width: 860px) {
   .rq-services-bento__grid {
     grid-template-columns: 1fr;
@@ -1282,7 +1363,7 @@ p {
   }
 
   .rq-service-tile,
-  .rq-service-tile--featured {
+  .rq-service-tile.is-featured {
     padding: clamp(1rem, 5vw, 1.45rem);
   }
 }

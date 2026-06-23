@@ -134,16 +134,6 @@ p {
   color: currentColor;
 }
 
-.rq-display {
-  max-width: 12ch;
-  font-size: clamp(2.8rem, 6vw, 4.8rem);
-}
-
-.rq-h2 {
-  max-width: 13ch;
-  font-size: clamp(2rem, 4.4vw, 3.3rem);
-}
-
 .rq-lead {
   max-width: 54ch;
   color: var(--rq-ink-2);
@@ -951,20 +941,6 @@ p {
   --rq-lime-ink: #2A3508;
   --rq-shadow-deep: 0 24px 70px rgba(28, 26, 23, .16);
   --rq-shadow-burgundy: 0 22px 60px rgba(122, 31, 43, .16);
-}
-
-.rq-display {
-  font-size: clamp(3.2rem, 8vw, 8rem);
-  line-height: .95;
-  letter-spacing: -.03em;
-  font-weight: 800;
-}
-
-.rq-h2 {
-  position: relative;
-  font-size: clamp(2.4rem, 5.5vw, 5rem);
-  line-height: 1;
-  letter-spacing: -.02em;
 }
 
 .rq-h2::after {
@@ -2443,17 +2419,6 @@ body {
   line-height: 1.6;
 }
 
-.rq-display {
-  font-size: clamp(2.6rem, 6vw, 6rem);
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-
-.rq-h2 {
-  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
-  line-height: 1.05;
-}
-
 .rq-eyebrow {
   font-size: 0.8125rem;
   letter-spacing: 0.12em;
@@ -2529,14 +2494,6 @@ h2 + p {
   html {
     font-size: 112.5%;
   }
-}
-
-.rq-display {
-  font-size: clamp(2.6rem, 4.8vw, 5.75rem);
-}
-
-.rq-h2 {
-  font-size: clamp(2.1rem, 3.6vw, 3.25rem);
 }
 
 .rq-problem-wall,

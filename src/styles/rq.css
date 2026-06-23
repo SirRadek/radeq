@@ -14,6 +14,9 @@
   --rq-on-dark-2: #C9BFB1;
   --rq-maxw: 1280px;
   --rq-maxw-wide: 1440px;
+  --rq-gutter: clamp(1rem, 3vw, 4rem);
+  --rq-page-w: min(calc(100% - 2 * var(--rq-gutter)), max(1280px, 72vw));
+  --rq-page-w-wide: min(calc(100% - 2 * var(--rq-gutter)), max(1440px, 72vw));
   --rq-pad: clamp(4rem, 8vw, 7.5rem);
   --rq-r: 14px;
   --rq-r-pill: 999px;
@@ -103,7 +106,7 @@ p {
 }
 
 .rq-section {
-  width: min(calc(100% - 2rem), var(--rq-maxw));
+  width: var(--rq-page-w);
   margin-inline: auto;
   padding-block: var(--rq-pad);
 }
@@ -566,7 +569,7 @@ html[data-motion-ready] main section {
 }
 
 .rq-bleed__inner {
-  width: min(100% - 2rem, var(--rq-maxw));
+  width: var(--rq-page-w);
   margin-inline: auto;
 }
 
@@ -1091,7 +1094,7 @@ html[data-motion-ready] main section {
 }
 
 .rq-statement__inner {
-  width: min(calc(100% - 2rem), var(--rq-maxw));
+  width: var(--rq-page-w);
   margin-inline: auto;
   padding-block: clamp(4rem, 10vw, 8rem);
 }
@@ -1200,7 +1203,8 @@ html[data-motion-ready] main section {
 }
 
 .rq-problem-wall__inner {
-  max-width: var(--rq-maxw, 1180px);
+  width: var(--rq-page-w-wide);
+  max-width: var(--rq-page-w-wide);
   margin-inline: auto;
   padding: clamp(4.5rem, 8vw, 7.5rem) clamp(1rem, 4vw, 2rem);
 }
@@ -2375,10 +2379,20 @@ h2 + p {
 .rq-problem-wall__inner,
 .rq-statement__inner,
 .rq-bleed__inner,
+.rq-diagnostic__inner,
+.rq-ukazky-teaser__inner {
+  width: var(--rq-page-w);
+  max-width: var(--rq-page-w);
+  margin-inline: auto;
+}
+
+.rq-pricing,
+.rq-problem-wall__inner,
+.rq-diagnostic__inner,
 .rq-ukazky-teaser__inner,
-.rq-diagnostic__inner {
-  width: min(calc(100% - 2rem), var(--rq-maxw));
-  max-width: var(--rq-maxw);
+.rq-services-bento .rq-bleed__inner {
+  width: var(--rq-page-w-wide);
+  max-width: var(--rq-page-w-wide);
   margin-inline: auto;
 }
 
@@ -2413,6 +2427,13 @@ h2 + p {
   .rq-ukazky-bento,
   .rq-diagnostic__grid {
     gap: clamp(1.25rem, 1.6vw, 2rem);
+  }
+}
+
+@media (min-width: 1600px) {
+  .rq-pricing-grid {
+    max-width: 1100px;
+    margin-inline: auto;
   }
 }
 
@@ -2884,11 +2905,13 @@ h2 + p {
    follow-upu smazat — kanonické hodnoty jsou tady. */
 .rq-display {
   max-width: 12ch;
-  font-size: clamp(2.6rem, 4.8vw, 5.75rem);
+  font-size: min(clamp(2.6rem, 4.8vw, 5.75rem), 12vw);
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.02em;
+  overflow-wrap: break-word;
   text-wrap: balance;
+  hyphens: auto;
 }
 
 .rq-h2 {

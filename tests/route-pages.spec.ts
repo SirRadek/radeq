@@ -33,6 +33,19 @@ test('new public routes fit mobile width', async ({ page }) => {
   }
 });
 
+test('homepage has no horizontal overflow across responsive widths', async ({ page }) => {
+  const widths = [300, 360, 768, 1024, 1440, 2560, 3840];
+
+  for (const width of widths) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/');
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow, `/ has ${overflow}px horizontal overflow at ${width}px`).toBe(0);
+  }
+});
+
 test('sitemap exposes the public route pages', async ({ request }) => {
   const sitemap = await request.get('/sitemap.xml');
   expect(sitemap.ok()).toBe(true);

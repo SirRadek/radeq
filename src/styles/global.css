@@ -191,7 +191,7 @@ html {
 
 body {
   position: relative;
-  min-width: 320px;
+  min-width: min(320px, 100%);
   min-height: 100%;
   margin: 0;
   color: var(--text-main);

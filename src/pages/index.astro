@@ -5,7 +5,7 @@ import RqFooter from '../components/RqFooter.astro';
 import RqGuide from '../components/RqGuide.astro';
 import RqJourney from '../components/RqJourney.astro';
 import RqMotion from '../components/RqMotion.astro';
-import RqDiagnostic from '../components/RqDiagnostic.astro';
+import RqProblemDiagnostic from '../components/RqProblemDiagnostic.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const nav = [
@@ -115,52 +115,7 @@ const symptoms = [
     })();
   </script>
 
-<section id="co-resim" class="rq-statement rq-problem-wall" aria-labelledby="rq-problem-wall-title">
-  <div class="rq-statement__inner rq-problem-wall__inner">
-    <div class="rq-problem-wall__head" data-rq-reveal>
-      <p class="rq-eyebrow">Co řeším</p>
-      <h2 id="rq-problem-wall-title" class="rq-h2 rq-h2--feature rq-problem-wall__title">Poznáváte některý z těchto problémů?</h2>
-    </div>
-
-    <div class="rq-problem-wall__grid" data-rq-reveal aria-label="Typické problémy, které řeším">
-      <article class="rq-problem-wall__tile rq-problem-wall__tile--lead rq-hoverable" style="--rq-i: 0;">
-        <span class="rq-flag">nalezen problém</span>
-        <p>Web jen existuje, ale nevydělává.</p>
-        <a class="rq-problem-wall__link" href="#sluzby">Probrat řešení</a>
-      </article>
-
-      <article class="rq-problem-wall__tile rq-problem-wall__tile--mail rq-hoverable" style="--rq-i: 1;">
-        <span class="rq-flag">nalezen problém</span>
-        <p>Poptávky se ztrácí v e-mailech a přepisujete je ručně.</p>
-        <a class="rq-problem-wall__link" href="#sluzby">Probrat řešení</a>
-      </article>
-
-      <article class="rq-problem-wall__tile rq-problem-wall__tile--offer rq-hoverable" style="--rq-i: 2;">
-        <span class="rq-flag">nalezen problém</span>
-        <p>Nabídka není jasná a zákazník neví, kam pokračovat.</p>
-        <a class="rq-problem-wall__link" href="#sluzby">Probrat řešení</a>
-      </article>
-
-      <article class="rq-problem-wall__tile rq-problem-wall__tile--data rq-hoverable" style="--rq-i: 3;">
-        <span class="rq-flag">nalezen problém</span>
-        <p>Data přepisujete mezi tabulkami pořád dokola.</p>
-        <a class="rq-problem-wall__link" href="#sluzby">Probrat řešení</a>
-      </article>
-
-      <article class="rq-problem-wall__tile rq-problem-wall__tile--overview rq-hoverable" style="--rq-i: 4;">
-        <span class="rq-flag">nalezen problém</span>
-        <p>Potřebujete jednoduchou evidenci nebo přehled, který se nerozpadne po týdnu.</p>
-        <a class="rq-problem-wall__link" href="#sluzby">Probrat řešení</a>
-      </article>
-
-      <article class="rq-problem-wall__tile rq-problem-wall__tile--start rq-hoverable" style="--rq-i: 5;">
-        <span class="rq-flag">nalezen problém</span>
-        <p>Chcete využít AI prakticky, ale nevíte, kde dává smysl.</p>
-        <a class="rq-problem-wall__link" href="#sluzby">Probrat řešení</a>
-      </article>
-    </div>
-  </div>
-</section>
+<RqProblemDiagnostic />
 
 <section class="rq-marquee rq-bleed" aria-label="Typické symptomy před úpravou webu a procesů" data-rq-marquee>
   <div class="rq-marquee__viewport">
@@ -178,8 +133,6 @@ const symptoms = [
     </div>
   </div>
 </section>
-
-<RqDiagnostic />
 
 <section id="sluzby" class="rq-section rq-bleed rq-services-bento" aria-labelledby="rq-sluzby-title">
   <div class="rq-bleed__inner">

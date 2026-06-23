@@ -1131,198 +1131,6 @@ p {
   }
 }
 
-/* ===== V2 Vlna 2a: tmavý problem wall ===== */
-.rq-problem-wall {
-  width: 100vw;
-  max-width: 100vw;
-  margin-inline: calc(50% - 50vw);
-  overflow-x: clip;
-  color: #f8f3e8;
-  background:
-    linear-gradient(135deg, #12100f 0%, #1b1214 48%, #251116 100%);
-}
-
-@supports not (overflow: clip) {
-  .rq-problem-wall { overflow-x: hidden; }
-}
-
-.rq-problem-wall,
-.rq-problem-wall * {
-  box-sizing: border-box;
-}
-
-.rq-problem-wall__inner {
-  width: var(--rq-page-w-wide);
-  max-width: var(--rq-page-w-wide);
-  margin-inline: auto;
-  padding: clamp(4.5rem, 8vw, 7.5rem) clamp(1rem, 4vw, 2rem);
-}
-
-.rq-problem-wall__head {
-  max-width: 860px;
-  margin-bottom: clamp(2rem, 5vw, 4rem);
-}
-
-.rq-problem-wall .rq-eyebrow {
-  color: rgba(248, 243, 232, 0.72);
-}
-
-.rq-problem-wall__title {
-  max-width: 11ch;
-  margin: 0;
-  color: #fffaf0;
-  line-height: 0.92;
-  letter-spacing: 0;
-}
-
-.rq-problem-wall__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr) minmax(0, 1fr) minmax(0, 0.92fr);
-  grid-template-areas:
-    "lead lead mail offer"
-    "lead lead data overview"
-    "start start data overview";
-  gap: clamp(0.85rem, 1.8vw, 1.25rem);
-  width: 100%;
-  min-width: 0;
-}
-
-.rq-problem-wall__tile {
-  position: relative;
-  display: flex;
-  min-width: 0;
-  min-height: 14rem;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1.25rem;
-  padding: clamp(1.1rem, 2vw, 1.55rem);
-  border: 1px solid rgba(248, 243, 232, 0.14);
-  border-left: 3px solid rgba(199, 224, 74, 0.72);
-  border-radius: min(var(--rq-r, 8px), 8px);
-  background: rgba(255, 250, 240, 0.055);
-  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.24);
-  color: #fffaf0;
-  isolation: isolate;
-  transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
-}
-
-.rq-problem-wall__tile::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  background: linear-gradient(145deg, rgba(122, 31, 43, 0.22), rgba(255, 255, 255, 0));
-  pointer-events: none;
-}
-
-.rq-problem-wall__tile:hover,
-.rq-problem-wall__tile:focus-within {
-  transform: translateY(-0.35rem);
-  border-color: rgba(199, 224, 74, 0.92);
-  background: rgba(255, 250, 240, 0.085);
-  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.34);
-}
-
-.rq-problem-wall__tile p {
-  margin: 0;
-  max-width: 28ch;
-  color: rgba(255, 250, 240, 0.92);
-  font-size: clamp(1rem, 1.25vw, 1.18rem);
-  line-height: 1.35;
-}
-
-.rq-problem-wall__tile--lead {
-  grid-area: lead;
-  min-height: clamp(24rem, 44vw, 34rem);
-  padding: clamp(1.35rem, 3vw, 2.25rem);
-  border-left-width: 5px;
-  background: rgba(122, 31, 43, 0.22);
-}
-
-.rq-problem-wall__tile--lead p {
-  max-width: 12ch;
-  color: #fffaf0;
-  font-family: var(--rq-display, inherit);
-  font-size: clamp(2.35rem, 5.8vw, 5.2rem);
-  line-height: 0.95;
-  letter-spacing: 0;
-}
-
-.rq-problem-wall__tile--mail { grid-area: mail; }
-.rq-problem-wall__tile--offer { grid-area: offer; }
-.rq-problem-wall__tile--data { grid-area: data; }
-.rq-problem-wall__tile--overview { grid-area: overview; }
-.rq-problem-wall__tile--start { grid-area: start; min-height: 12rem; }
-
-.rq-problem-wall .rq-flag {
-  color: var(--rq-lime-ink, #2A3508);
-  background: var(--rq-lime, #C7E04A);
-}
-
-.rq-problem-wall__link {
-  color: rgba(255, 250, 240, 0.82);
-  font-family: var(--rq-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
-  font-size: 0.82rem;
-  text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.rq-problem-wall__link::after {
-  content: " ->";
-  color: var(--rq-lime, #C7E04A);
-}
-
-.rq-problem-wall__link:hover,
-.rq-problem-wall__link:focus-visible {
-  color: #ffffff;
-  text-decoration: underline;
-  text-decoration-color: var(--rq-lime, #C7E04A);
-  text-underline-offset: 0.28em;
-}
-
-@media (max-width: 880px) {
-  .rq-problem-wall__grid {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas:
-      "lead"
-      "mail"
-      "offer"
-      "data"
-      "overview"
-      "start";
-  }
-
-  .rq-problem-wall__tile,
-  .rq-problem-wall__tile--lead,
-  .rq-problem-wall__tile--start {
-    min-height: auto;
-  }
-
-  .rq-problem-wall__tile--lead p {
-    max-width: 11ch;
-    font-size: clamp(2.45rem, 16vw, 4.2rem);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .rq-problem-wall__tile {
-    transition: none;
-  }
-
-  .rq-problem-wall__tile:hover,
-  .rq-problem-wall__tile:focus-within {
-    transform: none;
-  }
-}
-
-.rq-problem-wall [data-rq-reveal] .rq-problem-wall__tile {
-  transition-delay: calc(var(--rq-i, 0) * 70ms);
-}
-
-
 /* ===== V2 Vlna 2b: Služby bento ===== */
 .rq-services-bento {
   overflow: hidden;
@@ -2297,25 +2105,12 @@ html[data-rq-motion="on"] .rq-marquee__track {
 
 /* ===== V3 Wave 5a ===== */
 
-.rq-problem-wall {
-  background: var(--rq-carbon);
-  color: var(--rq-on-dark);
-}
-
-.rq-problem-wall :where(.rq-h2, h2, h3, strong),
 .rq-statement :where(.rq-h2, h2, h3, strong) {
   color: var(--rq-on-dark);
 }
 
-.rq-problem-wall :where(.rq-lead, p, li, dd),
 .rq-statement :where(.rq-lead, p, li, dd) {
   color: var(--rq-on-dark-2);
-}
-
-.rq-problem-wall :where(.rq-card, .rq-statement) {
-  border-color: rgba(247, 244, 238, .14);
-  background: var(--rq-carbon-2);
-  color: var(--rq-on-dark);
 }
 
 .rq-site-footer__logo {
@@ -2433,17 +2228,13 @@ h2 + p {
   }
 }
 
-.rq-problem-wall,
 .rq-services-bento,
 .rq-pricing,
-.rq-ukazky-teaser,
-.rq-diagnostic {
+.rq-ukazky-teaser {
   --rq-maxw: var(--rq-maxw-wide);
 }
 
-.rq-problem-wall,
 .rq-statement,
-.rq-diagnostic,
 .rq-site-footer,
 .rq-marquee,
 .rq-bleed {
@@ -2453,10 +2244,8 @@ h2 + p {
   overflow-x: clip;
 }
 
-.rq-problem-wall__inner,
 .rq-statement__inner,
 .rq-bleed__inner,
-.rq-diagnostic__inner,
 .rq-ukazky-teaser__inner {
   width: var(--rq-page-w);
   max-width: var(--rq-page-w);
@@ -2464,8 +2253,6 @@ h2 + p {
 }
 
 .rq-pricing,
-.rq-problem-wall__inner,
-.rq-diagnostic__inner,
 .rq-ukazky-teaser__inner,
 .rq-services-bento .rq-bleed__inner {
   width: var(--rq-page-w-wide);
@@ -2473,14 +2260,10 @@ h2 + p {
   margin-inline: auto;
 }
 
-.rq-problem-wall__head,
-.rq-diagnostic__head,
 .rq-pricing-note,
 .rq-ukazky-teaser .rq-lead,
 .rq-services-bento .rq-lead,
 .rq-pricing .rq-lead,
-.rq-diagnostic .rq-lead,
-.rq-problem-wall :where(p, li, dd),
 .rq-statement :where(p, li, dd) {
   max-width: 62ch;
 }
@@ -2488,9 +2271,7 @@ h2 + p {
 .rq-offers__grid,
 .rq-pricing-grid,
 .rq-ukazky-grid,
-.rq-ukazky-bento,
-.rq-diagnostic__grid,
-.rq-problem-wall__grid {
+.rq-ukazky-bento {
   min-width: 0;
 }
 
@@ -2501,8 +2282,7 @@ h2 + p {
 
   .rq-pricing-grid,
   .rq-ukazky-grid,
-  .rq-ukazky-bento,
-  .rq-diagnostic__grid {
+  .rq-ukazky-bento {
     gap: clamp(1.25rem, 1.6vw, 2rem);
   }
 }
@@ -2517,9 +2297,7 @@ h2 + p {
 @supports not (overflow: clip) {
   html,
   body,
-  .rq-problem-wall,
   .rq-statement,
-  .rq-diagnostic,
   .rq-site-footer,
   .rq-marquee,
   .rq-bleed {
@@ -2635,7 +2413,7 @@ h2 + p {
 
 /* ===== Polish 2026-06-22 · Brainstorm 1: patička — kontrast & afordance =====
    Footer-scoped aliasy (NEmění globální --rq-on-dark-2, který se používá i v
-   .rq-problem-wall/.rq-statement). Syrový WCAG kontrast textu prochází (9.9–15.4:1);
+   tmavých sekcích). Syrový WCAG kontrast textu prochází (9.9–15.4:1);
    skutečné problémy = afordance odkazů (stejná barva jako text, bez podtržení),
    mrtvé tel/mailto v bottomu, chybějící focus-visible, drobný bottom řádek.
    Burgundy #7A1F2B má na carbonu jen 1.76:1 → underline/focus používá světlý
@@ -2778,22 +2556,16 @@ h2 + p {
   text-wrap: balance;
 }
 
-/* Sekční „feature" nadpis (problem-wall) — silnější hlas než běžné H2, ale
+/* Sekční „feature" nadpis — silnější hlas než běžné H2, ale
    netypografuje na úrovni H1. Měření širší kvůli delšímu copy. */
 .rq-h2--feature {
   max-width: 18ch;
   font-size: clamp(2.3rem, 4.2vw, 3.9rem);
 }
 
-/* problem-wall title přechází z .rq-display na .rq-h2--feature (hierarchie);
-   nechceme tím ale přidat dekorativní ::after linku, kterou .rq-display neměla. */
-.rq-problem-wall__title::after {
-  content: none;
-}
-
 /* ===== Polish 2026-06-22 · Brainstorm 2: vizuál — zlehčit „těžký pád" =====
-   Sled hero(světlý) → marquee(tmavý) → problem-wall(tmavý) byl těžký. Marquee
-   zesvětlen na bg-sunken; carbon zůstává jen pro problem-wall a patičku. */
+   Sled hero(světlý) → marquee(tmavý) byl těžký. Marquee
+   zesvětlen na bg-sunken; carbon zůstává pro diagnostickou sekci a patičku. */
 .rq-marquee {
   border-block: 1px solid color-mix(in srgb, var(--rq-burgundy) 22%, transparent);
   background: var(--rq-bg-sunken);
@@ -2839,52 +2611,4 @@ body::after {
   top: auto !important;
   bottom: 0 !important;
   background: linear-gradient(0deg, var(--rq-bg) 0%, rgba(247, 244, 238, 0) 100%) !important;
-}
-
-/* Diagnostic schematic link overlay. Feature flag: remove .is-links-on from .rq-diagnostic. */
-.rq-diagnostic {
-  position: relative;
-  isolation: isolate;
-}
-
-.rq-diagnostic__inner {
-  position: relative;
-  z-index: 1;
-}
-
-.rq-diagnostic-links {
-  display: none;
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.rq-diagnostic.is-links-on .rq-diagnostic-links {
-  display: block;
-}
-
-.rq-diagnostic-links polyline {
-  fill: none;
-  stroke: var(--rq-burgundy, #7A1F2B);
-  stroke-width: 1;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: .35;
-  transition: opacity 180ms var(--rq-ease);
-}
-
-.rq-diagnostic-links polyline.is-drawing {
-  transition: stroke-dashoffset 560ms cubic-bezier(.16, 1, .3, 1), opacity 180ms var(--rq-ease);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .rq-diagnostic-links polyline,
-  .rq-diagnostic-links polyline.is-drawing {
-    transition: none !important;
-  }
 }

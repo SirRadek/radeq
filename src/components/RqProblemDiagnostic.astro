@@ -1,0 +1,717 @@
+---
+const items = [
+  {
+    id: 'web-poptavky',
+    symptom: 'Web nevede k poptávce',
+    problem: 'Web jen existuje, ale návštěvník nedojde ke kontaktu.',
+    cause: 'Nejasná nabídka a slabé výzvy k akci; návštěvník neví, co má udělat.',
+    verify: 'cestu od příchodu ke kontaktu, srozumitelnost nabídky a jestli se vůbec měří.',
+    step: 'krátký audit a úprava struktury + jasné CTA.',
+    service: 'Web a redesign / Audit',
+  },
+  {
+    id: 'poptavky-email',
+    symptom: 'Poptávky se ztrácí v e-mailech',
+    problem: 'Poptávky přijdou, ale další krok se řeší ručně a bez jasného stavu.',
+    cause: 'nepropojené nástroje — maily, tabulky, formuláře.',
+    verify: 'kde vzniká ruční práce a kolik času bere.',
+    step: 'navrhnout nejmenší automatizaci jednoho toku.',
+    service: 'Automatizace procesů',
+  },
+  {
+    id: 'rucni-data',
+    symptom: 'Data/úkoly přepisujete ručně',
+    problem: 'Data přepisujete mezi tabulkami pořád dokola.',
+    cause: 'nepropojené nástroje — maily, tabulky, formuláře.',
+    verify: 'kde vzniká ruční práce a kolik času bere.',
+    step: 'navrhnout nejmenší automatizaci jednoho toku.',
+    service: 'Automatizace procesů',
+  },
+  {
+    id: 'nejasny-krok',
+    symptom: 'Nabídka / další krok není jasný',
+    problem: 'Zákazník nerozumí nabídce nebo neví, kam pokračovat.',
+    cause: 'Nejasná nabídka a slabé výzvy k akci; návštěvník neví, co má udělat.',
+    verify: 'srozumitelnost nabídky, text výzvy k akci a cestu k formuláři nebo telefonu.',
+    step: 'upravit strukturu stránky tak, aby další krok byl zřejmý bez vysvětlování.',
+    service: 'Web a redesign / Audit',
+  },
+  {
+    id: 'mereni-prehled',
+    symptom: 'Chybí měření a přehled',
+    problem: 'Nevíte, co na webu nebo v procesu měřit.',
+    cause: 'chybí jednoduché měření cílů (poptávka, telefon).',
+    verify: 'co je vlastně cíl a jestli se dnes sleduje.',
+    step: 'nastavit přehledné měření bez přehnané analytiky.',
+    service: 'Data a AI / Audit',
+  },
+  {
+    id: 'zacatek-ai',
+    symptom: 'Nevím, kde začít / kde dává smysl AI',
+    problem: 'Máte víc možností než jistoty a nechcete začít drahým nástrojem naslepo.',
+    cause: 'moc možností a žádná priorita.',
+    verify: 'současný stav, opakovanou práci a podklady, nad kterými by AI případně dávala smysl.',
+    step: 'krátký audit, který dá jasné pořadí kroků a oddělí užitečné nápady od slepých uliček.',
+    service: 'Audit / Data a AI pomocníci',
+  },
+];
+---
+
+<section class="rq-section rq-problem-diagnostic" id="co-resim" aria-labelledby="rq-problem-diagnostic-title" data-rq-problem-diagnostic>
+  <span class="rq-problem-diagnostic__alias" id="diagnostika" aria-hidden="true"></span>
+  <div class="rq-problem-diagnostic__inner">
+    <header class="rq-problem-diagnostic__head" data-rq-reveal>
+      <div class="rq-problem-diagnostic__copy">
+        <p class="rq-eyebrow">Co řeším</p>
+        <h2 class="rq-h2 rq-h2--feature rq-problem-diagnostic__title" id="rq-problem-diagnostic-title">Poznáváte některý z těchto problémů?</h2>
+        <p class="rq-problem-diagnostic__lead">Vyberte signál, který sedí nejvíc. Ukážu pravděpodobnou příčinu, co ověřím a první rozumný krok bez zbytečné omáčky.</p>
+      </div>
+      <p class="rq-problem-diagnostic__badge">{items.length} typických signálů</p>
+    </header>
+
+    <div class="rq-problem-diagnostic__shell" data-rq-reveal>
+      <div class="rq-problem-diagnostic__tabs" role="tablist" aria-label="Typické problémy">
+        {items.map((item, index) => (
+          <button
+            class="rq-problem-diagnostic__tab"
+            id={`rq-problem-tab-${item.id}`}
+            type="button"
+            role="tab"
+            aria-selected={index === 0 ? 'true' : 'false'}
+            aria-controls={`rq-problem-panel-${item.id}`}
+            data-rq-problem-tab
+          >
+            <span class="rq-problem-diagnostic__number">{String(index + 1).padStart(2, '0')}</span>
+            <span class="rq-problem-diagnostic__tab-text">{item.symptom}</span>
+          </button>
+        ))}
+      </div>
+
+      <div class="rq-problem-diagnostic__laser" data-rq-problem-laser aria-hidden="true"></div>
+
+      <div class="rq-problem-diagnostic__output" aria-live="polite">
+        {items.map((item, index) => (
+          <article
+            class="rq-problem-diagnostic__panel"
+            id={`rq-problem-panel-${item.id}`}
+            role="tabpanel"
+            aria-labelledby={`rq-problem-tab-${item.id}`}
+            tabindex="0"
+            hidden={index !== 0}
+            data-rq-problem-panel
+          >
+            <div class="rq-problem-diagnostic__panel-top">
+              <span class="rq-problem-diagnostic__solution-label">Návrh řešení</span>
+              <span class="rq-problem-diagnostic__count">{String(index + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}</span>
+            </div>
+            <h3>{item.symptom}</h3>
+            <dl class="rq-problem-diagnostic__findings">
+              <div>
+                <dt>Problém</dt>
+                <dd>{item.problem}</dd>
+              </div>
+              <div>
+                <dt>Pravděpodobná příčina</dt>
+                <dd>{item.cause}</dd>
+              </div>
+              <div>
+                <dt>Co ověřím</dt>
+                <dd>{item.verify}</dd>
+              </div>
+              <div>
+                <dt>První krok</dt>
+                <dd>{item.step}</dd>
+              </div>
+            </dl>
+            <div class="rq-problem-diagnostic__actions">
+              <a class="rq-btn rq-btn--primary" href="#kontakt">Napsat poptávku</a>
+              <a class="rq-problem-diagnostic__service" href="#sluzby">Typicky souvisí: <strong>{item.service}</strong></a>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div class="rq-problem-diagnostic__accordion" aria-label="Typické problémy">
+        {items.map((item, index) => (
+          <div class="rq-problem-diagnostic__accordion-item">
+            <button
+              class="rq-problem-diagnostic__accordion-button"
+              type="button"
+              aria-expanded={index === 0 ? 'true' : 'false'}
+              aria-controls={`rq-problem-accordion-panel-${item.id}`}
+              data-rq-problem-accordion
+            >
+              <span class="rq-problem-diagnostic__number">{String(index + 1).padStart(2, '0')}</span>
+              <span class="rq-problem-diagnostic__tab-text">{item.symptom}</span>
+            </button>
+            <article
+              class="rq-problem-diagnostic__panel rq-problem-diagnostic__panel--accordion"
+              id={`rq-problem-accordion-panel-${item.id}`}
+              hidden={index !== 0}
+              data-rq-problem-accordion-panel
+            >
+              <div class="rq-problem-diagnostic__panel-top">
+                <span class="rq-problem-diagnostic__solution-label">Návrh řešení</span>
+                <span class="rq-problem-diagnostic__count">{String(index + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}</span>
+              </div>
+              <h3>{item.symptom}</h3>
+              <dl class="rq-problem-diagnostic__findings">
+                <div>
+                  <dt>Problém</dt>
+                  <dd>{item.problem}</dd>
+                </div>
+                <div>
+                  <dt>Pravděpodobná příčina</dt>
+                  <dd>{item.cause}</dd>
+                </div>
+                <div>
+                  <dt>Co ověřím</dt>
+                  <dd>{item.verify}</dd>
+                </div>
+                <div>
+                  <dt>První krok</dt>
+                  <dd>{item.step}</dd>
+                </div>
+              </dl>
+              <div class="rq-problem-diagnostic__actions">
+                <a class="rq-btn rq-btn--primary" href="#kontakt">Napsat poptávku</a>
+                <a class="rq-problem-diagnostic__service" href="#sluzby">Typicky souvisí: <strong>{item.service}</strong></a>
+              </div>
+            </article>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .rq-problem-diagnostic {
+    position: relative;
+    width: 100vw;
+    max-width: 100vw;
+    margin-inline: calc(50% - 50vw);
+    overflow-x: clip;
+    background:
+      linear-gradient(180deg, rgba(0, 0, 0, 0.16), transparent 18%, rgba(0, 0, 0, 0.18) 100%),
+      linear-gradient(135deg, #12100f 0%, #1b1214 50%, #251116 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), inset 0 26px 58px rgba(0, 0, 0, 0.28);
+    color: var(--rq-on-dark);
+  }
+
+  @supports not (overflow: clip) {
+    .rq-problem-diagnostic {
+      overflow-x: hidden;
+    }
+  }
+
+  .rq-problem-diagnostic__alias {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+  }
+
+  .rq-problem-diagnostic__inner {
+    width: var(--rq-page-w-wide);
+    max-width: var(--rq-page-w-wide);
+    margin-inline: auto;
+  }
+
+  .rq-problem-diagnostic__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 2.75rem;
+  }
+
+  .rq-problem-diagnostic .rq-eyebrow,
+  .rq-problem-diagnostic__lead {
+    color: var(--rq-on-dark-2);
+  }
+
+  .rq-problem-diagnostic__title {
+    max-width: 18ch;
+    color: var(--rq-on-dark);
+  }
+
+  .rq-problem-diagnostic__title::after {
+    background: color-mix(in srgb, var(--rq-lime) 72%, transparent);
+    opacity: 0.72;
+  }
+
+  .rq-problem-diagnostic__lead {
+    max-width: 58ch;
+    margin-top: 1rem;
+    line-height: 1.65;
+  }
+
+  .rq-problem-diagnostic__badge,
+  .rq-problem-diagnostic__solution-label,
+  .rq-problem-diagnostic__count,
+  .rq-problem-diagnostic__number {
+    font-family: var(--rq-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .rq-problem-diagnostic__badge {
+    border: 1px solid rgba(199, 224, 74, 0.34);
+    border-radius: var(--rq-r-pill);
+    padding: 0.7rem 0.82rem;
+    color: var(--rq-lime);
+    background: rgba(199, 224, 74, 0.08);
+  }
+
+  .rq-problem-diagnostic__shell {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(18rem, 0.82fr) minmax(0, 1.18fr);
+    gap: clamp(1.3rem, 3vw, 3rem);
+    align-items: start;
+    min-width: 0;
+  }
+
+  .rq-problem-diagnostic__tabs {
+    display: grid;
+    gap: 0.72rem;
+    min-width: 0;
+  }
+
+  .rq-problem-diagnostic__tab,
+  .rq-problem-diagnostic__accordion-button {
+    position: relative;
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    min-height: 4.7rem;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.9rem;
+    border: 1px solid rgba(247, 244, 238, 0.14);
+    border-radius: 8px;
+    padding: 1rem;
+    background: rgba(255, 250, 240, 0.055);
+    color: var(--rq-on-dark);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 180ms var(--rq-ease), border-color 180ms var(--rq-ease), color 180ms var(--rq-ease), transform 180ms var(--rq-ease);
+  }
+
+  .rq-problem-diagnostic__tab:hover,
+  .rq-problem-diagnostic__tab:focus-visible,
+  .rq-problem-diagnostic__accordion-button:hover,
+  .rq-problem-diagnostic__accordion-button:focus-visible {
+    border-color: rgba(199, 224, 74, 0.58);
+    outline: 0;
+    background: rgba(255, 250, 240, 0.085);
+  }
+
+  .rq-problem-diagnostic__tab[aria-selected='true'],
+  .rq-problem-diagnostic__accordion-button[aria-expanded='true'] {
+    border-color: color-mix(in srgb, var(--rq-burgundy) 54%, var(--rq-lime));
+    background: linear-gradient(135deg, var(--rq-burgundy-strong), #271018);
+    box-shadow: inset 4px 0 0 var(--rq-lime), 0 18px 44px rgba(0, 0, 0, 0.22);
+    color: #fffaf0;
+  }
+
+  .rq-problem-diagnostic__number {
+    color: color-mix(in srgb, var(--rq-on-dark-2) 74%, transparent);
+  }
+
+  .rq-problem-diagnostic__tab[aria-selected='true'] .rq-problem-diagnostic__number,
+  .rq-problem-diagnostic__accordion-button[aria-expanded='true'] .rq-problem-diagnostic__number {
+    color: var(--rq-lime);
+  }
+
+  .rq-problem-diagnostic__tab-text {
+    min-width: 0;
+    font-weight: 760;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+  }
+
+  .rq-problem-diagnostic__laser {
+    position: absolute;
+    z-index: 0;
+    top: var(--rq-laser-top, 2rem);
+    left: var(--rq-laser-left, 0);
+    display: block;
+    width: var(--rq-laser-width, 0);
+    height: 2px;
+    overflow: hidden;
+    opacity: 0.9;
+    pointer-events: none;
+    transform: translateY(-1px);
+  }
+
+  .rq-problem-diagnostic__laser::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--rq-lime) 18%, var(--rq-lime) 82%, transparent);
+    transform-origin: left center;
+  }
+
+  .rq-problem-diagnostic__laser.is-drawing::before {
+    animation: rq-problem-laser 300ms var(--rq-ease);
+  }
+
+  .rq-problem-diagnostic__output {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+  }
+
+  .rq-problem-diagnostic__panel {
+    min-width: 0;
+    border: 1px solid var(--rq-line);
+    border-radius: 8px;
+    padding: clamp(1.25rem, 3vw, 2.1rem);
+    background: var(--rq-surface);
+    color: var(--rq-ink);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+  }
+
+  .rq-problem-diagnostic__panel.is-switching {
+    animation: rq-problem-panel-in 180ms var(--rq-ease);
+  }
+
+  .rq-problem-diagnostic__panel:focus-visible {
+    outline: 3px solid var(--rq-lime);
+    outline-offset: 4px;
+  }
+
+  .rq-problem-diagnostic__panel-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.9rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .rq-problem-diagnostic__solution-label {
+    border-radius: var(--rq-r-pill);
+    padding: 0.58rem 0.7rem;
+    background: var(--rq-burgundy-tint);
+    color: var(--rq-burgundy-strong);
+  }
+
+  .rq-problem-diagnostic__count {
+    color: var(--rq-ink-2);
+  }
+
+  .rq-problem-diagnostic__panel h3 {
+    max-width: 20ch;
+    margin: 0;
+    color: var(--rq-burgundy-strong);
+    font-family: var(--rq-display), var(--rq-body), system-ui, sans-serif;
+    font-size: 1.85rem;
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1.08;
+    overflow-wrap: anywhere;
+  }
+
+  .rq-problem-diagnostic__findings {
+    display: grid;
+    gap: 0;
+    margin: 1.5rem 0 0;
+  }
+
+  .rq-problem-diagnostic__findings div {
+    display: grid;
+    gap: 0.42rem;
+    padding-block: 1rem;
+    border-top: 1px solid var(--rq-line);
+  }
+
+  .rq-problem-diagnostic__findings dt {
+    color: var(--rq-burgundy-strong);
+    font-weight: 800;
+    line-height: 1.3;
+  }
+
+  .rq-problem-diagnostic__findings dd {
+    margin: 0;
+    color: var(--rq-ink-2);
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  .rq-problem-diagnostic__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.9rem 1rem;
+    margin-top: 1.25rem;
+  }
+
+  .rq-problem-diagnostic__service {
+    color: var(--rq-burgundy-strong);
+    font-weight: 740;
+    line-height: 1.45;
+    text-decoration-line: underline;
+    text-decoration-color: var(--rq-lime);
+    text-decoration-thickness: 3px;
+    text-underline-offset: 4px;
+    overflow-wrap: anywhere;
+  }
+
+  .rq-problem-diagnostic__service:focus-visible,
+  .rq-problem-diagnostic__actions .rq-btn:focus-visible {
+    outline: 3px solid var(--rq-lime);
+    outline-offset: 4px;
+  }
+
+  .rq-problem-diagnostic__accordion {
+    display: none;
+  }
+
+  @keyframes rq-problem-panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.55rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes rq-problem-laser {
+    from {
+      opacity: 0.4;
+      transform: scaleX(0);
+    }
+    to {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+  }
+
+  @media (max-width: 860px) {
+    .rq-problem-diagnostic__head {
+      display: grid;
+      margin-bottom: 1.75rem;
+    }
+
+    .rq-problem-diagnostic__badge {
+      width: fit-content;
+    }
+
+    .rq-problem-diagnostic__shell {
+      display: block;
+    }
+
+    .rq-problem-diagnostic__tabs,
+    .rq-problem-diagnostic__output,
+    .rq-problem-diagnostic__laser {
+      display: none;
+    }
+
+    .rq-problem-diagnostic__accordion {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .rq-problem-diagnostic__accordion-item {
+      display: grid;
+      gap: 0.55rem;
+      min-width: 0;
+    }
+
+    .rq-problem-diagnostic__accordion-button {
+      min-height: 4.35rem;
+    }
+
+    .rq-problem-diagnostic__panel {
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+    }
+  }
+
+  @media (max-width: 520px) {
+    .rq-problem-diagnostic__head {
+      gap: 1.1rem;
+    }
+
+    .rq-problem-diagnostic__panel-top,
+    .rq-problem-diagnostic__actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .rq-problem-diagnostic__solution-label,
+    .rq-problem-diagnostic__count {
+      width: fit-content;
+    }
+
+    .rq-problem-diagnostic__actions .rq-btn {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .rq-problem-diagnostic__tab,
+    .rq-problem-diagnostic__accordion-button {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .rq-problem-diagnostic__badge {
+      white-space: normal;
+      line-height: 1.25;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rq-problem-diagnostic__tab,
+    .rq-problem-diagnostic__accordion-button,
+    .rq-problem-diagnostic__panel,
+    .rq-problem-diagnostic__laser::before,
+    .rq-problem-diagnostic__panel.is-switching,
+    .rq-problem-diagnostic__laser.is-drawing::before {
+      animation: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  (() => {
+    const root = document.querySelector('[data-rq-problem-diagnostic]');
+    if (!root || root.dataset.rqProblemDiagnosticReady === 'true') return;
+
+    root.dataset.rqProblemDiagnosticReady = 'true';
+
+    const tabs = Array.from(root.querySelectorAll('[data-rq-problem-tab]'));
+    const panels = Array.from(root.querySelectorAll('[data-rq-problem-panel]'));
+    const accordionButtons = Array.from(root.querySelectorAll('[data-rq-problem-accordion]'));
+    const accordionPanels = Array.from(root.querySelectorAll('[data-rq-problem-accordion-panel]'));
+    const shell = root.querySelector('.rq-problem-diagnostic__shell');
+    const output = root.querySelector('.rq-problem-diagnostic__output');
+    const laser = root.querySelector('[data-rq-problem-laser]');
+    const reducedMotionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    const mobileQuery = window.matchMedia?.('(max-width: 860px)');
+
+    const setPanelAnimation = (panel) => {
+      if (!panel || reducedMotionQuery?.matches) return;
+      panel.classList.remove('is-switching');
+      panel.getBoundingClientRect();
+      panel.classList.add('is-switching');
+      window.setTimeout(() => {
+        panel.classList.remove('is-switching');
+      }, 220);
+    };
+
+    const updateLaser = (shouldAnimate = false) => {
+      if (!shell || !output || !laser || mobileQuery?.matches) return;
+
+      const activeTab = tabs.find((tab) => tab.getAttribute('aria-selected') === 'true');
+      if (!activeTab) return;
+
+      const shellRect = shell.getBoundingClientRect();
+      const tabRect = activeTab.getBoundingClientRect();
+      const outputRect = output.getBoundingClientRect();
+      const left = tabRect.right - shellRect.left + 12;
+      const width = outputRect.left - tabRect.right - 24;
+
+      if (width <= 16) {
+        laser.style.setProperty('--rq-laser-width', '0px');
+        return;
+      }
+
+      laser.style.setProperty('--rq-laser-top', `${tabRect.top + tabRect.height / 2 - shellRect.top}px`);
+      laser.style.setProperty('--rq-laser-left', `${left}px`);
+      laser.style.setProperty('--rq-laser-width', `${width}px`);
+
+      if (!shouldAnimate || reducedMotionQuery?.matches) return;
+      laser.classList.remove('is-drawing');
+      laser.getBoundingClientRect();
+      laser.classList.add('is-drawing');
+    };
+
+    const activate = (nextIndex, shouldFocus = false) => {
+      const safeIndex = Math.max(0, Math.min(nextIndex, tabs.length - 1));
+      const activePanel = panels[safeIndex];
+      const activeAccordionPanel = accordionPanels[safeIndex];
+
+      tabs.forEach((tab, index) => {
+        const isActive = index === safeIndex;
+        tab.setAttribute('aria-selected', String(isActive));
+        tab.tabIndex = isActive ? 0 : -1;
+        if (panels[index]) panels[index].hidden = !isActive;
+      });
+
+      accordionButtons.forEach((button, index) => {
+        const isActive = index === safeIndex;
+        button.setAttribute('aria-expanded', String(isActive));
+        if (accordionPanels[index]) accordionPanels[index].hidden = !isActive;
+      });
+
+      setPanelAnimation(activePanel);
+      setPanelAnimation(activeAccordionPanel);
+      updateLaser(true);
+
+      if (shouldFocus) tabs[safeIndex]?.focus();
+    };
+
+    const moveTab = (currentTab, direction) => {
+      const currentIndex = tabs.indexOf(currentTab);
+      const nextIndex = (currentIndex + direction + tabs.length) % tabs.length;
+      activate(nextIndex, true);
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.tabIndex = index === 0 ? 0 : -1;
+
+      tab.addEventListener('click', () => {
+        activate(index, false);
+      });
+
+      tab.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+          event.preventDefault();
+          moveTab(tab, 1);
+        }
+
+        if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+          event.preventDefault();
+          moveTab(tab, -1);
+        }
+
+        if (event.key === 'Home') {
+          event.preventDefault();
+          activate(0, true);
+        }
+
+        if (event.key === 'End') {
+          event.preventDefault();
+          activate(tabs.length - 1, true);
+        }
+      });
+    });
+
+    accordionButtons.forEach((button, index) => {
+      button.addEventListener('click', () => {
+        activate(index, false);
+      });
+    });
+
+    window.addEventListener('resize', () => {
+      updateLaser(false);
+    }, { passive: true });
+
+    requestAnimationFrame(() => {
+      updateLaser(false);
+    });
+  })();
+</script>

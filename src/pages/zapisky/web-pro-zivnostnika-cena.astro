@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import RqLayout from '../../layouts/RqLayout.astro';
 import RqHeader from '../../components/RqHeader.astro';
 import RqFooter from '../../components/RqFooter.astro';
 
@@ -7,7 +7,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',label:'Služby'},{href:base+'/#jak-pracuji',label:'Jak pracuji'},{href:base+'/#ceny',label:'Ceny'},{href:base+'/ukazky/',label:'Ukázky'},{href:base+'/#kontakt',label:'Kontakt'}];
 ---
 
-<BaseLayout title="Kolik stojí web pro živnostníka a co v ceně má být" description="Praktický článek o ceně webu pro živnostníka, rozdílu mezi startovní cenou a celkovým rozsahem práce a o tom, co si připravit před poptávkou." lang="cs">
+<RqLayout title="Kolik stojí web pro živnostníka a co v ceně má být" description="Praktický článek o ceně webu pro živnostníka, rozdílu mezi startovní cenou a celkovým rozsahem práce a o tom, co si připravit před poptávkou." lang="cs">
   <RqHeader content={{ navItems: nav, cta: 'Chci zmapovat problém' }} alternateLabel="EN" alternatePath="/en/" />
 
   <main class="rq-section">
@@ -84,4 +84,4 @@ const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',
   </main>
 
   <RqFooter navItems={nav} />
-</BaseLayout>
+</RqLayout>

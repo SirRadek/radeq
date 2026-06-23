@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import RqLayout from '../../layouts/RqLayout.astro';
 import RqHeader from '../../components/RqHeader.astro';
 import RqFooter from '../../components/RqFooter.astro';
 
@@ -25,7 +25,7 @@ const articles = [
 ];
 ---
 
-<BaseLayout title="Zápisky | Poznámky z praxe" description="Evergreen poznámky z praxe o webech, e-shopech a péči po předání. Prakticky, česky a bez zbytečného marketingu." lang="cs">
+<RqLayout title="Zápisky | Poznámky z praxe" description="Evergreen poznámky z praxe o webech, e-shopech a péči po předání. Prakticky, česky a bez zbytečného marketingu." lang="cs">
   <RqHeader content={{ navItems: nav, cta: 'Chci zmapovat problém' }} alternateLabel="EN" alternatePath="/en/" />
 
   <main class="rq-section">
@@ -59,4 +59,4 @@ const articles = [
   </main>
 
   <RqFooter navItems={nav} />
-</BaseLayout>
+</RqLayout>

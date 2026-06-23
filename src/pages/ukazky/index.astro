@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import RqLayout from '../../layouts/RqLayout.astro';
 import RqHeader from '../../components/RqHeader.astro';
 import RqFooter from '../../components/RqFooter.astro';
 import RqGuide from '../../components/RqGuide.astro';
@@ -36,7 +36,7 @@ const ukazky = [
 ];
 ---
 
-<BaseLayout
+<RqLayout
   title="Ukázkové projekty | RadeQ.cz"
   description="Modelové weby, které ukazují rozsah a styl práce RadeQ.cz — web pro řemeslníka, web s rezervací a malý e-shop."
   lang="cs"
@@ -72,7 +72,7 @@ const ukazky = [
 
   <RqFooter navItems={nav} />
   <RqGuide />
-</BaseLayout>
+</RqLayout>
 
 <style>
   .rq-ukazky-grid {

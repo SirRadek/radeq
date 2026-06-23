@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import RqLayout from '../layouts/RqLayout.astro';
 import RqHeader from '../components/RqHeader.astro';
 import RqFooter from '../components/RqFooter.astro';
 import RqGuide from '../components/RqGuide.astro';
@@ -28,7 +28,7 @@ const symptoms = [
 ];
 ---
 
-<BaseLayout title="RadeQ.cz - Racionální digitalizace" description="Weby, data a automatizace pro živnostníky, malé firmy a spolky." lang="cs">
+<RqLayout title="RadeQ.cz - Racionální digitalizace" description="Weby, data a automatizace pro živnostníky, malé firmy a spolky." lang="cs">
   <RqHeader content={{ navItems: nav }} alternateLabel="EN" alternatePath="/en/" />
 
   <main>
@@ -455,4 +455,4 @@ const symptoms = [
   <RqFooter navItems={nav} />
   <RqGuide />
 <RqMotion />
-</BaseLayout>
+</RqLayout>

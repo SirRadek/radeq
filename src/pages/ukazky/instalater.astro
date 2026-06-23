@@ -1,12 +1,12 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import LegacyLayout from '../../layouts/LegacyLayout.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const pageTitle = 'Instalatér Novák | Voda, odpady a topení Kolín';
 const pageDescription = 'Modelový web instalatéra pro Kolín a okolí: opravy vody, WC, bojlerů a topení s rychlou domluvou a orientační cenou předem.';
 ---
 
-<BaseLayout title={pageTitle} description={pageDescription}>
+<LegacyLayout title={pageTitle} description={pageDescription}>
   <div class="demo-banner" role="note">
     <p>Vzorová ukázka studia RadeQ — takhle může vypadat váš web.</p>
     <a href={base + '/'} aria-label="Zpět na hlavní web RadeQ.cz">← Zpět na RadeQ.cz</a>
@@ -179,7 +179,7 @@ const pageDescription = 'Modelový web instalatéra pro Kolín a okolí: opravy 
   </footer>
 
   <a class="mobile-call" href="tel:+420777123456" aria-label="Zavolat instalatérovi Novákovi">Zavolat: 777 123 456</a>
-</BaseLayout>
+</LegacyLayout>
 
 <style>
   .demo-banner {

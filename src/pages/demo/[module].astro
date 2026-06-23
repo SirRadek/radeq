@@ -4,7 +4,7 @@ import ContactTerminal from '../../components/ContactTerminal';
 import StyleMatrixSimulator from '../../components/StyleMatrixSimulator';
 import { siteContent } from '../../data/siteContent';
 import { getModuleOptions, type ModuleId } from '../../data/styleMatrix';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import DemoLayout from '../../layouts/DemoLayout.astro';
 
 export function getStaticPaths() {
   return getModuleOptions('cs').map((option) => ({
@@ -29,7 +29,7 @@ const pageDescription = isShopShowcase
   : (moduleOption?.benefit ?? content.layout.description);
 ---
 
-<BaseLayout
+<DemoLayout
   title={pageTitle}
   description={pageDescription}
   lang={content.layout.lang}
@@ -72,4 +72,4 @@ const pageDescription = isShopShowcase
     />
     <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load />
   </main>
-</BaseLayout>
+</DemoLayout>

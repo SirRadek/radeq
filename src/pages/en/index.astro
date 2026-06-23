@@ -6,12 +6,12 @@ import HeroSection from '../../components/HeroSection.astro';
 import PricingSection from '../../components/PricingSection.astro';
 import ServiceCatalog from '../../components/ServiceCatalog.astro';
 import { siteContent } from '../../data/siteContent';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import LegacyLayout from '../../layouts/LegacyLayout.astro';
 
 const content = siteContent.en;
 ---
 
-<BaseLayout
+<LegacyLayout
   title={content.layout.title}
   description={content.layout.description}
   lang={content.layout.lang}
@@ -70,4 +70,4 @@ const content = siteContent.en;
     <HandoffStandard content={content.handoff} />
     <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load />
   </main>
-</BaseLayout>
+</LegacyLayout>

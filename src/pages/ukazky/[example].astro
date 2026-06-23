@@ -6,7 +6,7 @@ import { chatbotGuide } from '../../data/chatbotGuide';
 import { siteContent } from '../../data/siteContent';
 import { getShowcaseExample, showcaseExamples, type ShowcaseSlug } from '../../data/showcaseExamples';
 import { withBaseHref } from '../../lib/links';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import LegacyLayout from '../../layouts/LegacyLayout.astro';
 
 export function getStaticPaths() {
   return showcaseExamples.map((example) => ({
@@ -24,7 +24,7 @@ if (!example) {
 }
 ---
 
-<BaseLayout title={example.title} description={example.description} lang={content.layout.lang}>
+<LegacyLayout title={example.title} description={example.description} lang={content.layout.lang}>
   <CommandHeader
     content={content.header}
     locale={content.layout.lang}
@@ -76,4 +76,4 @@ if (!example) {
 
     <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load />
   </main>
-</BaseLayout>
+</LegacyLayout>

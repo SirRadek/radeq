@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import LegacyLayout from '../../layouts/LegacyLayout.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
@@ -15,7 +15,7 @@ const products = [
 ];
 ---
 
-<BaseLayout title="Pražírna U Mlýna | Vzorový e-shop" description="Vzorová ukázka malého českého e-shopu pro lokální pražírnu kávy: rychlý katalog, varianty gramáže a jednoduchý košík bez backendu.">
+<LegacyLayout title="Pražírna U Mlýna | Vzorový e-shop" description="Vzorová ukázka malého českého e-shopu pro lokální pražírnu kávy: rychlý katalog, varianty gramáže a jednoduchý košík bez backendu.">
   <main class="shop-page">
     <div class="demo-banner" role="region" aria-label="Vzorová ukázka">
       <p>Vzorová ukázka studia RadeQ — takhle může vypadat váš e-shop.</p>
@@ -86,7 +86,7 @@ const products = [
       <p class="checkout-message" data-checkout-message hidden>Toto je ukázkový e‑shop. V ostré verzi by zde byla platební brána a doprava (Zásilkovna, kurýr, osobní odběr).</p>
     </aside>
   </main>
-</BaseLayout>
+</LegacyLayout>
 
 <style>
   :global(html) { scroll-behavior: smooth; }

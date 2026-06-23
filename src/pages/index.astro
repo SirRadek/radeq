@@ -119,24 +119,6 @@ const symptoms = [
     })();
   </script>
 
-
-<section class="rq-marquee rq-bleed" aria-label="Typické symptomy před úpravou webu a procesů" data-rq-marquee>
-  <div class="rq-marquee__viewport">
-    <div class="rq-marquee__track" data-rq-marquee-track>
-      {[0, 1].map((groupIndex) => (
-        <span class="rq-marquee__group" data-rq-marquee-group={groupIndex === 0 ? 'true' : undefined} aria-hidden={groupIndex === 1 ? 'true' : undefined}>
-          {symptoms.map((symptom) => (
-            <>
-              <span class="rq-marquee__item">{symptom}</span>
-              <span class="rq-marquee__sep" aria-hidden="true">•</span>
-            </>
-          ))}
-        </span>
-      ))}
-    </div>
-  </div>
-</section>
-
 <section id="co-resim" class="rq-statement rq-problem-wall" aria-labelledby="rq-problem-wall-title">
   <div class="rq-statement__inner rq-problem-wall__inner">
     <div class="rq-problem-wall__head" data-rq-reveal>
@@ -180,6 +162,23 @@ const symptoms = [
         <p>Chcete využít AI prakticky, ale nevíte, kde dává smysl.</p>
         <a class="rq-problem-wall__link" href="#sluzby">Probrat řešení</a>
       </article>
+    </div>
+  </div>
+</section>
+
+<section class="rq-marquee rq-bleed" aria-label="Typické symptomy před úpravou webu a procesů" data-rq-marquee>
+  <div class="rq-marquee__viewport">
+    <div class="rq-marquee__track" data-rq-marquee-track>
+      {[0, 1].map((groupIndex) => (
+        <span class="rq-marquee__group" data-rq-marquee-group={groupIndex === 0 ? 'true' : undefined} aria-hidden={groupIndex === 1 ? 'true' : undefined}>
+          {symptoms.map((symptom) => (
+            <>
+              <span class="rq-marquee__item">{symptom}</span>
+              <span class="rq-marquee__sep" aria-hidden="true">•</span>
+            </>
+          ))}
+        </span>
+      ))}
     </div>
   </div>
 </section>

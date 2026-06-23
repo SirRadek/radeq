@@ -234,21 +234,70 @@
       const group = marquee.querySelector('[data-rq-marquee-group]');
       if (!track || !group) return;
 
+      const viewport = marquee.querySelector('.rq-marquee__viewport') || marquee;
+      const SPEED_PX_PER_SECOND = 14;
       let x = 0;
       let frame = 0;
+      let measureFrame = 0;
+      let lastTime = 0;
+      let groupWidth = 0;
       let isVisible = false;
-      let currentSpeed = 0.42;
-      let targetSpeed = 0.42;
+      let isPaused = false;
+      let isPointerPaused = false;
+      let isFocusPaused = false;
+      let resizeObserver = null;
+      let marqueeObserver = null;
+      let usesWindowResize = false;
 
-      const getGroupWidth = () => group.getBoundingClientRect().width;
+      const syncPaused = () => {
+        isPaused = isPointerPaused || isFocusPaused;
+      };
 
-      const tick = () => {
-        const width = getGroupWidth();
+      const applyTransform = () => {
+        track.style.transform = `translate3d(${-x}px, 0, 0)`;
+      };
 
-        if (width > 0) {
-          currentSpeed += (targetSpeed - currentSpeed) * 0.08;
-          x = (x + currentSpeed) % width;
-          track.style.transform = `translate3d(${-x}px, 0, 0)`;
+      const cloneGroup = () => {
+        const clone = group.cloneNode(true);
+        clone.removeAttribute('data-rq-marquee-group');
+        clone.setAttribute('aria-hidden', 'true');
+        clone.setAttribute('data-rq-marquee-clone', 'true');
+        track.appendChild(clone);
+      };
+
+      const measure = () => {
+        track.querySelectorAll('[data-rq-marquee-clone]').forEach((clone) => clone.remove());
+
+        groupWidth = group.getBoundingClientRect().width;
+        const viewportWidth = viewport.getBoundingClientRect().width;
+        if (groupWidth <= 0 || viewportWidth <= 0) return;
+
+        let cloneCount = 0;
+        while (track.scrollWidth < viewportWidth + groupWidth && cloneCount < 16) {
+          cloneGroup();
+          cloneCount += 1;
+        }
+
+        x %= groupWidth;
+        applyTransform();
+      };
+
+      const scheduleMeasure = () => {
+        if (measureFrame) cancelAnimationFrame(measureFrame);
+        measureFrame = requestAnimationFrame(() => {
+          measureFrame = 0;
+          measure();
+        });
+      };
+
+      const tick = (now) => {
+        if (!lastTime) lastTime = now;
+        const dt = Math.min((now - lastTime) / 1000, 0.08);
+        lastTime = now;
+
+        if (!isPaused && groupWidth > 0) {
+          x = (x + SPEED_PX_PER_SECOND * dt) % groupWidth;
+          applyTransform();
         }
 
         frame = isVisible ? requestAnimationFrame(tick) : 0;
@@ -263,33 +312,46 @@
         if (!frame) return;
         cancelAnimationFrame(frame);
         frame = 0;
+        lastTime = 0;
       };
 
-      marquee.addEventListener('mouseenter', () => {
-        targetSpeed = 0.14;
+      marquee.addEventListener('pointerenter', () => {
+        isPointerPaused = true;
+        syncPaused();
       });
 
-      marquee.addEventListener('mouseleave', () => {
-        targetSpeed = 0.42;
+      marquee.addEventListener('pointerleave', () => {
+        isPointerPaused = false;
+        syncPaused();
       });
 
       marquee.addEventListener('focusin', () => {
-        targetSpeed = 0.14;
+        isFocusPaused = true;
+        syncPaused();
       });
 
       marquee.addEventListener('focusout', () => {
-        targetSpeed = 0.42;
+        window.setTimeout(() => {
+          if (!marquee.contains(document.activeElement)) {
+            isFocusPaused = false;
+            syncPaused();
+          }
+        }, 0);
       });
 
-      window.addEventListener('resize', () => {
-        const width = getGroupWidth();
-        if (width > 0) {
-          x %= width;
-        }
-      });
+      scheduleMeasure();
+
+      if ('ResizeObserver' in window) {
+        resizeObserver = new ResizeObserver(scheduleMeasure);
+        resizeObserver.observe(viewport);
+        resizeObserver.observe(group);
+      } else {
+        usesWindowResize = true;
+        window.addEventListener('resize', scheduleMeasure, { passive: true });
+      }
 
       if ('IntersectionObserver' in window) {
-        const marqueeObserver = new IntersectionObserver(
+        marqueeObserver = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
               isVisible = entry.isIntersecting;
@@ -308,6 +370,16 @@
         isVisible = true;
         start();
       }
+
+      window.addEventListener('pagehide', () => {
+        stop();
+        if (measureFrame) cancelAnimationFrame(measureFrame);
+        resizeObserver?.disconnect();
+        marqueeObserver?.disconnect();
+        if (usesWindowResize) {
+          window.removeEventListener('resize', scheduleMeasure);
+        }
+      }, { once: true });
     });
 
     const countItems = Array.from(document.querySelectorAll('[data-rq-count]'));

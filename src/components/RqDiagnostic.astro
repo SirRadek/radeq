@@ -132,6 +132,7 @@ const items = [
   }
 
   .rq-diagnostic__tab {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -147,7 +148,20 @@ const items = [
     font: inherit;
     text-align: left;
     cursor: pointer;
+    overflow: hidden;
     transition: border-color 180ms var(--rq-ease), background-color 180ms var(--rq-ease), box-shadow 180ms var(--rq-ease), transform 180ms var(--rq-ease);
+  }
+
+  .rq-diagnostic__tab::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 2px;
+    background: var(--rq-burgundy-strong);
+    opacity: 0;
+    pointer-events: none;
+    transform: scaleX(0);
+    transform-origin: left center;
   }
 
   .rq-diagnostic__tab:hover,
@@ -161,6 +175,15 @@ const items = [
     border-color: var(--rq-burgundy-strong);
     background: linear-gradient(90deg, var(--rq-burgundy-tint), var(--rq-surface) 58%);
     box-shadow: inset 4px 0 0 var(--rq-lime);
+  }
+
+  .rq-diagnostic.is-auto-rotating .rq-diagnostic__tab[aria-selected='true']::after {
+    opacity: 1;
+    animation: rq-diagnostic-progress var(--rq-rotate-duration, 8000ms) linear forwards;
+  }
+
+  .rq-diagnostic.is-auto-paused .rq-diagnostic__tab[aria-selected='true']::after {
+    animation-play-state: paused;
   }
 
   .rq-diagnostic__tab-copy {
@@ -294,6 +317,11 @@ const items = [
     to { opacity: 1; }
   }
 
+  @keyframes rq-diagnostic-progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
   @media (max-width: 820px) {
     .rq-diagnostic__inner {
       width: min(100% - 24px, 1120px);
@@ -329,6 +357,7 @@ const items = [
 
   @media (prefers-reduced-motion: reduce) {
     .rq-diagnostic__tab,
+    .rq-diagnostic__tab::after,
     .rq-diagnostic.is-enhanced .rq-diagnostic__panel:not([hidden]) {
       animation: none;
       transition: none;
@@ -339,11 +368,17 @@ const items = [
 <script>
   const root = document.querySelector('[data-rq-diagnostic]');
 
-  if (root) {
+  if (root && root.dataset.rqDiagnosticReady !== 'true') {
+    root.dataset.rqDiagnosticReady = 'true';
+
     const tabs = Array.from(root.querySelectorAll('[data-rq-diagnostic-tab]'));
     const panels = Array.from(root.querySelectorAll('[data-rq-diagnostic-panel]'));
+    const output = root.querySelector('.rq-diagnostic__output');
+    const reducedMotionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    const ROTATE_MS = 8000;
 
     root.classList.add('is-enhanced');
+    root.style.setProperty('--rq-rotate-duration', `${ROTATE_MS}ms`);
 
     const activateTab = (nextTab, shouldFocus = true) => {
       tabs.forEach((tab) => {
@@ -367,6 +402,80 @@ const items = [
       }
     };
 
+    const canAutoRotate = tabs.length > 1 && !reducedMotionQuery?.matches;
+    let autoEnabled = canAutoRotate;
+    let rotateTimer = 0;
+    let rotateStartedAt = 0;
+    let rotateRemaining = ROTATE_MS;
+    let isPointerPaused = false;
+    let isFocusPaused = false;
+
+    const isAutoPaused = () => isPointerPaused || isFocusPaused;
+
+    const clearRotateTimer = () => {
+      if (!rotateTimer) return;
+      window.clearTimeout(rotateTimer);
+      rotateTimer = 0;
+    };
+
+    const getActiveIndex = () => {
+      const index = tabs.findIndex((tab) => tab.getAttribute('aria-selected') === 'true');
+      return index >= 0 ? index : 0;
+    };
+
+    const scheduleRotate = (delay = ROTATE_MS) => {
+      clearRotateTimer();
+      if (!autoEnabled || isAutoPaused()) return;
+
+      rotateRemaining = delay;
+      rotateStartedAt = performance.now();
+      rotateTimer = window.setTimeout(() => {
+        rotateTimer = 0;
+        const nextIndex = (getActiveIndex() + 1) % tabs.length;
+        activateTab(tabs[nextIndex], false);
+        scheduleRotate(ROTATE_MS);
+      }, delay);
+    };
+
+    const disableAutoRotate = () => {
+      if (!autoEnabled) return;
+      autoEnabled = false;
+      clearRotateTimer();
+      root.classList.remove('is-auto-rotating', 'is-auto-paused');
+      output?.setAttribute('aria-live', 'polite');
+    };
+
+    const pauseAutoRotate = (source) => {
+      if (!autoEnabled) return;
+
+      if (source === 'pointer') {
+        isPointerPaused = true;
+      } else {
+        isFocusPaused = true;
+      }
+
+      if (rotateTimer) {
+        rotateRemaining = Math.max(0, rotateRemaining - (performance.now() - rotateStartedAt));
+        clearRotateTimer();
+      }
+
+      root.classList.add('is-auto-paused');
+    };
+
+    const resumeAutoRotate = (source) => {
+      const wasPaused = isAutoPaused();
+
+      if (source === 'pointer') {
+        isPointerPaused = false;
+      } else {
+        isFocusPaused = false;
+      }
+
+      if (!autoEnabled || isAutoPaused() || !wasPaused) return;
+      root.classList.remove('is-auto-paused');
+      scheduleRotate(rotateRemaining);
+    };
+
     const moveTab = (currentTab, direction) => {
       const currentIndex = tabs.indexOf(currentTab);
       const nextIndex = (currentIndex + direction + tabs.length) % tabs.length;
@@ -376,26 +485,33 @@ const items = [
     tabs.forEach((tab, index) => {
       tab.tabIndex = index === 0 ? 0 : -1;
 
-      tab.addEventListener('click', () => activateTab(tab, false));
+      tab.addEventListener('click', () => {
+        disableAutoRotate();
+        activateTab(tab, false);
+      });
 
       tab.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
           event.preventDefault();
+          disableAutoRotate();
           moveTab(tab, 1);
         }
 
         if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
           event.preventDefault();
+          disableAutoRotate();
           moveTab(tab, -1);
         }
 
         if (event.key === 'Home') {
           event.preventDefault();
+          disableAutoRotate();
           activateTab(tabs[0]);
         }
 
         if (event.key === 'End') {
           event.preventDefault();
+          disableAutoRotate();
           activateTab(tabs[tabs.length - 1]);
         }
       });
@@ -404,5 +520,37 @@ const items = [
     panels.forEach((panel, index) => {
       panel.hidden = index !== 0;
     });
+
+    root.addEventListener('pointerenter', () => {
+      pauseAutoRotate('pointer');
+    });
+
+    root.addEventListener('pointerleave', () => {
+      resumeAutoRotate('pointer');
+    });
+
+    root.addEventListener('focusin', () => {
+      pauseAutoRotate('focus');
+    });
+
+    root.addEventListener('focusout', () => {
+      window.setTimeout(() => {
+        if (!root.contains(document.activeElement)) {
+          resumeAutoRotate('focus');
+        }
+      }, 0);
+    });
+
+    if (autoEnabled) {
+      output?.setAttribute('aria-live', 'off');
+      root.classList.add('is-auto-rotating');
+      scheduleRotate(ROTATE_MS);
+    }
+
+    reducedMotionQuery?.addEventListener?.('change', (event) => {
+      if (event.matches) disableAutoRotate();
+    });
+
+    window.addEventListener('pagehide', clearRotateTimer, { once: true });
   }
 </script>

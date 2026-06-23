@@ -2302,7 +2302,7 @@ p {
   white-space: nowrap;
   will-change: transform;
   transform: translate3d(0, 0, 0);
-  animation: rq-marquee-fallback var(--rq-marquee-duration, 28s) linear infinite;
+  animation: rq-marquee-fallback var(--rq-marquee-duration, 52s) linear infinite;
 }
 
 .rq-marquee:hover .rq-marquee__track,

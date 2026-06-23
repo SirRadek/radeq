@@ -368,7 +368,7 @@ const symptoms = [
 <section class="rq-section rq-contact" id="kontakt" aria-labelledby="kontakt-title">
   <div class="rq-contact__copy">
     <p class="rq-eyebrow" data-rq-reveal>Kontakt</p>
-    <h2 class="rq-h2" id="kontakt-title">Napište, co vás pálí</h2>
+    <h2 class="rq-h2" id="kontakt-title">Napište mi, s čím můžu pomoct</h2>
     <p class="rq-lead">Stačí stručně popsat, co chcete zjednodušit — ozvu se a doptám se. Odpovídám do 1 pracovního dne.</p>
   </div>
 
@@ -404,7 +404,7 @@ const symptoms = [
     <p class="rq-form-status" id="rq-lead-status" role="status" aria-live="polite"></p>
   </form>
 
-  <p class="rq-contact-note">Nebo rovnou zavolejte: <a href="tel:+420000000000">+420 [DOPLNIT TELEFON]</a> · napište na <a href="mailto:info@radeq.cz">info@radeq.cz</a></p>
+  <p class="rq-contact-note">Nebo napište přímo na <a href="mailto:info@radeq.cz">info@radeq.cz</a></p>
 
   <script is:inline define:vars={{ leadsUrl: base + "/api/leads" }}>
     (() => {
@@ -448,7 +448,8 @@ const symptoms = [
     "description": "Weby, e-shopy, automatizace procesů a práce s daty pro živnostníky a malé firmy.",
     "url": "https://radeq.cz",
     "areaServed": "CZ",
-    "founder": { "@type": "Person", "name": "Radek [PŘÍJMENÍ]" },
+    "founder": { "@type": "Person", "name": "Radek Široký" },
+    "address": { "@type": "PostalAddress", "addressLocality": "Praha", "addressCountry": "CZ" },
     "knowsAbout": ["tvorba webů", "e-shopy", "automatizace procesů", "práce s daty", "AI pomocníci", "SEO"]
   })} />
   <RqFooter navItems={nav} />

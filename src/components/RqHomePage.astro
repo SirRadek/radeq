@@ -199,17 +199,18 @@ const schema = {
           Points,
           Scene,
           ShaderMaterial,
+          Vector3,
           WebGLRenderer,
         } = three;
         const {
+          HERO_CAT_COLORS_BASE64,
           HERO_CAT_LOW_POWER_POINT_COUNT,
+          HERO_CAT_OUTLINE_BASE64,
           HERO_CAT_POINT_COUNT,
           HERO_CAT_POINTS_BASE64,
         } = catData;
 
         const bgColor = new Color('#F7F4EE');
-        const limeColor = new Color('#C7E04A');
-        const burgundyColor = new Color('#5E1926');
         const scene = new Scene();
         const cloud = new Group();
         const camera = new PerspectiveCamera(42, 1, 0.1, 180);
@@ -222,14 +223,29 @@ const schema = {
         const dpr = () => Math.min(window.devicePixelRatio || 1, 1.5);
         const lowPower = (navigator.hardwareConcurrency || 8) <= 4;
         const sourcePositions = decodeFloat32Base64(HERO_CAT_POINTS_BASE64);
-        const sourceCount = Math.min(HERO_CAT_POINT_COUNT, Math.floor(sourcePositions.length / 3));
+        const sourceColors = decodeUint8Base64(HERO_CAT_COLORS_BASE64);
+        const sourceOutline = decodeUint8Base64(HERO_CAT_OUTLINE_BASE64);
+        const sourceCount = Math.min(
+          HERO_CAT_POINT_COUNT,
+          Math.floor(sourcePositions.length / 3),
+          Math.floor(sourceColors.length / 3),
+          sourceOutline.length,
+        );
         const pointCount = lowPower ? Math.min(HERO_CAT_LOW_POWER_POINT_COUNT, sourceCount) : sourceCount;
-        const basePositions = downsamplePositions(sourcePositions, sourceCount, pointCount);
+        const sampleIndices = makeSampleIndices(sourceCount, pointCount);
+        const basePositions = sampleComponents(sourcePositions, sampleIndices, 3);
+        const pointColors = sampleComponents(sourceColors, sampleIndices, 3);
+        const pointOutline = sampleComponents(sourceOutline, sampleIndices, 1);
+        const homePositions = new Float32Array(pointCount * 3);
         const positions = new Float32Array(pointCount * 3);
         const pointSizes = new Float32Array(pointCount);
-        const pointTone = new Float32Array(pointCount);
         const pointAlpha = new Float32Array(pointCount);
         const pointGeometry = new BufferGeometry();
+        const hoverQuery = window.matchMedia?.('(hover: hover) and (pointer: fine)');
+        const scatterEnabled = !staticMode && Boolean(hoverQuery?.matches);
+        const pointer = { x: 0, y: 0, active: false };
+        const projection = new Vector3();
+        let scatterSettled = true;
 
         camera.position.z = refDepth;
         renderer.setClearColor(bgColor, 0);
@@ -251,9 +267,10 @@ const schema = {
 
         seedPointAttributes();
         pointGeometry.setAttribute('position', new BufferAttribute(positions, 3));
+        pointGeometry.setAttribute('acolor', new BufferAttribute(pointColors, 3, true));
         pointGeometry.setAttribute('aSize', new BufferAttribute(pointSizes, 1));
-        pointGeometry.setAttribute('aTone', new BufferAttribute(pointTone, 1));
         pointGeometry.setAttribute('aAlpha', new BufferAttribute(pointAlpha, 1));
+        pointGeometry.setAttribute('aOutline', new BufferAttribute(pointOutline, 1, true));
 
         const pointMaterial = new ShaderMaterial({
           transparent: true,
@@ -261,48 +278,49 @@ const schema = {
           depthTest: false,
           blending: NormalBlending,
           uniforms: {
-            uBurgundy: { value: burgundyColor },
-            uLime: { value: limeColor },
-            uOpacity: { value: lowPower ? 0.84 : 0.78 },
+            uOpacity: { value: lowPower ? 0.9 : 0.86 },
             uDpr: { value: dpr() },
             uRef: { value: refDepth },
             uSize: { value: lowPower ? 6.2 : 5.8 },
           },
           vertexShader: `
+            attribute vec3 acolor;
             attribute float aSize;
-            attribute float aTone;
             attribute float aAlpha;
+            attribute float aOutline;
             uniform float uDpr;
             uniform float uRef;
             uniform float uSize;
-            varying float vTone;
+            varying vec3 vColor;
             varying float vAlpha;
+            varying float vOutline;
 
             void main() {
               vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
               float depth = max(34.0, -mvPosition.z);
-              vTone = aTone;
+              vColor = acolor;
               vAlpha = aAlpha;
+              vOutline = aOutline;
               gl_Position = projectionMatrix * mvPosition;
-              gl_PointSize = uSize * aSize * uDpr * (uRef / depth);
+              gl_PointSize = uSize * aSize * (1.0 + aOutline * 0.26) * uDpr * (uRef / depth);
             }
           `,
           fragmentShader: `
             precision mediump float;
-            uniform vec3 uBurgundy;
-            uniform vec3 uLime;
             uniform float uOpacity;
-            varying float vTone;
+            varying vec3 vColor;
             varying float vAlpha;
+            varying float vOutline;
 
             void main() {
               float d = length(gl_PointCoord - vec2(0.5));
               float circle = smoothstep(0.5, 0.16, d);
               float core = smoothstep(0.23, 0.02, d);
-              float alpha = (circle * 0.74 + core * 0.26) * uOpacity * vAlpha;
+              float alpha = (circle * 0.74 + core * 0.26) * uOpacity * vAlpha * (1.0 + vOutline * 0.24);
               if (alpha < 0.006) discard;
-              vec3 color = mix(uBurgundy, uLime, clamp(vTone, 0.0, 1.0) * 0.56);
-              color = mix(color, uBurgundy, core * 0.12);
+              vec3 outlineColor = vec3(0.23, 0.15, 0.11);
+              vec3 color = mix(vColor, outlineColor, vOutline * 0.22);
+              color = mix(color, vColor * 1.05, core * 0.12);
               gl_FragColor = vec4(color, alpha);
             }
           `,
@@ -311,6 +329,12 @@ const schema = {
         const points = new Points(pointGeometry, pointMaterial);
         points.frustumCulled = false;
         cloud.add(points);
+
+        if (scatterEnabled) {
+          window.addEventListener('pointermove', handlePointerMove, { passive: true });
+          window.addEventListener('pointerout', handlePointerOut, { passive: true });
+          window.addEventListener('blur', deactivatePointer);
+        }
 
         function decodeFloat32Base64(base64) {
           const binary = window.atob(base64);
@@ -327,18 +351,38 @@ const schema = {
           return floats;
         }
 
-        function downsamplePositions(source, availableCount, targetCount) {
-          if (targetCount >= availableCount) return source.slice(0, availableCount * 3);
+        function decodeUint8Base64(base64) {
+          const binary = window.atob(base64);
+          const bytes = new Uint8Array(binary.length);
+          for (let index = 0; index < binary.length; index += 1) {
+            bytes[index] = binary.charCodeAt(index);
+          }
+          return bytes;
+        }
 
-          const sampled = new Float32Array(targetCount * 3);
+        function makeSampleIndices(availableCount, targetCount) {
+          const indices = new Uint32Array(targetCount);
+          if (targetCount >= availableCount) {
+            for (let index = 0; index < targetCount; index += 1) indices[index] = index;
+            return indices;
+          }
+
           const step = availableCount / targetCount;
           for (let index = 0; index < targetCount; index += 1) {
-            const sourceIndex = Math.min(availableCount - 1, Math.floor(index * step));
-            const sourceOffset = sourceIndex * 3;
-            const targetOffset = index * 3;
-            sampled[targetOffset] = source[sourceOffset];
-            sampled[targetOffset + 1] = source[sourceOffset + 1];
-            sampled[targetOffset + 2] = source[sourceOffset + 2];
+            indices[index] = Math.min(availableCount - 1, Math.floor(index * step));
+          }
+          return indices;
+        }
+
+        function sampleComponents(source, indices, itemSize) {
+          const SampleArray = source.constructor;
+          const sampled = new SampleArray(indices.length * itemSize);
+          for (let index = 0; index < indices.length; index += 1) {
+            const sourceOffset = indices[index] * itemSize;
+            const targetOffset = index * itemSize;
+            for (let component = 0; component < itemSize; component += 1) {
+              sampled[targetOffset + component] = source[sourceOffset + component];
+            }
           }
           return sampled;
         }
@@ -360,7 +404,6 @@ const schema = {
             const z = basePositions[offset + 2];
             const n = noise(index, x, y);
             pointSizes[index] = 0.86 + n * 0.48 + clamp01(z + 0.12) * 0.34;
-            pointTone[index] = clamp01(0.16 + n * 0.24 + (z + 0.12) * 1.32 + (0.5 - y) * 0.08);
             pointAlpha[index] = 0.8 + n * 0.2;
           }
         }
@@ -386,11 +429,15 @@ const schema = {
 
           for (let index = 0; index < pointCount; index += 1) {
             const offset = index * 3;
-            positions[offset] = basePositions[offset] * scale;
-            positions[offset + 1] = basePositions[offset + 1] * scale;
-            positions[offset + 2] = basePositions[offset + 2] * scale * 0.92;
+            homePositions[offset] = basePositions[offset] * scale;
+            homePositions[offset + 1] = basePositions[offset + 1] * scale;
+            homePositions[offset + 2] = basePositions[offset + 2] * scale * 0.92;
+            positions[offset] = homePositions[offset];
+            positions[offset + 1] = homePositions[offset + 1];
+            positions[offset + 2] = homePositions[offset + 2];
           }
 
+          scatterSettled = true;
           pointGeometry.attributes.position.needsUpdate = true;
           updateTransform(0);
         }
@@ -411,6 +458,112 @@ const schema = {
           cloud.rotation.x = -0.035 + Math.sin(time * 0.1) * 0.032;
           cloud.rotation.y = -0.16 + Math.sin(time * 0.12) * 0.105;
           cloud.rotation.z = Math.sin(time * 0.07) * 0.012;
+        }
+
+        function handlePointerMove(event) {
+          if (!scatterEnabled || event.pointerType === 'touch') return;
+          const rect = root.getBoundingClientRect();
+          pointer.x = event.clientX;
+          pointer.y = event.clientY;
+          pointer.active = (
+            event.clientX >= rect.left &&
+            event.clientX <= rect.right &&
+            event.clientY >= rect.top &&
+            event.clientY <= rect.bottom
+          );
+          scatterSettled = false;
+        }
+
+        function handlePointerOut(event) {
+          if (event.relatedTarget) return;
+          deactivatePointer();
+        }
+
+        function deactivatePointer() {
+          if (!scatterEnabled) return;
+          pointer.active = false;
+          scatterSettled = false;
+        }
+
+        function copyHomePositions() {
+          positions.set(homePositions);
+          pointGeometry.attributes.position.needsUpdate = true;
+        }
+
+        function applyScatter() {
+          if (!scatterEnabled || scatterSettled) return;
+
+          const rect = root.getBoundingClientRect();
+          const active = pointer.active &&
+            pointer.x >= rect.left - 4 &&
+            pointer.x <= rect.right + 4 &&
+            pointer.y >= rect.top - 4 &&
+            pointer.y <= rect.bottom + 4;
+          if (!active) pointer.active = false;
+
+          const radius = width < 1040 ? 124 : 148;
+          const radiusSq = radius * radius;
+          const maxPushPx = lowPower ? 44 : 58;
+          const unitPerPx = worldHeight / Math.max(height, 1);
+          const lerp = active ? 0.16 : 0.085;
+          let maxDelta = 0;
+
+          if (active) {
+            camera.updateMatrixWorld();
+            cloud.updateMatrixWorld(true);
+            points.updateMatrixWorld(true);
+          }
+
+          for (let index = 0; index < pointCount; index += 1) {
+            const offset = index * 3;
+            const homeX = homePositions[offset];
+            const homeY = homePositions[offset + 1];
+            const homeZ = homePositions[offset + 2];
+            let targetX = homeX;
+            let targetY = homeY;
+            let targetZ = homeZ;
+
+            if (active) {
+              projection.set(homeX, homeY, homeZ).applyMatrix4(points.matrixWorld).project(camera);
+              if (projection.z >= -1 && projection.z <= 1) {
+                const screenX = rect.left + (projection.x * 0.5 + 0.5) * width;
+                const screenY = rect.top + (-projection.y * 0.5 + 0.5) * height;
+                const dx = screenX - pointer.x;
+                const dy = screenY - pointer.y;
+                const distSq = dx * dx + dy * dy;
+
+                if (distSq < radiusSq) {
+                  const dist = Math.max(1, Math.sqrt(distSq));
+                  const falloff = 1 - dist / radius;
+                  const push = maxPushPx * falloff * falloff;
+                  targetX = homeX + (dx / dist) * push * unitPerPx;
+                  targetY = homeY - (dy / dist) * push * unitPerPx;
+                  targetZ = homeZ + falloff * 2.2;
+                }
+              }
+            }
+
+            const nextX = positions[offset] + (targetX - positions[offset]) * lerp;
+            const nextY = positions[offset + 1] + (targetY - positions[offset + 1]) * lerp;
+            const nextZ = positions[offset + 2] + (targetZ - positions[offset + 2]) * lerp;
+            maxDelta = Math.max(
+              maxDelta,
+              Math.abs(targetX - positions[offset]),
+              Math.abs(targetY - positions[offset + 1]),
+              Math.abs(targetZ - positions[offset + 2]),
+            );
+            positions[offset] = nextX;
+            positions[offset + 1] = nextY;
+            positions[offset + 2] = nextZ;
+          }
+
+          if (!active && maxDelta < 0.002) {
+            copyHomePositions();
+            scatterSettled = true;
+            return;
+          }
+
+          pointGeometry.attributes.position.needsUpdate = true;
         }
 
         function resize() {
@@ -441,6 +594,7 @@ const schema = {
           }
 
           updateTransform(now);
+          applyScatter();
           renderer.render(scene, camera);
           frameId = window.requestAnimationFrame(render);
         }
@@ -472,6 +626,11 @@ const schema = {
           pointMaterial.dispose();
           renderer.dispose();
           renderer.domElement.remove();
+          if (scatterEnabled) {
+            window.removeEventListener('pointermove', handlePointerMove);
+            window.removeEventListener('pointerout', handlePointerOut);
+            window.removeEventListener('blur', deactivatePointer);
+          }
         }
 
         resize();

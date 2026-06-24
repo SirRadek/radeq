@@ -42,6 +42,7 @@ const schema = {
 
 <main>
   <section class="rq-section rq-hero" id="top" style="--rq-reveal-index: 0">
+    <div class="rq-hero__ambient" data-rq-hero-three aria-hidden="true"></div>
     <div class="rq-hero__content">
       <div class="rq-hero__copy">
         <p class="rq-eyebrow" data-rq-reveal style="--rq-i:0">{content.hero.eyebrow}</p>
@@ -74,6 +75,520 @@ const schema = {
       </div>
     </div>
   </section>
+
+  <script>
+    import { inViewGate } from '../lib/inViewGate';
+
+    (() => {
+      const mount = document.querySelector('[data-rq-hero-three]');
+      if (!mount || mount.getAttribute('data-rq-hero-three-ready') === 'true') return;
+      mount.setAttribute('data-rq-hero-three-ready', 'true');
+
+      const MIN_WIDTH = 768;
+      const reducedMotionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+      const desktopQuery = window.matchMedia?.(`(min-width: ${MIN_WIDTH}px)`);
+      let gate = null;
+      let ambient = null;
+      let loading = false;
+      let shouldRun = false;
+      let resizeTimer = 0;
+      let pageHidden = document.hidden;
+      let webglAvailable = null;
+
+      function canUseWebGL() {
+        if (webglAvailable !== null) return webglAvailable;
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('webgl2', { alpha: true }) || canvas.getContext('webgl', { alpha: true });
+        context?.getExtension('WEBGL_lose_context')?.loseContext();
+        webglAvailable = Boolean(context);
+        return webglAvailable;
+      }
+
+      function canEnhance() {
+        return !reducedMotionQuery?.matches && window.innerWidth >= MIN_WIDTH && canUseWebGL();
+      }
+
+      function requestIdle(callback) {
+        if (typeof window.requestIdleCallback === 'function') {
+          return window.requestIdleCallback(callback, { timeout: 1200 });
+        }
+        return window.setTimeout(callback, 180);
+      }
+
+      function handleVisibilityChange() {
+        pageHidden = document.hidden;
+      }
+
+      function scheduleResize() {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(() => {
+          resizeTimer = 0;
+          if (reducedMotionQuery?.matches || window.innerWidth < MIN_WIDTH) {
+            ambient?.dispose();
+            ambient = null;
+            return;
+          }
+          ambient?.resize();
+        }, 160);
+      }
+
+      async function ensureAmbient() {
+        if (!shouldRun || pageHidden || reducedMotionQuery?.matches || window.innerWidth < MIN_WIDTH) return;
+        if (ambient) {
+          ambient.start();
+          return;
+        }
+        if (loading || !canUseWebGL()) return;
+
+        loading = true;
+        try {
+          const {
+            AdditiveBlending,
+            BufferAttribute,
+            BufferGeometry,
+            Color,
+            Fog,
+            LineSegments,
+            PerspectiveCamera,
+            Points,
+            Scene,
+            ShaderMaterial,
+            WebGLRenderer,
+          } = await import('three');
+
+          if (!shouldRun || pageHidden || reducedMotionQuery?.matches || window.innerWidth < MIN_WIDTH) return;
+
+          ambient = createHeroAmbient(mount, {
+            AdditiveBlending,
+            BufferAttribute,
+            BufferGeometry,
+            Color,
+            Fog,
+            LineSegments,
+            PerspectiveCamera,
+            Points,
+            Scene,
+            ShaderMaterial,
+            WebGLRenderer,
+          });
+          ambient.start();
+        } catch {
+          ambient?.dispose();
+          ambient = null;
+        } finally {
+          loading = false;
+        }
+      }
+
+      function createHeroAmbient(root, three) {
+        const {
+          AdditiveBlending,
+          BufferAttribute,
+          BufferGeometry,
+          Color,
+          Fog,
+          LineSegments,
+          PerspectiveCamera,
+          Points,
+          Scene,
+          ShaderMaterial,
+          WebGLRenderer,
+        } = three;
+
+        const bgColor = new Color('#F7F4EE');
+        const limeColor = new Color('#C7E04A');
+        const edgeColor = new Color('#5E1926');
+        const scene = new Scene();
+        const camera = new PerspectiveCamera(46, 1, 0.1, 220);
+        const fog = new Fog(bgColor, 84, 150);
+        const renderer = new WebGLRenderer({
+          alpha: true,
+          antialias: false,
+          powerPreference: 'low-power',
+        });
+
+        scene.fog = fog;
+        camera.position.z = 78;
+        renderer.setClearColor(bgColor, 0);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+        root.appendChild(renderer.domElement);
+
+        let width = 1;
+        let height = 1;
+        let worldWidth = 90;
+        let worldHeight = 58;
+        let frameId = 0;
+        let running = false;
+        let disposed = false;
+        let parallax = 0;
+        let lastTime = performance.now();
+        const lowPower = (navigator.hardwareConcurrency || 8) <= 4;
+        const nodeCount = lowPower ? 86 : 112;
+        const maxSegments = lowPower ? 168 : 252;
+        const positions = new Float32Array(nodeCount * 3);
+        const pointSizes = new Float32Array(nodeCount);
+        const glow = new Float32Array(nodeCount);
+        const linePositions = new Float32Array(maxSegments * 2 * 3);
+        const lineAlpha = new Float32Array(maxSegments * 2);
+        const nodes = [];
+        const pointer = {
+          x: 0,
+          y: 0,
+          tx: 0,
+          ty: 0,
+          strength: 0,
+          target: 0,
+        };
+
+        const random = (min, max) => min + Math.random() * (max - min);
+        const lerp = (a, b, t) => a + (b - a) * t;
+
+        function measure() {
+          const rect = root.getBoundingClientRect();
+          width = Math.max(1, Math.floor(rect.width || window.innerWidth));
+          height = Math.max(1, Math.floor(rect.height || window.innerHeight * 0.78));
+          worldHeight = 58;
+          worldWidth = worldHeight * (width / height);
+        }
+
+        function makeNode() {
+          const clustered = Math.random() < 0.72;
+          const x = clustered
+            ? lerp(-worldWidth * 0.04, worldWidth * 0.48, Math.pow(Math.random(), 0.58))
+            : random(-worldWidth * 0.42, worldWidth * 0.52);
+          const y = clustered
+            ? lerp(-worldHeight * 0.42, worldHeight * 0.2, Math.pow(Math.random(), 1.18))
+            : random(-worldHeight * 0.45, worldHeight * 0.38);
+
+          return {
+            x,
+            y,
+            z: random(-24, 18),
+            phase: random(0, Math.PI * 2),
+            speed: random(0.18, 0.42),
+            ax: random(0.45, 1.35),
+            ay: random(0.35, 1.05),
+            size: random(lowPower ? 3.4 : 3.8, lowPower ? 6.4 : 7.2),
+            px: x,
+            py: y,
+            pz: 0,
+          };
+        }
+
+        function seedNodes() {
+          nodes.length = 0;
+          for (let i = 0; i < nodeCount; i += 1) {
+            nodes.push(makeNode());
+            pointSizes[i] = nodes[i].size;
+          }
+        }
+
+        const pointGeometry = new BufferGeometry();
+        const lineGeometry = new BufferGeometry();
+        measure();
+        seedNodes();
+
+        pointGeometry.setAttribute('position', new BufferAttribute(positions, 3));
+        pointGeometry.setAttribute('aSize', new BufferAttribute(pointSizes, 1));
+        pointGeometry.setAttribute('aGlow', new BufferAttribute(glow, 1));
+        lineGeometry.setAttribute('position', new BufferAttribute(linePositions, 3));
+        lineGeometry.setAttribute('aAlpha', new BufferAttribute(lineAlpha, 1));
+        lineGeometry.setDrawRange(0, 0);
+
+        const pointMaterial = new ShaderMaterial({
+          transparent: true,
+          depthWrite: false,
+          depthTest: false,
+          blending: AdditiveBlending,
+          uniforms: {
+            uColor: { value: limeColor },
+            uOpacity: { value: 0.35 },
+            uPixelRatio: { value: Math.min(window.devicePixelRatio || 1, 1.5) },
+            uFogColor: { value: bgColor },
+            uFogNear: { value: fog.near },
+            uFogFar: { value: fog.far },
+          },
+          vertexShader: `
+            attribute float aSize;
+            attribute float aGlow;
+            varying float vGlow;
+            varying float vFogDepth;
+            uniform float uPixelRatio;
+
+            void main() {
+              vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+              vGlow = aGlow;
+              vFogDepth = -mvPosition.z;
+              gl_Position = projectionMatrix * mvPosition;
+              gl_PointSize = aSize * uPixelRatio * (86.0 / max(28.0, vFogDepth)) * (1.0 + aGlow * 0.45);
+            }
+          `,
+          fragmentShader: `
+            uniform vec3 uColor;
+            uniform float uOpacity;
+            uniform vec3 uFogColor;
+            uniform float uFogNear;
+            uniform float uFogFar;
+            varying float vGlow;
+            varying float vFogDepth;
+
+            void main() {
+              float d = length(gl_PointCoord - vec2(0.5));
+              float circle = smoothstep(0.5, 0.16, d);
+              float core = smoothstep(0.24, 0.02, d) * 0.28;
+              float fogAmount = smoothstep(uFogNear, uFogFar, vFogDepth);
+              float alpha = (circle + core) * uOpacity * (0.72 + vGlow * 0.58) * (1.0 - fogAmount * 0.74);
+              if (alpha < 0.002) discard;
+              vec3 color = mix(uColor, uFogColor, fogAmount * 0.72);
+              gl_FragColor = vec4(color, alpha);
+            }
+          `,
+        });
+
+        const lineMaterial = new ShaderMaterial({
+          transparent: true,
+          depthWrite: false,
+          depthTest: false,
+          blending: AdditiveBlending,
+          uniforms: {
+            uColor: { value: edgeColor },
+            uFogColor: { value: bgColor },
+            uFogNear: { value: fog.near },
+            uFogFar: { value: fog.far },
+          },
+          vertexShader: `
+            attribute float aAlpha;
+            varying float vAlpha;
+            varying float vFogDepth;
+
+            void main() {
+              vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+              vAlpha = aAlpha;
+              vFogDepth = -mvPosition.z;
+              gl_Position = projectionMatrix * mvPosition;
+            }
+          `,
+          fragmentShader: `
+            uniform vec3 uColor;
+            uniform vec3 uFogColor;
+            uniform float uFogNear;
+            uniform float uFogFar;
+            varying float vAlpha;
+            varying float vFogDepth;
+
+            void main() {
+              float fogAmount = smoothstep(uFogNear, uFogFar, vFogDepth);
+              float alpha = vAlpha * (1.0 - fogAmount * 0.78);
+              if (alpha < 0.001) discard;
+              vec3 color = mix(uColor, uFogColor, fogAmount * 0.76);
+              gl_FragColor = vec4(color, alpha);
+            }
+          `,
+        });
+
+        const points = new Points(pointGeometry, pointMaterial);
+        const lines = new LineSegments(lineGeometry, lineMaterial);
+        scene.add(lines, points);
+
+        function resize() {
+          measure();
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+          pointMaterial.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio || 1, 1.5);
+          renderer.setSize(width, height, false);
+        }
+
+        function updatePointer(event) {
+          const rect = root.getBoundingClientRect();
+          const inside = event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom;
+          pointer.target = inside ? 1 : 0;
+          if (!inside) return;
+          pointer.tx = ((event.clientX - rect.left) / Math.max(rect.width, 1) - 0.5) * worldWidth;
+          pointer.ty = (0.5 - (event.clientY - rect.top) / Math.max(rect.height, 1)) * worldHeight + parallax;
+        }
+
+        function updateNodes(time) {
+          const rect = root.getBoundingClientRect();
+          const unitPerPx = worldHeight / Math.max(height, 1);
+          const parallaxTarget = -rect.top * 0.25 * unitPerPx;
+          parallax += (parallaxTarget - parallax) * 0.045;
+          pointer.x += (pointer.tx - pointer.x) * 0.075;
+          pointer.y += (pointer.ty - pointer.y) * 0.075;
+          pointer.strength += (pointer.target - pointer.strength) * 0.08;
+
+          const radius = 12;
+          const radiusSq = radius * radius;
+
+          for (let i = 0; i < nodeCount; i += 1) {
+            const node = nodes[i];
+            const driftX = Math.sin(time * node.speed + node.phase) * node.ax
+              + Math.sin(time * 0.11 + node.phase * 0.7) * node.ax * 0.42;
+            const driftY = Math.cos(time * node.speed * 0.78 + node.phase * 1.23) * node.ay
+              + Math.sin(time * 0.09 + node.phase) * node.ay * 0.34;
+            const driftZ = Math.sin(time * 0.16 + node.phase * 1.7) * 3.4;
+            let x = node.x + driftX;
+            let y = node.y + driftY + parallax;
+            const z = node.z + driftZ;
+
+            const dx = x - pointer.x;
+            const dy = y - pointer.y;
+            const distanceSq = dx * dx + dy * dy;
+            let influence = 0;
+            if (pointer.strength > 0.01 && distanceSq < radiusSq) {
+              const distance = Math.sqrt(distanceSq) || 1;
+              influence = Math.pow(1 - distanceSq / radiusSq, 1.7) * pointer.strength;
+              const repulse = influence * 3.2;
+              x += (dx / distance) * repulse;
+              y += (dy / distance) * repulse;
+            }
+
+            node.px = x;
+            node.py = y;
+            node.pz = z;
+            const offset = i * 3;
+            positions[offset] = x;
+            positions[offset + 1] = y;
+            positions[offset + 2] = z;
+            glow[i] = influence;
+          }
+
+          pointGeometry.attributes.position.needsUpdate = true;
+          pointGeometry.attributes.aGlow.needsUpdate = true;
+        }
+
+        function updateLines() {
+          const threshold = lowPower ? 13.8 : 15.8;
+          const thresholdSq = threshold * threshold;
+          const candidates = [];
+          for (let i = 0; i < nodeCount - 1; i += 1) {
+            const a = nodes[i];
+            for (let j = i + 1; j < nodeCount; j += 1) {
+              const b = nodes[j];
+              const dx = a.px - b.px;
+              const dy = a.py - b.py;
+              const dz = (a.pz - b.pz) * 0.55;
+              const distanceSq = dx * dx + dy * dy + dz * dz;
+              if (distanceSq > thresholdSq) continue;
+              candidates.push([distanceSq, i, j]);
+            }
+          }
+
+          candidates.sort((a, b) => a[0] - b[0]);
+          const segmentCount = Math.min(maxSegments, candidates.length);
+          for (let segment = 0; segment < segmentCount; segment += 1) {
+            const [distanceSq, i, j] = candidates[segment];
+            const a = nodes[i];
+            const b = nodes[j];
+            const distance = Math.sqrt(distanceSq);
+            const closeness = Math.max(0, 1 - distance / threshold);
+            const focus = Math.min(1, (glow[i] + glow[j]) * 0.7);
+            const alpha = Math.min(0.1, 0.055 + closeness * 0.038 + focus * 0.028);
+            const offset = segment * 6;
+            linePositions[offset] = a.px;
+            linePositions[offset + 1] = a.py;
+            linePositions[offset + 2] = a.pz;
+            linePositions[offset + 3] = b.px;
+            linePositions[offset + 4] = b.py;
+            linePositions[offset + 5] = b.pz;
+            lineAlpha[segment * 2] = alpha;
+            lineAlpha[segment * 2 + 1] = alpha;
+          }
+
+          lineGeometry.setDrawRange(0, segmentCount * 2);
+          lineGeometry.attributes.position.needsUpdate = true;
+          lineGeometry.attributes.aAlpha.needsUpdate = true;
+        }
+
+        function render(now) {
+          if (!running || disposed || document.hidden) return;
+          const time = now * 0.001;
+          const delta = Math.min(0.05, (now - lastTime) * 0.001);
+          lastTime = now;
+          scene.rotation.z = Math.sin(time * 0.055) * 0.012;
+          scene.rotation.y = Math.sin(time * 0.045) * 0.035;
+          updateNodes(time + delta);
+          updateLines();
+          renderer.render(scene, camera);
+          frameId = window.requestAnimationFrame(render);
+        }
+
+        function start() {
+          if (running || disposed) return;
+          running = true;
+          lastTime = performance.now();
+          frameId = window.requestAnimationFrame(render);
+        }
+
+        function stop() {
+          running = false;
+          if (!frameId) return;
+          window.cancelAnimationFrame(frameId);
+          frameId = 0;
+        }
+
+        function dispose() {
+          if (disposed) return;
+          stop();
+          disposed = true;
+          window.removeEventListener('pointermove', updatePointer);
+          pointGeometry.dispose();
+          lineGeometry.dispose();
+          pointMaterial.dispose();
+          lineMaterial.dispose();
+          renderer.dispose();
+          renderer.domElement.remove();
+        }
+
+        window.addEventListener('pointermove', updatePointer, { passive: true });
+        resize();
+
+        return { start, stop, resize, dispose };
+      }
+
+      function startGate() {
+        if (!canEnhance()) return;
+        gate = inViewGate(mount, {
+          rootMargin: '160px 0px',
+          threshold: 0.01,
+          onEnter: () => {
+            shouldRun = true;
+            ensureAmbient();
+          },
+          onExit: () => {
+            shouldRun = false;
+            ambient?.stop();
+          },
+        });
+        window.addEventListener('resize', scheduleResize, { passive: true });
+        reducedMotionQuery?.addEventListener?.('change', scheduleResize);
+        desktopQuery?.addEventListener?.('change', scheduleResize);
+      }
+
+      function cleanup() {
+        window.clearTimeout(resizeTimer);
+        gate?.destroy();
+        gate = null;
+        ambient?.dispose();
+        ambient = null;
+        window.removeEventListener('resize', scheduleResize);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        reducedMotionQuery?.removeEventListener?.('change', scheduleResize);
+        desktopQuery?.removeEventListener?.('change', scheduleResize);
+      }
+
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+
+      window.addEventListener('pagehide', cleanup, { once: true });
+
+      const boot = () => requestIdle(() => startGate());
+      if (document.readyState === 'complete') {
+        boot();
+      } else {
+        window.addEventListener('load', boot, { once: true });
+      }
+    })();
+  </script>
 
   <script is:inline>
     (() => {

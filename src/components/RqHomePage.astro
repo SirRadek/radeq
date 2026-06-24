@@ -954,87 +954,6 @@ const schema = {
       if (tiles.length < 2) return;
       const liveEl = grid.parentElement?.querySelector('[data-rq-service-live]');
 
-      function createInViewGate(target, { rootMargin = '120px 0px', threshold = 0, onEnter = () => {}, onExit = () => {} } = {}) {
-        let observer = null;
-        let isIntersecting = false;
-        let isActive = false;
-        let destroyed = false;
-
-        function enter() {
-          if (destroyed || isActive) return;
-          isActive = true;
-          onEnter();
-        }
-
-        function exit() {
-          if (destroyed || !isActive) return;
-          isActive = false;
-          onExit();
-        }
-
-        function sync() {
-          if (document.hidden || !isIntersecting) {
-            exit();
-            return;
-          }
-
-          enter();
-        }
-
-        function handleVisibilityChange() {
-          if (document.hidden) {
-            exit();
-            return;
-          }
-
-          if (isIntersecting) enter();
-        }
-
-        function cleanup() {
-          observer?.disconnect();
-          observer = null;
-          document.removeEventListener('visibilitychange', handleVisibilityChange);
-          window.removeEventListener('pagehide', handlePageHide);
-        }
-
-        function handlePageHide() {
-          onExit();
-          isActive = false;
-          destroyed = true;
-          cleanup();
-        }
-
-        document.addEventListener('visibilitychange', handleVisibilityChange);
-        window.addEventListener('pagehide', handlePageHide, { once: true });
-
-        if (!('IntersectionObserver' in window)) {
-          isIntersecting = true;
-          if (!document.hidden) enter();
-
-          return {
-            destroy() {
-              destroyed = true;
-              cleanup();
-            },
-          };
-        }
-
-        observer = new IntersectionObserver((entries) => {
-          const entry = entries[0];
-          isIntersecting = Boolean(entry && entry.isIntersecting);
-          sync();
-        }, { rootMargin, threshold });
-
-        observer.observe(target);
-
-        return {
-          destroy() {
-            destroyed = true;
-            cleanup();
-          },
-        };
-      }
-
       const ROTATION_MS = 20000;
       const IN_MS = 820;
       const OUT_MS = 460;
@@ -1057,7 +976,6 @@ const schema = {
       const slotOrders = permute(SMALL_SLOTS);
 
       let observer = null;
-      let layoutGate = null;
       let resizeTimer = 0;
       let timerId = 0;
       let timerStartedAt = 0;
@@ -1068,7 +986,6 @@ const schema = {
       let isAnimating = false;
       let userLocked = false;
       let enhancementAvailable = false;
-      let layoutInView = false;
       let pendingConfigure = true;
       let highlightTimer = 0;
       let liveTimer = 0;
@@ -1134,8 +1051,34 @@ const schema = {
         clearTimer();
       }
 
+      function updateInViewFromRect() {
+        if (document.hidden) {
+          inView = false;
+          return inView;
+        }
+
+        const rect = grid.getBoundingClientRect();
+        const viewportWidth = window.innerWidth || document.documentElement.clientWidth || 0;
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+        inView = rect.width > 0
+          && rect.height > 0
+          && rect.bottom > 0
+          && rect.right > 0
+          && rect.top < viewportHeight
+          && rect.left < viewportWidth;
+        return inView;
+      }
+
+      function isRotationPaused() {
+        return userLocked || isAnimating || pointerPaused || focusPaused;
+      }
+
+      function canRotate() {
+        return enhancementAvailable && !document.hidden && inView && !isRotationPaused();
+      }
+
       function scheduleTimer() {
-        if (timerId || !enhancementAvailable || userLocked || isAnimating || !inView || pointerPaused || focusPaused || document.hidden) return;
+        if (timerId || !canRotate()) return;
         timerStartedAt = performance.now();
         timerId = window.setTimeout(() => {
           timerId = 0;
@@ -1145,8 +1088,8 @@ const schema = {
       }
 
       function syncPauseState() {
-        const paused = !enhancementAvailable || userLocked || isAnimating || !inView || pointerPaused || focusPaused || document.hidden;
-        grid.classList.toggle('is-paused', paused);
+        const paused = !canRotate();
+        grid.classList.toggle('is-paused', enhancementAvailable && paused);
         if (paused) {
           pauseTimer();
         } else {
@@ -1163,7 +1106,7 @@ const schema = {
       function observeGrid() {
         disconnectObserver();
         if (!('IntersectionObserver' in window)) {
-          inView = false;
+          updateInViewFromRect();
           syncPauseState();
           return;
         }
@@ -1171,12 +1114,13 @@ const schema = {
           const entry = entries[0];
           inView = Boolean(entry && entry.isIntersecting);
           syncPauseState();
-        }, { threshold: 0.15 });
+        }, { threshold: 0 });
         observer.observe(grid);
+        updateInViewFromRect();
+        syncPauseState();
       }
 
-      function exitLayoutGate() {
-        layoutInView = false;
+      function stopRotation() {
         pendingConfigure = true;
         window.clearTimeout(resizeTimer);
         resizeTimer = 0;
@@ -1188,7 +1132,6 @@ const schema = {
 
       function requestConfigure() {
         pendingConfigure = true;
-        if (!layoutInView) return;
         configure();
       }
 
@@ -1216,7 +1159,7 @@ const schema = {
       function reserveGridHeight(options = {}) {
         const force = Boolean(options.force);
 
-        if ((!layoutInView && !force) || document.hidden) {
+        if (document.hidden && !force) {
           pendingConfigure = true;
           return;
         }
@@ -1349,7 +1292,7 @@ const schema = {
       }
 
       function autoAdvance() {
-        if (!enhancementAvailable || userLocked || isAnimating || !inView || pointerPaused || focusPaused || document.hidden) {
+        if (!canRotate()) {
           syncPauseState();
           return;
         }
@@ -1464,8 +1407,9 @@ const schema = {
       }
 
       function configure() {
-        if (!layoutInView || document.hidden) {
+        if (document.hidden) {
           pendingConfigure = true;
+          pauseTimer();
           return;
         }
 
@@ -1474,7 +1418,7 @@ const schema = {
         clearTimer();
         disconnectObserver();
         inView = false;
-        pointerPaused = false;
+        pointerPaused = grid.matches(':hover');
         focusPaused = grid.contains(document.activeElement);
         remainingMs = ROTATION_MS;
 
@@ -1495,7 +1439,10 @@ const schema = {
         reserveGridHeight();
         grid.classList.add('is-rotation-ready', 'is-paused');
 
-        if (userLocked) return;
+        if (userLocked) {
+          syncPauseState();
+          return;
+        }
         observeGrid();
       }
 
@@ -1559,18 +1506,27 @@ const schema = {
 
       window.addEventListener('rq:service-focus', handleServiceFocus);
 
-      document.addEventListener('visibilitychange', () => {
-        if (!enhancementAvailable || userLocked) return;
+      function handleVisibilityChange() {
+        if (document.hidden) {
+          pauseTimer();
+          syncPauseState();
+          return;
+        }
+
+        if (pendingConfigure) {
+          configure();
+          return;
+        }
+
+        updateInViewFromRect();
         syncPauseState();
-      });
+      }
+
+      document.addEventListener('visibilitychange', handleVisibilityChange);
 
       window.addEventListener('resize', () => {
         window.clearTimeout(resizeTimer);
         resizeTimer = 0;
-        if (!layoutInView) {
-          pendingConfigure = true;
-          return;
-        }
         resizeTimer = window.setTimeout(() => {
           resizeTimer = 0;
           configure();
@@ -1584,22 +1540,14 @@ const schema = {
           retryFocusTimer = 0;
         }
         window.removeEventListener('rq:service-focus', handleServiceFocus);
-        exitLayoutGate();
-        layoutGate?.destroy();
-        layoutGate = null;
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        stopRotation();
       });
 
       watchQuery(reduceQuery);
       watchQuery(mobileQuery);
 
-      layoutGate = createInViewGate(grid, {
-        rootMargin: '120px 0px',
-        onEnter: () => {
-          layoutInView = true;
-          if (pendingConfigure) configure();
-        },
-        onExit: exitLayoutGate,
-      });
+      configure();
     })();
   </script>
 

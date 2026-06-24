@@ -839,14 +839,14 @@ export const homeContent = {
       carouselAriaLabel: 'Typické problémy',
       severitySrPrefix: 'Index závažnosti:',
       severitySrSuffix: 'z 5.',
-      tagline: 'Režírujte svůj byznys sami. Nabízíme víc než průměrný servis.',
+      tagline: 'Režírujte svůj byznys sami. Nabízíme víc než průměr.',
       roleLabels: {
         lead: 'V HLAVNÍ ROLI',
         support: 'DÁLE HRAJÍ',
       },
       solutionLabel: 'Návrh řešení',
       findingLabels: {
-        problem: 'Problém',
+        problem: 'Zápletka',
         cause: 'Pravděpodobná příčina',
         verify: 'Co ověřím',
         step: 'První krok',
@@ -888,7 +888,7 @@ export const homeContent = {
         start: {
           eyebrow: 'Problém',
           title: 'Web nevede k poptávce',
-          problemLabel: 'Problém',
+          problemLabel: 'Zápletka',
           problem: 'Web jen existuje, ale návštěvník nedojde ke kontaktu.',
           stepLabel: 'První krok',
           step: 'krátký audit a úprava struktury + jasné CTA.',
@@ -1154,14 +1154,14 @@ export const homeContent = {
       carouselAriaLabel: 'Typical problems',
       severitySrPrefix: 'Business impact:',
       severitySrSuffix: 'out of 5.',
-      tagline: 'Direct your business yourself. More than average service, without the drama.',
+      tagline: 'Direct your business yourself. We offer more than average.',
       roleLabels: {
         lead: 'STARRING',
         support: 'ALSO FEATURING',
       },
       solutionLabel: 'Suggested solution',
       findingLabels: {
-        problem: 'Problem',
+        problem: 'The plot',
         cause: 'Likely cause',
         verify: 'What I verify',
         step: 'First step',
@@ -1203,7 +1203,7 @@ export const homeContent = {
         start: {
           eyebrow: 'Problem',
           title: 'The website does not create enquiries',
-          problemLabel: 'Problem',
+          problemLabel: 'The plot',
           problem: 'The website exists, but visitors do not reach the contact step.',
           stepLabel: 'First step',
           step: 'a short audit, structure cleanup, and clear calls to action.',

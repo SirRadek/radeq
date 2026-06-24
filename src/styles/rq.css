@@ -2671,6 +2671,10 @@ h2 + p {
   animation: rq-tw-blink 1.05s steps(1, end) infinite;
 }
 
+.rq-hero__tw-text.is-rq-typewriter-paused::after {
+  animation-play-state: paused;
+}
+
 .rq-hero__tw-text.is-rq-typewriter-done::after {
   animation: none;
   opacity: 0;

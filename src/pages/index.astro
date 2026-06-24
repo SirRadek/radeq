@@ -85,6 +85,87 @@ const symptoms = [
       const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (reduce) { textEl.textContent = words[0]; return; }
 
+      function createInViewGate(target, { rootMargin = '120px 0px', threshold = 0, onEnter = () => {}, onExit = () => {} } = {}) {
+        let observer = null;
+        let isIntersecting = false;
+        let isActive = false;
+        let destroyed = false;
+
+        function enter() {
+          if (destroyed || isActive) return;
+          isActive = true;
+          onEnter();
+        }
+
+        function exit() {
+          if (destroyed || !isActive) return;
+          isActive = false;
+          onExit();
+        }
+
+        function sync() {
+          if (document.hidden || !isIntersecting) {
+            exit();
+            return;
+          }
+
+          enter();
+        }
+
+        function handleVisibilityChange() {
+          if (document.hidden) {
+            exit();
+            return;
+          }
+
+          if (isIntersecting) enter();
+        }
+
+        function cleanup() {
+          observer?.disconnect();
+          observer = null;
+          document.removeEventListener('visibilitychange', handleVisibilityChange);
+          window.removeEventListener('pagehide', handlePageHide);
+        }
+
+        function handlePageHide() {
+          onExit();
+          isActive = false;
+          destroyed = true;
+          cleanup();
+        }
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('pagehide', handlePageHide, { once: true });
+
+        if (!('IntersectionObserver' in window)) {
+          isIntersecting = true;
+          if (!document.hidden) enter();
+
+          return {
+            destroy() {
+              destroyed = true;
+              cleanup();
+            },
+          };
+        }
+
+        observer = new IntersectionObserver((entries) => {
+          const entry = entries[0];
+          isIntersecting = Boolean(entry && entry.isIntersecting);
+          sync();
+        }, { rootMargin, threshold });
+
+        observer.observe(target);
+
+        return {
+          destroy() {
+            destroyed = true;
+            cleanup();
+          },
+        };
+      }
+
       const TYPE = 70, DEL = 38, HOLD = 1600, GAP = 320;
       const MAX_CYCLES = 3;
       const finalWord = words[words.length - 1];
@@ -97,7 +178,7 @@ const symptoms = [
       let stopped = false;
       let timerId = 0;
       let nextDelay = HOLD;
-      let observer = null;
+      let gate = null;
 
       function clearTimer() {
         if (!timerId) return;
@@ -105,15 +186,15 @@ const symptoms = [
         timerId = 0;
       }
 
-      function disconnectObserver() {
-        if (!observer) return;
-        observer.disconnect();
-        observer = null;
+      function destroyGate() {
+        if (!gate) return;
+        gate.destroy();
+        gate = null;
       }
 
       function cleanup() {
         clearTimer();
-        disconnectObserver();
+        destroyGate();
       }
 
       function schedule(delay) {
@@ -138,6 +219,7 @@ const symptoms = [
         ci = finalWord.length;
         textEl.textContent = finalWord;
         textEl.classList.add('is-rq-typewriter-done');
+        textEl.classList.remove('is-rq-typewriter-paused');
         if (liveEl) liveEl.textContent = `${livePrefix}${finalWord}.`;
         cleanup();
       }
@@ -180,6 +262,7 @@ const symptoms = [
       function setInView(nextInView) {
         if (stopped) return;
         inView = nextInView;
+        textEl.classList.toggle('is-rq-typewriter-paused', !inView);
         if (!inView) {
           clearTimer();
           return;
@@ -187,33 +270,12 @@ const symptoms = [
         resume();
       }
 
-      function observeInView() {
-        if (stopped) return;
-        disconnectObserver();
-        if (!('IntersectionObserver' in window)) {
-          setInView(true);
-          return;
-        }
-        observer = new IntersectionObserver((entries) => {
-          const entry = entries[0];
-          setInView(Boolean(entry && entry.isIntersecting));
-        }, { rootMargin: '120px 0px' });
-        observer.observe(observeTarget);
-      }
-
       // Start showing the SSR word, hold, then delete and cycle.
-      observeInView();
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-          inView = false;
-          cleanup();
-          return;
-        }
-        observeInView();
-      });
-      window.addEventListener('pagehide', () => {
-        inView = false;
-        cleanup();
+      textEl.classList.add('is-rq-typewriter-paused');
+      gate = createInViewGate(observeTarget, {
+        rootMargin: '120px 0px',
+        onEnter: () => setInView(true),
+        onExit: () => setInView(false),
       });
     })();
   </script>
@@ -312,6 +374,87 @@ const symptoms = [
     const tiles = Array.from(grid.querySelectorAll('.rq-service-tile'));
     if (tiles.length < 2) return;
 
+    function createInViewGate(target, { rootMargin = '120px 0px', threshold = 0, onEnter = () => {}, onExit = () => {} } = {}) {
+      let observer = null;
+      let isIntersecting = false;
+      let isActive = false;
+      let destroyed = false;
+
+      function enter() {
+        if (destroyed || isActive) return;
+        isActive = true;
+        onEnter();
+      }
+
+      function exit() {
+        if (destroyed || !isActive) return;
+        isActive = false;
+        onExit();
+      }
+
+      function sync() {
+        if (document.hidden || !isIntersecting) {
+          exit();
+          return;
+        }
+
+        enter();
+      }
+
+      function handleVisibilityChange() {
+        if (document.hidden) {
+          exit();
+          return;
+        }
+
+        if (isIntersecting) enter();
+      }
+
+      function cleanup() {
+        observer?.disconnect();
+        observer = null;
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        window.removeEventListener('pagehide', handlePageHide);
+      }
+
+      function handlePageHide() {
+        onExit();
+        isActive = false;
+        destroyed = true;
+        cleanup();
+      }
+
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+      window.addEventListener('pagehide', handlePageHide, { once: true });
+
+      if (!('IntersectionObserver' in window)) {
+        isIntersecting = true;
+        if (!document.hidden) enter();
+
+        return {
+          destroy() {
+            destroyed = true;
+            cleanup();
+          },
+        };
+      }
+
+      observer = new IntersectionObserver((entries) => {
+        const entry = entries[0];
+        isIntersecting = Boolean(entry && entry.isIntersecting);
+        sync();
+      }, { rootMargin, threshold });
+
+      observer.observe(target);
+
+      return {
+        destroy() {
+          destroyed = true;
+          cleanup();
+        },
+      };
+    }
+
     const ROTATION_MS = 20000;
     const IN_MS = 820;
     const OUT_MS = 460;
@@ -334,6 +477,7 @@ const symptoms = [
     const slotOrders = permute(SMALL_SLOTS);
 
     let observer = null;
+    let layoutGate = null;
     let resizeTimer = 0;
     let timerId = 0;
     let timerStartedAt = 0;
@@ -344,6 +488,8 @@ const symptoms = [
     let isAnimating = false;
     let userLocked = false;
     let enhancementAvailable = false;
+    let layoutInView = false;
+    let pendingConfigure = true;
 
     function permute(items) {
       if (items.length <= 1) return [items.slice()];
@@ -446,6 +592,23 @@ const symptoms = [
       observer.observe(grid);
     }
 
+    function exitLayoutGate() {
+      layoutInView = false;
+      pendingConfigure = true;
+      window.clearTimeout(resizeTimer);
+      resizeTimer = 0;
+      inView = false;
+      clearTimer();
+      disconnectObserver();
+      syncPauseState();
+    }
+
+    function requestConfigure() {
+      pendingConfigure = true;
+      if (!layoutInView) return;
+      configure();
+    }
+
     function getNextTile() {
       const active = currentFeatured();
       const start = tiles.indexOf(active);
@@ -468,6 +631,11 @@ const symptoms = [
     }
 
     function reserveGridHeight() {
+      if (!layoutInView || document.hidden) {
+        pendingConfigure = true;
+        return;
+      }
+
       if (!enhancementAvailable) {
         grid.style.minHeight = '';
         return;
@@ -613,6 +781,12 @@ const symptoms = [
     }
 
     function configure() {
+      if (!layoutInView || document.hidden) {
+        pendingConfigure = true;
+        return;
+      }
+
+      pendingConfigure = false;
       enhancementAvailable = canEnhance();
       clearTimer();
       disconnectObserver();
@@ -651,11 +825,11 @@ const symptoms = [
     function watchQuery(query) {
       if (!query) return;
       if (typeof query.addEventListener === 'function') {
-        query.addEventListener('change', configure);
+        query.addEventListener('change', requestConfigure);
         return;
       }
       if (typeof query.addListener === 'function') {
-        query.addListener(configure);
+        query.addListener(requestConfigure);
       }
     }
 
@@ -706,18 +880,34 @@ const symptoms = [
 
     window.addEventListener('resize', () => {
       window.clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(configure, 160);
+      resizeTimer = 0;
+      if (!layoutInView) {
+        pendingConfigure = true;
+        return;
+      }
+      resizeTimer = window.setTimeout(() => {
+        resizeTimer = 0;
+        configure();
+      }, 160);
     });
 
     window.addEventListener('pagehide', () => {
-      clearTimer();
-      disconnectObserver();
+      exitLayoutGate();
+      layoutGate?.destroy();
+      layoutGate = null;
     });
 
     watchQuery(reduceQuery);
     watchQuery(mobileQuery);
 
-    configure();
+    layoutGate = createInViewGate(grid, {
+      rootMargin: '120px 0px',
+      onEnter: () => {
+        layoutInView = true;
+        if (pendingConfigure) configure();
+      },
+      onExit: exitLayoutGate,
+    });
   })();
 </script>
 

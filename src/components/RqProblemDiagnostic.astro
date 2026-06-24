@@ -586,6 +586,8 @@ const items = [
 </style>
 
 <script>
+  import { inViewGate } from '../lib/inViewGate';
+
   (() => {
     const root = document.querySelector('[data-rq-problem-diagnostic]');
     if (!root || root.dataset.rqProblemDiagnosticReady === 'true') return;
@@ -601,6 +603,15 @@ const items = [
     const laser = root.querySelector('[data-rq-problem-laser]');
     const reducedMotionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
     const mobileQuery = window.matchMedia?.('(max-width: 860px)');
+    let diagnosticInView = false;
+    let laserFrame = 0;
+    let pendingLaserUpdate = true;
+
+    const cancelLaserFrame = () => {
+      if (!laserFrame) return;
+      window.cancelAnimationFrame(laserFrame);
+      laserFrame = 0;
+    };
 
     const setPanelAnimation = (panel) => {
       if (!panel || reducedMotionQuery?.matches) return;
@@ -613,6 +624,11 @@ const items = [
     };
 
     const updateLaser = (shouldAnimate = false) => {
+      if (!diagnosticInView || document.hidden) {
+        pendingLaserUpdate = true;
+        return;
+      }
+
       if (!shell || !output || !laser || mobileQuery?.matches) return;
 
       const activeTab = tabs.find((tab) => tab.getAttribute('aria-selected') === 'true');
@@ -637,6 +653,17 @@ const items = [
       laser.classList.remove('is-drawing');
       laser.getBoundingClientRect();
       laser.classList.add('is-drawing');
+    };
+
+    const scheduleLaserUpdate = () => {
+      pendingLaserUpdate = true;
+      if (!diagnosticInView || document.hidden || laserFrame) return;
+
+      laserFrame = window.requestAnimationFrame(() => {
+        laserFrame = 0;
+        pendingLaserUpdate = false;
+        updateLaser(false);
+      });
     };
 
     const activate = (nextIndex, shouldFocus = false) => {
@@ -706,12 +733,30 @@ const items = [
       });
     });
 
-    window.addEventListener('resize', () => {
-      updateLaser(false);
-    }, { passive: true });
+    const handleResize = () => {
+      scheduleLaserUpdate();
+    };
 
-    requestAnimationFrame(() => {
-      updateLaser(false);
+    window.addEventListener('resize', handleResize, { passive: true });
+
+    const gate = inViewGate(root, {
+      rootMargin: '120px 0px',
+      onEnter: () => {
+        diagnosticInView = true;
+        if (pendingLaserUpdate) scheduleLaserUpdate();
+      },
+      onExit: () => {
+        diagnosticInView = false;
+        pendingLaserUpdate = true;
+        cancelLaserFrame();
+        laser?.classList.remove('is-drawing');
+      },
     });
+
+    window.addEventListener('pagehide', () => {
+      cancelLaserFrame();
+      window.removeEventListener('resize', handleResize);
+      gate.destroy();
+    }, { once: true });
   })();
 </script>

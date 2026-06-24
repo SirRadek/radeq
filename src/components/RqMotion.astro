@@ -159,6 +159,87 @@
 
     const marqueeRoots = Array.from(document.querySelectorAll('[data-rq-marquee]'));
 
+    const createInViewGate = (target, { rootMargin = '120px 0px', threshold = 0, onEnter = () => {}, onExit = () => {} } = {}) => {
+      let observer = null;
+      let isIntersecting = false;
+      let isActive = false;
+      let destroyed = false;
+
+      const enter = () => {
+        if (destroyed || isActive) return;
+        isActive = true;
+        onEnter();
+      };
+
+      const exit = () => {
+        if (destroyed || !isActive) return;
+        isActive = false;
+        onExit();
+      };
+
+      const sync = () => {
+        if (document.hidden || !isIntersecting) {
+          exit();
+          return;
+        }
+
+        enter();
+      };
+
+      const handleVisibilityChange = () => {
+        if (document.hidden) {
+          exit();
+          return;
+        }
+
+        if (isIntersecting) enter();
+      };
+
+      const cleanup = () => {
+        observer?.disconnect();
+        observer = null;
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        window.removeEventListener('pagehide', handlePageHide);
+      };
+
+      const handlePageHide = () => {
+        onExit();
+        isActive = false;
+        destroyed = true;
+        cleanup();
+      };
+
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+      window.addEventListener('pagehide', handlePageHide, { once: true });
+
+      if (!('IntersectionObserver' in window)) {
+        isIntersecting = true;
+        if (!document.hidden) enter();
+
+        return {
+          destroy() {
+            destroyed = true;
+            cleanup();
+          },
+        };
+      }
+
+      observer = new IntersectionObserver((entries) => {
+        const entry = entries[0];
+        isIntersecting = Boolean(entry && entry.isIntersecting);
+        sync();
+      }, { rootMargin, threshold });
+
+      observer.observe(target);
+
+      return {
+        destroy() {
+          destroyed = true;
+          cleanup();
+        },
+      };
+    };
+
     marqueeRoots.forEach((marquee) => {
       const track = marquee.querySelector('[data-rq-marquee-track]');
       const group = marquee.querySelector('[data-rq-marquee-group]');
@@ -176,7 +257,7 @@
       let isPointerPaused = false;
       let isFocusPaused = false;
       let resizeObserver = null;
-      let marqueeObserver = null;
+      let marqueeGate = null;
       let usesWindowResize = false;
 
       const syncPaused = () => {
@@ -212,10 +293,17 @@
         applyTransform();
       };
 
-      const scheduleMeasure = () => {
+      const cancelMeasure = () => {
         if (measureFrame) cancelAnimationFrame(measureFrame);
+        measureFrame = 0;
+      };
+
+      const scheduleMeasure = () => {
+        if (!isVisible || document.hidden) return;
+        cancelMeasure();
         measureFrame = requestAnimationFrame(() => {
           measureFrame = 0;
+          if (!isVisible || document.hidden) return;
           measure();
         });
       };
@@ -245,6 +333,44 @@
         lastTime = 0;
       };
 
+      const connectMeasurement = () => {
+        if (resizeObserver || usesWindowResize) return;
+
+        if ('ResizeObserver' in window) {
+          resizeObserver = new ResizeObserver(scheduleMeasure);
+          resizeObserver.observe(viewport);
+          resizeObserver.observe(group);
+        } else {
+          usesWindowResize = true;
+          window.addEventListener('resize', scheduleMeasure, { passive: true });
+        }
+      };
+
+      const disconnectMeasurement = () => {
+        cancelMeasure();
+        resizeObserver?.disconnect();
+        resizeObserver = null;
+        if (usesWindowResize) {
+          window.removeEventListener('resize', scheduleMeasure);
+          usesWindowResize = false;
+        }
+      };
+
+      const setMarqueeVisible = (nextVisible) => {
+        if (isVisible === nextVisible) return;
+        isVisible = nextVisible;
+
+        if (isVisible) {
+          connectMeasurement();
+          scheduleMeasure();
+          start();
+          return;
+        }
+
+        stop();
+        disconnectMeasurement();
+      };
+
       marquee.addEventListener('pointerenter', () => {
         isPointerPaused = true;
         syncPaused();
@@ -269,46 +395,17 @@
         }, 0);
       });
 
-      scheduleMeasure();
-
-      if ('ResizeObserver' in window) {
-        resizeObserver = new ResizeObserver(scheduleMeasure);
-        resizeObserver.observe(viewport);
-        resizeObserver.observe(group);
-      } else {
-        usesWindowResize = true;
-        window.addEventListener('resize', scheduleMeasure, { passive: true });
-      }
-
-      if ('IntersectionObserver' in window) {
-        marqueeObserver = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              isVisible = entry.isIntersecting;
-              if (isVisible) {
-                start();
-              } else {
-                stop();
-              }
-            });
-          },
-          { threshold: 0, rootMargin: '120px 0px' }
-        );
-
-        marqueeObserver.observe(marquee);
-      } else {
-        isVisible = true;
-        start();
-      }
+      marqueeGate = createInViewGate(marquee, {
+        rootMargin: '120px 0px',
+        threshold: 0,
+        onEnter: () => setMarqueeVisible(true),
+        onExit: () => setMarqueeVisible(false),
+      });
 
       window.addEventListener('pagehide', () => {
-        stop();
-        if (measureFrame) cancelAnimationFrame(measureFrame);
-        resizeObserver?.disconnect();
-        marqueeObserver?.disconnect();
-        if (usesWindowResize) {
-          window.removeEventListener('resize', scheduleMeasure);
-        }
+        setMarqueeVisible(false);
+        marqueeGate?.destroy();
+        marqueeGate = null;
       }, { once: true });
     });
 

@@ -2,6 +2,9 @@
 const items = [
   {
     id: 'web-poptavky',
+    role: 'lead',
+    severity: 5,
+    hook: 'Návštěvník přijde, rozhlédne se a odejde bez jasné cesty ke kontaktu.',
     symptom: 'Web nevede k poptávce',
     problem: 'Web jen existuje, ale návštěvník nedojde ke kontaktu.',
     cause: 'Nejasná nabídka a slabé výzvy k akci; návštěvník neví, co má udělat.',
@@ -10,25 +13,10 @@ const items = [
     service: 'Web a redesign / Audit',
   },
   {
-    id: 'poptavky-email',
-    symptom: 'Poptávky se ztrácí v e-mailech',
-    problem: 'Poptávky přijdou, ale další krok se řeší ručně a bez jasného stavu.',
-    cause: 'nepropojené nástroje — maily, tabulky, formuláře.',
-    verify: 'kde vzniká ruční práce a kolik času bere.',
-    step: 'navrhnout nejmenší automatizaci jednoho toku.',
-    service: 'Automatizace procesů',
-  },
-  {
-    id: 'rucni-data',
-    symptom: 'Data/úkoly přepisujete ručně',
-    problem: 'Data přepisujete mezi tabulkami pořád dokola.',
-    cause: 'nepropojené nástroje — maily, tabulky, formuláře.',
-    verify: 'kde vzniká ruční práce a kolik času bere.',
-    step: 'navrhnout nejmenší automatizaci jednoho toku.',
-    service: 'Automatizace procesů',
-  },
-  {
     id: 'nejasny-krok',
+    role: 'lead',
+    severity: 5,
+    hook: 'Dobrá služba zůstane bez odezvy, když další krok není vidět na první pohled.',
     symptom: 'Nabídka / další krok není jasný',
     problem: 'Zákazník nerozumí nabídce nebo neví, kam pokračovat.',
     cause: 'Nejasná nabídka a slabé výzvy k akci; návštěvník neví, co má udělat.',
@@ -37,7 +25,58 @@ const items = [
     service: 'Web a redesign / Audit',
   },
   {
+    id: 'poptavky-email',
+    role: 'support',
+    severity: 4,
+    hook: 'Každá zpráva má vlastní dějovou linku a nikdo nevidí, v jaké je scéně.',
+    symptom: 'Poptávky se ztrácí v e-mailech',
+    problem: 'Poptávky přijdou, ale další krok se řeší ručně a bez jasného stavu.',
+    cause: 'nepropojené nástroje - maily, tabulky, formuláře.',
+    verify: 'kde vzniká ruční práce a kolik času bere.',
+    step: 'navrhnout nejmenší automatizaci jednoho toku.',
+    service: 'Automatizace procesů',
+  },
+  {
+    id: 'rucni-data',
+    role: 'support',
+    severity: 4,
+    hook: 'Stejná data hrají ve více systémech a pokaždé je někdo přepisuje znovu.',
+    symptom: 'Data/úkoly přepisujete ručně',
+    problem: 'Data přepisujete mezi tabulkami pořád dokola.',
+    cause: 'nepropojené nástroje - maily, tabulky, formuláře.',
+    verify: 'kde vzniká ruční práce a kolik času bere.',
+    step: 'navrhnout nejmenší automatizaci jednoho toku.',
+    service: 'Automatizace procesů',
+  },
+  {
+    id: 'fakturace-papiry',
+    role: 'support',
+    severity: 5,
+    hook: 'Přes den děláte práci pro klienty, večer doháníte administrativu.',
+    symptom: 'Fakturace a papírování po večerech',
+    problem: 'Doklady, podklady a opakované administrativní kroky se vrací ve chvíli, kdy už má být hotovo.',
+    cause: 'proces není poskládaný do jednoduchého toku a část informací se dohledává až při fakturaci.',
+    verify: 'jak vzniká zakázka, kde se berou podklady pro fakturu a které kroky se opakují ručně.',
+    step: 'srovnat postup od poptávky po doklad a navrhnout malé zjednodušení bez výměny celého systému.',
+    service: 'Automatizace procesů / Audit',
+  },
+  {
+    id: 'zacatek-ai',
+    role: 'support',
+    severity: 4,
+    hook: 'Trailerů je hodně, ale chybí scénář, kde AI opravdu pomůže vašemu provozu.',
+    symptom: 'Nevím, kde začít / kde dává smysl AI',
+    problem: 'Máte víc možností než jistoty a nechcete začít drahým nástrojem naslepo.',
+    cause: 'moc možností a žádná priorita.',
+    verify: 'současný stav, opakovanou práci a podklady, nad kterými by AI případně dávala smysl.',
+    step: 'krátký audit, který dá jasné pořadí kroků a oddělí užitečné nápady od slepých uliček.',
+    service: 'Audit / Data a AI pomocníci',
+  },
+  {
     id: 'mereni-prehled',
+    role: 'support',
+    severity: 3,
+    hook: 'Bez přehledu se špatně pozná, která scéna vydělává a která jen zabírá čas.',
     symptom: 'Chybí měření a přehled',
     problem: 'Nevíte, co na webu nebo v procesu měřit.',
     cause: 'chybí jednoduché měření cílů (poptávka, telefon).',
@@ -46,18 +85,28 @@ const items = [
     service: 'Data a AI / Audit',
   },
   {
-    id: 'zacatek-ai',
-    symptom: 'Nevím, kde začít / kde dává smysl AI',
-    problem: 'Máte víc možností než jistoty a nechcete začít drahým nástrojem naslepo.',
-    cause: 'moc možností a žádná priorita.',
-    verify: 'současný stav, opakovanou práci a podklady, nad kterými by AI případně dávala smysl.',
-    step: 'krátký audit, který dá jasné pořadí kroků a oddělí užitečné nápady od slepých uliček.',
-    service: 'Audit / Data a AI pomocníci',
+    id: 'planovani-schuzek',
+    role: 'support',
+    severity: 3,
+    hook: 'Domluva termínu zabere víc záběrů než samotná schůzka.',
+    symptom: 'Utopený čas v plánování schůzek',
+    problem: 'Termíny, potvrzení a změny se řeší ručně přes několik zpráv.',
+    cause: 'chybí jednoduchý rezervační nebo potvrzovací postup a odpovědnost zůstává v e-mailu nebo telefonu.',
+    verify: 'kde se domlouvají termíny, jak se potvrzují změny a které informace se opakovaně posílají ručně.',
+    step: 'navrhnout jednoduchý postup pro výběr termínu, potvrzení a předání základních informací.',
+    service: 'Automatizace procesů',
   },
 ];
+
+const roleLabels: Record<string, string> = {
+  lead: 'V HLAVNÍ ROLI',
+  support: 'DÁLE HRAJÍ',
+};
+
+const stars = Array.from({ length: 5 });
 ---
 
-<section class="rq-section rq-problem-diagnostic" id="co-resim" aria-labelledby="rq-problem-diagnostic-title" data-rq-problem-diagnostic>
+<section class="rq-section rq-problem-diagnostic" id="co-resim" aria-labelledby="rq-problem-diagnostic-title" data-rq-problem-diagnostic data-rq-active-index="0">
   <span class="rq-problem-diagnostic__alias" id="diagnostika" aria-hidden="true"></span>
   <div class="rq-problem-diagnostic__inner">
     <header class="rq-problem-diagnostic__head" data-rq-reveal>
@@ -70,34 +119,75 @@ const items = [
     </header>
 
     <div class="rq-problem-diagnostic__shell" data-rq-reveal>
-      <div class="rq-problem-diagnostic__tabs" role="tablist" aria-label="Typické problémy">
-        {items.map((item, index) => (
-          <button
-            class="rq-problem-diagnostic__tab"
-            id={`rq-problem-tab-${item.id}`}
-            type="button"
-            role="tab"
-            aria-selected={index === 0 ? 'true' : 'false'}
-            aria-controls={`rq-problem-panel-${item.id}`}
-            data-rq-problem-tab
-          >
-            <span class="rq-problem-diagnostic__number">{String(index + 1).padStart(2, '0')}</span>
-            <span class="rq-problem-diagnostic__tab-text">{item.symptom}</span>
+      <div class="rq-problem-diagnostic__meta-row">
+        <p class="rq-problem-diagnostic__severity-legend" id="rq-problem-severity-legend">
+          <strong>Index závažnosti</strong> ukazuje dopad problému na chod firmy. Hvězdy nejsou hodnocení služby.
+        </p>
+        <div class="rq-problem-diagnostic__controls" aria-label="Posun karuselu">
+          <button class="rq-problem-diagnostic__nav" type="button" aria-label="Předchozí problém" data-rq-problem-prev disabled>
+            <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+              <path d="M15 5 8 12l7 7"></path>
+            </svg>
           </button>
-        ))}
+          <button class="rq-problem-diagnostic__nav" type="button" aria-label="Další problém" data-rq-problem-next>
+            <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+              <path d="m9 5 7 7-7 7"></path>
+            </svg>
+          </button>
+        </div>
       </div>
 
-      <div class="rq-problem-diagnostic__laser" data-rq-problem-laser aria-hidden="true"></div>
+      <div class="rq-problem-diagnostic__carousel-scene" data-rq-problem-carousel aria-describedby="rq-problem-severity-legend">
+        <ul class="rq-problem-diagnostic__filmstrip" role="list" aria-label="Typické problémy">
+          {items.map((item, index) => (
+            <li class:list={['rq-problem-diagnostic__frame', item.role === 'lead' && 'rq-problem-diagnostic__frame--lead']}>
+              <button
+                class:list={[
+                  'rq-problem-diagnostic__card',
+                  item.role === 'lead' && 'rq-problem-diagnostic__card--lead',
+                ]}
+                id={`rq-problem-card-${item.id}`}
+                type="button"
+                aria-current={index === 0 ? 'true' : 'false'}
+                aria-controls={`rq-problem-panel-${item.id}`}
+                data-rq-problem-card
+              >
+                <span class="rq-problem-diagnostic__card-inner">
+                  <span class="rq-problem-diagnostic__poster-meta">
+                    <span class="rq-problem-diagnostic__number">{String(index + 1).padStart(2, '0')}</span>
+                    <span class="rq-problem-diagnostic__role">{roleLabels[item.role]}</span>
+                  </span>
+                  <span class="rq-problem-diagnostic__poster-title">{item.symptom}</span>
+                  <span class="rq-problem-diagnostic__hook">{item.hook}</span>
+                  <span class="rq-problem-diagnostic__severity">
+                    <span class="rq-sr-only">Index závažnosti: {item.severity} z 5.</span>
+                    <span class="rq-problem-diagnostic__stars" aria-hidden="true">
+                      {stars.map((_, starIndex) => (
+                        <span class:list={['rq-problem-diagnostic__star', starIndex < item.severity && 'is-active']}>★</span>
+                      ))}
+                    </span>
+                  </span>
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
 
-      <div class="rq-problem-diagnostic__output" aria-live="polite">
+      <p class="rq-problem-diagnostic__tagline" id="rq-problem-carousel-tagline">Režírujte svůj byznys sami. Nabízíme víc než průměrný servis.</p>
+
+      <div class="rq-problem-diagnostic__output" aria-live="off" data-rq-problem-output>
         {items.map((item, index) => (
           <article
-            class="rq-problem-diagnostic__panel"
+            class:list={[
+              'rq-problem-diagnostic__panel',
+              index === 0 && 'is-active',
+            ]}
             id={`rq-problem-panel-${item.id}`}
-            role="tabpanel"
-            aria-labelledby={`rq-problem-tab-${item.id}`}
-            tabindex="0"
-            hidden={index !== 0}
+            role="region"
+            aria-labelledby={`rq-problem-card-${item.id}`}
+            aria-hidden={index === 0 ? 'false' : 'true'}
+            inert={index !== 0 ? true : undefined}
             data-rq-problem-panel
           >
             <div class="rq-problem-diagnostic__panel-top">
@@ -130,57 +220,6 @@ const items = [
           </article>
         ))}
       </div>
-
-      <div class="rq-problem-diagnostic__accordion" aria-label="Typické problémy">
-        {items.map((item, index) => (
-          <div class="rq-problem-diagnostic__accordion-item">
-            <button
-              class="rq-problem-diagnostic__accordion-button"
-              type="button"
-              aria-expanded={index === 0 ? 'true' : 'false'}
-              aria-controls={`rq-problem-accordion-panel-${item.id}`}
-              data-rq-problem-accordion
-            >
-              <span class="rq-problem-diagnostic__number">{String(index + 1).padStart(2, '0')}</span>
-              <span class="rq-problem-diagnostic__tab-text">{item.symptom}</span>
-            </button>
-            <article
-              class="rq-problem-diagnostic__panel rq-problem-diagnostic__panel--accordion"
-              id={`rq-problem-accordion-panel-${item.id}`}
-              hidden={index !== 0}
-              data-rq-problem-accordion-panel
-            >
-              <div class="rq-problem-diagnostic__panel-top">
-                <span class="rq-problem-diagnostic__solution-label">Návrh řešení</span>
-                <span class="rq-problem-diagnostic__count">{String(index + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}</span>
-              </div>
-              <h3>{item.symptom}</h3>
-              <dl class="rq-problem-diagnostic__findings">
-                <div>
-                  <dt>Problém</dt>
-                  <dd>{item.problem}</dd>
-                </div>
-                <div>
-                  <dt>Pravděpodobná příčina</dt>
-                  <dd>{item.cause}</dd>
-                </div>
-                <div>
-                  <dt>Co ověřím</dt>
-                  <dd>{item.verify}</dd>
-                </div>
-                <div>
-                  <dt>První krok</dt>
-                  <dd>{item.step}</dd>
-                </div>
-              </dl>
-              <div class="rq-problem-diagnostic__actions">
-                <a class="rq-btn rq-btn--primary" href="#kontakt">Napsat poptávku</a>
-                <a class="rq-problem-diagnostic__service" href="#sluzby">Typicky souvisí: <strong>{item.service}</strong></a>
-              </div>
-            </article>
-          </div>
-        ))}
-      </div>
     </div>
   </div>
 </section>
@@ -193,9 +232,9 @@ const items = [
     margin-inline: calc(50% - 50vw);
     overflow-x: clip;
     background:
-      linear-gradient(180deg, rgba(0, 0, 0, 0.16), transparent 18%, rgba(0, 0, 0, 0.18) 100%),
-      linear-gradient(135deg, #12100f 0%, #1b1214 50%, #251116 100%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), inset 0 26px 58px rgba(0, 0, 0, 0.28);
+      linear-gradient(180deg, rgba(13, 11, 12, 0.78), rgba(34, 15, 19, 0.9)),
+      linear-gradient(135deg, #0D0B0C 0%, #160d0f 48%, #220F13 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), inset 0 34px 74px rgba(0, 0, 0, 0.34);
     color: var(--rq-on-dark);
   }
 
@@ -224,12 +263,14 @@ const items = [
     align-items: flex-start;
     justify-content: space-between;
     gap: 1.5rem;
-    margin-bottom: 2.75rem;
+    margin-bottom: clamp(1.8rem, 4vw, 3.2rem);
   }
 
   .rq-problem-diagnostic .rq-eyebrow,
-  .rq-problem-diagnostic__lead {
-    color: var(--rq-on-dark-2);
+  .rq-problem-diagnostic__lead,
+  .rq-problem-diagnostic__severity-legend,
+  .rq-problem-diagnostic__tagline {
+    color: color-mix(in srgb, var(--rq-on-dark-2) 92%, transparent);
   }
 
   .rq-problem-diagnostic__title {
@@ -251,7 +292,9 @@ const items = [
   .rq-problem-diagnostic__badge,
   .rq-problem-diagnostic__solution-label,
   .rq-problem-diagnostic__count,
-  .rq-problem-diagnostic__number {
+  .rq-problem-diagnostic__number,
+  .rq-problem-diagnostic__role,
+  .rq-problem-diagnostic__severity-legend strong {
     font-family: var(--rq-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.78rem;
     font-weight: 700;
@@ -270,119 +313,384 @@ const items = [
   }
 
   .rq-problem-diagnostic__shell {
+    --rq-card-w: clamp(16.75rem, 28vw, 24rem);
+    --rq-card-w-lead: clamp(18.1rem, 30.24vw, 25.9rem);
+    --rq-card-h: clamp(20.5rem, 30vw, 24rem);
+    --rq-card-h-lead: clamp(22.1rem, 32.4vw, 25.9rem);
+    --rq-jaw-min-block-size: clamp(35rem, 42vw, 42rem);
     position: relative;
     display: grid;
-    grid-template-columns: minmax(18rem, 0.82fr) minmax(0, 1.18fr);
-    gap: clamp(1.3rem, 3vw, 3rem);
-    align-items: start;
+    gap: clamp(1rem, 2.4vw, 1.6rem);
     min-width: 0;
   }
 
-  .rq-problem-diagnostic__tabs {
-    display: grid;
-    gap: 0.72rem;
-    min-width: 0;
-  }
-
-  .rq-problem-diagnostic__tab,
-  .rq-problem-diagnostic__accordion-button {
-    position: relative;
-    display: grid;
-    width: 100%;
-    min-width: 0;
-    min-height: 4.7rem;
-    grid-template-columns: auto minmax(0, 1fr);
+  .rq-problem-diagnostic__meta-row {
+    display: flex;
     align-items: center;
-    gap: 0.9rem;
-    border: 1px solid rgba(247, 244, 238, 0.14);
-    border-radius: 8px;
-    padding: 1rem;
-    background: rgba(255, 250, 240, 0.055);
-    color: var(--rq-on-dark);
-    font: inherit;
-    text-align: left;
-    cursor: pointer;
-    transition: background-color 180ms var(--rq-ease), border-color 180ms var(--rq-ease), color 180ms var(--rq-ease), transform 180ms var(--rq-ease);
+    justify-content: space-between;
+    gap: 1rem;
+    min-width: 0;
   }
 
-  .rq-problem-diagnostic__tab:hover,
-  .rq-problem-diagnostic__tab:focus-visible,
-  .rq-problem-diagnostic__accordion-button:hover,
-  .rq-problem-diagnostic__accordion-button:focus-visible {
-    border-color: rgba(199, 224, 74, 0.58);
-    outline: 0;
-    background: rgba(255, 250, 240, 0.085);
+  .rq-problem-diagnostic__severity-legend {
+    max-width: 62ch;
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.55;
   }
 
-  .rq-problem-diagnostic__tab[aria-selected='true'],
-  .rq-problem-diagnostic__accordion-button[aria-expanded='true'] {
-    border-color: color-mix(in srgb, var(--rq-burgundy) 54%, var(--rq-lime));
-    background: linear-gradient(135deg, var(--rq-burgundy-strong), #271018);
-    box-shadow: inset 4px 0 0 var(--rq-lime), 0 18px 44px rgba(0, 0, 0, 0.22);
-    color: #fffaf0;
-  }
-
-  .rq-problem-diagnostic__number {
-    color: color-mix(in srgb, var(--rq-on-dark-2) 74%, transparent);
-  }
-
-  .rq-problem-diagnostic__tab[aria-selected='true'] .rq-problem-diagnostic__number,
-  .rq-problem-diagnostic__accordion-button[aria-expanded='true'] .rq-problem-diagnostic__number {
+  .rq-problem-diagnostic__severity-legend strong {
     color: var(--rq-lime);
   }
 
-  .rq-problem-diagnostic__tab-text {
-    min-width: 0;
-    font-weight: 760;
-    line-height: 1.25;
-    overflow-wrap: anywhere;
+  .rq-problem-diagnostic__controls {
+    display: inline-flex;
+    flex: 0 0 auto;
+    gap: 0.55rem;
   }
 
-  .rq-problem-diagnostic__laser {
-    position: absolute;
-    z-index: 0;
-    top: var(--rq-laser-top, 2rem);
-    left: var(--rq-laser-left, 0);
-    display: block;
-    width: var(--rq-laser-width, 0);
-    height: 2px;
-    overflow: hidden;
-    opacity: 0.9;
-    pointer-events: none;
+  .rq-problem-diagnostic__nav {
+    display: inline-grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    place-items: center;
+    border: 1px solid rgba(247, 244, 238, 0.16);
+    border-radius: 999px;
+    background: rgba(22, 18, 20, 0.72);
+    color: var(--rq-on-dark);
+    cursor: pointer;
+    transition: border-color 180ms var(--rq-ease), background-color 180ms var(--rq-ease), color 180ms var(--rq-ease), opacity 180ms var(--rq-ease), transform 180ms var(--rq-ease);
+  }
+
+  .rq-problem-diagnostic__nav svg {
+    width: 1.2rem;
+    height: 1.2rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2.2;
+  }
+
+  .rq-problem-diagnostic__nav:hover,
+  .rq-problem-diagnostic__nav:focus-visible {
+    border-color: rgba(199, 224, 74, 0.62);
+    outline: 0;
+    background: rgba(94, 25, 38, 0.78);
+    color: var(--rq-lime);
     transform: translateY(-1px);
   }
 
-  .rq-problem-diagnostic__laser::before {
-    content: "";
-    display: block;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, var(--rq-lime) 18%, var(--rq-lime) 82%, transparent);
-    transform-origin: left center;
+  .rq-problem-diagnostic__nav:focus-visible {
+    box-shadow: 0 0 0 3px rgba(199, 224, 74, 0.24);
   }
 
-  .rq-problem-diagnostic__laser.is-drawing::before {
-    animation: rq-problem-laser 300ms var(--rq-ease);
+  .rq-problem-diagnostic__nav:disabled {
+    cursor: default;
+    opacity: 0.38;
+    transform: none;
+  }
+
+  .rq-problem-diagnostic__carousel-scene {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    margin-inline: auto;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    padding-block: 1.6rem 1.35rem;
+    perspective: 1160px;
+    perspective-origin: center;
+    scroll-padding-inline: max(1rem, calc((100% - var(--rq-card-w)) / 2));
+    scroll-snap-type: x mandatory;
+    scrollbar-color: rgba(199, 224, 74, 0.6) rgba(247, 244, 238, 0.08);
+    scrollbar-width: thin;
+  }
+
+  .rq-problem-diagnostic__filmstrip {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.9rem, 2vw, 1.35rem);
+    min-width: max-content;
+    margin: 0;
+    padding: 0 max(1rem, calc((100% - var(--rq-card-w)) / 2));
+    list-style: none;
+    transform-style: preserve-3d;
+  }
+
+  .rq-problem-diagnostic__frame {
+    flex: 0 0 var(--rq-card-w);
+    min-width: 0;
+    scroll-snap-align: center;
+  }
+
+  .rq-problem-diagnostic__frame--lead {
+    flex-basis: var(--rq-card-w-lead);
+  }
+
+  .rq-problem-diagnostic__card {
+    position: relative;
+    display: block;
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    opacity: 0.82;
+    transform: translate3d(0, 0, 0);
+    transform-style: preserve-3d;
+    scroll-snap-align: center;
+    transition: opacity 180ms var(--rq-ease), transform 260ms var(--rq-ease);
+  }
+
+  .rq-problem-diagnostic__card::before,
+  .rq-problem-diagnostic__card::after {
+    content: "";
+    position: absolute;
+    inset: 10% 4% -6%;
+    border-radius: 14px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 220ms var(--rq-ease);
+  }
+
+  .rq-problem-diagnostic__card::before {
+    background: rgba(199, 224, 74, 0.18);
+    filter: blur(28px);
+    transform: translateY(0.8rem);
+  }
+
+  .rq-problem-diagnostic__card::after {
+    border: 1px solid rgba(199, 224, 74, 0.24);
+  }
+
+  .rq-problem-diagnostic__card-inner {
+    position: relative;
+    display: grid;
+    min-block-size: var(--rq-card-h);
+    grid-template-rows: auto minmax(6.5rem, auto) 1fr auto;
+    gap: 1rem;
+    border: 1px solid rgba(247, 244, 238, 0.13);
+    border-radius: 8px;
+    padding: clamp(1.05rem, 2.2vw, 1.45rem);
+    overflow: hidden;
+    background:
+      linear-gradient(160deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.018) 42%, rgba(94, 25, 38, 0.18)),
+      rgba(22, 18, 20, 0.75);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    backface-visibility: hidden;
+    box-shadow:
+      0 34px 72px rgba(0, 0, 0, 0.46),
+      0 12px 26px rgba(0, 0, 0, 0.32),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transform: translateY(0.25rem) translateZ(-8px) rotateY(-3deg) rotateX(1deg);
+    transform-style: preserve-3d;
+    transition: border-color 220ms var(--rq-ease), opacity 220ms var(--rq-ease), transform 260ms var(--rq-ease);
+  }
+
+  .rq-problem-diagnostic__card-inner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(199, 224, 74, 0.22), transparent 1px),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 34%);
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .rq-problem-diagnostic__card--lead {
+    opacity: 0.94;
+  }
+
+  .rq-problem-diagnostic__card--lead .rq-problem-diagnostic__card-inner {
+    min-block-size: var(--rq-card-h-lead);
+    border-color: rgba(199, 224, 74, 0.68);
+    box-shadow:
+      0 38px 84px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(199, 224, 74, 0.12),
+      0 0 40px rgba(199, 224, 74, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .rq-problem-diagnostic__frame:nth-child(even) .rq-problem-diagnostic__card-inner {
+    transform: translateY(0.65rem) translateZ(-18px) rotateY(3deg) rotateX(1deg);
+  }
+
+  .rq-problem-diagnostic__card[aria-current='true'] {
+    z-index: 3;
+    opacity: 1;
+  }
+
+  .rq-problem-diagnostic__card[aria-current='true']::before,
+  .rq-problem-diagnostic__card[aria-current='true']::after,
+  .rq-problem-diagnostic__card:hover::before,
+  .rq-problem-diagnostic__card:focus-visible::before {
+    opacity: 1;
+  }
+
+  .rq-problem-diagnostic__card[aria-current='true'] .rq-problem-diagnostic__card-inner {
+    border-color: rgba(199, 224, 74, 0.72);
+    box-shadow:
+      0 42px 94px rgba(0, 0, 0, 0.56),
+      0 0 0 1px rgba(199, 224, 74, 0.22),
+      0 0 54px rgba(199, 224, 74, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    transform: translateY(-6px) translateZ(34px) rotateY(0deg) rotateX(0deg);
+  }
+
+  .rq-problem-diagnostic__card:hover,
+  .rq-problem-diagnostic__card:focus-visible {
+    z-index: 4;
+    outline: 0;
+    opacity: 1;
+  }
+
+  .rq-problem-diagnostic__card:hover .rq-problem-diagnostic__card-inner,
+  .rq-problem-diagnostic__card:focus-visible .rq-problem-diagnostic__card-inner {
+    border-color: rgba(199, 224, 74, 0.78);
+    transform: translateY(-8px) translateZ(30px) rotateY(0deg) rotateX(0deg);
+  }
+
+  .rq-problem-diagnostic__card:focus-visible .rq-problem-diagnostic__card-inner {
+    box-shadow:
+      0 42px 94px rgba(0, 0, 0, 0.56),
+      0 0 0 3px rgba(199, 224, 74, 0.34),
+      0 0 54px rgba(199, 224, 74, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+
+  .rq-problem-diagnostic__filmstrip:has(.rq-problem-diagnostic__card:hover) .rq-problem-diagnostic__card:not(:hover):not([aria-current='true']),
+  .rq-problem-diagnostic__filmstrip:has(.rq-problem-diagnostic__card:focus-visible) .rq-problem-diagnostic__card:not(:focus-visible):not([aria-current='true']) {
+    opacity: 0.56;
+  }
+
+  .rq-problem-diagnostic.is-scrolling .rq-problem-diagnostic__card-inner,
+  .rq-problem-diagnostic__card:hover .rq-problem-diagnostic__card-inner,
+  .rq-problem-diagnostic__card:focus-visible .rq-problem-diagnostic__card-inner {
+    will-change: transform;
+  }
+
+  .rq-problem-diagnostic__poster-meta {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+  }
+
+  .rq-problem-diagnostic__number {
+    color: rgba(199, 224, 74, 0.82);
+  }
+
+  .rq-problem-diagnostic__role {
+    color: color-mix(in srgb, var(--rq-on-dark-2) 78%, transparent);
+    font-size: 0.7rem;
+  }
+
+  .rq-problem-diagnostic__card--lead .rq-problem-diagnostic__role {
+    color: var(--rq-lime);
+  }
+
+  .rq-problem-diagnostic__poster-title {
+    position: relative;
+    z-index: 1;
+    display: block;
+    color: var(--rq-on-dark);
+    font-family: var(--rq-display), var(--rq-body), system-ui, sans-serif;
+    font-size: clamp(1.45rem, 2.6vw, 2.05rem);
+    font-weight: 840;
+    letter-spacing: 0;
+    line-height: 1.02;
+    overflow-wrap: anywhere;
+  }
+
+  .rq-problem-diagnostic__hook {
+    position: relative;
+    z-index: 1;
+    display: block;
+    color: color-mix(in srgb, var(--rq-on-dark-2) 90%, transparent);
+    font-size: 0.98rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+
+  .rq-problem-diagnostic__severity {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    min-height: 1.5rem;
+  }
+
+  .rq-problem-diagnostic__stars {
+    display: inline-flex;
+    gap: 0.17rem;
+    color: rgba(247, 244, 238, 0.26);
+    font-size: 1.06rem;
+    line-height: 1;
+  }
+
+  .rq-problem-diagnostic__star.is-active {
+    color: var(--rq-lime);
+    text-shadow: 0 0 16px rgba(199, 224, 74, 0.34);
+  }
+
+  .rq-problem-diagnostic__tagline {
+    max-width: 46rem;
+    margin: -0.25rem 0 0;
+    font-family: var(--rq-display), var(--rq-body), system-ui, sans-serif;
+    font-size: clamp(1.08rem, 1.6vw, 1.35rem);
+    font-weight: 780;
+    line-height: 1.35;
   }
 
   .rq-problem-diagnostic__output {
     position: relative;
     z-index: 1;
     min-width: 0;
+    min-block-size: var(--rq-jaw-min-block-size);
+    margin-top: clamp(0.35rem, 1.6vw, 0.8rem);
   }
 
   .rq-problem-diagnostic__panel {
+    position: absolute;
+    inset: 0;
     min-width: 0;
-    border: 1px solid var(--rq-line);
+    min-block-size: var(--rq-jaw-min-block-size);
+    border: 1px solid rgba(247, 244, 238, 0.13);
     border-radius: 8px;
     padding: clamp(1.25rem, 3vw, 2.1rem);
-    background: var(--rq-surface);
-    color: var(--rq-ink);
-    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.02) 32%, rgba(94, 25, 38, 0.2)),
+      rgba(22, 18, 20, 0.86);
+    color: var(--rq-on-dark);
+    box-shadow:
+      0 30px 78px rgba(0, 0, 0, 0.44),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(0.7rem);
+    transition: opacity 220ms var(--rq-ease), transform 220ms var(--rq-ease), visibility 220ms var(--rq-ease);
   }
 
-  .rq-problem-diagnostic__panel.is-switching {
-    animation: rq-problem-panel-in 180ms var(--rq-ease);
+  .rq-problem-diagnostic__panel.is-active {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .rq-problem-diagnostic__output.is-switching .rq-problem-diagnostic__panel.is-active {
+    animation: rq-problem-panel-in 220ms var(--rq-ease);
   }
 
   .rq-problem-diagnostic__panel:focus-visible {
@@ -399,25 +707,26 @@ const items = [
   }
 
   .rq-problem-diagnostic__solution-label {
+    border: 1px solid rgba(199, 224, 74, 0.28);
     border-radius: var(--rq-r-pill);
     padding: 0.58rem 0.7rem;
-    background: var(--rq-burgundy-tint);
-    color: var(--rq-burgundy-strong);
+    background: rgba(199, 224, 74, 0.1);
+    color: var(--rq-lime);
   }
 
   .rq-problem-diagnostic__count {
-    color: var(--rq-ink-2);
+    color: color-mix(in srgb, var(--rq-on-dark-2) 72%, transparent);
   }
 
   .rq-problem-diagnostic__panel h3 {
-    max-width: 20ch;
+    max-width: 24ch;
     margin: 0;
-    color: var(--rq-burgundy-strong);
+    color: var(--rq-on-dark);
     font-family: var(--rq-display), var(--rq-body), system-ui, sans-serif;
-    font-size: 1.85rem;
-    font-weight: 800;
+    font-size: clamp(1.75rem, 3vw, 2.4rem);
+    font-weight: 840;
     letter-spacing: 0;
-    line-height: 1.08;
+    line-height: 1.06;
     overflow-wrap: anywhere;
   }
 
@@ -431,18 +740,18 @@ const items = [
     display: grid;
     gap: 0.42rem;
     padding-block: 1rem;
-    border-top: 1px solid var(--rq-line);
+    border-top: 1px solid rgba(247, 244, 238, 0.12);
   }
 
   .rq-problem-diagnostic__findings dt {
-    color: var(--rq-burgundy-strong);
+    color: var(--rq-lime);
     font-weight: 800;
     line-height: 1.3;
   }
 
   .rq-problem-diagnostic__findings dd {
     margin: 0;
-    color: var(--rq-ink-2);
+    color: color-mix(in srgb, var(--rq-on-dark-2) 92%, transparent);
     line-height: 1.6;
     overflow-wrap: anywhere;
   }
@@ -455,12 +764,18 @@ const items = [
     margin-top: 1.25rem;
   }
 
+  .rq-problem-diagnostic__actions .rq-btn--primary {
+    border-color: var(--rq-lime);
+    background: var(--rq-lime);
+    color: var(--rq-lime-ink);
+  }
+
   .rq-problem-diagnostic__service {
-    color: var(--rq-burgundy-strong);
+    color: var(--rq-lime);
     font-weight: 740;
     line-height: 1.45;
     text-decoration-line: underline;
-    text-decoration-color: var(--rq-lime);
+    text-decoration-color: color-mix(in srgb, var(--rq-lime) 72%, transparent);
     text-decoration-thickness: 3px;
     text-underline-offset: 4px;
     overflow-wrap: anywhere;
@@ -472,29 +787,48 @@ const items = [
     outline-offset: 4px;
   }
 
-  .rq-problem-diagnostic__accordion {
-    display: none;
+  @supports (animation-timeline: view()) {
+    @media (min-width: 861px) and (prefers-reduced-motion: no-preference) {
+      .rq-problem-diagnostic__card {
+        animation: rq-problem-card-depth linear both;
+        animation-range: entry 0% exit 100%;
+        animation-timeline: view(inline);
+      }
+
+      .rq-problem-diagnostic__card[aria-current='true'],
+      .rq-problem-diagnostic__card:hover,
+      .rq-problem-diagnostic__card:focus-visible {
+        animation: none;
+        opacity: 1;
+        transform: translate3d(0, 0, 0) rotateY(0deg) rotateX(0deg);
+      }
+    }
+  }
+
+  @keyframes rq-problem-card-depth {
+    0% {
+      opacity: 0.46;
+      transform: translate3d(0, 0.9rem, -70px) rotateY(10deg) rotateX(2deg);
+    }
+    45%,
+    55% {
+      opacity: 0.94;
+      transform: translate3d(0, 0, 22px) rotateY(0deg) rotateX(0deg);
+    }
+    100% {
+      opacity: 0.46;
+      transform: translate3d(0, 0.9rem, -70px) rotateY(-10deg) rotateX(2deg);
+    }
   }
 
   @keyframes rq-problem-panel-in {
     from {
       opacity: 0;
-      transform: translateY(0.55rem);
+      transform: translateY(0.7rem);
     }
     to {
       opacity: 1;
       transform: translateY(0);
-    }
-  }
-
-  @keyframes rq-problem-laser {
-    from {
-      opacity: 0.4;
-      transform: scaleX(0);
-    }
-    to {
-      opacity: 1;
-      transform: scaleX(1);
     }
   }
 
@@ -509,38 +843,72 @@ const items = [
     }
 
     .rq-problem-diagnostic__shell {
-      display: block;
+      --rq-card-w: min(84vw, 22rem);
+      --rq-card-w-lead: min(88vw, 22.9rem);
+      --rq-card-h: 19.25rem;
+      --rq-card-h-lead: 19.25rem;
+      --rq-jaw-min-block-size: 48rem;
     }
 
-    .rq-problem-diagnostic__tabs,
-    .rq-problem-diagnostic__output,
-    .rq-problem-diagnostic__laser {
-      display: none;
+    .rq-problem-diagnostic__meta-row {
+      align-items: flex-start;
     }
 
-    .rq-problem-diagnostic__accordion {
+    .rq-problem-diagnostic__carousel-scene {
+      padding-block: 0.65rem 1rem;
+      perspective: none;
+      scroll-padding-inline: max(1rem, calc((100% - var(--rq-card-w)) / 2));
+    }
+
+    .rq-problem-diagnostic__filmstrip {
+      gap: 0.85rem;
+      padding-inline: max(1rem, calc((100% - var(--rq-card-w)) / 2));
+      transform-style: flat;
+    }
+
+    .rq-problem-diagnostic__frame--lead {
+      flex-basis: var(--rq-card-w-lead);
+    }
+
+    .rq-problem-diagnostic__card,
+    .rq-problem-diagnostic__card[aria-current='true'],
+    .rq-problem-diagnostic__card:hover,
+    .rq-problem-diagnostic__card:focus-visible {
+      animation: none;
+      transform: none;
+    }
+
+    .rq-problem-diagnostic__card-inner,
+    .rq-problem-diagnostic__frame:nth-child(even) .rq-problem-diagnostic__card-inner,
+    .rq-problem-diagnostic__card[aria-current='true'] .rq-problem-diagnostic__card-inner,
+    .rq-problem-diagnostic__card:hover .rq-problem-diagnostic__card-inner,
+    .rq-problem-diagnostic__card:focus-visible .rq-problem-diagnostic__card-inner {
+      transform: none;
+    }
+
+    .rq-problem-diagnostic__card--lead .rq-problem-diagnostic__card-inner {
+      min-block-size: var(--rq-card-h);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .rq-problem-diagnostic__meta-row {
       display: grid;
-      gap: 0.8rem;
+      gap: 0.9rem;
     }
 
-    .rq-problem-diagnostic__accordion-item {
-      display: grid;
-      gap: 0.55rem;
-      min-width: 0;
-    }
-
-    .rq-problem-diagnostic__accordion-button {
-      min-height: 4.35rem;
-    }
-
-    .rq-problem-diagnostic__panel {
-      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+    .rq-problem-diagnostic__controls {
+      justify-self: start;
     }
   }
 
   @media (max-width: 520px) {
-    .rq-problem-diagnostic__head {
-      gap: 1.1rem;
+    .rq-problem-diagnostic__shell {
+      --rq-jaw-min-block-size: 55rem;
+    }
+
+    .rq-problem-diagnostic__poster-title {
+      font-size: 1.42rem;
     }
 
     .rq-problem-diagnostic__panel-top,
@@ -560,27 +928,55 @@ const items = [
   }
 
   @media (max-width: 360px) {
-    .rq-problem-diagnostic__tab,
-    .rq-problem-diagnostic__accordion-button {
-      grid-template-columns: 1fr;
-      gap: 0.5rem;
+    .rq-problem-diagnostic__shell {
+      --rq-card-w: min(88vw, 18rem);
+      --rq-card-w-lead: min(90vw, 18.7rem);
+      --rq-card-h: 20.25rem;
+      --rq-card-h-lead: 20.25rem;
+      --rq-jaw-min-block-size: 60rem;
     }
 
-    .rq-problem-diagnostic__badge {
+    .rq-problem-diagnostic__poster-meta,
+    .rq-problem-diagnostic__panel-top {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .rq-problem-diagnostic__role,
+    .rq-problem-diagnostic__badge,
+    .rq-problem-diagnostic__severity-legend strong {
       white-space: normal;
       line-height: 1.25;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .rq-problem-diagnostic__tab,
-    .rq-problem-diagnostic__accordion-button,
+    .rq-problem-diagnostic,
+    .rq-problem-diagnostic__card,
+    .rq-problem-diagnostic__card::before,
+    .rq-problem-diagnostic__card::after,
+    .rq-problem-diagnostic__card-inner,
     .rq-problem-diagnostic__panel,
-    .rq-problem-diagnostic__laser::before,
-    .rq-problem-diagnostic__panel.is-switching,
-    .rq-problem-diagnostic__laser.is-drawing::before {
+    .rq-problem-diagnostic__output.is-switching .rq-problem-diagnostic__panel.is-active {
       animation: none;
       transition: none;
+    }
+
+    .rq-problem-diagnostic__carousel-scene {
+      perspective: none;
+    }
+
+    .rq-problem-diagnostic__card,
+    .rq-problem-diagnostic__card[aria-current='true'],
+    .rq-problem-diagnostic__card:hover,
+    .rq-problem-diagnostic__card:focus-visible,
+    .rq-problem-diagnostic__card-inner,
+    .rq-problem-diagnostic__frame:nth-child(even) .rq-problem-diagnostic__card-inner,
+    .rq-problem-diagnostic__card[aria-current='true'] .rq-problem-diagnostic__card-inner,
+    .rq-problem-diagnostic__card:hover .rq-problem-diagnostic__card-inner,
+    .rq-problem-diagnostic__card:focus-visible .rq-problem-diagnostic__card-inner,
+    .rq-problem-diagnostic__panel {
+      transform: none;
     }
   }
 </style>
@@ -594,147 +990,180 @@ const items = [
 
     root.dataset.rqProblemDiagnosticReady = 'true';
 
-    const tabs = Array.from(root.querySelectorAll('[data-rq-problem-tab]'));
+    const carousel = root.querySelector('[data-rq-problem-carousel]');
+    const output = root.querySelector('[data-rq-problem-output]');
+    const cards = Array.from(root.querySelectorAll('[data-rq-problem-card]'));
     const panels = Array.from(root.querySelectorAll('[data-rq-problem-panel]'));
-    const accordionButtons = Array.from(root.querySelectorAll('[data-rq-problem-accordion]'));
-    const accordionPanels = Array.from(root.querySelectorAll('[data-rq-problem-accordion-panel]'));
-    const shell = root.querySelector('.rq-problem-diagnostic__shell');
-    const output = root.querySelector('.rq-problem-diagnostic__output');
-    const laser = root.querySelector('[data-rq-problem-laser]');
+    const prevButton = root.querySelector('[data-rq-problem-prev]');
+    const nextButton = root.querySelector('[data-rq-problem-next]');
     const reducedMotionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
-    const mobileQuery = window.matchMedia?.('(max-width: 860px)');
+
+    if (!carousel || !cards.length || !panels.length) return;
+
+    let activeIndex = 0;
     let diagnosticInView = false;
-    let laserFrame = 0;
-    let pendingLaserUpdate = true;
+    let userHasInteracted = false;
+    let scrollSettleTimer = 0;
+    let panelTimer = 0;
 
-    const cancelLaserFrame = () => {
-      if (!laserFrame) return;
-      window.cancelAnimationFrame(laserFrame);
-      laserFrame = 0;
+    const markInteracted = () => {
+      userHasInteracted = true;
+      output?.setAttribute('aria-live', 'polite');
     };
 
-    const setPanelAnimation = (panel) => {
-      if (!panel || reducedMotionQuery?.matches) return;
-      panel.classList.remove('is-switching');
-      panel.getBoundingClientRect();
-      panel.classList.add('is-switching');
-      window.setTimeout(() => {
-        panel.classList.remove('is-switching');
-      }, 220);
+    const clearScrollTimer = () => {
+      if (!scrollSettleTimer) return;
+      window.clearTimeout(scrollSettleTimer);
+      scrollSettleTimer = 0;
     };
 
-    const updateLaser = (shouldAnimate = false) => {
-      if (!diagnosticInView || document.hidden) {
-        pendingLaserUpdate = true;
-        return;
-      }
-
-      if (!shell || !output || !laser || mobileQuery?.matches) return;
-
-      const activeTab = tabs.find((tab) => tab.getAttribute('aria-selected') === 'true');
-      if (!activeTab) return;
-
-      const shellRect = shell.getBoundingClientRect();
-      const tabRect = activeTab.getBoundingClientRect();
-      const outputRect = output.getBoundingClientRect();
-      const left = tabRect.right - shellRect.left + 12;
-      const width = outputRect.left - tabRect.right - 24;
-
-      if (width <= 16) {
-        laser.style.setProperty('--rq-laser-width', '0px');
-        return;
-      }
-
-      laser.style.setProperty('--rq-laser-top', `${tabRect.top + tabRect.height / 2 - shellRect.top}px`);
-      laser.style.setProperty('--rq-laser-left', `${left}px`);
-      laser.style.setProperty('--rq-laser-width', `${width}px`);
-
-      if (!shouldAnimate || reducedMotionQuery?.matches) return;
-      laser.classList.remove('is-drawing');
-      laser.getBoundingClientRect();
-      laser.classList.add('is-drawing');
+    const clearPanelTimer = () => {
+      if (!panelTimer) return;
+      window.clearTimeout(panelTimer);
+      panelTimer = 0;
     };
 
-    const scheduleLaserUpdate = () => {
-      pendingLaserUpdate = true;
-      if (!diagnosticInView || document.hidden || laserFrame) return;
+    const updateNav = () => {
+      prevButton?.toggleAttribute('disabled', activeIndex === 0);
+      nextButton?.toggleAttribute('disabled', activeIndex === cards.length - 1);
+    };
 
-      laserFrame = window.requestAnimationFrame(() => {
-        laserFrame = 0;
-        pendingLaserUpdate = false;
-        updateLaser(false);
+    const animatePanel = () => {
+      if (!output || reducedMotionQuery?.matches) return;
+      clearPanelTimer();
+      output.classList.remove('is-switching');
+      output.getBoundingClientRect();
+      output.classList.add('is-switching');
+      panelTimer = window.setTimeout(() => {
+        output.classList.remove('is-switching');
+        panelTimer = 0;
+      }, 260);
+    };
+
+    const scrollCardIntoView = (index) => {
+      cards[index]?.scrollIntoView({
+        behavior: reducedMotionQuery?.matches ? 'auto' : 'smooth',
+        block: 'nearest',
+        inline: 'center',
       });
     };
 
-    const activate = (nextIndex, shouldFocus = false) => {
-      const safeIndex = Math.max(0, Math.min(nextIndex, tabs.length - 1));
-      const activePanel = panels[safeIndex];
-      const activeAccordionPanel = accordionPanels[safeIndex];
+    const activate = (nextIndex, options = {}) => {
+      const safeIndex = Math.max(0, Math.min(nextIndex, cards.length - 1));
+      const shouldAnimate = safeIndex !== activeIndex || options.forceAnimation;
 
-      tabs.forEach((tab, index) => {
-        const isActive = index === safeIndex;
-        tab.setAttribute('aria-selected', String(isActive));
-        tab.tabIndex = isActive ? 0 : -1;
-        if (panels[index]) panels[index].hidden = !isActive;
+      if (options.interacted) markInteracted();
+
+      activeIndex = safeIndex;
+      root.dataset.rqActiveIndex = String(activeIndex);
+
+      cards.forEach((card, index) => {
+        const isActive = index === activeIndex;
+        card.setAttribute('aria-current', String(isActive));
       });
 
-      accordionButtons.forEach((button, index) => {
-        const isActive = index === safeIndex;
-        button.setAttribute('aria-expanded', String(isActive));
-        if (accordionPanels[index]) accordionPanels[index].hidden = !isActive;
+      panels.forEach((panel, index) => {
+        const isActive = index === activeIndex;
+        panel.classList.toggle('is-active', isActive);
+        panel.setAttribute('aria-hidden', String(!isActive));
+        panel.toggleAttribute('inert', !isActive);
       });
 
-      setPanelAnimation(activePanel);
-      setPanelAnimation(activeAccordionPanel);
-      updateLaser(true);
-
-      if (shouldFocus) tabs[safeIndex]?.focus();
+      updateNav();
+      if (shouldAnimate) animatePanel();
+      if (options.scroll) scrollCardIntoView(activeIndex);
+      if (options.focus) cards[activeIndex]?.focus({ preventScroll: true });
     };
 
-    const moveTab = (currentTab, direction) => {
-      const currentIndex = tabs.indexOf(currentTab);
-      const nextIndex = (currentIndex + direction + tabs.length) % tabs.length;
-      activate(nextIndex, true);
-    };
+    const closestCardIndex = () => {
+      const carouselRect = carousel.getBoundingClientRect();
+      const carouselCenter = carouselRect.left + carouselRect.width / 2;
+      let closestIndex = activeIndex;
+      let closestDistance = Number.POSITIVE_INFINITY;
 
-    tabs.forEach((tab, index) => {
-      tab.tabIndex = index === 0 ? 0 : -1;
+      cards.forEach((card, index) => {
+        const rect = card.getBoundingClientRect();
+        const cardCenter = rect.left + rect.width / 2;
+        const distance = Math.abs(cardCenter - carouselCenter);
 
-      tab.addEventListener('click', () => {
-        activate(index, false);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
       });
 
-      tab.addEventListener('keydown', (event) => {
-        if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+      return closestIndex;
+    };
+
+    const settleScroll = () => {
+      clearScrollTimer();
+      root.classList.remove('is-scrolling');
+
+      if (!diagnosticInView || document.hidden) return;
+      activate(closestCardIndex(), { interacted: userHasInteracted });
+    };
+
+    const scheduleScrollSettle = () => {
+      if (!diagnosticInView || document.hidden) return;
+
+      root.classList.add('is-scrolling');
+      clearScrollTimer();
+      scrollSettleTimer = window.setTimeout(settleScroll, 150);
+    };
+
+    const moveBy = (direction, options = {}) => {
+      const nextIndex = Math.max(0, Math.min(activeIndex + direction, cards.length - 1));
+      activate(nextIndex, {
+        interacted: true,
+        scroll: true,
+        focus: options.focus,
+      });
+    };
+
+    cards.forEach((card, index) => {
+      card.addEventListener('click', () => {
+        activate(index, { interacted: true, scroll: true });
+      });
+
+      card.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
           event.preventDefault();
-          moveTab(tab, 1);
+          moveBy(1, { focus: true });
         }
 
-        if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
           event.preventDefault();
-          moveTab(tab, -1);
+          moveBy(-1, { focus: true });
         }
 
         if (event.key === 'Home') {
           event.preventDefault();
-          activate(0, true);
+          activate(0, { interacted: true, scroll: true, focus: true });
         }
 
         if (event.key === 'End') {
           event.preventDefault();
-          activate(tabs.length - 1, true);
+          activate(cards.length - 1, { interacted: true, scroll: true, focus: true });
         }
       });
     });
 
-    accordionButtons.forEach((button, index) => {
-      button.addEventListener('click', () => {
-        activate(index, false);
-      });
-    });
+    prevButton?.addEventListener('click', () => moveBy(-1, { focus: true }));
+    nextButton?.addEventListener('click', () => moveBy(1, { focus: true }));
+
+    carousel.addEventListener('pointerdown', markInteracted, { passive: true });
+    carousel.addEventListener('touchstart', markInteracted, { passive: true });
+    carousel.addEventListener('wheel', markInteracted, { passive: true });
+    carousel.addEventListener('scroll', scheduleScrollSettle, { passive: true });
+
+    if ('onscrollend' in window) {
+      carousel.addEventListener('scrollend', settleScroll, { passive: true });
+    }
 
     const handleResize = () => {
-      scheduleLaserUpdate();
+      clearScrollTimer();
+      root.classList.remove('is-scrolling');
+      if (diagnosticInView) scrollCardIntoView(activeIndex);
     };
 
     window.addEventListener('resize', handleResize, { passive: true });
@@ -743,18 +1172,19 @@ const items = [
       rootMargin: '120px 0px',
       onEnter: () => {
         diagnosticInView = true;
-        if (pendingLaserUpdate) scheduleLaserUpdate();
       },
       onExit: () => {
         diagnosticInView = false;
-        pendingLaserUpdate = true;
-        cancelLaserFrame();
-        laser?.classList.remove('is-drawing');
+        clearScrollTimer();
+        root.classList.remove('is-scrolling');
       },
     });
 
+    activate(0, { forceAnimation: false });
+
     window.addEventListener('pagehide', () => {
-      cancelLaserFrame();
+      clearScrollTimer();
+      clearPanelTimer();
       window.removeEventListener('resize', handleResize);
       gate.destroy();
     }, { once: true });

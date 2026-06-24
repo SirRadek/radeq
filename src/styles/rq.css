@@ -2699,3 +2699,15 @@ body::after {
   bottom: 0 !important;
   background: linear-gradient(0deg, var(--rq-bg) 0%, rgba(247, 244, 238, 0) 100%) !important;
 }
+/* Hero proof-rail desktop override. Higher specificity keeps this scoped override stable in the existing cascade. */
+body .rq-hero .rq-display {
+  max-width: clamp(16ch, 30vw, 20ch);
+}
+
+body .rq-hero .rq-lead {
+  max-width: clamp(48ch, 40vw, 60ch);
+}
+
+/* RD4: removed leftover Gen-12 @media(min-width:1180px) 2-col hero (proof-rail
+   right) — owner wants the heading + content full-width with proof as a band
+   below at all widths, not a right-side column. */

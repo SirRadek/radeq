@@ -2639,8 +2639,8 @@ h2 + p {
   overflow: hidden;
   pointer-events: none;
   contain: layout paint style;
-  -webkit-mask-image: radial-gradient(ellipse at 82% 58%, rgba(0, 0, 0, .15) 0%, rgba(0, 0, 0, .13) 26%, rgba(0, 0, 0, .08) 48%, rgba(0, 0, 0, .035) 68%, rgba(0, 0, 0, .02) 100%);
-  mask-image: radial-gradient(ellipse at 82% 58%, rgba(0, 0, 0, .15) 0%, rgba(0, 0, 0, .13) 26%, rgba(0, 0, 0, .08) 48%, rgba(0, 0, 0, .035) 68%, rgba(0, 0, 0, .02) 100%);
+  -webkit-mask-image: radial-gradient(ellipse at 82% 58%, rgba(0, 0, 0, .48) 0%, rgba(0, 0, 0, .4) 26%, rgba(0, 0, 0, .24) 48%, rgba(0, 0, 0, .1) 68%, rgba(0, 0, 0, .04) 100%);
+  mask-image: radial-gradient(ellipse at 82% 58%, rgba(0, 0, 0, .48) 0%, rgba(0, 0, 0, .4) 26%, rgba(0, 0, 0, .24) 48%, rgba(0, 0, 0, .1) 68%, rgba(0, 0, 0, .04) 100%);
 }
 
 .rq-hero__ambient canvas {
@@ -2759,12 +2759,6 @@ h2 + p {
   }
 
   .rq-hero__visual {
-    display: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .rq-hero__ambient {
     display: none;
   }
 }

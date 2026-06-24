@@ -2847,7 +2847,9 @@ h2 + p {
   }
 
   .rq-hero__ambient {
-    display: none;
+    opacity: .9;
+    -webkit-mask-image: radial-gradient(ellipse at 92% 46%, rgba(0, 0, 0, .48) 0%, rgba(0, 0, 0, .4) 24%, rgba(0, 0, 0, .22) 48%, rgba(0, 0, 0, .08) 68%, rgba(0, 0, 0, .02) 100%);
+    mask-image: radial-gradient(ellipse at 92% 46%, rgba(0, 0, 0, .48) 0%, rgba(0, 0, 0, .4) 24%, rgba(0, 0, 0, .22) 48%, rgba(0, 0, 0, .08) 68%, rgba(0, 0, 0, .02) 100%);
   }
 
   .rq-hero__visual {

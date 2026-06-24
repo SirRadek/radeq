@@ -10,7 +10,7 @@ const sourcePath = process.argv[2] || 'C:/Users/sirok/Downloads/kocka_body_3d.ht
 const outputPath = resolve(__dirname, '../src/data/heroCatPoints.ts');
 const sourceStep = 4;
 const desktopTarget = 7000;
-const lowPowerTarget = 3000;
+const lowPowerTarget = 2400;
 
 const html = await readFile(sourcePath, 'utf8');
 const imgMatch = html.match(/const\s+IMG\s*=\s*"([^"]+)"/);
@@ -158,30 +158,24 @@ try {
       }
 
       function adjustColorForHero(r, g, b) {
-        const ink = [0.28, 0.18, 0.13];
         let rr = r / 255;
         let gg = g / 255;
         let bb = b / 255;
         const lum = luma(rr, gg, bb);
-        const saturation = 1.08;
+        const saturation = 1.04;
+        const contrast = 1.02;
 
         rr = clamp01(lum + (rr - lum) * saturation);
         gg = clamp01(lum + (gg - lum) * saturation);
         bb = clamp01(lum + (bb - lum) * saturation);
 
-        rr = Math.pow(rr, 1.08) * 0.92;
-        gg = Math.pow(gg, 1.08) * 0.9;
-        bb = Math.pow(bb, 1.08) * 0.88;
-
-        const postLum = luma(rr, gg, bb);
-        const warmMix = postLum > 0.52 ? Math.min(0.32, (postLum - 0.52) * 0.72) : 0;
-        rr = rr * (1 - warmMix) + ink[0] * warmMix;
-        gg = gg * (1 - warmMix) + ink[1] * warmMix;
-        bb = bb * (1 - warmMix) + ink[2] * warmMix;
+        rr = clamp01((rr - 0.5) * contrast + 0.5);
+        gg = clamp01((gg - 0.5) * contrast + 0.5);
+        bb = clamp01((bb - 0.5) * contrast + 0.5);
 
         const finalLum = luma(rr, gg, bb);
-        if (finalLum > 0.66) {
-          const factor = 0.66 / finalLum;
+        if (finalLum > 0.9) {
+          const factor = 0.9 / finalLum;
           rr *= factor;
           gg *= factor;
           bb *= factor;

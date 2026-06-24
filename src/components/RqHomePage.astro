@@ -84,9 +84,10 @@ const schema = {
       if (!mount || mount.getAttribute('data-rq-hero-three-ready') === 'true') return;
       mount.setAttribute('data-rq-hero-three-ready', 'true');
 
-      const MIN_WIDTH = 768;
+      const MOBILE_POINT_WIDTH = 768;
       const reducedMotionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
-      const desktopQuery = window.matchMedia?.(`(min-width: ${MIN_WIDTH}px)`);
+      const mobilePointQuery = window.matchMedia?.(`(max-width: ${MOBILE_POINT_WIDTH - 0.02}px)`);
+      const coarsePointerQuery = window.matchMedia?.('(pointer: coarse)');
       let gate = null;
       let ambient = null;
       let loading = false;
@@ -105,11 +106,16 @@ const schema = {
       }
 
       function canEnhance() {
-        return window.innerWidth >= MIN_WIDTH && canUseWebGL();
+        return canUseWebGL();
       }
 
       function isStaticMode() {
         return Boolean(reducedMotionQuery?.matches);
+      }
+
+      function isLowPowerMode() {
+        const mobileViewport = mobilePointQuery ? mobilePointQuery.matches : window.innerWidth < MOBILE_POINT_WIDTH;
+        return mobileViewport || Boolean(coarsePointerQuery?.matches) || (navigator.hardwareConcurrency || 8) <= 4;
       }
 
       function requestIdle(callback) {
@@ -126,7 +132,7 @@ const schema = {
           return;
         }
 
-        if (shouldRun && window.innerWidth >= MIN_WIDTH) {
+        if (shouldRun) {
           ensureAmbient();
         }
       }
@@ -135,13 +141,14 @@ const schema = {
         window.clearTimeout(resizeTimer);
         resizeTimer = window.setTimeout(() => {
           resizeTimer = 0;
-          if (window.innerWidth < MIN_WIDTH) {
-            ambient?.dispose();
-            ambient = null;
-            return;
-          }
 
-          if (ambient?.staticMode !== undefined && ambient.staticMode !== isStaticMode()) {
+          if (
+            ambient &&
+            (
+              ambient.staticMode !== isStaticMode() ||
+              ambient.lowPowerMode !== isLowPowerMode()
+            )
+          ) {
             ambient.dispose();
             ambient = null;
           }
@@ -156,10 +163,11 @@ const schema = {
       }
 
       async function ensureAmbient() {
-        if (!shouldRun || pageHidden || window.innerWidth < MIN_WIDTH) return;
+        if (!shouldRun || pageHidden) return;
         const staticMode = isStaticMode();
+        const lowPowerMode = isLowPowerMode();
         if (ambient) {
-          if (ambient.staticMode !== staticMode) {
+          if (ambient.staticMode !== staticMode || ambient.lowPowerMode !== lowPowerMode) {
             ambient.dispose();
             ambient = null;
           } else {
@@ -176,9 +184,12 @@ const schema = {
             import('../data/heroCatPoints'),
           ]);
 
-          if (!shouldRun || pageHidden || window.innerWidth < MIN_WIDTH) return;
+          if (!shouldRun || pageHidden) return;
 
-          ambient = createHeroAmbient(mount, three, catData, { staticMode: isStaticMode() });
+          ambient = createHeroAmbient(mount, three, catData, {
+            staticMode: isStaticMode(),
+            lowPowerMode: isLowPowerMode(),
+          });
           ambient.start();
         } catch {
           ambient?.dispose();
@@ -188,7 +199,7 @@ const schema = {
         }
       }
 
-      function createHeroAmbient(root, three, catData, { staticMode = false } = {}) {
+      function createHeroAmbient(root, three, catData, { staticMode = false, lowPowerMode = false } = {}) {
         const {
           NormalBlending,
           BufferAttribute,
@@ -221,7 +232,7 @@ const schema = {
         });
         const refDepth = 86;
         const dpr = () => Math.min(window.devicePixelRatio || 1, 1.5);
-        const lowPower = (navigator.hardwareConcurrency || 8) <= 4;
+        const lowPower = Boolean(lowPowerMode);
         const sourcePositions = decodeFloat32Base64(HERO_CAT_POINTS_BASE64);
         const sourceColors = decodeUint8Base64(HERO_CAT_COLORS_BASE64);
         const sourceOutline = decodeUint8Base64(HERO_CAT_OUTLINE_BASE64);
@@ -242,8 +253,14 @@ const schema = {
         const pointAlpha = new Float32Array(pointCount);
         const pointGeometry = new BufferGeometry();
         const hoverQuery = window.matchMedia?.('(hover: hover) and (pointer: fine)');
-        const scatterEnabled = !staticMode && Boolean(hoverQuery?.matches);
-        const pointer = { x: 0, y: 0, active: false };
+        const coarseQuery = window.matchMedia?.('(pointer: coarse)');
+        const touchCapable = (navigator.maxTouchPoints || 0) > 0 || 'ontouchstart' in window;
+        const scatterEnabled = !staticMode && (
+          Boolean(hoverQuery?.matches) ||
+          Boolean(coarseQuery?.matches) ||
+          touchCapable
+        );
+        const pointer = { x: 0, y: 0, active: false, coarse: false, id: null };
         const projection = new Vector3();
         let scatterSettled = true;
 
@@ -282,6 +299,9 @@ const schema = {
             uDpr: { value: dpr() },
             uRef: { value: refDepth },
             uSize: { value: lowPower ? 6.2 : 5.8 },
+            uSaturation: { value: 1.12 },
+            uContrast: { value: 1.07 },
+            uEdgeDarken: { value: 0.05 },
           },
           vertexShader: `
             attribute vec3 acolor;
@@ -308,6 +328,9 @@ const schema = {
           fragmentShader: `
             precision mediump float;
             uniform float uOpacity;
+            uniform float uSaturation;
+            uniform float uContrast;
+            uniform float uEdgeDarken;
             varying vec3 vColor;
             varying float vAlpha;
             varying float vOutline;
@@ -318,9 +341,13 @@ const schema = {
               float core = smoothstep(0.23, 0.02, d);
               float alpha = (circle * 0.74 + core * 0.26) * uOpacity * vAlpha * (1.0 + vOutline * 0.24);
               if (alpha < 0.006) discard;
-              vec3 outlineColor = vec3(0.23, 0.15, 0.11);
-              vec3 color = mix(vColor, outlineColor, vOutline * 0.22);
-              color = mix(color, vColor * 1.05, core * 0.12);
+              float lum = dot(vColor, vec3(0.2126, 0.7152, 0.0722));
+              vec3 adjusted = mix(vec3(lum), vColor, uSaturation);
+              adjusted = clamp((adjusted - 0.5) * uContrast + 0.5, 0.0, 1.0);
+              vec3 outlineColor = vec3(0.38, 0.23, 0.13);
+              vec3 color = mix(adjusted, outlineColor, vOutline * 0.1);
+              color *= 1.0 - vOutline * uEdgeDarken;
+              color = mix(color, adjusted * 1.04, core * 0.1);
               gl_FragColor = vec4(color, alpha);
             }
           `,
@@ -331,8 +358,14 @@ const schema = {
         cloud.add(points);
 
         if (scatterEnabled) {
+          window.addEventListener('pointerdown', handlePointerDown, { passive: true });
           window.addEventListener('pointermove', handlePointerMove, { passive: true });
+          window.addEventListener('pointerup', handlePointerEnd, { passive: true });
+          window.addEventListener('pointercancel', handlePointerEnd, { passive: true });
           window.addEventListener('pointerout', handlePointerOut, { passive: true });
+          window.addEventListener('touchmove', handleTouchMove, { passive: true });
+          window.addEventListener('touchend', handleTouchEnd, { passive: true });
+          window.addEventListener('touchcancel', handleTouchEnd, { passive: true });
           window.addEventListener('blur', deactivatePointer);
         }
 
@@ -417,15 +450,16 @@ const schema = {
         }
 
         function layoutCloud() {
+          const mobileViewport = width < 768;
           const compactDesktop = width < 1040;
           const scale = Math.min(
-            compactDesktop ? worldHeight * 0.86 : worldHeight * 1.04,
-            compactDesktop ? worldWidth * 0.66 : worldWidth * 0.52,
-            compactDesktop ? 66 : 82,
+            mobileViewport ? worldHeight * 0.68 : compactDesktop ? worldHeight * 0.86 : worldHeight * 1.04,
+            mobileViewport ? worldWidth * 0.76 : compactDesktop ? worldWidth * 0.66 : worldWidth * 0.52,
+            mobileViewport ? 48 : compactDesktop ? 66 : 82,
           );
 
-          cloudBaseX = worldWidth * (compactDesktop ? 0.34 : 0.3);
-          cloudBaseY = -worldHeight * (compactDesktop ? 0.01 : 0.04);
+          cloudBaseX = worldWidth * (mobileViewport ? 0.42 : compactDesktop ? 0.34 : 0.3);
+          cloudBaseY = -worldHeight * (mobileViewport ? 0.13 : compactDesktop ? 0.01 : 0.04);
 
           for (let index = 0; index < pointCount; index += 1) {
             const offset = index * 3;
@@ -460,18 +494,42 @@ const schema = {
           cloud.rotation.z = Math.sin(time * 0.07) * 0.012;
         }
 
-        function handlePointerMove(event) {
-          if (!scatterEnabled || event.pointerType === 'touch') return;
+        function updatePointer(clientX, clientY, coarse, pointerId = null) {
           const rect = root.getBoundingClientRect();
-          pointer.x = event.clientX;
-          pointer.y = event.clientY;
+          pointer.x = clientX;
+          pointer.y = clientY;
+          pointer.coarse = Boolean(coarse);
+          pointer.id = pointerId;
           pointer.active = (
-            event.clientX >= rect.left &&
-            event.clientX <= rect.right &&
-            event.clientY >= rect.top &&
-            event.clientY <= rect.bottom
+            clientX >= rect.left &&
+            clientX <= rect.right &&
+            clientY >= rect.top &&
+            clientY <= rect.bottom
           );
           scatterSettled = false;
+        }
+
+        function updatePointerFromEvent(event) {
+          const coarse = event.pointerType !== 'mouse' || Boolean(coarseQuery?.matches);
+          const pointerId = event.pointerType === 'mouse' ? null : event.pointerId;
+          updatePointer(event.clientX, event.clientY, coarse, pointerId);
+        }
+
+        function handlePointerDown(event) {
+          if (!scatterEnabled) return;
+          updatePointerFromEvent(event);
+        }
+
+        function handlePointerMove(event) {
+          if (!scatterEnabled) return;
+          if (pointer.id !== null && event.pointerType !== 'mouse' && event.pointerId !== pointer.id) return;
+          updatePointerFromEvent(event);
+        }
+
+        function handlePointerEnd(event) {
+          if (!scatterEnabled) return;
+          if (pointer.id !== null && event.pointerId !== pointer.id) return;
+          deactivatePointer();
         }
 
         function handlePointerOut(event) {
@@ -479,9 +537,26 @@ const schema = {
           deactivatePointer();
         }
 
+        function handleTouchMove(event) {
+          if (!scatterEnabled || !event.touches.length) return;
+          const touch = event.touches[0];
+          updatePointer(touch.clientX, touch.clientY, true, pointer.id);
+        }
+
+        function handleTouchEnd(event) {
+          if (!scatterEnabled) return;
+          if (event.touches.length) {
+            const touch = event.touches[0];
+            updatePointer(touch.clientX, touch.clientY, true, pointer.id);
+            return;
+          }
+          deactivatePointer();
+        }
+
         function deactivatePointer() {
           if (!scatterEnabled) return;
           pointer.active = false;
+          pointer.id = null;
           scatterSettled = false;
         }
 
@@ -494,18 +569,20 @@ const schema = {
           if (!scatterEnabled || scatterSettled) return;
 
           const rect = root.getBoundingClientRect();
+          const touchScatter = pointer.coarse;
+          const radius = touchScatter ? (width < 768 ? 196 : 180) : (width < 1040 ? 124 : 148);
+          const activeMargin = touchScatter ? Math.min(72, radius * 0.35) : 4;
           const active = pointer.active &&
-            pointer.x >= rect.left - 4 &&
-            pointer.x <= rect.right + 4 &&
-            pointer.y >= rect.top - 4 &&
-            pointer.y <= rect.bottom + 4;
+            pointer.x >= rect.left - activeMargin &&
+            pointer.x <= rect.right + activeMargin &&
+            pointer.y >= rect.top - activeMargin &&
+            pointer.y <= rect.bottom + activeMargin;
           if (!active) pointer.active = false;
 
-          const radius = width < 1040 ? 124 : 148;
           const radiusSq = radius * radius;
-          const maxPushPx = lowPower ? 44 : 58;
+          const maxPushPx = touchScatter ? (lowPower ? 58 : 70) : (lowPower ? 44 : 58);
           const unitPerPx = worldHeight / Math.max(height, 1);
-          const lerp = active ? 0.16 : 0.085;
+          const lerp = active ? (touchScatter ? 0.18 : 0.16) : 0.085;
           let maxDelta = 0;
 
           if (active) {
@@ -627,15 +704,21 @@ const schema = {
           renderer.dispose();
           renderer.domElement.remove();
           if (scatterEnabled) {
+            window.removeEventListener('pointerdown', handlePointerDown);
             window.removeEventListener('pointermove', handlePointerMove);
+            window.removeEventListener('pointerup', handlePointerEnd);
+            window.removeEventListener('pointercancel', handlePointerEnd);
             window.removeEventListener('pointerout', handlePointerOut);
+            window.removeEventListener('touchmove', handleTouchMove);
+            window.removeEventListener('touchend', handleTouchEnd);
+            window.removeEventListener('touchcancel', handleTouchEnd);
             window.removeEventListener('blur', deactivatePointer);
           }
         }
 
         resize();
 
-        return { start, stop, resize, dispose, staticMode };
+        return { start, stop, resize, dispose, staticMode, lowPowerMode: lowPower };
       }
 
       function startGate() {
@@ -654,7 +737,8 @@ const schema = {
         });
         window.addEventListener('resize', scheduleResize, { passive: true });
         reducedMotionQuery?.addEventListener?.('change', scheduleResize);
-        desktopQuery?.addEventListener?.('change', scheduleResize);
+        mobilePointQuery?.addEventListener?.('change', scheduleResize);
+        coarsePointerQuery?.addEventListener?.('change', scheduleResize);
       }
 
       function cleanup() {
@@ -666,7 +750,8 @@ const schema = {
         window.removeEventListener('resize', scheduleResize);
         document.removeEventListener('visibilitychange', handleVisibilityChange);
         reducedMotionQuery?.removeEventListener?.('change', scheduleResize);
-        desktopQuery?.removeEventListener?.('change', scheduleResize);
+        mobilePointQuery?.removeEventListener?.('change', scheduleResize);
+        coarsePointerQuery?.removeEventListener?.('change', scheduleResize);
       }
 
       document.addEventListener('visibilitychange', handleVisibilityChange);

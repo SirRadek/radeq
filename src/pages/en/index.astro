@@ -1,73 +1,18 @@
 ---
-import CommandHeader from '../../components/CommandHeader.astro';
-import ContactTerminal from '../../components/ContactTerminal';
-import HandoffStandard from '../../components/HandoffStandard.astro';
-import HeroSection from '../../components/HeroSection.astro';
-import PricingSection from '../../components/PricingSection.astro';
-import ServiceCatalog from '../../components/ServiceCatalog.astro';
-import { siteContent } from '../../data/siteContent';
-import LegacyLayout from '../../layouts/LegacyLayout.astro';
+import RqHomePage from '../../components/RqHomePage.astro';
+import { homeContent } from '../../data/home';
+import RqLayout from '../../layouts/RqLayout.astro';
 
-const content = siteContent.en;
+const content = homeContent.en;
 ---
 
-<LegacyLayout
-  title={content.layout.title}
-  description={content.layout.description}
-  lang={content.layout.lang}
-  alternatePath={content.layout.alternatePath}
+<RqLayout
+  title={content.seo.title}
+  description={content.seo.description}
+  lang="en"
+  canonicalPath={content.seo.canonicalPath}
+  alternatePath={content.seo.alternatePath}
   alternateLang="cs"
 >
-  <CommandHeader
-    content={content.header}
-    alternatePath={content.layout.alternatePath}
-    alternateLabel={content.layout.alternateLabel}
-    locale={content.layout.lang}
-    showStyleToggle={false}
-  />
-  <main>
-    <div class="proposal-stage" id="services">
-      <HeroSection content={content.hero} />
-      <ServiceCatalog locale={content.layout.lang} content={content.systems} />
-    </div>
-    <PricingSection content={content.pricing} />
-    <section class="about-services" id="about" aria-labelledby="about-title" data-section-signature="about-services">
-      <div class="about-services__intro">
-        <p class="section-code">{content.about.sectionCode}</p>
-        <h2 id="about-title">{content.about.title}</h2>
-        <p>{content.about.lead}</p>
-      </div>
-      <div class="about-services__profile">
-        <p class="section-code">{content.about.profileTitle}</p>
-        <p>{content.about.profileText}</p>
-        <dl>
-          {
-            content.about.principles.map((principle) => (
-              <div>
-                <dt>{principle.label}</dt>
-                <dd>{principle.value}</dd>
-              </div>
-            ))
-          }
-        </dl>
-      </div>
-      <div class="about-services__services">
-        <p class="section-code">{content.about.servicesTitle}</p>
-      </div>
-      <div class="about-services__grid" aria-label={content.about.servicesTitle}>
-        {
-          content.about.items.map((item) => (
-            <article>
-              <span>{item.label}</span>
-              <h3>{item.title}</h3>
-              <p>{item.text}</p>
-            </article>
-          ))
-        }
-      </div>
-      <p class="about-services__note">{content.about.note}</p>
-    </section>
-    <HandoffStandard content={content.handoff} />
-    <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load />
-  </main>
-</LegacyLayout>
+  <RqHomePage content={content} lang="en" />
+</RqLayout>

@@ -1,116 +1,15 @@
 ---
-const items = [
-  {
-    id: 'web-poptavky',
-    role: 'lead',
-    severity: 5,
-    hook: 'Návštěvník přijde, rozhlédne se a odejde bez jasné cesty ke kontaktu.',
-    symptom: 'Web nevede k poptávce',
-    problem: 'Web jen existuje, ale návštěvník nedojde ke kontaktu.',
-    cause: 'Nejasná nabídka a slabé výzvy k akci; návštěvník neví, co má udělat.',
-    verify: 'cestu od příchodu ke kontaktu, srozumitelnost nabídky a jestli se vůbec měří.',
-    step: 'krátký audit a úprava struktury + jasné CTA.',
-    service: 'Web a redesign / Audit',
-    serviceId: 'web',
-  },
-  {
-    id: 'nejasny-krok',
-    role: 'lead',
-    severity: 5,
-    hook: 'Dobrá služba zůstane bez odezvy, když další krok není vidět na první pohled.',
-    symptom: 'Nabídka / další krok není jasný',
-    problem: 'Zákazník nerozumí nabídce nebo neví, kam pokračovat.',
-    cause: 'Nejasná nabídka a slabé výzvy k akci; návštěvník neví, co má udělat.',
-    verify: 'srozumitelnost nabídky, text výzvy k akci a cestu k formuláři nebo telefonu.',
-    step: 'upravit strukturu stránky tak, aby další krok byl zřejmý bez vysvětlování.',
-    service: 'Web a redesign / Audit',
-    serviceId: 'web',
-  },
-  {
-    id: 'poptavky-email',
-    role: 'support',
-    severity: 4,
-    hook: 'Každá zpráva má vlastní dějovou linku a nikdo nevidí, v jaké je scéně.',
-    symptom: 'Poptávky se ztrácí v e-mailech',
-    problem: 'Poptávky přijdou, ale další krok se řeší ručně a bez jasného stavu.',
-    cause: 'nepropojené nástroje - maily, tabulky, formuláře.',
-    verify: 'kde vzniká ruční práce a kolik času bere.',
-    step: 'navrhnout nejmenší automatizaci jednoho toku.',
-    service: 'Automatizace procesů',
-    serviceId: 'automation',
-  },
-  {
-    id: 'rucni-data',
-    role: 'support',
-    severity: 4,
-    hook: 'Stejná data hrají ve více systémech a pokaždé je někdo přepisuje znovu.',
-    symptom: 'Data/úkoly přepisujete ručně',
-    problem: 'Data přepisujete mezi tabulkami pořád dokola.',
-    cause: 'nepropojené nástroje - maily, tabulky, formuláře.',
-    verify: 'kde vzniká ruční práce a kolik času bere.',
-    step: 'navrhnout nejmenší automatizaci jednoho toku.',
-    service: 'Automatizace procesů',
-    serviceId: 'automation',
-  },
-  {
-    id: 'fakturace-papiry',
-    role: 'support',
-    severity: 5,
-    hook: 'Přes den děláte práci pro klienty, večer doháníte administrativu.',
-    symptom: 'Fakturace a papírování po večerech',
-    problem: 'Doklady, podklady a opakované administrativní kroky se vrací ve chvíli, kdy už má být hotovo.',
-    cause: 'proces není poskládaný do jednoduchého toku a část informací se dohledává až při fakturaci.',
-    verify: 'jak vzniká zakázka, kde se berou podklady pro fakturu a které kroky se opakují ručně.',
-    step: 'srovnat postup od poptávky po doklad a navrhnout malé zjednodušení bez výměny celého systému.',
-    service: 'Automatizace procesů / Audit',
-    serviceId: 'automation',
-  },
-  {
-    id: 'zacatek-ai',
-    role: 'support',
-    severity: 4,
-    hook: 'Trailerů je hodně, ale chybí scénář, kde AI opravdu pomůže vašemu provozu.',
-    symptom: 'Nevím, kde začít / kde dává smysl AI',
-    problem: 'Máte víc možností než jistoty a nechcete začít drahým nástrojem naslepo.',
-    cause: 'moc možností a žádná priorita.',
-    verify: 'současný stav, opakovanou práci a podklady, nad kterými by AI případně dávala smysl.',
-    step: 'krátký audit, který dá jasné pořadí kroků a oddělí užitečné nápady od slepých uliček.',
-    service: 'Audit / Data a AI pomocníci',
-    serviceId: 'audit',
-  },
-  {
-    id: 'mereni-prehled',
-    role: 'support',
-    severity: 3,
-    hook: 'Bez přehledu se špatně pozná, která scéna vydělává a která jen zabírá čas.',
-    symptom: 'Chybí měření a přehled',
-    problem: 'Nevíte, co na webu nebo v procesu měřit.',
-    cause: 'chybí jednoduché měření cílů (poptávka, telefon).',
-    verify: 'co je vlastně cíl a jestli se dnes sleduje.',
-    step: 'nastavit přehledné měření bez přehnané analytiky.',
-    service: 'Data a AI / Audit',
-    serviceId: 'data',
-  },
-  {
-    id: 'planovani-schuzek',
-    role: 'support',
-    severity: 3,
-    hook: 'Domluva termínu zabere víc záběrů než samotná schůzka.',
-    symptom: 'Utopený čas v plánování schůzek',
-    problem: 'Termíny, potvrzení a změny se řeší ručně přes několik zpráv.',
-    cause: 'chybí jednoduchý rezervační nebo potvrzovací postup a odpovědnost zůstává v e-mailu nebo telefonu.',
-    verify: 'kde se domlouvají termíny, jak se potvrzují změny a které informace se opakovaně posílají ručně.',
-    step: 'navrhnout jednoduchý postup pro výběr termínu, potvrzení a předání základních informací.',
-    service: 'Automatizace procesů',
-    serviceId: 'automation',
-  },
-];
+import { homeContent, type HomeContent } from '../data/home';
+import type { Locale } from '../data/locales';
 
-const roleLabels: Record<string, string> = {
-  lead: 'V HLAVNÍ ROLI',
-  support: 'DÁLE HRAJÍ',
-};
+interface Props {
+  content?: HomeContent['problems'];
+  lang?: Locale;
+}
 
+const { content = homeContent.cs.problems } = Astro.props;
+const items = content.items;
+const roleLabels = content.roleLabels;
 const stars = Array.from({ length: 5 });
 ---
 
@@ -119,25 +18,25 @@ const stars = Array.from({ length: 5 });
   <div class="rq-problem-diagnostic__inner">
     <header class="rq-problem-diagnostic__head" data-rq-reveal>
       <div class="rq-problem-diagnostic__copy">
-        <p class="rq-eyebrow">Co řeším</p>
-        <h2 class="rq-h2 rq-h2--feature rq-problem-diagnostic__title" id="rq-problem-diagnostic-title">Poznáváte některý z těchto problémů?</h2>
-        <p class="rq-problem-diagnostic__lead">Vyberte signál, který sedí nejvíc. Ukážu pravděpodobnou příčinu, co ověřím a první rozumný krok bez zbytečné omáčky.</p>
+        <p class="rq-eyebrow">{content.eyebrow}</p>
+        <h2 class="rq-h2 rq-h2--feature rq-problem-diagnostic__title" id="rq-problem-diagnostic-title">{content.title}</h2>
+        <p class="rq-problem-diagnostic__lead">{content.lead}</p>
       </div>
-      <p class="rq-problem-diagnostic__badge">{items.length} typických signálů</p>
+      <p class="rq-problem-diagnostic__badge">{content.badgeText}</p>
     </header>
 
     <div class="rq-problem-diagnostic__shell" data-rq-reveal>
       <div class="rq-problem-diagnostic__meta-row">
         <p class="rq-problem-diagnostic__severity-legend" id="rq-problem-severity-legend">
-          <strong>Index závažnosti</strong> ukazuje dopad problému na chod firmy. Hvězdy nejsou hodnocení služby.
+          <strong>{content.severityLegend.strong}</strong> {content.severityLegend.text}
         </p>
-        <div class="rq-problem-diagnostic__controls" aria-label="Posun karuselu">
-          <button class="rq-problem-diagnostic__nav" type="button" aria-label="Předchozí problém" data-rq-problem-prev disabled>
+        <div class="rq-problem-diagnostic__controls" aria-label={content.controlsAriaLabel}>
+          <button class="rq-problem-diagnostic__nav" type="button" aria-label={content.previousLabel} data-rq-problem-prev disabled>
             <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
               <path d="M15 5 8 12l7 7"></path>
             </svg>
           </button>
-          <button class="rq-problem-diagnostic__nav" type="button" aria-label="Další problém" data-rq-problem-next>
+          <button class="rq-problem-diagnostic__nav" type="button" aria-label={content.nextLabel} data-rq-problem-next>
             <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
               <path d="m9 5 7 7-7 7"></path>
             </svg>
@@ -146,7 +45,7 @@ const stars = Array.from({ length: 5 });
       </div>
 
       <div class="rq-problem-diagnostic__carousel-scene" data-rq-problem-carousel aria-describedby="rq-problem-severity-legend">
-        <ul class="rq-problem-diagnostic__filmstrip" role="list" aria-label="Typické problémy">
+        <ul class="rq-problem-diagnostic__filmstrip" role="list" aria-label={content.carouselAriaLabel}>
           {items.map((item, index) => (
             <li class:list={['rq-problem-diagnostic__frame', item.role === 'lead' && 'rq-problem-diagnostic__frame--lead']}>
               <button
@@ -168,7 +67,7 @@ const stars = Array.from({ length: 5 });
                   <span class="rq-problem-diagnostic__poster-title">{item.symptom}</span>
                   <span class="rq-problem-diagnostic__hook">{item.hook}</span>
                   <span class="rq-problem-diagnostic__severity">
-                    <span class="rq-sr-only">Index závažnosti: {item.severity} z 5.</span>
+                    <span class="rq-sr-only">{content.severitySrPrefix} {item.severity} {content.severitySrSuffix}</span>
                     <span class="rq-problem-diagnostic__stars" aria-hidden="true">
                       {stars.map((_, starIndex) => (
                         <span class:list={['rq-problem-diagnostic__star', starIndex < item.severity && 'is-active']}>★</span>
@@ -182,7 +81,7 @@ const stars = Array.from({ length: 5 });
         </ul>
       </div>
 
-      <p class="rq-problem-diagnostic__tagline" id="rq-problem-carousel-tagline">Režírujte svůj byznys sami. Nabízíme víc než průměrný servis.</p>
+      <p class="rq-problem-diagnostic__tagline" id="rq-problem-carousel-tagline">{content.tagline}</p>
 
       <div class="rq-problem-diagnostic__output" aria-live="off" data-rq-problem-output>
         {items.map((item, index) => (
@@ -202,31 +101,31 @@ const stars = Array.from({ length: 5 });
             data-rq-problem-mini-step={item.step}
           >
             <div class="rq-problem-diagnostic__panel-top">
-              <span class="rq-problem-diagnostic__solution-label">Návrh řešení</span>
+              <span class="rq-problem-diagnostic__solution-label">{content.solutionLabel}</span>
               <span class="rq-problem-diagnostic__count">{String(index + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}</span>
             </div>
             <h3>{item.symptom}</h3>
             <dl class="rq-problem-diagnostic__findings">
               <div>
-                <dt>Problém</dt>
+                <dt>{content.findingLabels.problem}</dt>
                 <dd>{item.problem}</dd>
               </div>
               <div>
-                <dt>Pravděpodobná příčina</dt>
+                <dt>{content.findingLabels.cause}</dt>
                 <dd>{item.cause}</dd>
               </div>
               <div>
-                <dt>Co ověřím</dt>
+                <dt>{content.findingLabels.verify}</dt>
                 <dd>{item.verify}</dd>
               </div>
               <div>
-                <dt>První krok</dt>
+                <dt>{content.findingLabels.step}</dt>
                 <dd>{item.step}</dd>
               </div>
             </dl>
             <div class="rq-problem-diagnostic__actions">
-              <a class="rq-btn rq-btn--primary" href="#kontakt">Napsat poptávku</a>
-              <a class="rq-problem-diagnostic__service" href={`#service-${item.serviceId}`} data-rq-service-target={item.serviceId}>Typicky souvisí: <strong>{item.service}</strong></a>
+              <a class="rq-btn rq-btn--primary" href="#kontakt">{content.ctaLabel}</a>
+              <a class="rq-problem-diagnostic__service" href={`#service-${item.serviceId}`} data-rq-service-target={item.serviceId}>{content.servicePrefix} <strong>{item.service}</strong></a>
             </div>
           </article>
         ))}

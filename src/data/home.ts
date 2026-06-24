@@ -1,0 +1,1411 @@
+import type { Locale } from './locales';
+
+export type HomeNavItem = {
+  href: string;
+  label: string;
+};
+
+export type HomeContent = {
+  seo: {
+    title: string;
+    description: string;
+    canonicalPath: string;
+    alternatePath: string;
+    alternateLabel: string;
+  };
+  nav: {
+    ariaLabel: string;
+    navAriaLabel: string;
+    brandAriaLabel: string;
+    homeHref: string;
+    items: readonly HomeNavItem[];
+  };
+  hero: {
+    eyebrow: string;
+    title: string;
+    typewriter: {
+      prefix: string;
+      words: readonly string[];
+      sizerWord: string;
+      initialWord: string;
+      liveText: string;
+    };
+    lead: string;
+    journeyNote: string;
+    proofAriaLabel: string;
+    proofItems: readonly {
+      label: string;
+      text: string;
+    }[];
+    actions: {
+      primary: HomeNavItem;
+      secondary: HomeNavItem;
+      micro: string;
+    };
+  };
+  problems: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    badgeText: string;
+    severityLegend: {
+      strong: string;
+      text: string;
+    };
+    controlsAriaLabel: string;
+    previousLabel: string;
+    nextLabel: string;
+    carouselAriaLabel: string;
+    severitySrPrefix: string;
+    severitySrSuffix: string;
+    tagline: string;
+    roleLabels: Record<string, string>;
+    solutionLabel: string;
+    findingLabels: {
+      problem: string;
+      cause: string;
+      verify: string;
+      step: string;
+    };
+    ctaLabel: string;
+    servicePrefix: string;
+    items: readonly {
+      id: string;
+      role: 'lead' | 'support';
+      severity: number;
+      hook: string;
+      symptom: string;
+      problem: string;
+      cause: string;
+      verify: string;
+      step: string;
+      service: string;
+      serviceId: string;
+    }[];
+  };
+  marquee: {
+    ariaLabel: string;
+    items: readonly string[];
+  };
+  services: {
+    eyebrow: string;
+    title: string;
+    ariaLabel: string;
+    ctaLabel: string;
+    liveFallback: string;
+    livePrefix: string;
+    items: readonly {
+      id: string;
+      slot: string;
+      className?: string;
+      featured?: boolean;
+      flag?: string;
+      price: string;
+      title: string;
+      result: string;
+      outputs: readonly string[];
+    }[];
+  };
+  journey: {
+    eyebrow: string;
+    title: string;
+    timelineText: string;
+    timelineNote: string;
+    startCap: string;
+    endCap: string;
+    tablistAriaLabel: string;
+    preview: {
+      start: {
+        eyebrow: string;
+        title: string;
+        problemLabel: string;
+        problem: string;
+        stepLabel: string;
+        step: string;
+        ctaLabel: string;
+      };
+      end: {
+        badge: string;
+        kicker: string;
+        title: string;
+        text: string;
+        ctaLabel: string;
+      };
+    };
+    panelLabels: {
+      solve: string;
+      duration: string;
+      process: string;
+      benefit: string;
+      tagListAriaPrefix: string;
+    };
+    phases: readonly {
+      id: string;
+      number: string;
+      title: string;
+      duration: string;
+      solve: string;
+      process: string;
+      benefit: string;
+      tags: readonly {
+        label: string;
+        value: string;
+        strong?: boolean;
+      }[];
+      final?: boolean;
+    }[];
+    trustAriaLabel: string;
+    trustPoints: readonly string[];
+  };
+  guarantee: {
+    eyebrow: string;
+    title: string;
+    text: string;
+  };
+  pricing: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    ariaLabel: string;
+    note: string;
+    items: readonly {
+      title: string;
+      price: string;
+      suffix?: string;
+      text: string;
+      ctaLabel: string;
+      featured?: boolean;
+      badge?: string;
+    }[];
+  };
+  showcase: {
+    eyebrow: string;
+    title: string;
+    items: readonly {
+      href: string;
+      className: string;
+      badge: string;
+      kicker: string;
+      title: string;
+      text: string;
+      linkLabel: string;
+    }[];
+  };
+  contact: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    fields: {
+      name: string;
+      email: string;
+      projectType: string;
+      message: string;
+      budget: string;
+      deadline: string;
+      deadlinePlaceholder: string;
+      honeypot: string;
+    };
+    projectOptions: readonly {
+      label: string;
+      value: string;
+    }[];
+    budgetOptions: readonly {
+      label: string;
+      value: string;
+    }[];
+    optionalSummary: string;
+    submitLabel: string;
+    notePrefix: string;
+    noteEmail: string;
+    status: {
+      sending: string;
+      success: string;
+      failureHtml: string;
+    };
+  };
+  footer: {
+    tagline: string;
+    navTitle: string;
+    navAriaLabel: string;
+    connectionTitle: string;
+    connectionLinks: readonly HomeNavItem[];
+    legal: string;
+    contactEmail: string;
+  };
+  guide: {
+    toggleLabel: string;
+    eyebrow: string;
+    title: string;
+    closeLabel: string;
+    intro: string;
+    quickActionsAriaLabel: string;
+    initialMessage: string;
+    inputLabel: string;
+    inputPlaceholder: string;
+    sendLabel: string;
+    topics: Record<string, {
+      chipLabel?: string;
+      text: string;
+      href: string;
+      label: string;
+      followups?: readonly {
+        key: string;
+        label: string;
+      }[];
+    }>;
+    fallback: {
+      text: string;
+      href: string;
+      label: string;
+    };
+    matchers: Record<string, readonly string[]>;
+  };
+  schema: {
+    description: string;
+    url: string;
+    areaServed: string;
+    founderName: string;
+    addressLocality: string;
+    addressCountry: string;
+    knowsAbout: readonly string[];
+  };
+};
+
+const csProblems: HomeContent['problems']['items'] = [
+  {
+    id: 'web-poptavky',
+    role: 'lead',
+    severity: 5,
+    hook: 'Návštěvník přijde, rozhlédne se a odejde bez jasné cesty ke kontaktu.',
+    symptom: 'Web nevede k poptávce',
+    problem: 'Web jen existuje, ale návštěvník nedojde ke kontaktu.',
+    cause: 'Nejasná nabídka a slabé výzvy k akci; návštěvník neví, co má udělat.',
+    verify: 'cestu od příchodu ke kontaktu, srozumitelnost nabídky a jestli se vůbec měří.',
+    step: 'krátký audit a úprava struktury + jasné CTA.',
+    service: 'Web a redesign / Audit',
+    serviceId: 'web',
+  },
+  {
+    id: 'nejasny-krok',
+    role: 'lead',
+    severity: 5,
+    hook: 'Dobrá služba zůstane bez odezvy, když další krok není vidět na první pohled.',
+    symptom: 'Nabídka / další krok není jasný',
+    problem: 'Zákazník nerozumí nabídce nebo neví, kam pokračovat.',
+    cause: 'Nejasná nabídka a slabé výzvy k akci; návštěvník neví, co má udělat.',
+    verify: 'srozumitelnost nabídky, text výzvy k akci a cestu k formuláři nebo telefonu.',
+    step: 'upravit strukturu stránky tak, aby další krok byl zřejmý bez vysvětlování.',
+    service: 'Web a redesign / Audit',
+    serviceId: 'web',
+  },
+  {
+    id: 'poptavky-email',
+    role: 'support',
+    severity: 4,
+    hook: 'Každá zpráva má vlastní dějovou linku a nikdo nevidí, v jaké je scéně.',
+    symptom: 'Poptávky se ztrácí v e-mailech',
+    problem: 'Poptávky přijdou, ale další krok se řeší ručně a bez jasného stavu.',
+    cause: 'nepropojené nástroje - maily, tabulky, formuláře.',
+    verify: 'kde vzniká ruční práce a kolik času bere.',
+    step: 'navrhnout nejmenší automatizaci jednoho toku.',
+    service: 'Automatizace procesů',
+    serviceId: 'automation',
+  },
+  {
+    id: 'rucni-data',
+    role: 'support',
+    severity: 4,
+    hook: 'Stejná data hrají ve více systémech a pokaždé je někdo přepisuje znovu.',
+    symptom: 'Data/úkoly přepisujete ručně',
+    problem: 'Data přepisujete mezi tabulkami pořád dokola.',
+    cause: 'nepropojené nástroje - maily, tabulky, formuláře.',
+    verify: 'kde vzniká ruční práce a kolik času bere.',
+    step: 'navrhnout nejmenší automatizaci jednoho toku.',
+    service: 'Automatizace procesů',
+    serviceId: 'automation',
+  },
+  {
+    id: 'fakturace-papiry',
+    role: 'support',
+    severity: 5,
+    hook: 'Přes den děláte práci pro klienty, večer doháníte administrativu.',
+    symptom: 'Fakturace a papírování po večerech',
+    problem: 'Doklady, podklady a opakované administrativní kroky se vrací ve chvíli, kdy už má být hotovo.',
+    cause: 'proces není poskládaný do jednoduchého toku a část informací se dohledává až při fakturaci.',
+    verify: 'jak vzniká zakázka, kde se berou podklady pro fakturu a které kroky se opakují ručně.',
+    step: 'srovnat postup od poptávky po doklad a navrhnout malé zjednodušení bez výměny celého systému.',
+    service: 'Automatizace procesů / Audit',
+    serviceId: 'automation',
+  },
+  {
+    id: 'zacatek-ai',
+    role: 'support',
+    severity: 4,
+    hook: 'Trailerů je hodně, ale chybí scénář, kde AI opravdu pomůže vašemu provozu.',
+    symptom: 'Nevím, kde začít / kde dává smysl AI',
+    problem: 'Máte víc možností než jistoty a nechcete začít drahým nástrojem naslepo.',
+    cause: 'moc možností a žádná priorita.',
+    verify: 'současný stav, opakovanou práci a podklady, nad kterými by AI případně dávala smysl.',
+    step: 'krátký audit, který dá jasné pořadí kroků a oddělí užitečné nápady od slepých uliček.',
+    service: 'Audit / Data a AI pomocníci',
+    serviceId: 'audit',
+  },
+  {
+    id: 'mereni-prehled',
+    role: 'support',
+    severity: 3,
+    hook: 'Bez přehledu se špatně pozná, která scéna vydělává a která jen zabírá čas.',
+    symptom: 'Chybí měření a přehled',
+    problem: 'Nevíte, co na webu nebo v procesu měřit.',
+    cause: 'chybí jednoduché měření cílů (poptávka, telefon).',
+    verify: 'co je vlastně cíl a jestli se dnes sleduje.',
+    step: 'nastavit přehledné měření bez přehnané analytiky.',
+    service: 'Data a AI / Audit',
+    serviceId: 'data',
+  },
+  {
+    id: 'planovani-schuzek',
+    role: 'support',
+    severity: 3,
+    hook: 'Domluva termínu zabere víc záběrů než samotná schůzka.',
+    symptom: 'Utopený čas v plánování schůzek',
+    problem: 'Termíny, potvrzení a změny se řeší ručně přes několik zpráv.',
+    cause: 'chybí jednoduchý rezervační nebo potvrzovací postup a odpovědnost zůstává v e-mailu nebo telefonu.',
+    verify: 'kde se domlouvají termíny, jak se potvrzují změny a které informace se opakovaně posílají ručně.',
+    step: 'navrhnout jednoduchý postup pro výběr termínu, potvrzení a předání základních informací.',
+    service: 'Automatizace procesů',
+    serviceId: 'automation',
+  },
+];
+
+const enProblems: HomeContent['problems']['items'] = [
+  {
+    id: 'web-poptavky',
+    role: 'lead',
+    severity: 5,
+    hook: 'Visitors arrive, look around, and leave without a clear route to contact.',
+    symptom: 'The website does not create enquiries',
+    problem: 'The website exists, but visitors do not reach the contact step.',
+    cause: 'The offer is unclear and the calls to action are weak; visitors do not know what to do next.',
+    verify: 'the path from arrival to contact, clarity of the offer, and whether the key steps are measured at all.',
+    step: 'a short audit, structure cleanup, and clear calls to action.',
+    service: 'Website and redesign / Audit',
+    serviceId: 'web',
+  },
+  {
+    id: 'nejasny-krok',
+    role: 'lead',
+    severity: 5,
+    hook: 'A good service gets no response when the next step is not visible at first glance.',
+    symptom: 'The offer / next step is not clear',
+    problem: 'Customers do not understand the offer or do not know where to continue.',
+    cause: 'The offer is unclear and the calls to action are weak; visitors do not know what to do next.',
+    verify: 'offer clarity, call-to-action wording, and the route to the form or phone.',
+    step: 'adjust the page structure so the next step is obvious without explanation.',
+    service: 'Website and redesign / Audit',
+    serviceId: 'web',
+  },
+  {
+    id: 'poptavky-email',
+    role: 'support',
+    severity: 4,
+    hook: 'Every message has its own plotline and nobody can see which scene it is in.',
+    symptom: 'Enquiries get lost in email',
+    problem: 'Enquiries arrive, but the next step is handled manually and without a clear status.',
+    cause: 'disconnected tools - email, sheets, and forms.',
+    verify: 'where manual work appears and how much time it takes.',
+    step: 'design the smallest useful automation for one flow.',
+    service: 'Process automation',
+    serviceId: 'automation',
+  },
+  {
+    id: 'rucni-data',
+    role: 'support',
+    severity: 4,
+    hook: 'The same data appears in several systems and someone retypes it every time.',
+    symptom: 'You retype data/tasks manually',
+    problem: 'You keep moving data between spreadsheets by hand.',
+    cause: 'disconnected tools - email, sheets, and forms.',
+    verify: 'where manual work appears and how much time it takes.',
+    step: 'design the smallest useful automation for one flow.',
+    service: 'Process automation',
+    serviceId: 'automation',
+  },
+  {
+    id: 'fakturace-papiry',
+    role: 'support',
+    severity: 5,
+    hook: 'You do client work during the day and catch up with admin in the evening.',
+    symptom: 'Invoicing and paperwork take evenings',
+    problem: 'Documents, source material, and repeated admin steps come back when the work should already be done.',
+    cause: 'the process is not arranged into a simple flow and some information is only hunted down during invoicing.',
+    verify: 'how a job starts, where invoice source data comes from, and which steps are repeated manually.',
+    step: 'line up the process from enquiry to document and propose a small simplification without replacing the whole system.',
+    service: 'Process automation / Audit',
+    serviceId: 'automation',
+  },
+  {
+    id: 'zacatek-ai',
+    role: 'support',
+    severity: 4,
+    hook: 'There are many trailers, but no script for where AI would actually help your operation.',
+    symptom: 'I do not know where to start / where AI makes sense',
+    problem: 'You have more options than certainty and do not want to start with an expensive tool blindly.',
+    cause: 'too many options and no priority.',
+    verify: 'the current state, repeated work, and source material where AI could realistically help.',
+    step: 'a short audit that orders the steps and separates useful ideas from dead ends.',
+    service: 'Audit / Data and AI assistants',
+    serviceId: 'audit',
+  },
+  {
+    id: 'mereni-prehled',
+    role: 'support',
+    severity: 3,
+    hook: 'Without a clear view, it is hard to tell which scene earns money and which only takes time.',
+    symptom: 'Measurement and overview are missing',
+    problem: 'You do not know what to measure on the website or in the process.',
+    cause: 'simple goal measurement is missing (enquiry, phone call).',
+    verify: 'what the real goal is and whether it is tracked today.',
+    step: 'set up clear measurement without unnecessary analytics overhead.',
+    service: 'Data and AI / Audit',
+    serviceId: 'data',
+  },
+  {
+    id: 'planovani-schuzek',
+    role: 'support',
+    severity: 3,
+    hook: 'Agreeing on a time takes more takes than the meeting itself.',
+    symptom: 'Too much time disappears into scheduling',
+    problem: 'Slots, confirmations, and changes are handled manually across several messages.',
+    cause: 'there is no simple booking or confirmation flow and responsibility stays in email or on the phone.',
+    verify: 'where meetings are arranged, how changes are confirmed, and which information is repeatedly sent by hand.',
+    step: 'design a simple flow for choosing a time, confirming it, and handing over the basic information.',
+    service: 'Process automation',
+    serviceId: 'automation',
+  },
+];
+
+const csServices: HomeContent['services']['items'] = [
+  {
+    id: 'web',
+    slot: 'web',
+    featured: true,
+    price: 'od 9 900 Kč',
+    title: 'Web a redesign',
+    result: 'Výsledek: web, který návštěvníkovi rychle vysvětlí nabídku a přivádí poptávky.',
+    outputs: [
+      'rychlý jednostránkový web (Astro) + poptávkový formulář',
+      'základní SEO pro Google i Seznam + měření',
+      'předání tak, že drobnosti zvládnete měnit sami',
+    ],
+  },
+  {
+    id: 'shop',
+    slot: 'shop',
+    className: 'rq-service-tile--shop',
+    price: 'od 19 900 Kč',
+    title: 'E-shop',
+    result: 'Výsledek: malý vlastněný obchod bez zbytečností, který sami utáhnete.',
+    outputs: [
+      'katalog, košík, varianty',
+      'doprava a platba dle platformy',
+      'předání + krátké zaškolení',
+    ],
+  },
+  {
+    id: 'automation',
+    slot: 'automation',
+    className: 'rq-service-tile--automation',
+    price: 'od 12 000 Kč',
+    title: 'Automatizace procesů',
+    result: 'Výsledek: konec ručního přepisování — co děláte opakovaně, běží samo.',
+    outputs: [
+      'analýza jednoho procesu od začátku do konce',
+      'jeden funkční automatický tok',
+      'dokumentace + předání',
+    ],
+  },
+  {
+    id: 'data',
+    slot: 'data',
+    className: 'rq-service-tile--data',
+    price: 'od 15 000 Kč',
+    title: 'Data a AI pomocníci',
+    result: 'Výsledek: přehled ve vlastních datech a AI nasazená prakticky a bezpečně.',
+    outputs: [
+      'sběr a vyčištění dat',
+      'jednoduchý přehled / report',
+      'AI pomocník nad schválenými podklady',
+    ],
+  },
+  {
+    id: 'audit',
+    slot: 'audit',
+    className: 'rq-service-tile--audit',
+    flag: 'Nízkorizikový start',
+    price: '4 900 Kč',
+    title: 'Audit webu nebo procesu',
+    result: 'Výsledek: víte, co nejvíc brzdí a co řešit první — cenu odečtu z realizace.',
+    outputs: [
+      'technický stav, rychlost, SEO základ, formuláře',
+      'seznam problémů podle priority',
+      'doporučení, co hned a co počká',
+    ],
+  },
+];
+
+const enServices: HomeContent['services']['items'] = [
+  {
+    id: 'web',
+    slot: 'web',
+    featured: true,
+    price: 'from CZK 9,900',
+    title: 'Website and redesign',
+    result: 'Result: a website that explains the offer quickly and brings in measurable enquiries.',
+    outputs: [
+      'fast one-page website (Astro) + enquiry form',
+      'SEO basics for Google and Seznam + measurement',
+      'handoff so you can change small things yourself',
+    ],
+  },
+  {
+    id: 'shop',
+    slot: 'shop',
+    className: 'rq-service-tile--shop',
+    price: 'from CZK 19,900',
+    title: 'E-shop',
+    result: 'Result: a small owned store without unnecessary complexity, manageable by your team.',
+    outputs: [
+      'catalogue, cart, variants',
+      'shipping and payment according to the platform',
+      'handoff + short training',
+    ],
+  },
+  {
+    id: 'automation',
+    slot: 'automation',
+    className: 'rq-service-tile--automation',
+    price: 'from CZK 12,000',
+    title: 'Process automation',
+    result: 'Result: less manual retyping - repeated work runs by itself.',
+    outputs: [
+      'analysis of one process from start to finish',
+      'one working automated flow',
+      'documentation + handoff',
+    ],
+  },
+  {
+    id: 'data',
+    slot: 'data',
+    className: 'rq-service-tile--data',
+    price: 'from CZK 15,000',
+    title: 'Data and AI assistants',
+    result: 'Result: a clear view of your own data and AI used practically and safely.',
+    outputs: [
+      'data collection and cleanup',
+      'simple overview / report',
+      'AI assistant over approved source material',
+    ],
+  },
+  {
+    id: 'audit',
+    slot: 'audit',
+    className: 'rq-service-tile--audit',
+    flag: 'Low-risk start',
+    price: 'CZK 4,900',
+    title: 'Website or process audit',
+    result: 'Result: you know what slows things down most and what to fix first - the audit is deducted from implementation.',
+    outputs: [
+      'technical state, speed, SEO basics, forms',
+      'problem list by priority',
+      'recommendations for what to fix now and what can wait',
+    ],
+  },
+];
+
+const csJourney: HomeContent['journey']['phases'] = [
+  {
+    id: 'rozbor',
+    number: '01',
+    title: 'Rozbor',
+    duration: '1–3 dny',
+    solve: 'co nefunguje, kdo to používá, kde se ztrácí čas a důvěra.',
+    process: 'krátký hovor, projdu web/proces, doptám se na cíl.',
+    benefit: 'jasně pojmenovaný problém a priority bez mlhy.',
+    tags: [
+      { label: 'Výstup', value: 'rozbor' },
+      { label: 'Vaše role', value: 'dáte přístup/podklady.' },
+      { label: 'Moje role', value: 'rozeberu a změřím.' },
+      { label: 'Trust', value: 'bez závazků — když se nedomluvíme, rozbor vám zůstává.' },
+    ],
+  },
+  {
+    id: 'navrh',
+    number: '02',
+    title: 'Návrh',
+    duration: '2–5 dní',
+    solve: 'co vznikne, pro koho, v jakém pořadí a co se dělat NEbude.',
+    process: 'připravím strukturu + texty, projdeme a schválíte.',
+    benefit: 'konkrétní plán, cenu a termín předem — méně překvapení.',
+    tags: [
+      { label: 'Výstup', value: 'návrh' },
+      { label: 'Vaše role', value: 'potvrdíte směr.' },
+      { label: 'Moje role', value: 'navrhnu.' },
+    ],
+  },
+  {
+    id: 'stavba',
+    number: '03',
+    title: 'Stavba',
+    duration: 'dny (úpravy) až ~2 týdny',
+    solve: 'web / e-shop / automatizace, obsah, mobil, základ SEO.',
+    process: 'stavím po částech, průběžně ukazuju na preview — žádná černá skříňka.',
+    benefit: 'funkční řešení k vyzkoušení, chyby se zachytí včas.',
+    tags: [
+      { label: 'Výstup', value: 'funkční řešení' },
+      { label: 'Vaše role', value: 'připomínkujete.' },
+      { label: 'Moje role', value: 'postavím.' },
+      { label: 'Trust', value: 'platba po částech — druhá až po schválení prototypu.' },
+    ],
+  },
+  {
+    id: 'test',
+    number: '04',
+    title: 'Test',
+    duration: '1-3 dny',
+    solve: 'mobil/prohlížeče, rychlost, formuláře, reálné scénáře.',
+    process: 'projedu testovací checklist, ověřím výkon a funkčnost.',
+    benefit: 'méně chyb po spuštění, ověřený výkon.',
+    tags: [
+      { label: 'Výstup', value: 'Protokol o testování (Lighthouse).', strong: true },
+      { label: 'Vaše role', value: 'potvrdíte hlavní scénáře.' },
+      { label: 'Moje role', value: 'testuji.' },
+    ],
+  },
+  {
+    id: 'predani',
+    number: '05',
+    title: 'Předání',
+    duration: '~1 den',
+    solve: 'spuštění, přístupy, zaškolení, co dál.',
+    process: 'nasadím na vaši doménu, předám návod.',
+    benefit: 'plná kontrola a víte, na koho se obrátit.',
+    tags: [
+      { label: 'Výstup', value: 'předávací poznámky + návod' },
+      { label: 'Vaše role', value: 'převezmete přístupy.' },
+      { label: 'Moje role', value: 'nasadím a předám.' },
+      { label: 'Trust', value: 'po předání dle domluvy: 30 dní podpory, nebo návod/video.' },
+    ],
+    final: true,
+  },
+];
+
+const enJourney: HomeContent['journey']['phases'] = [
+  {
+    id: 'rozbor',
+    number: '01',
+    title: 'Diagnosis',
+    duration: '1-3 days',
+    solve: 'what is not working, who uses it, and where time and trust are lost.',
+    process: 'a short call, I review the website/process, and clarify the goal.',
+    benefit: 'a clearly named problem and priorities without fog.',
+    tags: [
+      { label: 'Output', value: 'diagnosis' },
+      { label: 'Your role', value: 'provide access/source material.' },
+      { label: 'My role', value: 'analyse and measure.' },
+      { label: 'Trust', value: 'no obligation - if we do not continue, the diagnosis stays yours.' },
+    ],
+  },
+  {
+    id: 'navrh',
+    number: '02',
+    title: 'Proposal',
+    duration: '2-5 days',
+    solve: 'what will be created, for whom, in which order, and what will NOT be done.',
+    process: 'I prepare the structure + copy, then we review and approve it.',
+    benefit: 'a concrete plan, price, and timing upfront - fewer surprises.',
+    tags: [
+      { label: 'Output', value: 'proposal' },
+      { label: 'Your role', value: 'confirm the direction.' },
+      { label: 'My role', value: 'design the approach.' },
+    ],
+  },
+  {
+    id: 'stavba',
+    number: '03',
+    title: 'Build',
+    duration: 'days (small changes) to about 2 weeks',
+    solve: 'website / e-shop / automation, content, mobile, SEO basics.',
+    process: 'I build in parts and show preview work as we go - no black box.',
+    benefit: 'a working solution to try, with issues caught early.',
+    tags: [
+      { label: 'Output', value: 'working solution' },
+      { label: 'Your role', value: 'give feedback.' },
+      { label: 'My role', value: 'build it.' },
+      { label: 'Trust', value: 'staged payment - the second part follows prototype approval.' },
+    ],
+  },
+  {
+    id: 'test',
+    number: '04',
+    title: 'Test',
+    duration: '1-3 days',
+    solve: 'mobile/browsers, speed, forms, real scenarios.',
+    process: 'I run through the test checklist and verify performance and function.',
+    benefit: 'fewer launch issues and verified performance.',
+    tags: [
+      { label: 'Output', value: 'Test report (Lighthouse).', strong: true },
+      { label: 'Your role', value: 'confirm the main scenarios.' },
+      { label: 'My role', value: 'test.' },
+    ],
+  },
+  {
+    id: 'predani',
+    number: '05',
+    title: 'Handoff',
+    duration: 'about 1 day',
+    solve: 'launch, access, training, and what comes next.',
+    process: 'I deploy to your domain and hand over instructions.',
+    benefit: 'full control and clarity on who to contact.',
+    tags: [
+      { label: 'Output', value: 'handoff notes + guide' },
+      { label: 'Your role', value: 'take over access.' },
+      { label: 'My role', value: 'deploy and hand off.' },
+      { label: 'Trust', value: 'after handoff by agreement: 30 days of support, or a guide/video.' },
+    ],
+    final: true,
+  },
+];
+
+export const homeContent = {
+  cs: {
+    seo: {
+      title: 'RadeQ.cz - Racionální digitalizace',
+      description: 'Weby, data a automatizace pro živnostníky, malé firmy a spolky.',
+      canonicalPath: '/',
+      alternatePath: '/en/',
+      alternateLabel: 'EN',
+    },
+    nav: {
+      ariaLabel: 'Hlavní navigace',
+      navAriaLabel: 'Hlavní navigace',
+      brandAriaLabel: 'RadeQ.cz',
+      homeHref: '/',
+      items: [
+        { href: '#co-resim', label: 'Co řeším' },
+        { href: '#sluzby', label: 'Služby' },
+        { href: '#jak-pracuji', label: 'Postup' },
+        { href: '#ceny', label: 'Ceny' },
+        { href: '/ukazky/', label: 'Ukázky' },
+        { href: '#kontakt', label: 'Kontakt' },
+      ],
+    },
+    hero: {
+      eyebrow: 'Racionální digitalizace',
+      title: 'Weby, data a automatizace, které vám uvolní ruce.',
+      typewriter: {
+        prefix: 'Pro\u00a0',
+        words: ['živnostníky', 'salony', 'malé firmy', 'lokální služby'],
+        sizerWord: 'lokální služby',
+        initialWord: 'živnostníky',
+        liveText: 'Pro živnostníky, salony, malé firmy a lokální služby.',
+      },
+      lead: 'Pomůžu vám zjednodušit web, poptávky, evidenci nebo ruční práci v tabulkách. Navrhnu řešení, postavím ho, ověřím v praxi a předám tak, abyste ho zvládli používat bez závislosti na dodavateli.',
+      journeyNote: 'Postup od problému k ověřenému výsledku.',
+      proofAriaLabel: 'Důkazy a orientační ceny',
+      proofItems: [
+        { label: 'Web od 9 900 Kč', text: 'jasná nabídka a měřitelné poptávky' },
+        { label: 'Audit od 4 900 Kč', text: 'zjistíte, co brzdí; audit odečtu z realizace' },
+        { label: 'Postavím · změřím · předám', text: 'bez závislosti na dodavateli' },
+      ],
+      actions: {
+        primary: { href: '#kontakt', label: 'Napsat poptávku' },
+        secondary: { href: '#ukazky-teaser', label: 'Ukázky práce' },
+        micro: 'Nezávazně. Ozvu se do 1 pracovního dne.',
+      },
+    },
+    problems: {
+      eyebrow: 'Co řeším',
+      title: 'Poznáváte některý z těchto problémů?',
+      lead: 'Vyberte signál, který sedí nejvíc. Ukážu pravděpodobnou příčinu, co ověřím a první rozumný krok bez zbytečné omáčky.',
+      badgeText: '8 typických signálů',
+      severityLegend: {
+        strong: 'Index závažnosti',
+        text: 'ukazuje dopad problému na chod firmy. Hvězdy nejsou hodnocení služby.',
+      },
+      controlsAriaLabel: 'Posun karuselu',
+      previousLabel: 'Předchozí problém',
+      nextLabel: 'Další problém',
+      carouselAriaLabel: 'Typické problémy',
+      severitySrPrefix: 'Index závažnosti:',
+      severitySrSuffix: 'z 5.',
+      tagline: 'Režírujte svůj byznys sami. Nabízíme víc než průměrný servis.',
+      roleLabels: {
+        lead: 'V HLAVNÍ ROLI',
+        support: 'DÁLE HRAJÍ',
+      },
+      solutionLabel: 'Návrh řešení',
+      findingLabels: {
+        problem: 'Problém',
+        cause: 'Pravděpodobná příčina',
+        verify: 'Co ověřím',
+        step: 'První krok',
+      },
+      ctaLabel: 'Napsat poptávku',
+      servicePrefix: 'Typicky souvisí:',
+      items: csProblems,
+    },
+    marquee: {
+      ariaLabel: 'Typické symptomy před úpravou webu a procesů',
+      items: [
+        'pomalý web',
+        'poptávky se ztrácí v mailu',
+        'ruční přepisování do Excelu',
+        'nejasné CTA',
+        'web nevodí zákazníky',
+        'žádné měření',
+        'chaos v nástrojích',
+      ],
+    },
+    services: {
+      eyebrow: 'Služby',
+      title: 'Co vám zjednoduším',
+      ariaLabel: 'Služby a orientační ceny',
+      ctaLabel: 'Domluvit nezávazný rozbor',
+      liveFallback: 'služba',
+      livePrefix: 'Zvýrazněno:',
+      items: csServices,
+    },
+    journey: {
+      eyebrow: 'Postup',
+      title: 'Jak to bude probíhat',
+      timelineText: 'Typicky 2–4 týdny od poptávky ke spuštění.',
+      timelineNote: 'Orientačně pro běžný projekt — větší zakázky podle domluvy.',
+      startCap: 'Váš problém',
+      endCap: 'Výsledek · ověřeno',
+      tablistAriaLabel: 'Fáze spolupráce',
+      preview: {
+        start: {
+          eyebrow: 'Problém',
+          title: 'Web nevede k poptávce',
+          problemLabel: 'Problém',
+          problem: 'Web jen existuje, ale návštěvník nedojde ke kontaktu.',
+          stepLabel: 'První krok',
+          step: 'krátký audit a úprava struktury + jasné CTA.',
+          ctaLabel: 'Otevřít diagnostiku',
+        },
+        end: {
+          badge: 'VZOROVÝ PROJEKT',
+          kicker: 'Řemeslo a lokální služby',
+          title: 'Web pro instalatéra',
+          text: 'Přehled služeb, důvěryhodné reference a rychlý kontakt pro zákazníky, kteří potřebují pomoct hned.',
+          ctaLabel: 'Zobrazit ukázky',
+        },
+      },
+      panelLabels: {
+        solve: 'Co řešíme',
+        duration: 'Jak dlouho',
+        process: 'Jak probíhá',
+        benefit: 'Co z toho máte',
+        tagListAriaPrefix: 'Výstupy a role:',
+      },
+      phases: csJourney,
+      trustAriaLabel: 'Důležité jistoty procesu',
+      trustPoints: [
+        'Jeden člověk od rozboru po test — nic se neztratí mezi rolemi.',
+        'Každá fáze má hmatatelný výstup.',
+        'Test je před předáním, ne až po stížnosti.',
+      ],
+    },
+    guarantee: {
+      eyebrow: 'Servisní protokol & Testerova záruka',
+      title: 'Každá zakázka má jasný výstup a ověřený výkon.',
+      text: 'U každé zakázky dostanete servisní protokol — co jsem udělal, co se změnilo a co dál (i co nemá smysl řešit). Před předáním web otestuji: formuláře, mobil, rychlost, základní SEO i měření. Hlídám rychlé načítání (Lighthouse 90+ u prezentačních webů) a konkrétní cíl zapíšu do protokolu předem — když ho při předání nesplním, vrátím 15 % z ceny práce, nebo to bez příplatku doladím.',
+    },
+    pricing: {
+      eyebrow: 'Ceny',
+      title: 'Orientační ceny bez překvapení.',
+      lead: 'Péče po spuštění pro menší weby, e-shopy a automatizace. Vybereme jen rozsah, který dává smysl.',
+      ariaLabel: 'Tarify péče po spuštění',
+      note: 'Nechcete paušál? Bloky hodin 5/15/40 h (od 1 100 Kč/h). Audit lze odečíst z realizace. Nejsem plátce DPH — ceny jsou konečné.',
+      items: [
+        { title: 'Klid', price: '2 500 Kč', suffix: '/měs.', text: 'provoz, zálohy, drobné úpravy (1 h), máte komu zavolat', ctaLabel: 'Chci Klid' },
+        { title: 'Růst', price: '6 000 Kč', suffix: '/měs.', text: 'vše z Klidu + SEO/výkon hlídání, měsíční report, 3 h vývoje', ctaLabel: 'Chci Růst', featured: true, badge: 'Doporučeno' },
+        { title: 'Partner', price: '15 000 Kč', suffix: '/měs.', text: 'vše z Růstu + průběžná automatizace/AI, 10 h, prioritní support', ctaLabel: 'Chci Partner' },
+      ],
+    },
+    showcase: {
+      eyebrow: 'Ukázky',
+      title: 'Co umím postavit',
+      items: [
+        {
+          href: '/ukazky/instalater/',
+          className: 'rq-ukazky-bento-card--featured',
+          badge: 'VZOROVÝ PROJEKT',
+          kicker: 'Řemeslo a lokální služby',
+          title: 'Web pro instalatéra',
+          text: 'Přehled služeb, důvěryhodné reference a rychlý kontakt pro zákazníky, kteří potřebují pomoct hned.',
+          linkLabel: 'Zobrazit ukázku',
+        },
+        {
+          href: '/ukazky/sluzba/',
+          className: 'rq-ukazky-bento-card--booking',
+          badge: 'VZOROVÝ PROJEKT',
+          kicker: 'Služby s termíny',
+          title: 'Web s rezervací',
+          text: 'Jednoduchá prezentace služby s jasnou cestou k objednání.',
+          linkLabel: 'Zobrazit ukázku',
+        },
+        {
+          href: '/ukazky/eshop/',
+          className: 'rq-ukazky-bento-card--shop',
+          badge: 'VZOROVÝ PROJEKT',
+          kicker: 'Prodej a katalog',
+          title: 'Malý e-shop',
+          text: 'Produktová nabídka, košík a nákupní tok pro menší sortiment.',
+          linkLabel: 'Zobrazit ukázku',
+        },
+      ],
+    },
+    contact: {
+      eyebrow: 'Kontakt',
+      title: 'Napište mi, s čím můžu pomoct',
+      lead: 'Stačí stručně popsat, co chcete zjednodušit — ozvu se a doptám se. Odpovídám do 1 pracovního dne.',
+      fields: {
+        name: 'Jméno',
+        email: 'E-mail',
+        projectType: 'O jaký projekt jde?',
+        message: 'Co potřebujete zjednodušit?',
+        budget: 'Orientační rozpočet',
+        deadline: 'Termín',
+        deadlinePlaceholder: 'Např. do 2 měsíců',
+        honeypot: 'Toto pole nevyplňujte',
+      },
+      projectOptions: [
+        { label: 'Web', value: 'Web' },
+        { label: 'E-shop', value: 'E-shop' },
+        { label: 'Automatizace procesů', value: 'Automatizace procesů' },
+        { label: 'Data a AI', value: 'Data a AI' },
+        { label: 'Audit', value: 'Audit' },
+        { label: 'Jiné', value: 'Jiné' },
+      ],
+      budgetOptions: [
+        { label: 'Nechám otevřené', value: '' },
+        { label: 'Do 10 000 Kč', value: 'Do 10 000 Kč' },
+        { label: '10 000-30 000 Kč', value: '10 000-30 000 Kč' },
+        { label: '30 000-60 000 Kč', value: '30 000-60 000 Kč' },
+        { label: '60 000 Kč+', value: '60 000 Kč+' },
+      ],
+      optionalSummary: 'Doplňující detaily (nepovinné)',
+      submitLabel: 'Odeslat poptávku',
+      notePrefix: 'Nebo napište přímo na',
+      noteEmail: 'info@radeq.cz',
+      status: {
+        sending: 'Odesílám…',
+        success: 'Děkuji, poptávka odeslána. Ozvu se co nejdřív.',
+        failureHtml: 'Odeslání teď neproběhlo. Napište prosím na <a href="mailto:info@radeq.cz">info@radeq.cz</a>.',
+      },
+    },
+    footer: {
+      tagline: 'Racionální digitalizace pro živnostníky, malé firmy a spolky. Weby, data a automatizace bez zbytečné složitosti.',
+      navTitle: 'Navigace',
+      navAriaLabel: 'Navigace v patičce',
+      connectionTitle: 'Spojení',
+      connectionLinks: [
+        { href: '/#kontakt', label: 'Napsat poptávku' },
+        { href: '/#ceny', label: 'Ceník' },
+      ],
+      legal: '© 2026 Radek Široký — RadeQ.cz · IČO 08748811 · Praha · celá ČR',
+      contactEmail: 'info@radeq.cz',
+    },
+    guide: {
+      toggleLabel: 'Rychlá navigace',
+      eyebrow: 'RadeQ',
+      title: 'Rychlá navigace',
+      closeLabel: 'Zavřít',
+      intro: 'Pomůžu vám najít, co potřebujete. Vyberte téma:',
+      quickActionsAriaLabel: 'Rychlá témata',
+      initialMessage: 'Vyberte téma nebo napište krátký dotaz.',
+      inputLabel: 'Váš dotaz',
+      inputPlaceholder: 'Např. cena webu',
+      sendLabel: 'Odeslat',
+      topics: {
+        ceny: {
+          chipLabel: 'Kolik to stojí',
+          text: 'Audit od 4 900 Kč, web od 9 900 Kč, e-shop od 19 900 Kč, automatizace od 12 000 Kč. Měsíční správa od 2 500 Kč. Přesně po krátké domluvě.',
+          href: '#ceny',
+          label: 'Přejít na ceny',
+          followups: [
+            { key: 'kontakt', label: 'Chci poptávku' },
+            { key: 'sluzby', label: 'Služby' },
+          ],
+        },
+        sluzby: {
+          chipLabel: 'Jaké služby nabízíte',
+          text: 'Weby a redesign, e-shopy, automatizace procesů, práce s daty a AI, audit.',
+          href: '#sluzby',
+          label: 'Přejít na služby',
+          followups: [
+            { key: 'ceny', label: 'Ceny' },
+            { key: 'spoluprace', label: 'Postup' },
+          ],
+        },
+        spoluprace: {
+          chipLabel: 'Jak probíhá spolupráce',
+          text: 'Pojmenujeme problém → nejmenší funkční řešení → postavím, otestuji a předám (se servisním protokolem).',
+          href: '#jak-pracuji',
+          label: 'Jak pracuji',
+          followups: [
+            { key: 'kontakt', label: 'Chci poptávku' },
+            { key: 'ceny', label: 'Ceny' },
+          ],
+        },
+        kontakt: {
+          chipLabel: 'Chci poptávku',
+          text: 'Napište pár vět, co řešíte. Ozvat se můžete i na info@radeq.cz.',
+          href: '#kontakt',
+          label: 'Přejít na kontakt',
+          followups: [
+            { key: 'sluzby', label: 'Služby' },
+            { key: 'spoluprace', label: 'Postup' },
+          ],
+        },
+      },
+      fallback: {
+        text: 'Tohle radši napište do poptávky — Radek odpoví přesně.',
+        href: '#kontakt',
+        label: 'Napsat poptávku',
+      },
+      matchers: {
+        ceny: ['cen', 'cena', 'ceny', 'kolik', 'stoj', 'rozpocet', 'audit', 'sprava', 'eshop', 'e-shop', 'web'],
+        sluzby: ['sluz', 'nabiz', 'delate', 'redesign', 'automatiz', 'data', 'ai', 'eshop', 'e-shop'],
+        spoluprace: ['jak', 'postup', 'spoluprac', 'probiha', 'predani', 'test', 'reseni'],
+        kontakt: ['kontakt', 'poptav', 'napsat', 'email', 'mail', 'info'],
+      },
+    },
+    schema: {
+      description: 'Weby, e-shopy, automatizace procesů a práce s daty pro živnostníky a malé firmy.',
+      url: 'https://radeq.cz',
+      areaServed: 'CZ',
+      founderName: 'Radek Široký',
+      addressLocality: 'Praha',
+      addressCountry: 'CZ',
+      knowsAbout: ['tvorba webů', 'e-shopy', 'automatizace procesů', 'práce s daty', 'AI pomocníci', 'SEO'],
+    },
+  },
+  en: {
+    seo: {
+      title: 'RadeQ.cz - Rational digitalization',
+      description: 'Websites, data, and automation for sole traders, small businesses, and associations.',
+      canonicalPath: '/en/',
+      alternatePath: '/',
+      alternateLabel: 'CZ',
+    },
+    nav: {
+      ariaLabel: 'Primary navigation',
+      navAriaLabel: 'Primary navigation',
+      brandAriaLabel: 'RadeQ.cz',
+      homeHref: '/en/',
+      items: [
+        { href: '#co-resim', label: 'What I solve' },
+        { href: '#sluzby', label: 'Services' },
+        { href: '#jak-pracuji', label: 'Process' },
+        { href: '#ceny', label: 'Pricing' },
+        { href: '/ukazky/', label: 'Examples' },
+        { href: '#kontakt', label: 'Contact' },
+      ],
+    },
+    hero: {
+      eyebrow: 'Rational digitalization',
+      title: 'Websites, data, and automation that free your hands.',
+      typewriter: {
+        prefix: 'For\u00a0',
+        words: ['sole traders', 'studios', 'small businesses', 'local services'],
+        sizerWord: 'small businesses',
+        initialWord: 'sole traders',
+        liveText: 'For sole traders, studios, small businesses, and local services.',
+      },
+      lead: 'I help simplify your website, enquiries, records, or manual spreadsheet work. I design the solution, build it, verify it in practice, and hand it over so you can use it without depending on a supplier.',
+      journeyNote: 'A path from problem to verified result.',
+      proofAriaLabel: 'Proof points and indicative prices',
+      proofItems: [
+        { label: 'Website from CZK 9,900', text: 'clear offer and measurable enquiries' },
+        { label: 'Audit from CZK 4,900', text: 'find what slows things down; audit deducted from implementation' },
+        { label: 'Build · measure · hand off', text: 'without supplier lock-in' },
+      ],
+      actions: {
+        primary: { href: '#kontakt', label: 'Send an enquiry' },
+        secondary: { href: '#ukazky-teaser', label: 'Work examples' },
+        micro: 'No obligation. I reply within 1 business day.',
+      },
+    },
+    problems: {
+      eyebrow: 'What I solve',
+      title: 'Do any of these problems look familiar?',
+      lead: 'Choose the signal that fits best. I will show the likely cause, what I would verify, and the first sensible step without unnecessary theatre.',
+      badgeText: '8 typical signals',
+      severityLegend: {
+        strong: 'Business impact',
+        text: 'shows how strongly the problem affects operations. Stars are not a service rating.',
+      },
+      controlsAriaLabel: 'Carousel controls',
+      previousLabel: 'Previous problem',
+      nextLabel: 'Next problem',
+      carouselAriaLabel: 'Typical problems',
+      severitySrPrefix: 'Business impact:',
+      severitySrSuffix: 'out of 5.',
+      tagline: 'Direct your business yourself. More than average service, without the drama.',
+      roleLabels: {
+        lead: 'STARRING',
+        support: 'ALSO FEATURING',
+      },
+      solutionLabel: 'Suggested solution',
+      findingLabels: {
+        problem: 'Problem',
+        cause: 'Likely cause',
+        verify: 'What I verify',
+        step: 'First step',
+      },
+      ctaLabel: 'Send an enquiry',
+      servicePrefix: 'Typically related:',
+      items: enProblems,
+    },
+    marquee: {
+      ariaLabel: 'Typical symptoms before improving a website and processes',
+      items: [
+        'slow website',
+        'enquiries get lost in email',
+        'manual retyping into Excel',
+        'unclear CTA',
+        'website does not guide customers',
+        'no measurement',
+        'tool chaos',
+      ],
+    },
+    services: {
+      eyebrow: 'Services',
+      title: 'What I can simplify for you',
+      ariaLabel: 'Services and indicative prices',
+      ctaLabel: 'Book a no-obligation diagnosis',
+      liveFallback: 'service',
+      livePrefix: 'Highlighted:',
+      items: enServices,
+    },
+    journey: {
+      eyebrow: 'Process',
+      title: 'How the work runs',
+      timelineText: 'Typically 2-4 weeks from enquiry to launch.',
+      timelineNote: 'Indicative for a standard project - larger work by agreement.',
+      startCap: 'Your problem',
+      endCap: 'Result · verified',
+      tablistAriaLabel: 'Collaboration phases',
+      preview: {
+        start: {
+          eyebrow: 'Problem',
+          title: 'The website does not create enquiries',
+          problemLabel: 'Problem',
+          problem: 'The website exists, but visitors do not reach the contact step.',
+          stepLabel: 'First step',
+          step: 'a short audit, structure cleanup, and clear calls to action.',
+          ctaLabel: 'Open diagnostics',
+        },
+        end: {
+          badge: 'SAMPLE PROJECT',
+          kicker: 'Trades and local services',
+          title: 'Website for a plumber',
+          text: 'A clear service overview, trustworthy references, and fast contact for customers who need help now.',
+          ctaLabel: 'Show examples',
+        },
+      },
+      panelLabels: {
+        solve: 'What we solve',
+        duration: 'How long',
+        process: 'How it works',
+        benefit: 'What you get',
+        tagListAriaPrefix: 'Outputs and roles:',
+      },
+      phases: enJourney,
+      trustAriaLabel: 'Important process assurances',
+      trustPoints: [
+        'One person from diagnosis to testing - nothing gets lost between roles.',
+        'Every phase has a tangible output.',
+        'Testing happens before handoff, not after complaints.',
+      ],
+    },
+    guarantee: {
+      eyebrow: 'Service protocol & Tester guarantee',
+      title: 'Every project has a clear output and verified performance.',
+      text: 'For every project, you receive a service protocol - what I did, what changed, and what comes next (including what is not worth solving). Before handoff, I test the website: forms, mobile, speed, SEO basics, and measurement. I watch fast loading (Lighthouse 90+ for presentation websites) and write the concrete target into the protocol upfront - if I do not meet it at handoff, I return 15% of the labour price or fine-tune it without extra charge.',
+    },
+    pricing: {
+      eyebrow: 'Pricing',
+      title: 'Indicative prices without surprises.',
+      lead: 'Post-launch care for smaller websites, e-shops, and automations. We choose only the scope that makes sense.',
+      ariaLabel: 'Post-launch care plans',
+      note: 'Do not want a retainer? Hour blocks 5/15/40 h (from CZK 1,100/h). Audit can be deducted from implementation. I am not a VAT payer - prices are final.',
+      items: [
+        { title: 'Calm', price: 'CZK 2,500', suffix: '/mo.', text: 'operation, backups, small edits (1 h), someone to call', ctaLabel: 'I want Calm' },
+        { title: 'Growth', price: 'CZK 6,000', suffix: '/mo.', text: 'everything in Calm + SEO/performance monitoring, monthly report, 3 h of development', ctaLabel: 'I want Growth', featured: true, badge: 'Recommended' },
+        { title: 'Partner', price: 'CZK 15,000', suffix: '/mo.', text: 'everything in Growth + ongoing automation/AI, 10 h, priority support', ctaLabel: 'I want Partner' },
+      ],
+    },
+    showcase: {
+      eyebrow: 'Examples',
+      title: 'What I can build',
+      items: [
+        {
+          href: '/ukazky/instalater/',
+          className: 'rq-ukazky-bento-card--featured',
+          badge: 'SAMPLE PROJECT',
+          kicker: 'Trades and local services',
+          title: 'Website for a plumber',
+          text: 'A clear service overview, trustworthy references, and fast contact for customers who need help now.',
+          linkLabel: 'View example',
+        },
+        {
+          href: '/ukazky/sluzba/',
+          className: 'rq-ukazky-bento-card--booking',
+          badge: 'SAMPLE PROJECT',
+          kicker: 'Appointment-based services',
+          title: 'Website with booking',
+          text: 'A simple service presentation with a clear path to booking.',
+          linkLabel: 'View example',
+        },
+        {
+          href: '/ukazky/eshop/',
+          className: 'rq-ukazky-bento-card--shop',
+          badge: 'SAMPLE PROJECT',
+          kicker: 'Sales and catalogue',
+          title: 'Small e-shop',
+          text: 'Product offer, cart, and purchase flow for a smaller catalogue.',
+          linkLabel: 'View example',
+        },
+      ],
+    },
+    contact: {
+      eyebrow: 'Contact',
+      title: 'Tell me what I can help with',
+      lead: 'Briefly describe what you want to simplify - I will reply and ask follow-up questions. I answer within 1 business day.',
+      fields: {
+        name: 'Name',
+        email: 'Email',
+        projectType: 'What kind of project is it?',
+        message: 'What do you need to simplify?',
+        budget: 'Indicative budget',
+        deadline: 'Deadline',
+        deadlinePlaceholder: 'For example, within 2 months',
+        honeypot: 'Do not fill this field',
+      },
+      projectOptions: [
+        { label: 'Website', value: 'Website' },
+        { label: 'E-shop', value: 'E-shop' },
+        { label: 'Process automation', value: 'Process automation' },
+        { label: 'Data and AI', value: 'Data and AI' },
+        { label: 'Audit', value: 'Audit' },
+        { label: 'Other', value: 'Other' },
+      ],
+      budgetOptions: [
+        { label: 'Leave open', value: '' },
+        { label: 'Up to CZK 10,000', value: 'Up to CZK 10,000' },
+        { label: 'CZK 10,000-30,000', value: 'CZK 10,000-30,000' },
+        { label: 'CZK 30,000-60,000', value: 'CZK 30,000-60,000' },
+        { label: 'CZK 60,000+', value: 'CZK 60,000+' },
+      ],
+      optionalSummary: 'Additional details (optional)',
+      submitLabel: 'Send enquiry',
+      notePrefix: 'Or write directly to',
+      noteEmail: 'info@radeq.cz',
+      status: {
+        sending: 'Sending…',
+        success: 'Thank you, the enquiry has been sent. I will reply as soon as possible.',
+        failureHtml: 'Sending did not work right now. Please write to <a href="mailto:info@radeq.cz">info@radeq.cz</a>.',
+      },
+    },
+    footer: {
+      tagline: 'Rational digitalization for sole traders, small businesses, and associations. Websites, data, and automation without unnecessary complexity.',
+      navTitle: 'Navigation',
+      navAriaLabel: 'Footer navigation',
+      connectionTitle: 'Contact',
+      connectionLinks: [
+        { href: '/en/#kontakt', label: 'Send an enquiry' },
+        { href: '/en/#ceny', label: 'Pricing' },
+      ],
+      legal: '© 2026 Radek Široký — RadeQ.cz · ID No. 08748811 · Prague · Czech Republic',
+      contactEmail: 'info@radeq.cz',
+    },
+    guide: {
+      toggleLabel: 'Quick navigation',
+      eyebrow: 'RadeQ',
+      title: 'Quick navigation',
+      closeLabel: 'Close',
+      intro: 'I can help you find what you need. Choose a topic:',
+      quickActionsAriaLabel: 'Quick topics',
+      initialMessage: 'Choose a topic or write a short question.',
+      inputLabel: 'Your question',
+      inputPlaceholder: 'For example, website price',
+      sendLabel: 'Send',
+      topics: {
+        ceny: {
+          chipLabel: 'How much does it cost',
+          text: 'Audit from CZK 4,900, website from CZK 9,900, e-shop from CZK 19,900, automation from CZK 12,000. Monthly care from CZK 2,500. Exact scope follows a short discussion.',
+          href: '#ceny',
+          label: 'Go to pricing',
+          followups: [
+            { key: 'kontakt', label: 'Send enquiry' },
+            { key: 'sluzby', label: 'Services' },
+          ],
+        },
+        sluzby: {
+          chipLabel: 'What services do you offer',
+          text: 'Websites and redesigns, e-shops, process automation, data and AI work, and audits.',
+          href: '#sluzby',
+          label: 'Go to services',
+          followups: [
+            { key: 'ceny', label: 'Pricing' },
+            { key: 'spoluprace', label: 'Process' },
+          ],
+        },
+        spoluprace: {
+          chipLabel: 'How collaboration works',
+          text: 'We name the problem → choose the smallest working solution → I build, test, and hand it over with a service protocol.',
+          href: '#jak-pracuji',
+          label: 'How I work',
+          followups: [
+            { key: 'kontakt', label: 'Send enquiry' },
+            { key: 'ceny', label: 'Pricing' },
+          ],
+        },
+        kontakt: {
+          chipLabel: 'I want to enquire',
+          text: 'Write a few sentences about what you are solving. You can also email info@radeq.cz.',
+          href: '#kontakt',
+          label: 'Go to contact',
+          followups: [
+            { key: 'sluzby', label: 'Services' },
+            { key: 'spoluprace', label: 'Process' },
+          ],
+        },
+      },
+      fallback: {
+        text: 'That is better sent as an enquiry - Radek will answer precisely.',
+        href: '#kontakt',
+        label: 'Send an enquiry',
+      },
+      matchers: {
+        ceny: ['price', 'pricing', 'cost', 'budget', 'audit', 'care', 'website', 'web', 'eshop', 'e-shop', 'shop'],
+        sluzby: ['service', 'services', 'offer', 'redesign', 'automation', 'data', 'ai', 'website', 'web', 'eshop', 'e-shop'],
+        spoluprace: ['how', 'process', 'collaboration', 'handoff', 'test', 'testing', 'result'],
+        kontakt: ['contact', 'enquiry', 'request', 'email', 'mail', 'info'],
+      },
+    },
+    schema: {
+      description: 'Websites, e-shops, process automation, and data work for sole traders and small businesses.',
+      url: 'https://radeq.cz/en/',
+      areaServed: 'CZ',
+      founderName: 'Radek Široký',
+      addressLocality: 'Prague',
+      addressCountry: 'CZ',
+      knowsAbout: ['websites', 'e-shops', 'process automation', 'data work', 'AI assistants', 'SEO'],
+    },
+  },
+} as const satisfies Record<Locale, HomeContent>;

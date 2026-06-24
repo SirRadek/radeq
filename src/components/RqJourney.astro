@@ -1,98 +1,27 @@
 ---
-const phases = [
-  {
-    id: 'rozbor',
-    number: '01',
-    title: 'Rozbor',
-    duration: '1–3 dny',
-    solve: 'co nefunguje, kdo to používá, kde se ztrácí čas a důvěra.',
-    process: 'krátký hovor, projdu web/proces, doptám se na cíl.',
-    benefit: 'jasně pojmenovaný problém a priority bez mlhy.',
-    tags: [
-      { label: 'Výstup', value: 'rozbor' },
-      { label: 'Vaše role', value: 'dáte přístup/podklady.' },
-      { label: 'Moje role', value: 'rozeberu a změřím.' },
-      { label: 'Trust', value: 'bez závazků — když se nedomluvíme, rozbor vám zůstává.' },
-    ],
-  },
-  {
-    id: 'navrh',
-    number: '02',
-    title: 'Návrh',
-    duration: '2–5 dní',
-    solve: 'co vznikne, pro koho, v jakém pořadí a co se dělat NEbude.',
-    process: 'připravím strukturu + texty, projdeme a schválíte.',
-    benefit: 'konkrétní plán, cenu a termín předem — méně překvapení.',
-    tags: [
-      { label: 'Výstup', value: 'návrh' },
-      { label: 'Vaše role', value: 'potvrdíte směr.' },
-      { label: 'Moje role', value: 'navrhnu.' },
-    ],
-  },
-  {
-    id: 'stavba',
-    number: '03',
-    title: 'Stavba',
-    duration: 'dny (úpravy) až ~2 týdny',
-    solve: 'web / e-shop / automatizace, obsah, mobil, základ SEO.',
-    process: 'stavím po částech, průběžně ukazuju na preview — žádná černá skříňka.',
-    benefit: 'funkční řešení k vyzkoušení, chyby se zachytí včas.',
-    tags: [
-      { label: 'Výstup', value: 'funkční řešení' },
-      { label: 'Vaše role', value: 'připomínkujete.' },
-      { label: 'Moje role', value: 'postavím.' },
-      { label: 'Trust', value: 'platba po částech — druhá až po schválení prototypu.' },
-    ],
-  },
-  {
-    id: 'test',
-    number: '04',
-    title: 'Test',
-    duration: '1-3 dny',
-    solve: 'mobil/prohlížeče, rychlost, formuláře, reálné scénáře.',
-    process: 'projedu testovací checklist, ověřím výkon a funkčnost.',
-    benefit: 'méně chyb po spuštění, ověřený výkon.',
-    tags: [
-      { label: 'Výstup', value: 'Protokol o testování (Lighthouse).', strong: true },
-      { label: 'Vaše role', value: 'potvrdíte hlavní scénáře.' },
-      { label: 'Moje role', value: 'testuji.' },
-    ],
-  },
-  {
-    id: 'predani',
-    number: '05',
-    title: 'Předání',
-    duration: '~1 den',
-    solve: 'spuštění, přístupy, zaškolení, co dál.',
-    process: 'nasadím na vaši doménu, předám návod.',
-    benefit: 'plná kontrola a víte, na koho se obrátit.',
-    tags: [
-      { label: 'Výstup', value: 'předávací poznámky + návod' },
-      { label: 'Vaše role', value: 'převezmete přístupy.' },
-      { label: 'Moje role', value: 'nasadím a předám.' },
-      { label: 'Trust', value: 'po předání dle domluvy: 30 dní podpory, nebo návod/video.' },
-    ],
-    final: true,
-  },
-];
+import { homeContent, type HomeContent } from '../data/home';
+import type { Locale } from '../data/locales';
 
-const trustPoints = [
-  'Jeden člověk od rozboru po test — nic se neztratí mezi rolemi.',
-  'Každá fáze má hmatatelný výstup.',
-  'Test je před předáním, ne až po stížnosti.',
-];
+interface Props {
+  content?: HomeContent['journey'];
+  lang?: Locale;
+}
+
+const { content = homeContent.cs.journey } = Astro.props;
+const phases = content.phases;
+const trustPoints = content.trustPoints;
 ---
 
 <div class="rq-journey" data-rq-journey>
   <div class="rq-journey__header" data-rq-reveal>
-    <p class="rq-eyebrow">Postup</p>
-    <h2 class="rq-h2">Jak to bude probíhat</h2>
+    <p class="rq-eyebrow">{content.eyebrow}</p>
+    <h2 class="rq-h2">{content.title}</h2>
   </div>
 
   <div class="rq-journey__timeline rq-journey-line" data-rq-reveal>
     <div class="rq-journey-line__copy">
-      <p>Typicky 2–4 týdny od poptávky ke spuštění.</p>
-      <small>Orientačně pro běžný projekt — větší zakázky podle domluvy.</small>
+      <p>{content.timelineText}</p>
+      <small>{content.timelineNote}</small>
     </div>
 
     <div class="rq-journey-line__track">
@@ -105,14 +34,14 @@ const trustPoints = [
           aria-controls="rq-journey-preview"
           data-rq-journey-preview-trigger="start"
         >
-          <span>Váš problém</span>
+          <span>{content.startCap}</span>
           <span class="rq-journey-line__cap-dot"></span>
         </button>
 
         <div
           class="rq-journey-line__tabs"
           role="tablist"
-          aria-label="Fáze spolupráce"
+          aria-label={content.tablistAriaLabel}
           aria-orientation="horizontal"
         >
           {phases.map((phase, index) => (
@@ -144,7 +73,7 @@ const trustPoints = [
           aria-controls="rq-journey-preview"
           data-rq-journey-preview-trigger="end"
         >
-          <span>Výsledek · ověřeno</span>
+          <span>{content.endCap}</span>
           <span class="rq-journey-line__cap-dot"></span>
         </button>
       </div>
@@ -154,29 +83,29 @@ const trustPoints = [
   <aside class="rq-journey-preview" id="rq-journey-preview" hidden data-rq-journey-preview>
     <div class="rq-journey-preview__mode" data-rq-journey-preview-mode="start">
       <div class="rq-problem-diagnostic__panel--mini">
-        <p class="rq-journey-preview__eyebrow">Problém</p>
-        <h3 data-rq-journey-preview-problem-title>Web nevede k poptávce</h3>
+        <p class="rq-journey-preview__eyebrow">{content.preview.start.eyebrow}</p>
+        <h3 data-rq-journey-preview-problem-title>{content.preview.start.title}</h3>
         <dl class="rq-journey-preview__facts">
           <div>
-            <dt>Problém</dt>
-            <dd data-rq-journey-preview-problem-text>Web jen existuje, ale návštěvník nedojde ke kontaktu.</dd>
+            <dt>{content.preview.start.problemLabel}</dt>
+            <dd data-rq-journey-preview-problem-text>{content.preview.start.problem}</dd>
           </div>
           <div>
-            <dt>První krok</dt>
-            <dd data-rq-journey-preview-problem-step>krátký audit a úprava struktury + jasné CTA.</dd>
+            <dt>{content.preview.start.stepLabel}</dt>
+            <dd data-rq-journey-preview-problem-step>{content.preview.start.step}</dd>
           </div>
         </dl>
-        <a class="rq-btn rq-btn--primary" href="#co-resim" data-rq-journey-scroll>Otevřít diagnostiku</a>
+        <a class="rq-btn rq-btn--primary" href="#co-resim" data-rq-journey-scroll>{content.preview.start.ctaLabel}</a>
       </div>
     </div>
 
     <div class="rq-journey-preview__mode" data-rq-journey-preview-mode="end" hidden>
       <article class="rq-journey-preview__example">
-        <span class="rq-ukazky-bento-card__badge">VZOROVÝ PROJEKT</span>
-        <span class="rq-ukazky-bento-card__kicker">Řemeslo a lokální služby</span>
-        <strong class="rq-ukazky-bento-card__title">Web pro instalatéra</strong>
-        <span class="rq-ukazky-bento-card__text">Přehled služeb, důvěryhodné reference a rychlý kontakt pro zákazníky, kteří potřebují pomoct hned.</span>
-        <a class="rq-btn rq-btn--ghost" href="#ukazky-teaser" data-rq-journey-scroll>Zobrazit ukázky</a>
+        <span class="rq-ukazky-bento-card__badge">{content.preview.end.badge}</span>
+        <span class="rq-ukazky-bento-card__kicker">{content.preview.end.kicker}</span>
+        <strong class="rq-ukazky-bento-card__title">{content.preview.end.title}</strong>
+        <span class="rq-ukazky-bento-card__text">{content.preview.end.text}</span>
+        <a class="rq-btn rq-btn--ghost" href="#ukazky-teaser" data-rq-journey-scroll>{content.preview.end.ctaLabel}</a>
       </article>
     </div>
   </aside>
@@ -200,24 +129,24 @@ const trustPoints = [
 
         <dl class="rq-journey-panel__grid">
           <div>
-            <dt>Co řešíme</dt>
+            <dt>{content.panelLabels.solve}</dt>
             <dd>{phase.solve}</dd>
           </div>
           <div>
-            <dt>Jak dlouho</dt>
+            <dt>{content.panelLabels.duration}</dt>
             <dd>{phase.duration}.</dd>
           </div>
           <div>
-            <dt>Jak probíhá</dt>
+            <dt>{content.panelLabels.process}</dt>
             <dd>{phase.process}</dd>
           </div>
           <div>
-            <dt>Co z toho máte</dt>
+            <dt>{content.panelLabels.benefit}</dt>
             <dd>{phase.benefit}</dd>
           </div>
         </dl>
 
-        <ul class="rq-journey-tags" aria-label={`Výstupy a role: ${phase.title}`}>
+        <ul class="rq-journey-tags" aria-label={`${content.panelLabels.tagListAriaPrefix} ${phase.title}`}>
           {phase.tags.map((tag) => (
             <li>
               <span>{tag.label}</span>
@@ -229,7 +158,7 @@ const trustPoints = [
     ))}
   </div>
 
-  <ul class="rq-journey-trust" aria-label="Důležité jistoty procesu" data-rq-reveal>
+  <ul class="rq-journey-trust" aria-label={content.trustAriaLabel} data-rq-reveal>
     {trustPoints.map((point) => <li>{point}</li>)}
   </ul>
 </div>

@@ -1,5 +1,5 @@
 ---
-const { navItems } = Astro.props;
+const { navItems = [], content = {}, homeHref = "/" } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const resolve = (h) => {
   if (!h || !h.startsWith("/")) return h;
@@ -7,6 +7,16 @@ const resolve = (h) => {
   return base + h;
 };
 const logoMask = `${base}/brand/radeq-logo-b-mask.png`;
+const tagline = content.tagline ?? "Racionální digitalizace pro živnostníky, malé firmy a spolky. Weby, data a automatizace bez zbytečné složitosti.";
+const navTitle = content.navTitle ?? "Navigace";
+const navAriaLabel = content.navAriaLabel ?? "Navigace v patičce";
+const connectionTitle = content.connectionTitle ?? "Spojení";
+const connectionLinks = content.connectionLinks ?? [
+  { href: "/#kontakt", label: "Napsat poptávku" },
+  { href: "/#ceny", label: "Ceník" },
+];
+const legal = content.legal ?? "© 2026 Radek Široký — RadeQ.cz · IČO 08748811 · Praha · celá ČR";
+const contactEmail = content.contactEmail ?? "info@radeq.cz";
 ---
 
 <footer class="rq-site-footer">
@@ -15,18 +25,18 @@ const logoMask = `${base}/brand/radeq-logo-b-mask.png`;
       <div>
         <a
           class="rq-site-footer__logo rq-logo"
-          href={base || "/"}
+          href={resolve(homeHref)}
           style={`--rq-logo-mask:url("${logoMask}")`}
           aria-label="RadeQ.cz"
         >
           <span role="img" aria-label="RadeQ.cz"></span>
         </a>
-        <p class="rq-site-footer__tagline">Racionální digitalizace pro živnostníky, malé firmy a spolky. Weby, data a automatizace bez zbytečné složitosti.</p>
+        <p class="rq-site-footer__tagline">{tagline}</p>
       </div>
 
       <div>
-        <h2 class="rq-site-footer__title">Navigace</h2>
-        <nav class="rq-site-footer__links" aria-label="Navigace v patičce">
+        <h2 class="rq-site-footer__title">{navTitle}</h2>
+        <nav class="rq-site-footer__links" aria-label={navAriaLabel}>
           {navItems.map((item) => (
             <a class="rq-site-footer__link" href={resolve(item.href)}>{item.label}</a>
           ))}
@@ -34,17 +44,18 @@ const logoMask = `${base}/brand/radeq-logo-b-mask.png`;
       </div>
 
       <div>
-        <h2 class="rq-site-footer__title">Spojení</h2>
+        <h2 class="rq-site-footer__title">{connectionTitle}</h2>
         <div class="rq-site-footer__links">
-          <a class="rq-site-footer__link" href={resolve("/#kontakt")}>Napsat poptávku</a>
-          <a class="rq-site-footer__link" href={resolve("/#ceny")}>Ceník</a>
+          {connectionLinks.map((item) => (
+            <a class="rq-site-footer__link" href={resolve(item.href)}>{item.label}</a>
+          ))}
         </div>
       </div>
     </div>
 
     <div class="rq-site-footer__bottom">
-      <span>© 2026 Radek Široký — RadeQ.cz · IČO 08748811 · Praha · celá ČR</span>
-      <span class="rq-site-footer__contact"><a href="mailto:info@radeq.cz">info@radeq.cz</a></span>
+      <span>{legal}</span>
+      <span class="rq-site-footer__contact"><a href={`mailto:${contactEmail}`}>{contactEmail}</a></span>
     </div>
   </div>
 </footer>

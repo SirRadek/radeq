@@ -1,0 +1,1144 @@
+---
+import { homeContent, type HomeContent } from '../data/home';
+import type { Locale } from '../data/locales';
+import RqFooter from './RqFooter.astro';
+import RqGuide from './RqGuide.astro';
+import RqHeader from './RqHeader.astro';
+import RqJourney from './RqJourney.astro';
+import RqMotion from './RqMotion.astro';
+import RqProblemDiagnostic from './RqProblemDiagnostic.astro';
+
+interface Props {
+  content?: HomeContent;
+  lang?: Locale;
+}
+
+const { content = homeContent.cs, lang = 'cs' } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const resolve = (href: string) => {
+  if (!href || !href.startsWith('/')) return href;
+  if (base && (href === base || href.startsWith(`${base}/`))) return href;
+  return `${base}${href}`;
+};
+const typewriterWords = content.hero.typewriter.words.join('|');
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: 'RadeQ.cz',
+  description: content.schema.description,
+  url: content.schema.url,
+  areaServed: content.schema.areaServed,
+  founder: { '@type': 'Person', name: content.schema.founderName },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: content.schema.addressLocality,
+    addressCountry: content.schema.addressCountry,
+  },
+  knowsAbout: content.schema.knowsAbout,
+};
+---
+
+<RqHeader content={content.nav} alternateLabel={content.seo.alternateLabel} alternatePath={content.seo.alternatePath} />
+
+<main>
+  <section class="rq-section rq-hero" id="top" style="--rq-reveal-index: 0">
+    <div class="rq-hero__content">
+      <div class="rq-hero__copy">
+        <p class="rq-eyebrow" data-rq-reveal style="--rq-i:0">{content.hero.eyebrow}</p>
+        <h1 class="rq-display" data-rq-reveal style="--rq-i:1">{content.hero.title}</h1>
+        <p class="rq-hero__typewriter" data-rq-reveal style="--rq-i:2">
+          <span class="rq-hero__tw-prefix">{content.hero.typewriter.prefix}</span><span
+            class="rq-hero__tw-rotator"
+            data-rq-typewriter
+            data-rq-words={typewriterWords}
+          ><span class="rq-hero__tw-sizer" aria-hidden="true">{content.hero.typewriter.sizerWord}</span><span class="rq-hero__tw-text" aria-hidden="true">{content.hero.typewriter.initialWord}</span></span>
+          <span class="rq-sr-only" data-rq-typewriter-live aria-live="polite">{content.hero.typewriter.liveText}</span>
+        </p>
+        <p class="rq-lead" data-rq-reveal style="--rq-i:3">{content.hero.lead}</p>
+        <p class="rq-hero__journey-note" data-rq-reveal style="--rq-i:4">{content.hero.journeyNote}</p>
+      </div>
+
+      <div class="rq-proof-rail" data-rq-reveal style="--rq-i:5" aria-label={content.hero.proofAriaLabel}>
+        {content.hero.proofItems.map((item) => (
+          <div class="rq-proof-rail__item">
+            <p class="rq-proof-rail__label">{item.label}</p>
+            <p class="rq-proof-rail__text">{item.text}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="rq-hero__actions" data-rq-reveal style="--rq-i:6">
+        <a class="rq-btn rq-btn--primary" href={content.hero.actions.primary.href} data-rq-magnetic>{content.hero.actions.primary.label}</a>
+        <a class="rq-btn rq-btn--ghost" href={content.hero.actions.secondary.href}>{content.hero.actions.secondary.label}</a>
+        <p class="rq-hero__micro">{content.hero.actions.micro}</p>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    (() => {
+      const el = document.querySelector('[data-rq-typewriter]');
+      if (!el) return;
+      const textEl = el.querySelector('.rq-hero__tw-text');
+      const liveEl = el.parentElement && el.parentElement.querySelector('[data-rq-typewriter-live]');
+      const words = (el.getAttribute('data-rq-words') || '').split('|').map((w) => w.trim()).filter(Boolean);
+      if (!textEl || words.length === 0) return;
+
+      const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) { textEl.textContent = words[0]; return; }
+
+      function createInViewGate(target, { rootMargin = '120px 0px', threshold = 0, onEnter = () => {}, onExit = () => {} } = {}) {
+        let observer = null;
+        let isIntersecting = false;
+        let isActive = false;
+        let destroyed = false;
+
+        function enter() {
+          if (destroyed || isActive) return;
+          isActive = true;
+          onEnter();
+        }
+
+        function exit() {
+          if (destroyed || !isActive) return;
+          isActive = false;
+          onExit();
+        }
+
+        function sync() {
+          if (document.hidden || !isIntersecting) {
+            exit();
+            return;
+          }
+
+          enter();
+        }
+
+        function handleVisibilityChange() {
+          if (document.hidden) {
+            exit();
+            return;
+          }
+
+          if (isIntersecting) enter();
+        }
+
+        function cleanup() {
+          observer?.disconnect();
+          observer = null;
+          document.removeEventListener('visibilitychange', handleVisibilityChange);
+          window.removeEventListener('pagehide', handlePageHide);
+        }
+
+        function handlePageHide() {
+          onExit();
+          isActive = false;
+          destroyed = true;
+          cleanup();
+        }
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('pagehide', handlePageHide, { once: true });
+
+        if (!('IntersectionObserver' in window)) {
+          isIntersecting = true;
+          if (!document.hidden) enter();
+
+          return {
+            destroy() {
+              destroyed = true;
+              cleanup();
+            },
+          };
+        }
+
+        observer = new IntersectionObserver((entries) => {
+          const entry = entries[0];
+          isIntersecting = Boolean(entry && entry.isIntersecting);
+          sync();
+        }, { rootMargin, threshold });
+
+        observer.observe(target);
+
+        return {
+          destroy() {
+            destroyed = true;
+            cleanup();
+          },
+        };
+      }
+
+      const TYPE = 70, DEL = 38, HOLD = 1600, GAP = 320;
+      const MAX_CYCLES = 3;
+      const finalWord = words[words.length - 1];
+      const observeTarget = el.closest('.rq-hero__typewriter') || el;
+      const prefixEl = el.parentElement && el.parentElement.querySelector('.rq-hero__tw-prefix');
+      const livePrefix = prefixEl ? prefixEl.textContent.replace(/\s+/g, ' ') : '';
+      let wi = 0, ci = words[0].length, deleting = true;
+      let cycles = 0;
+      let inView = false;
+      let stopped = false;
+      let timerId = 0;
+      let nextDelay = HOLD;
+      let gate = null;
+
+      function clearTimer() {
+        if (!timerId) return;
+        window.clearTimeout(timerId);
+        timerId = 0;
+      }
+
+      function destroyGate() {
+        if (!gate) return;
+        gate.destroy();
+        gate = null;
+      }
+
+      function cleanup() {
+        clearTimer();
+        destroyGate();
+      }
+
+      function schedule(delay) {
+        nextDelay = delay;
+        clearTimer();
+        if (!inView || stopped || document.hidden) return;
+        timerId = window.setTimeout(() => {
+          timerId = 0;
+          tick();
+        }, delay);
+      }
+
+      function resume() {
+        if (timerId || stopped || document.hidden) return;
+        schedule(nextDelay);
+      }
+
+      function stopOnFinalWord() {
+        stopped = true;
+        deleting = false;
+        wi = words.length - 1;
+        ci = finalWord.length;
+        textEl.textContent = finalWord;
+        textEl.classList.add('is-rq-typewriter-done');
+        textEl.classList.remove('is-rq-typewriter-paused');
+        if (liveEl) liveEl.textContent = `${livePrefix}${finalWord}.`;
+        cleanup();
+      }
+
+      function maybeStopAfterCycle(word) {
+        if (word !== finalWord) return false;
+        cycles += 1;
+        if (cycles < MAX_CYCLES) return false;
+        stopOnFinalWord();
+        return true;
+      }
+
+      function tick() {
+        if (!inView || stopped || document.hidden) return;
+        const word = words[wi];
+        if (!deleting) {
+          ci += 1;
+          textEl.textContent = word.slice(0, ci);
+          if (ci >= word.length) {
+            if (liveEl) liveEl.textContent = word;
+            if (maybeStopAfterCycle(word)) return;
+            deleting = true;
+            schedule(HOLD);
+            return;
+          }
+          schedule(TYPE);
+          return;
+        }
+        ci -= 1;
+        textEl.textContent = word.slice(0, Math.max(ci, 0));
+        if (ci <= 0) {
+          deleting = false;
+          wi = (wi + 1) % words.length;
+          schedule(GAP);
+          return;
+        }
+        schedule(DEL);
+      }
+
+      function setInView(nextInView) {
+        if (stopped) return;
+        inView = nextInView;
+        textEl.classList.toggle('is-rq-typewriter-paused', !inView);
+        if (!inView) {
+          clearTimer();
+          return;
+        }
+        resume();
+      }
+
+      // Start showing the SSR word, hold, then delete and cycle.
+      textEl.classList.add('is-rq-typewriter-paused');
+      gate = createInViewGate(observeTarget, {
+        rootMargin: '120px 0px',
+        onEnter: () => setInView(true),
+        onExit: () => setInView(false),
+      });
+    })();
+  </script>
+
+  <RqProblemDiagnostic content={content.problems} lang={lang} />
+
+  <section class="rq-marquee rq-bleed" aria-label={content.marquee.ariaLabel} data-rq-marquee>
+    <div class="rq-marquee__viewport">
+      <div class="rq-marquee__track" data-rq-marquee-track>
+        {[0, 1].map((groupIndex) => (
+          <span class="rq-marquee__group" data-rq-marquee-group={groupIndex === 0 ? 'true' : undefined} aria-hidden={groupIndex === 1 ? 'true' : undefined}>
+            {content.marquee.items.map((item) => (
+              <>
+                <span class="rq-marquee__item">{item}</span>
+                <span class="rq-marquee__sep" aria-hidden="true">•</span>
+              </>
+            ))}
+          </span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="sluzby" class="rq-section rq-bleed rq-services-bento" aria-labelledby="rq-sluzby-title">
+    <div class="rq-bleed__inner">
+      <p class="rq-eyebrow">{content.services.eyebrow}</p>
+      <h2 id="rq-sluzby-title" class="rq-h2">{content.services.title}</h2>
+      <div class="rq-services-bento__grid" data-rq-service-rotator data-rq-reveal aria-label={content.services.ariaLabel}>
+        {content.services.items.map((service, index) => (
+          <article
+            id={`service-${service.id}`}
+            class:list={[
+              'rq-offer',
+              'rq-service-tile',
+              service.className,
+              'rq-hoverable',
+              service.featured && 'is-featured',
+            ]}
+            data-rq-service-id={service.id}
+            data-rq-slot={service.slot}
+            aria-current={service.featured ? 'true' : undefined}
+            style={`--rq-i: ${index};`}
+          >
+            {service.flag && <span class="rq-flag">{service.flag}</span>}
+            <p class="rq-offer__price">{service.price}</p>
+            <h3>{service.title}</h3>
+            <p class="rq-offer__result">{service.result}</p>
+            <ul class="rq-offer__outputs">
+              {service.outputs.map((output) => <li>{output}</li>)}
+            </ul>
+          </article>
+        ))}
+      </div>
+      <div class="rq-services-bento__cta">
+        <a class="rq-btn rq-btn--primary" href="#kontakt">{content.services.ctaLabel}</a>
+      </div>
+      <p class="rq-sr-only" data-rq-service-live aria-live="polite"></p>
+    </div>
+  </section>
+
+  <script is:inline define:vars={{ serviceLiveFallback: content.services.liveFallback, serviceLivePrefix: content.services.livePrefix }}>
+    (() => {
+      const grid = document.querySelector('[data-rq-service-rotator]');
+      if (!grid) return;
+
+      const tiles = Array.from(grid.querySelectorAll('.rq-service-tile'));
+      if (tiles.length < 2) return;
+      const liveEl = grid.parentElement?.querySelector('[data-rq-service-live]');
+
+      function createInViewGate(target, { rootMargin = '120px 0px', threshold = 0, onEnter = () => {}, onExit = () => {} } = {}) {
+        let observer = null;
+        let isIntersecting = false;
+        let isActive = false;
+        let destroyed = false;
+
+        function enter() {
+          if (destroyed || isActive) return;
+          isActive = true;
+          onEnter();
+        }
+
+        function exit() {
+          if (destroyed || !isActive) return;
+          isActive = false;
+          onExit();
+        }
+
+        function sync() {
+          if (document.hidden || !isIntersecting) {
+            exit();
+            return;
+          }
+
+          enter();
+        }
+
+        function handleVisibilityChange() {
+          if (document.hidden) {
+            exit();
+            return;
+          }
+
+          if (isIntersecting) enter();
+        }
+
+        function cleanup() {
+          observer?.disconnect();
+          observer = null;
+          document.removeEventListener('visibilitychange', handleVisibilityChange);
+          window.removeEventListener('pagehide', handlePageHide);
+        }
+
+        function handlePageHide() {
+          onExit();
+          isActive = false;
+          destroyed = true;
+          cleanup();
+        }
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('pagehide', handlePageHide, { once: true });
+
+        if (!('IntersectionObserver' in window)) {
+          isIntersecting = true;
+          if (!document.hidden) enter();
+
+          return {
+            destroy() {
+              destroyed = true;
+              cleanup();
+            },
+          };
+        }
+
+        observer = new IntersectionObserver((entries) => {
+          const entry = entries[0];
+          isIntersecting = Boolean(entry && entry.isIntersecting);
+          sync();
+        }, { rootMargin, threshold });
+
+        observer.observe(target);
+
+        return {
+          destroy() {
+            destroyed = true;
+            cleanup();
+          },
+        };
+      }
+
+      const ROTATION_MS = 20000;
+      const IN_MS = 820;
+      const OUT_MS = 460;
+      const REST_MS = 620;
+      const QUICK_IN_MS = 620;
+      const QUICK_OUT_MS = 360;
+      const QUICK_REST_MS = 500;
+      const FEATURED_SLOT = 'web';
+      const SLOTS = ['web', 'shop', 'automation', 'data', 'audit'];
+      const SMALL_SLOTS = SLOTS.filter((slot) => slot !== FEATURED_SLOT);
+      const IN_EASING = 'cubic-bezier(.16,1,.3,1)';
+      const OUT_EASING = 'cubic-bezier(.4,0,.2,1)';
+      const REST_EASING = 'cubic-bezier(.25,1,.5,1)';
+      const initialFeatured = tiles.find((tile) => tile.classList.contains('is-featured')) || tiles[0];
+      const initialSlots = new Map(tiles.map((tile) => [tile, tile.dataset.rqSlot || '']));
+      const reduceQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+      const mobileQuery = window.matchMedia?.('(max-width: 860px)');
+      const supportsAnimations = typeof tiles[0].animate === 'function';
+      const supportsProgressRing = typeof CSS !== 'undefined' && 'registerProperty' in CSS;
+      const slotOrders = permute(SMALL_SLOTS);
+
+      let observer = null;
+      let layoutGate = null;
+      let resizeTimer = 0;
+      let timerId = 0;
+      let timerStartedAt = 0;
+      let remainingMs = ROTATION_MS;
+      let inView = false;
+      let pointerPaused = false;
+      let focusPaused = false;
+      let isAnimating = false;
+      let userLocked = false;
+      let enhancementAvailable = false;
+      let layoutInView = false;
+      let pendingConfigure = true;
+      let highlightTimer = 0;
+      let liveTimer = 0;
+      let retryFocusTimer = 0;
+
+      function permute(items) {
+        if (items.length <= 1) return [items.slice()];
+        return items.flatMap((item, index) => {
+          const rest = items.slice(0, index).concat(items.slice(index + 1));
+          return permute(rest).map((order) => [item].concat(order));
+        });
+      }
+
+      function canEnhance() {
+        return supportsAnimations && !reduceQuery?.matches && !mobileQuery?.matches;
+      }
+
+      function currentFeatured() {
+        return tiles.find((tile) => tile.classList.contains('is-featured')) || initialFeatured;
+      }
+
+      function setFeatured(tile) {
+        tiles.forEach((candidate) => {
+          const active = candidate === tile;
+          candidate.classList.toggle('is-featured', active);
+          if (active) {
+            candidate.setAttribute('aria-current', 'true');
+          } else {
+            candidate.removeAttribute('aria-current');
+          }
+        });
+      }
+
+      function resetToInitialState() {
+        tiles.forEach((tile) => {
+          const slot = initialSlots.get(tile);
+          if (slot) tile.dataset.rqSlot = slot;
+        });
+        setFeatured(initialFeatured);
+      }
+
+      function setInteractive(enabled) {
+        tiles.forEach((tile) => {
+          if (!enabled) {
+            tile.removeAttribute('role');
+            tile.removeAttribute('tabindex');
+            return;
+          }
+          tile.setAttribute('role', 'button');
+          tile.setAttribute('tabindex', '0');
+        });
+      }
+
+      function clearTimer() {
+        if (!timerId) return;
+        window.clearTimeout(timerId);
+        timerId = 0;
+      }
+
+      function pauseTimer() {
+        if (!timerId) return;
+        remainingMs = Math.max(0, remainingMs - (performance.now() - timerStartedAt));
+        clearTimer();
+      }
+
+      function scheduleTimer() {
+        if (timerId || !enhancementAvailable || userLocked || isAnimating || !inView || pointerPaused || focusPaused || document.hidden) return;
+        timerStartedAt = performance.now();
+        timerId = window.setTimeout(() => {
+          timerId = 0;
+          remainingMs = ROTATION_MS;
+          autoAdvance();
+        }, remainingMs);
+      }
+
+      function syncPauseState() {
+        const paused = !enhancementAvailable || userLocked || isAnimating || !inView || pointerPaused || focusPaused || document.hidden;
+        grid.classList.toggle('is-paused', paused);
+        if (paused) {
+          pauseTimer();
+        } else {
+          scheduleTimer();
+        }
+      }
+
+      function disconnectObserver() {
+        if (!observer) return;
+        observer.disconnect();
+        observer = null;
+      }
+
+      function observeGrid() {
+        disconnectObserver();
+        if (!('IntersectionObserver' in window)) {
+          inView = false;
+          syncPauseState();
+          return;
+        }
+        observer = new IntersectionObserver((entries) => {
+          const entry = entries[0];
+          inView = Boolean(entry && entry.isIntersecting);
+          syncPauseState();
+        }, { threshold: 0.15 });
+        observer.observe(grid);
+      }
+
+      function exitLayoutGate() {
+        layoutInView = false;
+        pendingConfigure = true;
+        window.clearTimeout(resizeTimer);
+        resizeTimer = 0;
+        inView = false;
+        clearTimer();
+        disconnectObserver();
+        syncPauseState();
+      }
+
+      function requestConfigure() {
+        pendingConfigure = true;
+        if (!layoutInView) return;
+        configure();
+      }
+
+      function getNextTile() {
+        const active = currentFeatured();
+        const start = tiles.indexOf(active);
+        for (let offset = 1; offset < tiles.length; offset += 1) {
+          const candidate = tiles[(start + offset) % tiles.length];
+          if (candidate && candidate !== active) return candidate;
+        }
+        return null;
+      }
+
+      function applySwap(target) {
+        const active = currentFeatured();
+        if (!target || target === active) return false;
+
+        const releasedSlot = target.dataset.rqSlot || initialSlots.get(target);
+        active.dataset.rqSlot = releasedSlot;
+        target.dataset.rqSlot = FEATURED_SLOT;
+        setFeatured(target);
+        return true;
+      }
+
+      function reserveGridHeight(options = {}) {
+        const force = Boolean(options.force);
+
+        if ((!layoutInView && !force) || document.hidden) {
+          pendingConfigure = true;
+          return;
+        }
+
+        if (!enhancementAvailable) {
+          grid.style.minHeight = '';
+          return;
+        }
+
+        const width = grid.getBoundingClientRect().width;
+        if (!width) return;
+
+        grid.style.minHeight = '0px';
+
+        const clone = grid.cloneNode(true);
+        const cloneTiles = Array.from(clone.querySelectorAll('.rq-service-tile'));
+        clone.removeAttribute('data-rq-reveal');
+        clone.classList.remove('is-rotation-ready', 'is-paused', 'is-flipping', 'is-user-locked');
+        clone.style.position = 'absolute';
+        clone.style.left = '-10000px';
+        clone.style.top = '0';
+        clone.style.width = `${width}px`;
+        clone.style.minHeight = '0';
+        clone.style.visibility = 'hidden';
+        clone.style.pointerEvents = 'none';
+
+        document.body.appendChild(clone);
+        let maxHeight = grid.getBoundingClientRect().height;
+
+        cloneTiles.forEach((tile) => {
+          tile.removeAttribute('role');
+          tile.removeAttribute('tabindex');
+        });
+
+        cloneTiles.forEach((_, featuredIndex) => {
+          const smallIndices = cloneTiles
+            .map((tile, index) => index)
+            .filter((index) => index !== featuredIndex);
+
+          slotOrders.forEach((order) => {
+            cloneTiles.forEach((tile, index) => {
+              const active = index === featuredIndex;
+              tile.classList.toggle('is-featured', active);
+              tile.dataset.rqSlot = active ? FEATURED_SLOT : order[smallIndices.indexOf(index)];
+            });
+            maxHeight = Math.max(maxHeight, clone.getBoundingClientRect().height);
+          });
+        });
+
+        clone.remove();
+        grid.style.minHeight = `${Math.ceil(maxHeight)}px`;
+      }
+
+      function promoteTile(target, options = {}) {
+        const active = currentFeatured();
+        if (!enhancementAvailable || !target || target === active || isAnimating) return;
+        const quick = Boolean(options.quick);
+
+        isAnimating = true;
+        grid.classList.add('is-flipping');
+        syncPauseState();
+
+        const firstRects = new Map(tiles.map((tile) => [tile, tile.getBoundingClientRect()]));
+        applySwap(target);
+        const lastRects = new Map(tiles.map((tile) => [tile, tile.getBoundingClientRect()]));
+
+        tiles.forEach((tile) => {
+          tile.style.zIndex = tile === target ? '3' : tile === active ? '1' : '2';
+        });
+
+        const animations = tiles.map((tile) => {
+          const first = firstRects.get(tile);
+          const last = lastRects.get(tile);
+          if (!first || !last) return null;
+
+          const dx = first.left - last.left;
+          const dy = first.top - last.top;
+          const sx = first.width / Math.max(last.width, 1);
+          const sy = first.height / Math.max(last.height, 1);
+          const moved = Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5 || Math.abs(sx - 1) > 0.01 || Math.abs(sy - 1) > 0.01;
+          if (!moved) return null;
+
+          const incoming = tile === target;
+          const outgoing = tile === active;
+          const duration = incoming
+            ? (quick ? QUICK_IN_MS : IN_MS)
+            : outgoing
+              ? (quick ? QUICK_OUT_MS : OUT_MS)
+              : (quick ? QUICK_REST_MS : REST_MS);
+          const easing = incoming ? IN_EASING : outgoing ? OUT_EASING : REST_EASING;
+          const delay = outgoing && !quick ? 60 : 0;
+          const keyframes = outgoing
+            ? [
+                { transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`, opacity: 0.9 },
+                { transform: 'translate(0, 0) scale(1, 1)', opacity: 1 },
+              ]
+            : [
+                { transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})` },
+                { transform: 'translate(0, 0) scale(1, 1)' },
+              ];
+
+          tile.style.transformOrigin = 'top left';
+          tile.classList.add('is-flip-animating');
+          return tile.animate(keyframes, {
+            duration,
+            easing,
+            delay,
+            fill: 'both',
+          });
+        }).filter(Boolean);
+
+        const finish = () => {
+          tiles.forEach((tile) => {
+            tile.style.transformOrigin = '';
+            tile.style.zIndex = '';
+            tile.classList.remove('is-flip-animating');
+          });
+          grid.classList.remove('is-flipping');
+          isAnimating = false;
+          remainingMs = ROTATION_MS;
+          syncPauseState();
+        };
+
+        if (!animations.length) {
+          finish();
+          return;
+        }
+
+        Promise.allSettled(animations.map((animation) => animation.finished)).then(finish);
+      }
+
+      function autoAdvance() {
+        if (!enhancementAvailable || userLocked || isAnimating || !inView || pointerPaused || focusPaused || document.hidden) {
+          syncPauseState();
+          return;
+        }
+        promoteTile(getNextTile());
+      }
+
+      function lockToTile(tile) {
+        if (!enhancementAvailable || !tile || tile === currentFeatured()) return;
+        userLocked = true;
+        clearTimer();
+        disconnectObserver();
+        grid.classList.add('is-user-locked', 'is-paused');
+        promoteTile(tile, { quick: true });
+      }
+
+      function serviceTileById(serviceId) {
+        return tiles.find((tile) => tile.dataset.rqServiceId === serviceId) || null;
+      }
+
+      function clearCrossHighlight() {
+        if (highlightTimer) {
+          window.clearTimeout(highlightTimer);
+          highlightTimer = 0;
+        }
+        if (liveTimer) {
+          window.clearTimeout(liveTimer);
+          liveTimer = 0;
+        }
+        tiles.forEach((tile) => tile.classList.remove('is-cross-highlight'));
+      }
+
+      function markCrossHighlight(tile) {
+        clearCrossHighlight();
+        tile.classList.add('is-cross-highlight');
+
+        const title = tile.querySelector('h3')?.textContent?.trim() || serviceLiveFallback;
+        if (liveEl) {
+          liveEl.textContent = '';
+          liveTimer = window.setTimeout(() => {
+            liveEl.textContent = `${serviceLivePrefix} ${title}`;
+            liveTimer = 0;
+          }, 0);
+        }
+
+        highlightTimer = window.setTimeout(() => {
+          tile.classList.remove('is-cross-highlight');
+          highlightTimer = 0;
+        }, 3000);
+      }
+
+      function scrollTileToCenter(tile) {
+        window.requestAnimationFrame(() => {
+          tile.scrollIntoView({
+            behavior: reduceQuery?.matches ? 'auto' : 'smooth',
+            block: 'center',
+            inline: 'nearest',
+          });
+        });
+      }
+
+      function lockRotationForFocus() {
+        userLocked = true;
+        clearTimer();
+        disconnectObserver();
+        grid.classList.add('is-user-locked', 'is-paused');
+      }
+
+      function focusService(serviceId) {
+        const target = serviceTileById(serviceId);
+        if (!target) return false;
+
+        lockRotationForFocus();
+
+        if (canEnhance()) {
+          enhancementAvailable = true;
+          grid.classList.toggle('has-rq-progress-ring', supportsProgressRing);
+          grid.classList.add('is-rotation-ready', 'is-paused');
+          setInteractive(true);
+          reserveGridHeight({ force: true });
+
+          if (target !== currentFeatured()) {
+            if (isAnimating) {
+              if (retryFocusTimer) window.clearTimeout(retryFocusTimer);
+              retryFocusTimer = window.setTimeout(() => {
+                retryFocusTimer = 0;
+                focusService(serviceId);
+              }, QUICK_IN_MS + 80);
+            } else {
+              promoteTile(target, { quick: true });
+            }
+          } else {
+            syncPauseState();
+          }
+        } else {
+          enhancementAvailable = false;
+          grid.classList.remove('is-rotation-ready', 'has-rq-progress-ring', 'is-flipping');
+          setInteractive(false);
+          setFeatured(target);
+          grid.style.minHeight = '';
+        }
+
+        markCrossHighlight(target);
+        scrollTileToCenter(target);
+        return true;
+      }
+
+      function handleServiceFocus(event) {
+        const serviceId = event.detail?.serviceId;
+        if (typeof serviceId !== 'string' || !serviceId) return;
+        if (!focusService(serviceId)) return;
+        event.preventDefault?.();
+      }
+
+      function configure() {
+        if (!layoutInView || document.hidden) {
+          pendingConfigure = true;
+          return;
+        }
+
+        pendingConfigure = false;
+        enhancementAvailable = canEnhance();
+        clearTimer();
+        disconnectObserver();
+        inView = false;
+        pointerPaused = false;
+        focusPaused = grid.contains(document.activeElement);
+        remainingMs = ROTATION_MS;
+
+        grid.classList.toggle('has-rq-progress-ring', supportsProgressRing && enhancementAvailable);
+        grid.classList.toggle('is-user-locked', userLocked && enhancementAvailable);
+        grid.classList.remove('is-flipping');
+
+        if (!enhancementAvailable) {
+          grid.classList.remove('is-rotation-ready', 'is-paused', 'has-rq-progress-ring');
+          grid.classList.toggle('is-user-locked', userLocked);
+          setInteractive(false);
+          if (!userLocked) resetToInitialState();
+          grid.style.minHeight = '';
+          return;
+        }
+
+        setInteractive(true);
+        reserveGridHeight();
+        grid.classList.add('is-rotation-ready', 'is-paused');
+
+        if (userLocked) return;
+        observeGrid();
+      }
+
+      function closestTile(event) {
+        const eventTarget = event.target instanceof Element ? event.target : null;
+        if (!eventTarget) return null;
+        const tile = eventTarget.closest('.rq-service-tile');
+        return tile && grid.contains(tile) ? tile : null;
+      }
+
+      function watchQuery(query) {
+        if (!query) return;
+        if (typeof query.addEventListener === 'function') {
+          query.addEventListener('change', requestConfigure);
+          return;
+        }
+        if (typeof query.addListener === 'function') {
+          query.addListener(requestConfigure);
+        }
+      }
+
+      grid.addEventListener('pointerenter', () => {
+        if (!enhancementAvailable || userLocked) return;
+        pointerPaused = true;
+        syncPauseState();
+      });
+
+      grid.addEventListener('pointerleave', () => {
+        if (!enhancementAvailable || userLocked) return;
+        pointerPaused = false;
+        syncPauseState();
+      });
+
+      grid.addEventListener('focusin', () => {
+        if (!enhancementAvailable || userLocked) return;
+        focusPaused = true;
+        syncPauseState();
+      });
+
+      grid.addEventListener('focusout', () => {
+        window.requestAnimationFrame(() => {
+          if (!enhancementAvailable || userLocked) return;
+          focusPaused = grid.contains(document.activeElement);
+          syncPauseState();
+        });
+      });
+
+      grid.addEventListener('click', (event) => {
+        const target = closestTile(event);
+        if (!target) return;
+        lockToTile(target);
+      });
+
+      grid.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        const target = closestTile(event);
+        if (!target) return;
+        event.preventDefault();
+        lockToTile(target);
+      });
+
+      window.addEventListener('rq:service-focus', handleServiceFocus);
+
+      document.addEventListener('visibilitychange', () => {
+        if (!enhancementAvailable || userLocked) return;
+        syncPauseState();
+      });
+
+      window.addEventListener('resize', () => {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = 0;
+        if (!layoutInView) {
+          pendingConfigure = true;
+          return;
+        }
+        resizeTimer = window.setTimeout(() => {
+          resizeTimer = 0;
+          configure();
+        }, 160);
+      });
+
+      window.addEventListener('pagehide', () => {
+        clearCrossHighlight();
+        if (retryFocusTimer) {
+          window.clearTimeout(retryFocusTimer);
+          retryFocusTimer = 0;
+        }
+        window.removeEventListener('rq:service-focus', handleServiceFocus);
+        exitLayoutGate();
+        layoutGate?.destroy();
+        layoutGate = null;
+      });
+
+      watchQuery(reduceQuery);
+      watchQuery(mobileQuery);
+
+      layoutGate = createInViewGate(grid, {
+        rootMargin: '120px 0px',
+        onEnter: () => {
+          layoutInView = true;
+          if (pendingConfigure) configure();
+        },
+        onExit: exitLayoutGate,
+      });
+    })();
+  </script>
+
+  <section id="jak-pracuji" class="rq-section rq-process">
+    <RqJourney content={content.journey} lang={lang} />
+    <article class="rq-guarantee">
+      <p class="rq-eyebrow">{content.guarantee.eyebrow}</p>
+      <h3>{content.guarantee.title}</h3>
+      <p>{content.guarantee.text}</p>
+    </article>
+  </section>
+
+  <section class="rq-section rq-pricing" id="ceny" aria-labelledby="ceny-title">
+    <p class="rq-eyebrow" data-rq-reveal>{content.pricing.eyebrow}</p>
+    <h2 class="rq-h2" id="ceny-title">{content.pricing.title}</h2>
+    <p class="rq-lead">{content.pricing.lead}</p>
+
+    <div class="rq-pricing-grid" data-rq-reveal aria-label={content.pricing.ariaLabel}>
+      {content.pricing.items.map((item) => (
+        <article class:list={['rq-card', 'rq-price-card', item.featured && 'rq-price-card--featured']}>
+          {item.badge && <span class="rq-price-card__badge">{item.badge}</span>}
+          <h3 class="rq-price-card__title">{item.title}</h3>
+          <p class="rq-price-card__price">{item.price}{item.suffix && <span>{item.suffix}</span>}</p>
+          <p class="rq-price-card__text">{item.text}</p>
+          <a class:list={['rq-btn', item.featured ? 'rq-btn--primary' : 'rq-btn--ghost']} href="#kontakt">{item.ctaLabel}</a>
+        </article>
+      ))}
+    </div>
+
+    <p class="rq-pricing-note">{content.pricing.note}</p>
+  </section>
+
+  <section class="rq-bleed rq-ukazky-teaser" id="ukazky-teaser" aria-labelledby="ukazky-teaser-title">
+    <div class="rq-section rq-ukazky-teaser__inner">
+      <p class="rq-eyebrow">{content.showcase.eyebrow}</p>
+      <h2 class="rq-h2" id="ukazky-teaser-title">{content.showcase.title}</h2>
+      <div class="rq-ukazky-bento" data-rq-reveal>
+        {content.showcase.items.map((item) => (
+          <a class:list={['rq-card', 'rq-ukazky-bento-card', item.className]} href={resolve(item.href)}>
+            <span class="rq-ukazky-bento-card__badge">{item.badge}</span>
+            <span class="rq-ukazky-bento-card__kicker">{item.kicker}</span>
+            <strong class="rq-ukazky-bento-card__title">{item.title}</strong>
+            <span class="rq-ukazky-bento-card__text">{item.text}</span>
+            <span class="rq-ukazky-bento-card__link">{item.linkLabel}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="rq-section rq-contact" id="kontakt" aria-labelledby="kontakt-title">
+    <div class="rq-contact__copy">
+      <p class="rq-eyebrow" data-rq-reveal>{content.contact.eyebrow}</p>
+      <h2 class="rq-h2" id="kontakt-title">{content.contact.title}</h2>
+      <p class="rq-lead">{content.contact.lead}</p>
+    </div>
+
+    <form class="rq-contact-form" method="post" action={resolve('/api/leads')} id="rq-lead-form">
+      <div class="rq-form-field">
+        <label for="rq-lead-name">{content.contact.fields.name}</label>
+        <input id="rq-lead-name" name="name" type="text" autocomplete="name" required />
+      </div>
+
+      <div class="rq-form-field">
+        <label for="rq-lead-email">{content.contact.fields.email}</label>
+        <input id="rq-lead-email" name="email" type="email" autocomplete="email" required />
+      </div>
+
+      <div class="rq-form-field">
+        <label for="rq-lead-current">{content.contact.fields.projectType}</label>
+        <select id="rq-lead-current" name="project_type">
+          {content.contact.projectOptions.map((option) => <option value={option.value}>{option.label}</option>)}
+        </select>
+      </div>
+
+      <div class="rq-form-field">
+        <label for="rq-lead-need">{content.contact.fields.message}</label>
+        <textarea id="rq-lead-need" name="message" rows="6" required></textarea>
+      </div>
+
+      <details class="rq-form-optional">
+        <summary>{content.contact.optionalSummary}</summary>
+        <div class="rq-form-optional__grid">
+          <div class="rq-form-field">
+            <label for="rq-lead-budget">{content.contact.fields.budget}</label>
+            <select id="rq-lead-budget" name="budget_range">
+              {content.contact.budgetOptions.map((option) => <option value={option.value}>{option.label}</option>)}
+            </select>
+          </div>
+          <div class="rq-form-field">
+            <label for="rq-lead-deadline">{content.contact.fields.deadline}</label>
+            <input id="rq-lead-deadline" name="deadline" type="text" autocomplete="off" placeholder={content.contact.fields.deadlinePlaceholder} />
+          </div>
+        </div>
+      </details>
+
+      <div class="rq-hp" aria-hidden="true">
+        <label>{content.contact.fields.honeypot}<input type="text" name="honeypot" tabindex="-1" autocomplete="off" /></label>
+      </div>
+      <button class="rq-btn rq-btn--primary" type="submit">{content.contact.submitLabel}</button>
+      <p class="rq-form-status" id="rq-lead-status" role="status" aria-live="polite"></p>
+    </form>
+
+    <p class="rq-contact-note">{content.contact.notePrefix} <a href={`mailto:${content.contact.noteEmail}`}>{content.contact.noteEmail}</a></p>
+
+    <script is:inline define:vars={{
+      leadsUrl: resolve('/api/leads'),
+      leadLocale: lang,
+      statusSending: content.contact.status.sending,
+      statusSuccess: content.contact.status.success,
+      statusFailureHtml: content.contact.status.failureHtml,
+    }}>
+      (() => {
+        const form = document.getElementById("rq-lead-form");
+        const statusEl = document.getElementById("rq-lead-status");
+        if (!form) return;
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const fd = new FormData(form);
+          if (fd.get("honeypot")) return;
+          const payload = {
+            name: fd.get("name") || "", email: fd.get("email") || "",
+            project_type: fd.get("project_type") || "", message: fd.get("message") || "",
+            company: "", audience: "", deadline: fd.get("deadline") || "", current_url: "", budget_range: fd.get("budget_range") || "",
+            honeypot: "", source_path: location.pathname + location.search,
+            referrer: document.referrer || "", locale: leadLocale
+          };
+          statusEl.textContent = statusSending;
+          try {
+            const r = await fetch(leadsUrl, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
+            const ct = r.headers.get("content-type") || "";
+            if (!ct.includes("application/json")) throw new Error("nojson");
+            const res = await r.json();
+            if (!r.ok || !res.ok) throw new Error((res.details && res.details.join(" ")) || res.error || "fail");
+            form.reset();
+            statusEl.textContent = statusSuccess;
+          } catch (err) {
+            statusEl.innerHTML = statusFailureHtml;
+          }
+        });
+      })();
+    </script>
+  </section>
+</main>
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />
+<RqFooter navItems={content.nav.items} content={content.footer} homeHref={content.nav.homeHref} />
+<RqGuide content={content.guide} lang={lang} />
+<RqMotion />

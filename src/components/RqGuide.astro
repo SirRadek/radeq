@@ -1,4 +1,14 @@
 ---
+import { homeContent, type HomeContent } from '../data/home';
+import type { Locale } from '../data/locales';
+
+interface Props {
+  content?: HomeContent['guide'];
+  lang?: Locale;
+}
+
+const { content = homeContent.cs.guide } = Astro.props;
+const topics = Object.entries(content.topics);
 ---
 
 <div class="rq-guide" data-rq-guide>
@@ -10,7 +20,7 @@
     data-rq-toggle
   >
     <span class="rq-guide__toggle-icon" aria-hidden="true">?</span>
-    <span class="rq-guide__toggle-label">Rychlá navigace</span>
+    <span class="rq-guide__toggle-label">{content.toggleLabel}</span>
   </button>
 
   <section
@@ -24,32 +34,31 @@
   >
     <header class="rq-guide__header">
       <div>
-        <p class="rq-guide__eyebrow">RadeQ</p>
-        <h2 id="rq-guide-title" class="rq-guide__title">Rychlá navigace</h2>
+        <p class="rq-guide__eyebrow">{content.eyebrow}</p>
+        <h2 id="rq-guide-title" class="rq-guide__title">{content.title}</h2>
       </div>
-      <button class="rq-guide__close" type="button" aria-label="Zavřít" data-rq-close>
+      <button class="rq-guide__close" type="button" aria-label={content.closeLabel} data-rq-close>
         <span aria-hidden="true">×</span>
       </button>
     </header>
 
     <div class="rq-guide__body">
-      <p class="rq-guide__intro">Pomůžu vám najít, co potřebujete. Vyberte téma:</p>
+      <p class="rq-guide__intro">{content.intro}</p>
 
-      <div class="rq-guide__quick-actions" aria-label="Rychlá témata">
-        <button class="rq-guide__chip" type="button" data-rq-topic="ceny">Kolik to stojí</button>
-        <button class="rq-guide__chip" type="button" data-rq-topic="sluzby">Jaké služby nabízíte</button>
-        <button class="rq-guide__chip" type="button" data-rq-topic="spoluprace">Jak probíhá spolupráce</button>
-        <button class="rq-guide__chip" type="button" data-rq-topic="kontakt">Chci poptávku</button>
+      <div class="rq-guide__quick-actions" aria-label={content.quickActionsAriaLabel}>
+        {topics.map(([key, topic]) => (
+          topic.chipLabel ? <button class="rq-guide__chip" type="button" data-rq-topic={key}>{topic.chipLabel}</button> : null
+        ))}
       </div>
 
       <div class="rq-guide__messages" aria-live="polite" data-rq-messages>
         <div class="rq-guide__message rq-guide__message--guide">
-          <p>Vyberte téma nebo napište krátký dotaz.</p>
+          <p>{content.initialMessage}</p>
         </div>
       </div>
 
       <form class="rq-guide__form" data-rq-form>
-        <label class="rq-guide__label" for="rq-guide-input">Váš dotaz</label>
+        <label class="rq-guide__label" for="rq-guide-input">{content.inputLabel}</label>
         <div class="rq-guide__input-row">
           <input
             id="rq-guide-input"
@@ -57,10 +66,10 @@
             type="text"
             name="rq-guide-query"
             autocomplete="off"
-            placeholder="Např. cena webu"
+            placeholder={content.inputPlaceholder}
             data-rq-input
           />
-          <button class="rq-guide__send" type="submit">Odeslat</button>
+          <button class="rq-guide__send" type="submit">{content.sendLabel}</button>
         </div>
       </form>
     </div>
@@ -372,66 +381,32 @@
   }
 </style>
 
-<script>
+<script is:inline define:vars={{ rqGuideTopics: content.topics, rqGuideFallback: content.fallback, rqGuideMatchers: content.matchers }}>
   // Preview na GitHub Pages je kurátorovaný client-side průvodce; v produkci na Cloudflare lze napojit Workers AI.
-  const rqGuideTopics = {
-    ceny: {
-      text: 'Audit od 4 900 Kč, web od 9 900 Kč, e-shop od 19 900 Kč, automatizace od 12 000 Kč. Měsíční správa od 2 500 Kč. Přesně po krátké domluvě.',
-      href: '#ceny',
-      label: 'Přejít na ceny',
-      followups: [
-        { key: 'kontakt', label: 'Chci poptávku' },
-        { key: 'sluzby', label: 'Služby' }
-      ]
-    },
-    sluzby: {
-      text: 'Weby a redesign, e-shopy, automatizace procesů, práce s daty a AI, audit.',
-      href: '#sluzby',
-      label: 'Přejít na služby',
-      followups: [
-        { key: 'ceny', label: 'Ceny' },
-        { key: 'spoluprace', label: 'Postup' }
-      ]
-    },
-    spoluprace: {
-      text: 'Pojmenujeme problém → nejmenší funkční řešení → postavím, otestuji a předám (se servisním protokolem).',
-      href: '#jak-pracuji',
-      label: 'Jak pracuji',
-      followups: [
-        { key: 'kontakt', label: 'Chci poptávku' },
-        { key: 'ceny', label: 'Ceny' }
-      ]
-    },
-    kontakt: {
-      text: 'Napište pár vět, co řešíte. Ozvat se můžete i na info@radeq.cz.',
-      href: '#kontakt',
-      label: 'Přejít na kontakt',
-      followups: [
-        { key: 'sluzby', label: 'Služby' },
-        { key: 'spoluprace', label: 'Postup' }
-      ]
-    }
-  };
-
-  const rqGuideFallback = {
-    text: 'Tohle radši napište do poptávky — Radek odpoví přesně.',
-    href: '#kontakt',
-    label: 'Napsat poptávku'
-  };
-
   const rqNormalize = (value) => value
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
     .trim();
+
+  const rqEscapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  const rqMatchesTerm = (text, term) => {
+    const normalizedTerm = rqNormalize(term);
+    if (!normalizedTerm) return false;
+    if (normalizedTerm.length <= 3) {
+      return new RegExp(`(^|\\s)${rqEscapeRegExp(normalizedTerm)}(\\s|$)`).test(text);
+    }
+    return text.includes(normalizedTerm);
+  };
 
   const rqMatchTopic = (query) => {
     const text = rqNormalize(query);
     if (!text) return null;
-    if (/\b(cen|cena|ceny|kolik|stoj|rozpocet|audit|sprava|eshop|e-shop|web)\b/.test(text)) return 'ceny';
-    if (/\b(sluz|nabiz|delate|redesign|automatiz|data|ai|eshop|e-shop)\b/.test(text)) return 'sluzby';
-    if (/\b(jak|postup|spoluprac|probiha|predani|test|reseni)\b/.test(text)) return 'spoluprace';
-    if (/\b(kontakt|poptav|napsat|email|mail|info)\b/.test(text)) return 'kontakt';
+    for (const [key, terms] of Object.entries(rqGuideMatchers)) {
+      if (terms.some((term) => rqMatchesTerm(text, term))) return key;
+    }
     return null;
   };
 

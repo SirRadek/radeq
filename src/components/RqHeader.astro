@@ -1,5 +1,5 @@
 ---
-const { content, alternateLabel, alternatePath } = Astro.props;
+const { content = {}, alternateLabel, alternatePath } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const resolve = (h) => {
   if (!h || !h.startsWith("/")) return h;
@@ -7,21 +7,27 @@ const resolve = (h) => {
   return base + h;
 };
 const logoMask = `${base}/brand/radeq-logo-b-mask.png`;
+const navItems = content.navItems ?? content.items ?? [];
+const headerAriaLabel = content.ariaLabel ?? "Hlavní navigace";
+const navAriaLabel = content.navAriaLabel ?? "Hlavní navigace";
+const brandAriaLabel = content.brandAriaLabel ?? "RadeQ.cz";
+const homeHref = content.homeHref ?? "/";
+const ctaHref = content.ctaHref ?? "/#kontakt";
 ---
 
-<header class="rq-site-header">
+<header class="rq-site-header" aria-label={headerAriaLabel}>
   <div class="rq-site-header__inner">
     <a
       class="rq-site-header__logo rq-logo"
-      href={base || "/"}
+      href={resolve(homeHref)}
       style={`--rq-logo-mask:url("${logoMask}")`}
-      aria-label="RadeQ.cz"
+      aria-label={brandAriaLabel}
     >
-      <span role="img" aria-label="RadeQ.cz"></span>
+      <span role="img" aria-label={brandAriaLabel}></span>
     </a>
 
-    <nav class="rq-site-nav" aria-label="Hlavní navigace">
-      {content.navItems.map((item) => (
+    <nav class="rq-site-nav" aria-label={navAriaLabel}>
+      {navItems.map((item) => (
         <a class="rq-site-nav__link" href={resolve(item.href)}>{item.label}</a>
       ))}
     </nav>
@@ -30,7 +36,7 @@ const logoMask = `${base}/brand/radeq-logo-b-mask.png`;
       {alternateLabel && alternatePath && (
         <a class="rq-site-header__alt" href={resolve(alternatePath)}>{alternateLabel}</a>
       )}
-      {content.cta && <a class="rq-btn rq-btn--primary" href={resolve("/#kontakt")}>{content.cta}</a>}
+      {content.cta && <a class="rq-btn rq-btn--primary" href={resolve(ctaHref)}>{content.cta}</a>}
     </div>
   </div>
 </header>

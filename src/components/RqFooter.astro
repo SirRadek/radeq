@@ -16,6 +16,7 @@ const connectionLinks = content.connectionLinks ?? [
   { href: "/#ceny", label: "Ceník" },
 ];
 const legal = content.legal ?? "© 2026 Radek Široký — RadeQ.cz · IČO 08748811 · Praha · celá ČR";
+const legalItems = legal.split(/\s*(?:\u00b7|\u2014)\s*/).filter(Boolean);
 const contactEmail = content.contactEmail ?? "info@radeq.cz";
 ---
 
@@ -54,7 +55,7 @@ const contactEmail = content.contactEmail ?? "info@radeq.cz";
     </div>
 
     <div class="rq-site-footer__bottom">
-      <span>{legal}</span>
+      {legalItems.map((item) => <span>{item}</span>)}
       <span class="rq-site-footer__contact"><a href={`mailto:${contactEmail}`}>{contactEmail}</a></span>
     </div>
   </div>

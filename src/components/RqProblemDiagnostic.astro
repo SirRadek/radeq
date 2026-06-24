@@ -155,7 +155,14 @@ const stars = Array.from({ length: 5 });
             </dl>
             <div class="rq-problem-diagnostic__actions">
               <a class="rq-btn rq-btn--primary" href="#kontakt">{content.ctaLabel}</a>
-              <a class="rq-problem-diagnostic__service" href={`#service-${item.serviceId}`} data-rq-service-target={item.serviceId}>{content.servicePrefix} <strong>{item.service}</strong></a>
+              <a
+                class="rq-problem-diagnostic__service"
+                href={`#service-${item.primaryServiceId}`}
+                data-rq-primary-service-target={item.primaryServiceId}
+                data-rq-related-service-target={item.relatedServiceIds[0]}
+              >
+                {content.servicePrefix} <strong>{item.service}</strong>
+              </a>
             </div>
           </article>
         ))}
@@ -1251,15 +1258,16 @@ const stars = Array.from({ length: 5 });
 
     root.addEventListener('click', (event) => {
       const serviceLink = event.target instanceof Element
-        ? event.target.closest('[data-rq-service-target]')
+        ? event.target.closest('[data-rq-primary-service-target]')
         : null;
       if (!serviceLink || !root.contains(serviceLink)) return;
 
-      const serviceId = serviceLink.getAttribute('data-rq-service-target');
-      if (!serviceId) return;
+      const primaryServiceId = serviceLink.getAttribute('data-rq-primary-service-target');
+      const relatedServiceId = serviceLink.getAttribute('data-rq-related-service-target') || '';
+      if (!primaryServiceId) return;
 
       const focusEvent = new CustomEvent('rq:service-focus', {
-        detail: { serviceId },
+        detail: { primaryServiceId, relatedServiceId },
         cancelable: true,
       });
 

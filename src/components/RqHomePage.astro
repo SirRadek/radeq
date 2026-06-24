@@ -962,6 +962,7 @@ const schema = {
       const QUICK_OUT_MS = 360;
       const QUICK_REST_MS = 500;
       const FEATURED_SLOT = 'web';
+      const RELATED_SLOT = 'shop';
       const SLOTS = ['web', 'shop', 'automation', 'data', 'audit'];
       const SMALL_SLOTS = SLOTS.filter((slot) => slot !== FEATURED_SLOT);
       const IN_EASING = 'cubic-bezier(.16,1,.3,1)';
@@ -1164,7 +1165,7 @@ const schema = {
           return;
         }
 
-        if (!enhancementAvailable) {
+        if (!enhancementAvailable && !force) {
           grid.style.minHeight = '';
           return;
         }
@@ -1213,22 +1214,93 @@ const schema = {
         grid.style.minHeight = `${Math.ceil(maxHeight)}px`;
       }
 
-      function promoteTile(target, options = {}) {
-        const active = currentFeatured();
-        if (!enhancementAvailable || !target || target === active || isAnimating) return;
+      function applyFocusLayout(primaryTile, relatedTile) {
+        if (!primaryTile) return false;
+
+        const nextSlots = new Map();
+        const usedSlots = new Set();
+
+        const assignSlot = (tile, slot) => {
+          if (!tile || !slot || nextSlots.has(tile) || usedSlots.has(slot)) return false;
+          nextSlots.set(tile, slot);
+          usedSlots.add(slot);
+          return true;
+        };
+
+        assignSlot(primaryTile, FEATURED_SLOT);
+        if (relatedTile && relatedTile !== primaryTile) assignSlot(relatedTile, RELATED_SLOT);
+
+        const remainingSlots = SLOTS.filter((slot) => !usedSlots.has(slot));
+        const unassignedTiles = new Set(tiles.filter((tile) => !nextSlots.has(tile)));
+
+        const assignPreferredSlots = (getSlot) => {
+          tiles.forEach((tile) => {
+            if (!unassignedTiles.has(tile)) return;
+            const slot = getSlot(tile);
+            const slotIndex = remainingSlots.indexOf(slot);
+            if (slotIndex < 0) return;
+            nextSlots.set(tile, slot);
+            remainingSlots.splice(slotIndex, 1);
+            unassignedTiles.delete(tile);
+          });
+        };
+
+        assignPreferredSlots((tile) => tile.dataset.rqSlot || '');
+        assignPreferredSlots((tile) => initialSlots.get(tile) || '');
+
+        unassignedTiles.forEach((tile) => {
+          const slot = remainingSlots.shift();
+          if (slot) nextSlots.set(tile, slot);
+        });
+
+        let changed = currentFeatured() !== primaryTile;
+        tiles.forEach((tile) => {
+          const nextSlot = nextSlots.get(tile);
+          if (!nextSlot) return;
+          if (tile.dataset.rqSlot !== nextSlot) changed = true;
+          tile.dataset.rqSlot = nextSlot;
+        });
+        setFeatured(primaryTile);
+
+        return changed;
+      }
+
+      function animateTileLayout(updateLayout, options = {}) {
+        if (!enhancementAvailable || isAnimating) return false;
+
         const quick = Boolean(options.quick);
+        const primaryTile = options.primaryTile || null;
+        const relatedTile = options.relatedTile || null;
+        const outgoingTile = options.outgoingTile || null;
 
         isAnimating = true;
         grid.classList.add('is-flipping');
         syncPauseState();
 
         const firstRects = new Map(tiles.map((tile) => [tile, tile.getBoundingClientRect()]));
-        applySwap(target);
+        const changed = updateLayout();
         const lastRects = new Map(tiles.map((tile) => [tile, tile.getBoundingClientRect()]));
 
         tiles.forEach((tile) => {
-          tile.style.zIndex = tile === target ? '3' : tile === active ? '1' : '2';
+          tile.style.zIndex = tile === primaryTile ? '4' : tile === relatedTile ? '3' : tile === outgoingTile ? '1' : '2';
         });
+
+        const finish = () => {
+          tiles.forEach((tile) => {
+            tile.style.transformOrigin = '';
+            tile.style.zIndex = '';
+            tile.classList.remove('is-flip-animating');
+          });
+          grid.classList.remove('is-flipping');
+          isAnimating = false;
+          remainingMs = ROTATION_MS;
+          syncPauseState();
+        };
+
+        if (!changed) {
+          finish();
+          return false;
+        }
 
         const animations = tiles.map((tile) => {
           const first = firstRects.get(tile);
@@ -1242,8 +1314,8 @@ const schema = {
           const moved = Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5 || Math.abs(sx - 1) > 0.01 || Math.abs(sy - 1) > 0.01;
           if (!moved) return null;
 
-          const incoming = tile === target;
-          const outgoing = tile === active;
+          const incoming = tile === primaryTile;
+          const outgoing = tile === outgoingTile && tile !== primaryTile;
           const duration = incoming
             ? (quick ? QUICK_IN_MS : IN_MS)
             : outgoing
@@ -1271,24 +1343,34 @@ const schema = {
           });
         }).filter(Boolean);
 
-        const finish = () => {
-          tiles.forEach((tile) => {
-            tile.style.transformOrigin = '';
-            tile.style.zIndex = '';
-            tile.classList.remove('is-flip-animating');
-          });
-          grid.classList.remove('is-flipping');
-          isAnimating = false;
-          remainingMs = ROTATION_MS;
-          syncPauseState();
-        };
-
         if (!animations.length) {
           finish();
-          return;
+          return changed;
         }
 
         Promise.allSettled(animations.map((animation) => animation.finished)).then(finish);
+        return changed;
+      }
+
+      function promoteTile(target, options = {}) {
+        const active = currentFeatured();
+        if (!enhancementAvailable || !target || target === active || isAnimating) return false;
+        return animateTileLayout(() => applySwap(target), {
+          quick: Boolean(options.quick),
+          primaryTile: target,
+          outgoingTile: active,
+        });
+      }
+
+      function promoteFocusedServices(primaryTile, relatedTile, options = {}) {
+        const active = currentFeatured();
+        if (!enhancementAvailable || !primaryTile || isAnimating) return false;
+        return animateTileLayout(() => applyFocusLayout(primaryTile, relatedTile), {
+          quick: Boolean(options.quick),
+          primaryTile,
+          relatedTile,
+          outgoingTile: active,
+        });
       }
 
       function autoAdvance() {
@@ -1321,24 +1403,32 @@ const schema = {
           window.clearTimeout(liveTimer);
           liveTimer = 0;
         }
-        tiles.forEach((tile) => tile.classList.remove('is-cross-highlight'));
+        tiles.forEach((tile) => tile.classList.remove('is-cross-highlight', 'is-related-highlight'));
       }
 
-      function markCrossHighlight(tile) {
+      function getTileTitle(tile) {
+        return tile?.querySelector('h3')?.textContent?.trim() || '';
+      }
+
+      function markCrossHighlight(tile, relatedTile = null) {
         clearCrossHighlight();
         tile.classList.add('is-cross-highlight');
+        if (relatedTile && relatedTile !== tile) relatedTile.classList.add('is-related-highlight');
 
-        const title = tile.querySelector('h3')?.textContent?.trim() || serviceLiveFallback;
+        const title = getTileTitle(tile) || serviceLiveFallback;
+        const relatedTitle = relatedTile && relatedTile !== tile ? getTileTitle(relatedTile) : '';
+        const liveTitle = relatedTitle ? `${title} + ${relatedTitle}` : title;
         if (liveEl) {
           liveEl.textContent = '';
           liveTimer = window.setTimeout(() => {
-            liveEl.textContent = `${serviceLivePrefix} ${title}`;
+            liveEl.textContent = `${serviceLivePrefix} ${liveTitle}`;
             liveTimer = 0;
           }, 0);
         }
 
         highlightTimer = window.setTimeout(() => {
           tile.classList.remove('is-cross-highlight');
+          relatedTile?.classList.remove('is-related-highlight');
           highlightTimer = 0;
         }, 3000);
       }
@@ -1360,9 +1450,11 @@ const schema = {
         grid.classList.add('is-user-locked', 'is-paused');
       }
 
-      function focusService(serviceId) {
-        const target = serviceTileById(serviceId);
+      function focusService(primaryServiceId, relatedServiceId = '') {
+        const target = serviceTileById(primaryServiceId);
         if (!target) return false;
+        const relatedTarget = serviceTileById(relatedServiceId);
+        const validRelatedTarget = relatedTarget && relatedTarget !== target ? relatedTarget : null;
 
         lockRotationForFocus();
 
@@ -1373,16 +1465,14 @@ const schema = {
           setInteractive(true);
           reserveGridHeight({ force: true });
 
-          if (target !== currentFeatured()) {
-            if (isAnimating) {
-              if (retryFocusTimer) window.clearTimeout(retryFocusTimer);
-              retryFocusTimer = window.setTimeout(() => {
-                retryFocusTimer = 0;
-                focusService(serviceId);
-              }, QUICK_IN_MS + 80);
-            } else {
-              promoteTile(target, { quick: true });
-            }
+          if (isAnimating) {
+            if (retryFocusTimer) window.clearTimeout(retryFocusTimer);
+            retryFocusTimer = window.setTimeout(() => {
+              retryFocusTimer = 0;
+              focusService(primaryServiceId, relatedServiceId);
+            }, QUICK_IN_MS + 80);
+          } else if (!promoteFocusedServices(target, validRelatedTarget, { quick: true })) {
+            syncPauseState();
           } else {
             syncPauseState();
           }
@@ -1390,19 +1480,20 @@ const schema = {
           enhancementAvailable = false;
           grid.classList.remove('is-rotation-ready', 'has-rq-progress-ring', 'is-flipping');
           setInteractive(false);
-          setFeatured(target);
-          grid.style.minHeight = '';
+          reserveGridHeight({ force: true });
+          applyFocusLayout(target, validRelatedTarget);
         }
 
-        markCrossHighlight(target);
+        markCrossHighlight(target, validRelatedTarget);
         scrollTileToCenter(target);
         return true;
       }
 
       function handleServiceFocus(event) {
-        const serviceId = event.detail?.serviceId;
-        if (typeof serviceId !== 'string' || !serviceId) return;
-        if (!focusService(serviceId)) return;
+        const primaryServiceId = event.detail?.primaryServiceId;
+        const relatedServiceId = event.detail?.relatedServiceId;
+        if (typeof primaryServiceId !== 'string' || !primaryServiceId) return;
+        if (!focusService(primaryServiceId, typeof relatedServiceId === 'string' ? relatedServiceId : '')) return;
         event.preventDefault?.();
       }
 
@@ -1431,7 +1522,11 @@ const schema = {
           grid.classList.toggle('is-user-locked', userLocked);
           setInteractive(false);
           if (!userLocked) resetToInitialState();
-          grid.style.minHeight = '';
+          if (userLocked) {
+            reserveGridHeight({ force: true });
+          } else {
+            grid.style.minHeight = '';
+          }
           return;
         }
 

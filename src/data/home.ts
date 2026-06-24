@@ -80,7 +80,8 @@ export type HomeContent = {
       verify: string;
       step: string;
       service: string;
-      serviceId: string;
+      primaryServiceId: string;
+      relatedServiceIds: readonly string[];
     }[];
   };
   marquee: {
@@ -283,7 +284,8 @@ const csProblems: HomeContent['problems']['items'] = [
     verify: 'cestu od příchodu ke kontaktu, srozumitelnost nabídky a jestli se vůbec měří.',
     step: 'krátký audit a úprava struktury + jasné CTA.',
     service: 'Web a redesign / Audit',
-    serviceId: 'web',
+    primaryServiceId: 'web',
+    relatedServiceIds: ['audit', 'data'],
   },
   {
     id: 'nejasny-krok',
@@ -296,7 +298,8 @@ const csProblems: HomeContent['problems']['items'] = [
     verify: 'srozumitelnost nabídky, text výzvy k akci a cestu k formuláři nebo telefonu.',
     step: 'upravit strukturu stránky tak, aby další krok byl zřejmý bez vysvětlování.',
     service: 'Web a redesign / Audit',
-    serviceId: 'web',
+    primaryServiceId: 'web',
+    relatedServiceIds: ['audit', 'shop'],
   },
   {
     id: 'poptavky-email',
@@ -309,7 +312,8 @@ const csProblems: HomeContent['problems']['items'] = [
     verify: 'kde vzniká ruční práce a kolik času bere.',
     step: 'navrhnout nejmenší automatizaci jednoho toku.',
     service: 'Automatizace procesů',
-    serviceId: 'automation',
+    primaryServiceId: 'automation',
+    relatedServiceIds: ['audit', 'data'],
   },
   {
     id: 'rucni-data',
@@ -322,7 +326,8 @@ const csProblems: HomeContent['problems']['items'] = [
     verify: 'kde vzniká ruční práce a kolik času bere.',
     step: 'navrhnout nejmenší automatizaci jednoho toku.',
     service: 'Automatizace procesů',
-    serviceId: 'automation',
+    primaryServiceId: 'automation',
+    relatedServiceIds: ['data', 'audit'],
   },
   {
     id: 'fakturace-papiry',
@@ -335,7 +340,8 @@ const csProblems: HomeContent['problems']['items'] = [
     verify: 'jak vzniká zakázka, kde se berou podklady pro fakturu a které kroky se opakují ručně.',
     step: 'srovnat postup od poptávky po doklad a navrhnout malé zjednodušení bez výměny celého systému.',
     service: 'Automatizace procesů / Audit',
-    serviceId: 'automation',
+    primaryServiceId: 'automation',
+    relatedServiceIds: ['audit', 'data'],
   },
   {
     id: 'zacatek-ai',
@@ -348,7 +354,8 @@ const csProblems: HomeContent['problems']['items'] = [
     verify: 'současný stav, opakovanou práci a podklady, nad kterými by AI případně dávala smysl.',
     step: 'krátký audit, který dá jasné pořadí kroků a oddělí užitečné nápady od slepých uliček.',
     service: 'Audit / Data a AI pomocníci',
-    serviceId: 'audit',
+    primaryServiceId: 'audit',
+    relatedServiceIds: ['data', 'automation'],
   },
   {
     id: 'mereni-prehled',
@@ -361,7 +368,8 @@ const csProblems: HomeContent['problems']['items'] = [
     verify: 'co je vlastně cíl a jestli se dnes sleduje.',
     step: 'nastavit přehledné měření bez přehnané analytiky.',
     service: 'Data a AI / Audit',
-    serviceId: 'data',
+    primaryServiceId: 'data',
+    relatedServiceIds: ['audit', 'web'],
   },
   {
     id: 'planovani-schuzek',
@@ -374,7 +382,8 @@ const csProblems: HomeContent['problems']['items'] = [
     verify: 'kde se domlouvají termíny, jak se potvrzují změny a které informace se opakovaně posílají ručně.',
     step: 'navrhnout jednoduchý postup pro výběr termínu, potvrzení a předání základních informací.',
     service: 'Automatizace procesů',
-    serviceId: 'automation',
+    primaryServiceId: 'automation',
+    relatedServiceIds: ['web', 'audit'],
   },
 ];
 
@@ -390,7 +399,8 @@ const enProblems: HomeContent['problems']['items'] = [
     verify: 'the path from arrival to contact, clarity of the offer, and whether the key steps are measured at all.',
     step: 'a short audit, structure cleanup, and clear calls to action.',
     service: 'Website and redesign / Audit',
-    serviceId: 'web',
+    primaryServiceId: 'web',
+    relatedServiceIds: ['audit', 'data'],
   },
   {
     id: 'nejasny-krok',
@@ -403,7 +413,8 @@ const enProblems: HomeContent['problems']['items'] = [
     verify: 'offer clarity, call-to-action wording, and the route to the form or phone.',
     step: 'adjust the page structure so the next step is obvious without explanation.',
     service: 'Website and redesign / Audit',
-    serviceId: 'web',
+    primaryServiceId: 'web',
+    relatedServiceIds: ['audit', 'shop'],
   },
   {
     id: 'poptavky-email',
@@ -416,7 +427,8 @@ const enProblems: HomeContent['problems']['items'] = [
     verify: 'where manual work appears and how much time it takes.',
     step: 'design the smallest useful automation for one flow.',
     service: 'Process automation',
-    serviceId: 'automation',
+    primaryServiceId: 'automation',
+    relatedServiceIds: ['audit', 'data'],
   },
   {
     id: 'rucni-data',
@@ -429,7 +441,8 @@ const enProblems: HomeContent['problems']['items'] = [
     verify: 'where manual work appears and how much time it takes.',
     step: 'design the smallest useful automation for one flow.',
     service: 'Process automation',
-    serviceId: 'automation',
+    primaryServiceId: 'automation',
+    relatedServiceIds: ['data', 'audit'],
   },
   {
     id: 'fakturace-papiry',
@@ -442,7 +455,8 @@ const enProblems: HomeContent['problems']['items'] = [
     verify: 'how a job starts, where invoice source data comes from, and which steps are repeated manually.',
     step: 'line up the process from enquiry to document and propose a small simplification without replacing the whole system.',
     service: 'Process automation / Audit',
-    serviceId: 'automation',
+    primaryServiceId: 'automation',
+    relatedServiceIds: ['audit', 'data'],
   },
   {
     id: 'zacatek-ai',
@@ -455,7 +469,8 @@ const enProblems: HomeContent['problems']['items'] = [
     verify: 'the current state, repeated work, and source material where AI could realistically help.',
     step: 'a short audit that orders the steps and separates useful ideas from dead ends.',
     service: 'Audit / Data and AI assistants',
-    serviceId: 'audit',
+    primaryServiceId: 'audit',
+    relatedServiceIds: ['data', 'automation'],
   },
   {
     id: 'mereni-prehled',
@@ -468,7 +483,8 @@ const enProblems: HomeContent['problems']['items'] = [
     verify: 'what the real goal is and whether it is tracked today.',
     step: 'set up clear measurement without unnecessary analytics overhead.',
     service: 'Data and AI / Audit',
-    serviceId: 'data',
+    primaryServiceId: 'data',
+    relatedServiceIds: ['audit', 'web'],
   },
   {
     id: 'planovani-schuzek',
@@ -481,7 +497,8 @@ const enProblems: HomeContent['problems']['items'] = [
     verify: 'where meetings are arranged, how changes are confirmed, and which information is repeatedly sent by hand.',
     step: 'design a simple flow for choosing a time, confirming it, and handing over the basic information.',
     service: 'Process automation',
-    serviceId: 'automation',
+    primaryServiceId: 'automation',
+    relatedServiceIds: ['web', 'audit'],
   },
 ];
 

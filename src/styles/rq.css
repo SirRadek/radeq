@@ -1168,6 +1168,12 @@ p {
   initial-value: 0deg;
 }
 
+@property --rq-progress-alpha {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
 /* ===== V2 Vlna 2b: Služby bento ===== */
 .rq-services-bento {
   overflow: hidden;
@@ -1257,7 +1263,7 @@ p {
   padding: 2px;
   border-radius: inherit;
   background: conic-gradient(from -90deg, var(--rq-burgundy, #7A1F2B) var(--rq-progress, 0deg), transparent 0);
-  opacity: 1;
+  opacity: var(--rq-progress-alpha, 0);
   transform: none;
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
@@ -1371,8 +1377,22 @@ p {
 }
 
 @keyframes rq-service-progress-ring {
-  to {
+  0% {
+    --rq-progress: 0deg;
+    --rq-progress-alpha: 0;
+  }
+
+  8% {
+    --rq-progress-alpha: 0.62;
+  }
+
+  96% {
+    --rq-progress-alpha: 0.62;
+  }
+
+  100% {
     --rq-progress: 360deg;
+    --rq-progress-alpha: 0;
   }
 }
 

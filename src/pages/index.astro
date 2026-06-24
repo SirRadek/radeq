@@ -313,11 +313,18 @@ const symptoms = [
     if (tiles.length < 2) return;
 
     const ROTATION_MS = 20000;
-    const FLIP_MS = 620;
+    const IN_MS = 820;
+    const OUT_MS = 460;
+    const REST_MS = 620;
+    const QUICK_IN_MS = 620;
+    const QUICK_OUT_MS = 360;
+    const QUICK_REST_MS = 500;
     const FEATURED_SLOT = 'web';
     const SLOTS = ['web', 'shop', 'automation', 'data', 'audit'];
     const SMALL_SLOTS = SLOTS.filter((slot) => slot !== FEATURED_SLOT);
-    const FLIP_EASING = 'cubic-bezier(.25,1,.5,1)';
+    const IN_EASING = 'cubic-bezier(.16,1,.3,1)';
+    const OUT_EASING = 'cubic-bezier(.4,0,.2,1)';
+    const REST_EASING = 'cubic-bezier(.25,1,.5,1)';
     const initialFeatured = tiles.find((tile) => tile.classList.contains('is-featured')) || tiles[0];
     const initialSlots = new Map(tiles.map((tile) => [tile, tile.dataset.rqSlot || '']));
     const reduceQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
@@ -510,9 +517,10 @@ const symptoms = [
       grid.style.minHeight = `${Math.ceil(maxHeight)}px`;
     }
 
-    function promoteTile(target) {
+    function promoteTile(target, options = {}) {
       const active = currentFeatured();
       if (!enhancementAvailable || !target || target === active || isAnimating) return;
+      const quick = Boolean(options.quick);
 
       isAnimating = true;
       grid.classList.add('is-flipping');
@@ -521,6 +529,10 @@ const symptoms = [
       const firstRects = new Map(tiles.map((tile) => [tile, tile.getBoundingClientRect()]));
       applySwap(target);
       const lastRects = new Map(tiles.map((tile) => [tile, tile.getBoundingClientRect()]));
+
+      tiles.forEach((tile) => {
+        tile.style.zIndex = tile === target ? '3' : tile === active ? '1' : '2';
+      });
 
       const animations = tiles.map((tile) => {
         const first = firstRects.get(tile);
@@ -534,14 +546,31 @@ const symptoms = [
         const moved = Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5 || Math.abs(sx - 1) > 0.01 || Math.abs(sy - 1) > 0.01;
         if (!moved) return null;
 
+        const incoming = tile === target;
+        const outgoing = tile === active;
+        const duration = incoming
+          ? (quick ? QUICK_IN_MS : IN_MS)
+          : outgoing
+            ? (quick ? QUICK_OUT_MS : OUT_MS)
+            : (quick ? QUICK_REST_MS : REST_MS);
+        const easing = incoming ? IN_EASING : outgoing ? OUT_EASING : REST_EASING;
+        const delay = outgoing && !quick ? 60 : 0;
+        const keyframes = outgoing
+          ? [
+              { transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`, opacity: 0.9 },
+              { transform: 'translate(0, 0) scale(1, 1)', opacity: 1 },
+            ]
+          : [
+              { transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})` },
+              { transform: 'translate(0, 0) scale(1, 1)' },
+            ];
+
         tile.style.transformOrigin = 'top left';
         tile.classList.add('is-flip-animating');
-        return tile.animate([
-          { transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})` },
-          { transform: 'translate(0, 0) scale(1, 1)' },
-        ], {
-          duration: FLIP_MS,
-          easing: FLIP_EASING,
+        return tile.animate(keyframes, {
+          duration,
+          easing,
+          delay,
           fill: 'both',
         });
       }).filter(Boolean);
@@ -549,6 +578,7 @@ const symptoms = [
       const finish = () => {
         tiles.forEach((tile) => {
           tile.style.transformOrigin = '';
+          tile.style.zIndex = '';
           tile.classList.remove('is-flip-animating');
         });
         grid.classList.remove('is-flipping');
@@ -579,7 +609,7 @@ const symptoms = [
       clearTimer();
       disconnectObserver();
       grid.classList.add('is-user-locked', 'is-paused');
-      promoteTile(tile);
+      promoteTile(tile, { quick: true });
     }
 
     function configure() {

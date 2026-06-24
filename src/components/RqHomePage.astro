@@ -955,6 +955,7 @@ const schema = {
       const liveEl = grid.parentElement?.querySelector('[data-rq-service-live]');
 
       const ROTATION_MS = 20000;
+      const PROGRESS_INTRO_MS = 520;
       const IN_MS = 820;
       const OUT_MS = 460;
       const REST_MS = 620;
@@ -973,8 +974,20 @@ const schema = {
       const reduceQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
       const mobileQuery = window.matchMedia?.('(max-width: 860px)');
       const supportsAnimations = typeof tiles[0].animate === 'function';
-      const supportsProgressRing = typeof CSS !== 'undefined' && 'registerProperty' in CSS;
+      const supportsCss = typeof CSS !== 'undefined';
+      const supportsMaskRing = supportsCss
+        && typeof CSS.supports === 'function'
+        && (
+          CSS.supports('-webkit-mask-composite', 'xor')
+          || CSS.supports('mask-composite', 'exclude')
+          || CSS.supports('(-webkit-mask-composite: xor)')
+          || CSS.supports('(mask-composite: exclude)')
+        );
+      const supportsProgressRing = supportsCss && 'registerProperty' in CSS && supportsMaskRing;
       const slotOrders = permute(SMALL_SLOTS);
+
+      grid.style.setProperty('--rq-service-rotation-ms', `${ROTATION_MS}ms`);
+      grid.style.setProperty('--rq-service-progress-intro-ms', `${PROGRESS_INTRO_MS}ms`);
 
       let observer = null;
       let resizeTimer = 0;
@@ -1008,7 +1021,15 @@ const schema = {
         return tiles.find((tile) => tile.classList.contains('is-featured')) || initialFeatured;
       }
 
+      function restartProgressAnimation(tile) {
+        if (!enhancementAvailable || !supportsProgressRing || !tile) return;
+        tile.classList.add('is-progress-restarting');
+        void tile.offsetWidth;
+        tile.classList.remove('is-progress-restarting');
+      }
+
       function setFeatured(tile) {
+        const previousFeatured = currentFeatured();
         tiles.forEach((candidate) => {
           const active = candidate === tile;
           candidate.classList.toggle('is-featured', active);
@@ -1018,6 +1039,7 @@ const schema = {
             candidate.removeAttribute('aria-current');
           }
         });
+        if (tile && tile !== previousFeatured) restartProgressAnimation(tile);
       }
 
       function resetToInitialState() {
@@ -1533,6 +1555,7 @@ const schema = {
         setInteractive(true);
         reserveGridHeight();
         grid.classList.add('is-rotation-ready', 'is-paused');
+        if (!userLocked) restartProgressAnimation(currentFeatured());
 
         if (userLocked) {
           syncPauseState();

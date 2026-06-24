@@ -1174,6 +1174,18 @@ p {
   initial-value: 0;
 }
 
+@property --rq-progress-intro {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@property --rq-progress-softness {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
 /* ===== V2 Vlna 2b: Služby bento ===== */
 .rq-services-bento {
   overflow: hidden;
@@ -1184,6 +1196,8 @@ p {
 }
 
 .rq-services-bento__grid {
+  --rq-service-rotation-ms: 20000ms;
+  --rq-service-progress-intro-ms: 520ms;
   display: grid;
   margin-top: clamp(1.5rem, 3vw, 2.4rem);
   grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr) minmax(0, 1fr);
@@ -1271,17 +1285,16 @@ p {
 
 .rq-services-bento__grid.is-rotation-ready .rq-service-tile.is-featured::after {
   opacity: 0.78;
-  animation: rq-service-progress-line 20000ms linear infinite;
+  animation: rq-service-progress-line var(--rq-service-rotation-ms, 20000ms) linear infinite;
 }
 
+.rq-services-bento__grid.has-rq-progress-ring.is-rotation-ready .rq-service-tile.is-featured::before,
 .rq-services-bento__grid.has-rq-progress-ring.is-rotation-ready .rq-service-tile.is-featured::after {
   inset: 0;
   width: auto;
   height: auto;
   padding: 2px;
   border-radius: inherit;
-  background: conic-gradient(from -90deg, var(--rq-burgundy, #7A1F2B) var(--rq-progress, 0deg), transparent 0);
-  opacity: var(--rq-progress-alpha, 0);
   transform: none;
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
@@ -1291,16 +1304,44 @@ p {
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
   mask-composite: exclude;
-  animation: rq-service-progress-ring 20000ms linear infinite;
 }
 
+.rq-services-bento__grid.has-rq-progress-ring.is-rotation-ready .rq-service-tile.is-featured::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  background: conic-gradient(from -90deg, color-mix(in srgb, var(--rq-burgundy, #7A1F2B) 56%, transparent) var(--rq-progress-intro, 0deg), transparent 0);
+  opacity: var(--rq-progress-alpha, 0);
+  filter: blur(var(--rq-progress-softness, 0px));
+  pointer-events: none;
+  animation: rq-service-progress-intro var(--rq-service-progress-intro-ms, 520ms) cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.rq-services-bento__grid.has-rq-progress-ring.is-rotation-ready .rq-service-tile.is-featured::after {
+  z-index: 2;
+  background: conic-gradient(from -90deg, var(--rq-burgundy, #7A1F2B) var(--rq-progress, 0deg), transparent 0);
+  opacity: var(--rq-progress-alpha, 0);
+  filter: blur(var(--rq-progress-softness, 0px));
+  animation: rq-service-progress-ring calc(var(--rq-service-rotation-ms, 20000ms) - var(--rq-service-progress-intro-ms, 520ms)) linear var(--rq-service-progress-intro-ms, 520ms) forwards;
+}
+
+.rq-services-bento__grid.has-rq-progress-ring.is-rotation-ready .rq-service-tile.is-progress-restarting::before,
+.rq-services-bento__grid.has-rq-progress-ring.is-rotation-ready .rq-service-tile.is-progress-restarting::after {
+  animation: none !important;
+}
+
+.rq-services-bento__grid.is-paused .rq-service-tile.is-featured::before,
 .rq-services-bento__grid.is-paused .rq-service-tile.is-featured::after,
+.rq-services-bento__grid:hover .rq-service-tile.is-featured::before,
 .rq-services-bento__grid:hover .rq-service-tile.is-featured::after,
+.rq-services-bento__grid:focus-within .rq-service-tile.is-featured::before,
 .rq-services-bento__grid:focus-within .rq-service-tile.is-featured::after {
   animation-play-state: paused;
 }
 
+.rq-services-bento__grid.is-user-locked.has-rq-progress-ring.is-rotation-ready .rq-service-tile.is-featured::before,
 .rq-services-bento__grid.is-user-locked.has-rq-progress-ring.is-rotation-ready .rq-service-tile.is-featured::after,
+.rq-services-bento__grid.is-user-locked .rq-service-tile.is-featured::before,
 .rq-services-bento__grid.is-user-locked .rq-service-tile.is-featured::after {
   opacity: 0;
 }
@@ -1394,18 +1435,34 @@ p {
   transform: none;
 }
 
+@keyframes rq-service-progress-intro {
+  0% {
+    --rq-progress-intro: 0deg;
+    --rq-progress-alpha: 0;
+    --rq-progress-softness: 7px;
+  }
+
+  54% {
+    --rq-progress-alpha: 0.18;
+    --rq-progress-softness: 3px;
+  }
+
+  100% {
+    --rq-progress-intro: 360deg;
+    --rq-progress-alpha: 0.26;
+    --rq-progress-softness: 0px;
+  }
+}
+
 @keyframes rq-service-progress-ring {
   0% {
     --rq-progress: 0deg;
-    --rq-progress-alpha: 0;
-  }
-
-  8% {
-    --rq-progress-alpha: 0.62;
+    --rq-progress-alpha: 0.66;
+    --rq-progress-softness: 0px;
   }
 
   96% {
-    --rq-progress-alpha: 0.62;
+    --rq-progress-alpha: 0.66;
   }
 
   100% {

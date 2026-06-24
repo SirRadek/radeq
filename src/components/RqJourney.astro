@@ -96,46 +96,90 @@ const trustPoints = [
     </div>
 
     <div class="rq-journey-line__track">
-      <div
-        class="rq-journey-line__flow"
-        role="tablist"
-        aria-label="Fáze spolupráce"
-        aria-orientation="horizontal"
-      >
+      <div class="rq-journey-line__flow">
         <div class="rq-journey-line__rail" aria-hidden="true"></div>
-        <span class="rq-journey-line__cap rq-journey-line__cap--start" aria-hidden="true">
+        <button
+          class="rq-journey-line__cap rq-journey-line__cap--start"
+          type="button"
+          aria-expanded="false"
+          aria-controls="rq-journey-preview"
+          data-rq-journey-preview-trigger="start"
+        >
           <span>Váš problém</span>
           <span class="rq-journey-line__cap-dot"></span>
-        </span>
+        </button>
 
-        {phases.map((phase, index) => (
-          <button
-            class:list={['rq-journey-node', { 'is-active': index === 0 }]}
-            type="button"
-            role="tab"
-            id={`rq-journey-tab-${phase.id}`}
-            aria-selected={index === 0 ? 'true' : 'false'}
-            aria-controls={`rq-journey-panel-${phase.id}`}
-            aria-label={phase.title}
-            data-rq-journey-node
-            data-rq-target-index={index}
-            tabindex={index === 0 ? '0' : '-1'}
-          >
-            <span class="rq-journey-node__label">
-              <span class="rq-journey-node__number">{phase.number}</span>
-              <span class="rq-journey-node__title">{phase.title}</span>
-            </span>
-            <span class="rq-journey-node__dot" aria-hidden="true"></span>
-          </button>
-        ))}
+        <div
+          class="rq-journey-line__tabs"
+          role="tablist"
+          aria-label="Fáze spolupráce"
+          aria-orientation="horizontal"
+        >
+          {phases.map((phase, index) => (
+            <button
+              class:list={['rq-journey-node', { 'is-active': index === 0 }]}
+              type="button"
+              role="tab"
+              id={`rq-journey-tab-${phase.id}`}
+              aria-selected={index === 0 ? 'true' : 'false'}
+              aria-controls={`rq-journey-panel-${phase.id}`}
+              aria-label={phase.title}
+              data-rq-journey-node
+              data-rq-target-index={index}
+              tabindex={index === 0 ? '0' : '-1'}
+            >
+              <span class="rq-journey-node__label">
+                <span class="rq-journey-node__number">{phase.number}</span>
+                <span class="rq-journey-node__title">{phase.title}</span>
+              </span>
+              <span class="rq-journey-node__dot" aria-hidden="true"></span>
+            </button>
+          ))}
+        </div>
 
-        <span class="rq-journey-line__cap rq-journey-line__cap--end" aria-hidden="true">
+        <button
+          class="rq-journey-line__cap rq-journey-line__cap--end"
+          type="button"
+          aria-expanded="false"
+          aria-controls="rq-journey-preview"
+          data-rq-journey-preview-trigger="end"
+        >
           <span>Výsledek · ověřeno</span>
           <span class="rq-journey-line__cap-dot"></span>
-        </span>
+        </button>
       </div>
     </div>
   </div>
+
+  <aside class="rq-journey-preview" id="rq-journey-preview" hidden data-rq-journey-preview>
+    <div class="rq-journey-preview__mode" data-rq-journey-preview-mode="start">
+      <div class="rq-problem-diagnostic__panel--mini">
+        <p class="rq-journey-preview__eyebrow">Problém</p>
+        <h3 data-rq-journey-preview-problem-title>Web nevede k poptávce</h3>
+        <dl class="rq-journey-preview__facts">
+          <div>
+            <dt>Problém</dt>
+            <dd data-rq-journey-preview-problem-text>Web jen existuje, ale návštěvník nedojde ke kontaktu.</dd>
+          </div>
+          <div>
+            <dt>První krok</dt>
+            <dd data-rq-journey-preview-problem-step>krátký audit a úprava struktury + jasné CTA.</dd>
+          </div>
+        </dl>
+        <a class="rq-btn rq-btn--primary" href="#co-resim" data-rq-journey-scroll>Otevřít diagnostiku</a>
+      </div>
+    </div>
+
+    <div class="rq-journey-preview__mode" data-rq-journey-preview-mode="end" hidden>
+      <article class="rq-journey-preview__example">
+        <span class="rq-ukazky-bento-card__badge">VZOROVÝ PROJEKT</span>
+        <span class="rq-ukazky-bento-card__kicker">Řemeslo a lokální služby</span>
+        <strong class="rq-ukazky-bento-card__title">Web pro instalatéra</strong>
+        <span class="rq-ukazky-bento-card__text">Přehled služeb, důvěryhodné reference a rychlý kontakt pro zákazníky, kteří potřebují pomoct hned.</span>
+        <a class="rq-btn rq-btn--ghost" href="#ukazky-teaser" data-rq-journey-scroll>Zobrazit ukázky</a>
+      </article>
+    </div>
+  </aside>
 
   <div class="rq-journey__panels">
     {phases.map((phase, index) => (

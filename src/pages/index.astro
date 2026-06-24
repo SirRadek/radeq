@@ -304,7 +304,7 @@ const symptoms = [
     <p class="rq-eyebrow">Služby</p>
     <h2 id="rq-sluzby-title" class="rq-h2">Co vám zjednoduším</h2>
     <div class="rq-services-bento__grid" data-rq-service-rotator data-rq-reveal aria-label="Služby a orientační ceny">
-      <article class="rq-offer rq-service-tile rq-hoverable is-featured" data-rq-slot="web" aria-current="true" style="--rq-i: 0;">
+      <article id="service-web" class="rq-offer rq-service-tile rq-hoverable is-featured" data-rq-service-id="web" data-rq-slot="web" aria-current="true" style="--rq-i: 0;">
         <p class="rq-offer__price">od 9 900 Kč</p>
         <h3>Web a redesign</h3>
         <p class="rq-offer__result">Výsledek: web, který návštěvníkovi rychle vysvětlí nabídku a přivádí poptávky.</p>
@@ -315,7 +315,7 @@ const symptoms = [
         </ul>
       </article>
 
-      <article class="rq-offer rq-service-tile rq-service-tile--shop rq-hoverable" data-rq-slot="shop" style="--rq-i: 1;">
+      <article id="service-shop" class="rq-offer rq-service-tile rq-service-tile--shop rq-hoverable" data-rq-service-id="shop" data-rq-slot="shop" style="--rq-i: 1;">
         <p class="rq-offer__price">od 19 900 Kč</p>
         <h3>E-shop</h3>
         <p class="rq-offer__result">Výsledek: malý vlastněný obchod bez zbytečností, který sami utáhnete.</p>
@@ -326,7 +326,7 @@ const symptoms = [
         </ul>
       </article>
 
-      <article class="rq-offer rq-service-tile rq-service-tile--automation rq-hoverable" data-rq-slot="automation" style="--rq-i: 2;">
+      <article id="service-automation" class="rq-offer rq-service-tile rq-service-tile--automation rq-hoverable" data-rq-service-id="automation" data-rq-slot="automation" style="--rq-i: 2;">
         <p class="rq-offer__price">od 12 000 Kč</p>
         <h3>Automatizace procesů</h3>
         <p class="rq-offer__result">Výsledek: konec ručního přepisování — co děláte opakovaně, běží samo.</p>
@@ -337,7 +337,7 @@ const symptoms = [
         </ul>
       </article>
 
-      <article class="rq-offer rq-service-tile rq-service-tile--data rq-hoverable" data-rq-slot="data" style="--rq-i: 3;">
+      <article id="service-data" class="rq-offer rq-service-tile rq-service-tile--data rq-hoverable" data-rq-service-id="data" data-rq-slot="data" style="--rq-i: 3;">
         <p class="rq-offer__price">od 15 000 Kč</p>
         <h3>Data a AI pomocníci</h3>
         <p class="rq-offer__result">Výsledek: přehled ve vlastních datech a AI nasazená prakticky a bezpečně.</p>
@@ -348,7 +348,7 @@ const symptoms = [
         </ul>
       </article>
 
-      <article class="rq-offer rq-service-tile rq-service-tile--audit rq-hoverable" data-rq-slot="audit" style="--rq-i: 4;">
+      <article id="service-audit" class="rq-offer rq-service-tile rq-service-tile--audit rq-hoverable" data-rq-service-id="audit" data-rq-slot="audit" style="--rq-i: 4;">
         <span class="rq-flag">Nízkorizikový start</span>
         <p class="rq-offer__price">4 900 Kč</p>
         <h3>Audit webu nebo procesu</h3>
@@ -363,6 +363,7 @@ const symptoms = [
     <div class="rq-services-bento__cta">
       <a class="rq-btn rq-btn--primary" href="#kontakt">Domluvit nezávazný rozbor</a>
     </div>
+    <p class="rq-sr-only" data-rq-service-live aria-live="polite"></p>
   </div>
 </section>
 
@@ -373,6 +374,7 @@ const symptoms = [
 
     const tiles = Array.from(grid.querySelectorAll('.rq-service-tile'));
     if (tiles.length < 2) return;
+    const liveEl = grid.parentElement?.querySelector('[data-rq-service-live]');
 
     function createInViewGate(target, { rootMargin = '120px 0px', threshold = 0, onEnter = () => {}, onExit = () => {} } = {}) {
       let observer = null;
@@ -490,6 +492,9 @@ const symptoms = [
     let enhancementAvailable = false;
     let layoutInView = false;
     let pendingConfigure = true;
+    let highlightTimer = 0;
+    let liveTimer = 0;
+    let retryFocusTimer = 0;
 
     function permute(items) {
       if (items.length <= 1) return [items.slice()];
@@ -630,8 +635,10 @@ const symptoms = [
       return true;
     }
 
-    function reserveGridHeight() {
-      if (!layoutInView || document.hidden) {
+    function reserveGridHeight(options = {}) {
+      const force = Boolean(options.force);
+
+      if ((!layoutInView && !force) || document.hidden) {
         pendingConfigure = true;
         return;
       }
@@ -780,6 +787,104 @@ const symptoms = [
       promoteTile(tile, { quick: true });
     }
 
+    function serviceTileById(serviceId) {
+      return tiles.find((tile) => tile.dataset.rqServiceId === serviceId) || null;
+    }
+
+    function clearCrossHighlight() {
+      if (highlightTimer) {
+        window.clearTimeout(highlightTimer);
+        highlightTimer = 0;
+      }
+      if (liveTimer) {
+        window.clearTimeout(liveTimer);
+        liveTimer = 0;
+      }
+      tiles.forEach((tile) => tile.classList.remove('is-cross-highlight'));
+    }
+
+    function markCrossHighlight(tile) {
+      clearCrossHighlight();
+      tile.classList.add('is-cross-highlight');
+
+      const title = tile.querySelector('h3')?.textContent?.trim() || 'služba';
+      if (liveEl) {
+        liveEl.textContent = '';
+        liveTimer = window.setTimeout(() => {
+          liveEl.textContent = `Zvýrazněno: ${title}`;
+          liveTimer = 0;
+        }, 0);
+      }
+
+      highlightTimer = window.setTimeout(() => {
+        tile.classList.remove('is-cross-highlight');
+        highlightTimer = 0;
+      }, 3000);
+    }
+
+    function scrollTileToCenter(tile) {
+      window.requestAnimationFrame(() => {
+        tile.scrollIntoView({
+          behavior: reduceQuery?.matches ? 'auto' : 'smooth',
+          block: 'center',
+          inline: 'nearest',
+        });
+      });
+    }
+
+    function lockRotationForFocus() {
+      userLocked = true;
+      clearTimer();
+      disconnectObserver();
+      grid.classList.add('is-user-locked', 'is-paused');
+    }
+
+    function focusService(serviceId) {
+      const target = serviceTileById(serviceId);
+      if (!target) return false;
+
+      lockRotationForFocus();
+
+      if (canEnhance()) {
+        enhancementAvailable = true;
+        grid.classList.toggle('has-rq-progress-ring', supportsProgressRing);
+        grid.classList.add('is-rotation-ready', 'is-paused');
+        setInteractive(true);
+        reserveGridHeight({ force: true });
+
+        if (target !== currentFeatured()) {
+          if (isAnimating) {
+            if (retryFocusTimer) window.clearTimeout(retryFocusTimer);
+            retryFocusTimer = window.setTimeout(() => {
+              retryFocusTimer = 0;
+              focusService(serviceId);
+            }, QUICK_IN_MS + 80);
+          } else {
+            promoteTile(target, { quick: true });
+          }
+        } else {
+          syncPauseState();
+        }
+      } else {
+        enhancementAvailable = false;
+        grid.classList.remove('is-rotation-ready', 'has-rq-progress-ring', 'is-flipping');
+        setInteractive(false);
+        setFeatured(target);
+        grid.style.minHeight = '';
+      }
+
+      markCrossHighlight(target);
+      scrollTileToCenter(target);
+      return true;
+    }
+
+    function handleServiceFocus(event) {
+      const serviceId = event.detail?.serviceId;
+      if (typeof serviceId !== 'string' || !serviceId) return;
+      if (!focusService(serviceId)) return;
+      event.preventDefault?.();
+    }
+
     function configure() {
       if (!layoutInView || document.hidden) {
         pendingConfigure = true;
@@ -800,9 +905,10 @@ const symptoms = [
       grid.classList.remove('is-flipping');
 
       if (!enhancementAvailable) {
-        grid.classList.remove('is-rotation-ready', 'is-paused', 'has-rq-progress-ring', 'is-user-locked');
+        grid.classList.remove('is-rotation-ready', 'is-paused', 'has-rq-progress-ring');
+        grid.classList.toggle('is-user-locked', userLocked);
         setInteractive(false);
-        resetToInitialState();
+        if (!userLocked) resetToInitialState();
         grid.style.minHeight = '';
         return;
       }
@@ -873,6 +979,8 @@ const symptoms = [
       lockToTile(target);
     });
 
+    window.addEventListener('rq:service-focus', handleServiceFocus);
+
     document.addEventListener('visibilitychange', () => {
       if (!enhancementAvailable || userLocked) return;
       syncPauseState();
@@ -892,6 +1000,12 @@ const symptoms = [
     });
 
     window.addEventListener('pagehide', () => {
+      clearCrossHighlight();
+      if (retryFocusTimer) {
+        window.clearTimeout(retryFocusTimer);
+        retryFocusTimer = 0;
+      }
+      window.removeEventListener('rq:service-focus', handleServiceFocus);
       exitLayoutGate();
       layoutGate?.destroy();
       layoutGate = null;

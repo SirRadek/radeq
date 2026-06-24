@@ -25,6 +25,84 @@
         const initialIndex = initialTab ? getTabIndex(initialTab) : 0;
         let activeIndex = initialIndex;
         let focusIndex = initialIndex;
+        const preview = journey.querySelector('[data-rq-journey-preview]');
+        const previewTriggers = Array.from(journey.querySelectorAll('[data-rq-journey-preview-trigger]'));
+        const previewModes = Array.from(journey.querySelectorAll('[data-rq-journey-preview-mode]'));
+        const previewProblemTitle = journey.querySelector('[data-rq-journey-preview-problem-title]');
+        const previewProblemText = journey.querySelector('[data-rq-journey-preview-problem-text]');
+        const previewProblemStep = journey.querySelector('[data-rq-journey-preview-problem-step]');
+        let activePreviewMode = '';
+
+        const getPreviewTriggerMode = (trigger) => trigger.getAttribute('data-rq-journey-preview-trigger') || '';
+
+        const getActiveProblemPreview = (detail = {}) => {
+          if (detail.title || detail.problem || detail.step) {
+            return detail;
+          }
+
+          const activeProblemPanel = document.querySelector('[data-rq-problem-panel].is-active');
+          const findings = Array.from(activeProblemPanel?.querySelectorAll('.rq-problem-diagnostic__findings dd') || []);
+
+          return {
+            title: activeProblemPanel?.getAttribute('data-rq-problem-mini-title') || activeProblemPanel?.querySelector('h3')?.textContent?.trim() || '',
+            problem: activeProblemPanel?.getAttribute('data-rq-problem-mini-problem') || findings[0]?.textContent?.trim() || '',
+            step: activeProblemPanel?.getAttribute('data-rq-problem-mini-step') || findings[3]?.textContent?.trim() || '',
+          };
+        };
+
+        const updateStartPreview = (detail = {}) => {
+          const previewData = getActiveProblemPreview(detail);
+          if (previewData.title && previewProblemTitle) previewProblemTitle.textContent = previewData.title;
+          if (previewData.problem && previewProblemText) previewProblemText.textContent = previewData.problem;
+          if (previewData.step && previewProblemStep) previewProblemStep.textContent = previewData.step;
+        };
+
+        const syncPreviewTriggers = () => {
+          previewTriggers.forEach((trigger) => {
+            trigger.setAttribute('aria-expanded', String(getPreviewTriggerMode(trigger) === activePreviewMode));
+          });
+        };
+
+        const closePreview = (options = {}) => {
+          if (!preview || !activePreviewMode) return;
+          const previousTrigger = previewTriggers.find((trigger) => getPreviewTriggerMode(trigger) === activePreviewMode);
+          activePreviewMode = '';
+          preview.hidden = true;
+          previewModes.forEach((mode) => { mode.hidden = true; });
+          syncPreviewTriggers();
+          if (options.restoreFocus) previousTrigger?.focus();
+        };
+
+        const openPreview = (mode) => {
+          if (!preview || !mode) return;
+          if (mode === 'start') updateStartPreview();
+
+          activePreviewMode = mode;
+          preview.hidden = false;
+          previewModes.forEach((previewMode) => {
+            previewMode.hidden = previewMode.getAttribute('data-rq-journey-preview-mode') !== mode;
+          });
+          syncPreviewTriggers();
+        };
+
+        const togglePreview = (mode) => {
+          if (activePreviewMode === mode) {
+            closePreview();
+            return;
+          }
+
+          openPreview(mode);
+        };
+
+        const focusScrollTarget = (target) => {
+          if (typeof target.focus !== 'function') return;
+          const hadTabIndex = target.hasAttribute('tabindex');
+          if (!hadTabIndex) target.setAttribute('tabindex', '-1');
+          target.focus({ preventScroll: true });
+          if (!hadTabIndex) {
+            target.addEventListener('blur', () => target.removeAttribute('tabindex'), { once: true });
+          }
+        };
 
         const syncTabs = () => {
           tabs.forEach((tab) => {
@@ -109,6 +187,50 @@
             action();
           });
         });
+
+        journey.addEventListener('click', (event) => {
+          const trigger = event.target instanceof Element ? event.target.closest('[data-rq-journey-preview-trigger]') : null;
+          if (!trigger || !journey.contains(trigger)) return;
+          event.preventDefault();
+          togglePreview(getPreviewTriggerMode(trigger));
+        });
+
+        journey.addEventListener('keydown', (event) => {
+          if (event.key !== 'Escape' || !activePreviewMode) return;
+          event.preventDefault();
+          closePreview({ restoreFocus: true });
+        });
+
+        journey.addEventListener('click', (event) => {
+          const eventTarget = event.target instanceof Element ? event.target : null;
+          const link = eventTarget?.closest('[data-rq-journey-scroll]');
+          if (!link || !journey.contains(link)) return;
+
+          const hash = link.getAttribute('href') || '';
+          if (!hash.startsWith('#')) return;
+
+          const target = document.querySelector(hash);
+          if (!target) return;
+
+          event.preventDefault();
+          closePreview();
+          target.scrollIntoView({
+            behavior: reducedMotionQuery?.matches ? 'auto' : 'smooth',
+            block: 'start',
+            inline: 'nearest',
+          });
+          window.requestAnimationFrame(() => focusScrollTarget(target));
+        });
+
+        const handleProblemChange = (event) => {
+          if (activePreviewMode !== 'start') return;
+          updateStartPreview(event.detail || {});
+        };
+
+        window.addEventListener('rq:problem-change', handleProblemChange);
+        window.addEventListener('pagehide', () => {
+          window.removeEventListener('rq:problem-change', handleProblemChange);
+        }, { once: true });
       });
     };
 

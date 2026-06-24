@@ -11,6 +11,7 @@ const items = [
     verify: 'cestu od příchodu ke kontaktu, srozumitelnost nabídky a jestli se vůbec měří.',
     step: 'krátký audit a úprava struktury + jasné CTA.',
     service: 'Web a redesign / Audit',
+    serviceId: 'web',
   },
   {
     id: 'nejasny-krok',
@@ -23,6 +24,7 @@ const items = [
     verify: 'srozumitelnost nabídky, text výzvy k akci a cestu k formuláři nebo telefonu.',
     step: 'upravit strukturu stránky tak, aby další krok byl zřejmý bez vysvětlování.',
     service: 'Web a redesign / Audit',
+    serviceId: 'web',
   },
   {
     id: 'poptavky-email',
@@ -35,6 +37,7 @@ const items = [
     verify: 'kde vzniká ruční práce a kolik času bere.',
     step: 'navrhnout nejmenší automatizaci jednoho toku.',
     service: 'Automatizace procesů',
+    serviceId: 'automation',
   },
   {
     id: 'rucni-data',
@@ -47,6 +50,7 @@ const items = [
     verify: 'kde vzniká ruční práce a kolik času bere.',
     step: 'navrhnout nejmenší automatizaci jednoho toku.',
     service: 'Automatizace procesů',
+    serviceId: 'automation',
   },
   {
     id: 'fakturace-papiry',
@@ -59,6 +63,7 @@ const items = [
     verify: 'jak vzniká zakázka, kde se berou podklady pro fakturu a které kroky se opakují ručně.',
     step: 'srovnat postup od poptávky po doklad a navrhnout malé zjednodušení bez výměny celého systému.',
     service: 'Automatizace procesů / Audit',
+    serviceId: 'automation',
   },
   {
     id: 'zacatek-ai',
@@ -71,6 +76,7 @@ const items = [
     verify: 'současný stav, opakovanou práci a podklady, nad kterými by AI případně dávala smysl.',
     step: 'krátký audit, který dá jasné pořadí kroků a oddělí užitečné nápady od slepých uliček.',
     service: 'Audit / Data a AI pomocníci',
+    serviceId: 'audit',
   },
   {
     id: 'mereni-prehled',
@@ -83,6 +89,7 @@ const items = [
     verify: 'co je vlastně cíl a jestli se dnes sleduje.',
     step: 'nastavit přehledné měření bez přehnané analytiky.',
     service: 'Data a AI / Audit',
+    serviceId: 'data',
   },
   {
     id: 'planovani-schuzek',
@@ -95,6 +102,7 @@ const items = [
     verify: 'kde se domlouvají termíny, jak se potvrzují změny a které informace se opakovaně posílají ručně.',
     step: 'navrhnout jednoduchý postup pro výběr termínu, potvrzení a předání základních informací.',
     service: 'Automatizace procesů',
+    serviceId: 'automation',
   },
 ];
 
@@ -189,6 +197,9 @@ const stars = Array.from({ length: 5 });
             aria-hidden={index === 0 ? 'false' : 'true'}
             inert={index !== 0 ? true : undefined}
             data-rq-problem-panel
+            data-rq-problem-mini-title={item.symptom}
+            data-rq-problem-mini-problem={item.problem}
+            data-rq-problem-mini-step={item.step}
           >
             <div class="rq-problem-diagnostic__panel-top">
               <span class="rq-problem-diagnostic__solution-label">Návrh řešení</span>
@@ -215,7 +226,7 @@ const stars = Array.from({ length: 5 });
             </dl>
             <div class="rq-problem-diagnostic__actions">
               <a class="rq-btn rq-btn--primary" href="#kontakt">Napsat poptávku</a>
-              <a class="rq-problem-diagnostic__service" href="#sluzby">Typicky souvisí: <strong>{item.service}</strong></a>
+              <a class="rq-problem-diagnostic__service" href={`#service-${item.serviceId}`} data-rq-service-target={item.serviceId}>Typicky souvisí: <strong>{item.service}</strong></a>
             </div>
           </article>
         ))}
@@ -1050,6 +1061,7 @@ const stars = Array.from({ length: 5 });
 
     const activate = (nextIndex, options = {}) => {
       const safeIndex = Math.max(0, Math.min(nextIndex, cards.length - 1));
+      const previousIndex = activeIndex;
       const shouldAnimate = safeIndex !== activeIndex || options.forceAnimation;
 
       if (options.interacted) markInteracted();
@@ -1070,10 +1082,39 @@ const stars = Array.from({ length: 5 });
       });
 
       updateNav();
+      if (safeIndex !== previousIndex) {
+        const panel = panels[activeIndex];
+        window.dispatchEvent(new CustomEvent('rq:problem-change', {
+          detail: {
+            title: panel?.getAttribute('data-rq-problem-mini-title') || '',
+            problem: panel?.getAttribute('data-rq-problem-mini-problem') || '',
+            step: panel?.getAttribute('data-rq-problem-mini-step') || '',
+          },
+        }));
+      }
       if (shouldAnimate) animatePanel();
       if (options.scroll) scrollCardIntoView(activeIndex);
       if (options.focus) cards[activeIndex]?.focus({ preventScroll: true });
     };
+
+    root.addEventListener('click', (event) => {
+      const serviceLink = event.target instanceof Element
+        ? event.target.closest('[data-rq-service-target]')
+        : null;
+      if (!serviceLink || !root.contains(serviceLink)) return;
+
+      const serviceId = serviceLink.getAttribute('data-rq-service-target');
+      if (!serviceId) return;
+
+      const focusEvent = new CustomEvent('rq:service-focus', {
+        detail: { serviceId },
+        cancelable: true,
+      });
+
+      if (!window.dispatchEvent(focusEvent)) {
+        event.preventDefault();
+      }
+    });
 
     const closestCardIndex = () => {
       const carouselRect = carousel.getBoundingClientRect();

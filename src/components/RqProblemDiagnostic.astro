@@ -7,9 +7,11 @@ interface Props {
   lang?: Locale;
 }
 
-const { content = homeContent.cs.problems } = Astro.props;
+const { content = homeContent.cs.problems, lang = 'cs' } = Astro.props;
 const items = content.items;
 const roleLabels = content.roleLabels;
+const problemIndicatorLabel = lang === 'en' ? 'Problem' : 'Problém';
+const timelineAriaLabel = lang === 'en' ? 'Problem timeline' : 'Časová osa problémů';
 const stars = Array.from({ length: 5 });
 ---
 
@@ -30,24 +32,20 @@ const stars = Array.from({ length: 5 });
         <p class="rq-problem-diagnostic__severity-legend" id="rq-problem-severity-legend">
           <strong>{content.severityLegend.strong}</strong> {content.severityLegend.text}
         </p>
-        <div class="rq-problem-diagnostic__controls" aria-label={content.controlsAriaLabel}>
-          <button class="rq-problem-diagnostic__nav" type="button" aria-label={content.previousLabel} data-rq-problem-prev disabled>
+      </div>
+
+      <div class="rq-problem-diagnostic__board">
+        <div class="rq-problem-diagnostic__stage" aria-label={content.controlsAriaLabel}>
+          <button class="rq-problem-diagnostic__nav rq-problem-diagnostic__nav--prev" type="button" tabindex="-1" aria-label={content.previousLabel} data-rq-problem-prev disabled>
             <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
               <path d="M15 5 8 12l7 7"></path>
             </svg>
           </button>
-          <button class="rq-problem-diagnostic__nav" type="button" aria-label={content.nextLabel} data-rq-problem-next>
-            <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
-              <path d="m9 5 7 7-7 7"></path>
-            </svg>
-          </button>
-        </div>
-      </div>
 
-      <div class="rq-problem-diagnostic__carousel-scene" data-rq-problem-carousel aria-describedby="rq-problem-severity-legend">
-        <ul class="rq-problem-diagnostic__filmstrip" role="list" aria-label={content.carouselAriaLabel}>
+          <div class="rq-problem-diagnostic__carousel-scene" data-rq-problem-carousel aria-describedby="rq-problem-severity-legend">
+        <ul class="rq-problem-diagnostic__filmstrip" role="tablist" aria-label={content.carouselAriaLabel}>
           {items.map((item, index) => (
-            <li class:list={['rq-problem-diagnostic__frame', item.role === 'lead' && 'rq-problem-diagnostic__frame--lead']}>
+            <li class:list={['rq-problem-diagnostic__frame', item.role === 'lead' && 'rq-problem-diagnostic__frame--lead']} role="presentation">
               <button
                 class:list={[
                   'rq-problem-diagnostic__card',
@@ -55,8 +53,10 @@ const stars = Array.from({ length: 5 });
                 ]}
                 id={`rq-problem-card-${item.id}`}
                 type="button"
-                aria-current={index === 0 ? 'true' : 'false'}
+                role="tab"
+                aria-selected={index === 0 ? 'true' : 'false'}
                 aria-controls={`rq-problem-panel-${item.id}`}
+                tabindex={index === 0 ? '0' : '-1'}
                 data-rq-problem-card
               >
                 <span class="rq-problem-diagnostic__card-inner">
@@ -79,7 +79,36 @@ const stars = Array.from({ length: 5 });
             </li>
           ))}
         </ul>
-      </div>
+          </div>
+
+          <button class="rq-problem-diagnostic__nav rq-problem-diagnostic__nav--next" type="button" tabindex="-1" aria-label={content.nextLabel} data-rq-problem-next>
+            <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+              <path d="m9 5 7 7-7 7"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div
+          class="rq-problem-diagnostic__timeline"
+          role="group"
+          aria-label={timelineAriaLabel}
+          data-rq-problem-timeline
+          style={`--rq-active-index: 0; --rq-count: ${items.length};`}
+        >
+          <span class="rq-problem-diagnostic__timeline-rail" aria-hidden="true"></span>
+          {items.map((item, index) => (
+            <button
+              class="rq-problem-diagnostic__indicator"
+              type="button"
+              aria-label={`${problemIndicatorLabel} ${index + 1}`}
+              aria-controls={`rq-problem-panel-${item.id}`}
+              aria-current={index === 0 ? 'true' : 'false'}
+              data-rq-problem-indicator
+            >
+              {String(index + 1).padStart(2, '0')}
+            </button>
+          ))}
+        </div>
 
       <p class="rq-problem-diagnostic__tagline" id="rq-problem-carousel-tagline">{content.tagline}</p>
 
@@ -91,7 +120,8 @@ const stars = Array.from({ length: 5 });
               index === 0 && 'is-active',
             ]}
             id={`rq-problem-panel-${item.id}`}
-            role="region"
+            role="tabpanel"
+            tabindex={index === 0 ? '0' : '-1'}
             aria-labelledby={`rq-problem-card-${item.id}`}
             aria-hidden={index === 0 ? 'false' : 'true'}
             inert={index !== 0 ? true : undefined}
@@ -129,6 +159,7 @@ const stars = Array.from({ length: 5 });
             </div>
           </article>
         ))}
+      </div>
       </div>
     </div>
   </div>
@@ -228,6 +259,7 @@ const stars = Array.from({ length: 5 });
     --rq-card-h: clamp(20.5rem, 30vw, 24rem);
     --rq-card-h-lead: clamp(22.1rem, 32.4vw, 25.9rem);
     --rq-jaw-min-block-size: clamp(35rem, 42vw, 42rem);
+    --rq-problem-ease-out-back: cubic-bezier(0.18, 1.22, 0.28, 1);
     position: relative;
     display: grid;
     gap: clamp(1rem, 2.4vw, 1.6rem);
@@ -237,7 +269,7 @@ const stars = Array.from({ length: 5 });
   .rq-problem-diagnostic__meta-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 1rem;
     min-width: 0;
   }
@@ -253,23 +285,71 @@ const stars = Array.from({ length: 5 });
     color: var(--rq-lime);
   }
 
-  .rq-problem-diagnostic__controls {
-    display: inline-flex;
-    flex: 0 0 auto;
-    gap: 0.55rem;
+  .rq-problem-diagnostic__board {
+    position: relative;
+    display: grid;
+    gap: clamp(0.85rem, 1.8vw, 1.25rem);
+    min-width: 0;
+    border: 1px solid rgba(247, 244, 238, 0.14);
+    border-radius: 8px;
+    padding: clamp(0.85rem, 2vw, 1.35rem);
+    overflow: clip;
+    isolation: isolate;
+    background:
+      linear-gradient(180deg, rgba(247, 244, 238, 0.075), transparent 42%),
+      linear-gradient(135deg, rgba(94, 25, 38, 0.34), rgba(22, 18, 20, 0.78) 48%, rgba(13, 11, 12, 0.88)),
+      rgba(22, 18, 20, 0.92);
+    box-shadow:
+      0 36px 90px rgba(0, 0, 0, 0.42),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 0 0 1px rgba(199, 224, 74, 0.045);
+  }
+
+  @supports not (overflow: clip) {
+    .rq-problem-diagnostic__board {
+      overflow: hidden;
+    }
+  }
+
+  .rq-problem-diagnostic__board::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(90deg, rgba(199, 224, 74, 0.09), transparent 1px),
+      linear-gradient(180deg, rgba(247, 244, 238, 0.055), transparent 1px);
+    background-size: 4.5rem 4.5rem;
+    opacity: 0.26;
+    pointer-events: none;
+  }
+
+  .rq-problem-diagnostic__stage {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 2.9rem minmax(0, 1fr) 2.9rem;
+    align-items: center;
+    gap: clamp(0.45rem, 1.1vw, 0.75rem);
+    min-width: 0;
   }
 
   .rq-problem-diagnostic__nav {
     display: inline-grid;
-    width: 2.75rem;
-    height: 2.75rem;
+    width: 2.9rem;
+    height: 2.9rem;
     place-items: center;
-    border: 1px solid rgba(247, 244, 238, 0.16);
+    border: 1px solid rgba(199, 224, 74, 0.34);
     border-radius: 999px;
-    background: rgba(22, 18, 20, 0.72);
-    color: var(--rq-on-dark);
+    background:
+      radial-gradient(circle at 50% 0%, rgba(199, 224, 74, 0.16), transparent 58%),
+      rgba(94, 25, 38, 0.72);
+    color: var(--rq-lime);
     cursor: pointer;
-    transition: border-color 180ms var(--rq-ease), background-color 180ms var(--rq-ease), color 180ms var(--rq-ease), opacity 180ms var(--rq-ease), transform 180ms var(--rq-ease);
+    box-shadow:
+      0 0 0 1px rgba(13, 11, 12, 0.48),
+      0 0 28px rgba(199, 224, 74, 0.1);
+    transition: border-color 180ms var(--rq-ease), background-color 180ms var(--rq-ease), color 180ms var(--rq-ease), opacity 180ms var(--rq-ease), transform 180ms var(--rq-ease), box-shadow 180ms var(--rq-ease);
   }
 
   .rq-problem-diagnostic__nav svg {
@@ -284,11 +364,16 @@ const stars = Array.from({ length: 5 });
 
   .rq-problem-diagnostic__nav:hover,
   .rq-problem-diagnostic__nav:focus-visible {
-    border-color: rgba(199, 224, 74, 0.62);
+    border-color: rgba(199, 224, 74, 0.78);
     outline: 0;
-    background: rgba(94, 25, 38, 0.78);
+    background:
+      radial-gradient(circle at 50% 0%, rgba(199, 224, 74, 0.28), transparent 62%),
+      rgba(94, 25, 38, 0.86);
     color: var(--rq-lime);
     transform: translateY(-1px);
+    box-shadow:
+      0 0 0 1px rgba(13, 11, 12, 0.48),
+      0 0 34px rgba(199, 224, 74, 0.2);
   }
 
   .rq-problem-diagnostic__nav:focus-visible {
@@ -297,7 +382,7 @@ const stars = Array.from({ length: 5 });
 
   .rq-problem-diagnostic__nav:disabled {
     cursor: default;
-    opacity: 0.38;
+    opacity: 0.42;
     transform: none;
   }
 
@@ -308,13 +393,19 @@ const stars = Array.from({ length: 5 });
     margin-inline: auto;
     overflow-x: auto;
     overscroll-behavior-x: contain;
-    padding-block: 1.6rem 1.35rem;
+    padding-block: 1.65rem 1.45rem;
     perspective: 1160px;
     perspective-origin: center;
     scroll-padding-inline: max(1rem, calc((100% - var(--rq-card-w)) / 2));
     scroll-snap-type: x mandatory;
-    scrollbar-color: rgba(199, 224, 74, 0.6) rgba(247, 244, 238, 0.08);
-    scrollbar-width: thin;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .rq-problem-diagnostic__carousel-scene::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
   }
 
   .rq-problem-diagnostic__filmstrip {
@@ -339,6 +430,9 @@ const stars = Array.from({ length: 5 });
   }
 
   .rq-problem-diagnostic__card {
+    --rq-card-rotate: 0deg;
+    --rq-card-lift: 0.75rem;
+    --rq-card-depth: -64px;
     position: relative;
     display: block;
     width: 100%;
@@ -350,11 +444,24 @@ const stars = Array.from({ length: 5 });
     font: inherit;
     text-align: left;
     cursor: pointer;
-    opacity: 0.82;
-    transform: translate3d(0, 0, 0);
+    opacity: 0.45;
+    filter: saturate(0.72);
+    transform: translate3d(0, var(--rq-card-lift), var(--rq-card-depth)) rotateY(var(--rq-card-rotate));
     transform-style: preserve-3d;
     scroll-snap-align: center;
-    transition: opacity 180ms var(--rq-ease), transform 260ms var(--rq-ease);
+    transition: opacity 240ms var(--rq-ease), filter 240ms var(--rq-ease), transform 480ms var(--rq-problem-ease-out-back);
+  }
+
+  .rq-problem-diagnostic__card[data-rq-problem-side='before'] {
+    --rq-card-rotate: 14deg;
+  }
+
+  .rq-problem-diagnostic__card[data-rq-problem-side='after'] {
+    --rq-card-rotate: -14deg;
+  }
+
+  .rq-problem-diagnostic__card[data-rq-problem-distance='far'] {
+    opacity: 0.36;
   }
 
   .rq-problem-diagnostic__card::before,
@@ -398,7 +505,7 @@ const stars = Array.from({ length: 5 });
       0 34px 72px rgba(0, 0, 0, 0.46),
       0 12px 26px rgba(0, 0, 0, 0.32),
       inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    transform: translateY(0.25rem) translateZ(-8px) rotateY(-3deg) rotateX(1deg);
+    transform: translateZ(0);
     transform-style: preserve-3d;
     transition: border-color 220ms var(--rq-ease), opacity 220ms var(--rq-ease), transform 260ms var(--rq-ease);
   }
@@ -414,57 +521,51 @@ const stars = Array.from({ length: 5 });
     pointer-events: none;
   }
 
-  .rq-problem-diagnostic__card--lead {
-    opacity: 0.94;
-  }
-
   .rq-problem-diagnostic__card--lead .rq-problem-diagnostic__card-inner {
     min-block-size: var(--rq-card-h-lead);
-    border-color: rgba(199, 224, 74, 0.68);
-    box-shadow:
-      0 38px 84px rgba(0, 0, 0, 0.5),
-      0 0 0 1px rgba(199, 224, 74, 0.12),
-      0 0 40px rgba(199, 224, 74, 0.12),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
-  .rq-problem-diagnostic__frame:nth-child(even) .rq-problem-diagnostic__card-inner {
-    transform: translateY(0.65rem) translateZ(-18px) rotateY(3deg) rotateX(1deg);
-  }
-
-  .rq-problem-diagnostic__card[aria-current='true'] {
+  .rq-problem-diagnostic__card[aria-selected='true'] {
+    --rq-card-lift: -0.35rem;
+    --rq-card-depth: 42px;
+    --rq-card-rotate: 0deg;
     z-index: 3;
     opacity: 1;
+    filter: saturate(1.08);
   }
 
-  .rq-problem-diagnostic__card[aria-current='true']::before,
-  .rq-problem-diagnostic__card[aria-current='true']::after,
+  .rq-problem-diagnostic__card[aria-selected='true']::before,
+  .rq-problem-diagnostic__card[aria-selected='true']::after,
   .rq-problem-diagnostic__card:hover::before,
   .rq-problem-diagnostic__card:focus-visible::before {
     opacity: 1;
   }
 
-  .rq-problem-diagnostic__card[aria-current='true'] .rq-problem-diagnostic__card-inner {
+  .rq-problem-diagnostic__card[aria-selected='true'] .rq-problem-diagnostic__card-inner {
     border-color: rgba(199, 224, 74, 0.72);
     box-shadow:
       0 42px 94px rgba(0, 0, 0, 0.56),
       0 0 0 1px rgba(199, 224, 74, 0.22),
       0 0 54px rgba(199, 224, 74, 0.18),
       inset 0 1px 0 rgba(255, 255, 255, 0.12);
-    transform: translateY(-6px) translateZ(34px) rotateY(0deg) rotateX(0deg);
+    transform: translateZ(22px);
   }
 
   .rq-problem-diagnostic__card:hover,
   .rq-problem-diagnostic__card:focus-visible {
+    --rq-card-lift: -0.3rem;
+    --rq-card-depth: 28px;
+    --rq-card-rotate: 0deg;
     z-index: 4;
     outline: 0;
-    opacity: 1;
+    opacity: 0.96;
+    filter: saturate(1);
   }
 
   .rq-problem-diagnostic__card:hover .rq-problem-diagnostic__card-inner,
   .rq-problem-diagnostic__card:focus-visible .rq-problem-diagnostic__card-inner {
     border-color: rgba(199, 224, 74, 0.78);
-    transform: translateY(-8px) translateZ(30px) rotateY(0deg) rotateX(0deg);
+    transform: translateZ(18px);
   }
 
   .rq-problem-diagnostic__card:focus-visible .rq-problem-diagnostic__card-inner {
@@ -475,15 +576,129 @@ const stars = Array.from({ length: 5 });
       inset 0 1px 0 rgba(255, 255, 255, 0.12);
   }
 
-  .rq-problem-diagnostic__filmstrip:has(.rq-problem-diagnostic__card:hover) .rq-problem-diagnostic__card:not(:hover):not([aria-current='true']),
-  .rq-problem-diagnostic__filmstrip:has(.rq-problem-diagnostic__card:focus-visible) .rq-problem-diagnostic__card:not(:focus-visible):not([aria-current='true']) {
-    opacity: 0.56;
+  .rq-problem-diagnostic__card[aria-selected='true'] .rq-problem-diagnostic__number,
+  .rq-problem-diagnostic__card[aria-selected='true'] .rq-problem-diagnostic__role,
+  .rq-problem-diagnostic__card[aria-selected='true'] .rq-problem-diagnostic__poster-title {
+    color: var(--rq-lime);
+    text-shadow: 0 0 18px rgba(199, 224, 74, 0.24);
+  }
+
+  .rq-problem-diagnostic__filmstrip:has(.rq-problem-diagnostic__card:hover) .rq-problem-diagnostic__card:not(:hover):not([aria-selected='true']),
+  .rq-problem-diagnostic__filmstrip:has(.rq-problem-diagnostic__card:focus-visible) .rq-problem-diagnostic__card:not(:focus-visible):not([aria-selected='true']) {
+    opacity: 0.38;
   }
 
   .rq-problem-diagnostic.is-scrolling .rq-problem-diagnostic__card-inner,
   .rq-problem-diagnostic__card:hover .rq-problem-diagnostic__card-inner,
   .rq-problem-diagnostic__card:focus-visible .rq-problem-diagnostic__card-inner {
     will-change: transform;
+  }
+
+  .rq-problem-diagnostic__timeline {
+    --rq-step: calc(100% / var(--rq-count));
+    --rq-laser-w: clamp(2.1rem, 6.5vw, 4.5rem);
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(var(--rq-count), minmax(2.45rem, 1fr));
+    align-items: end;
+    gap: clamp(0.25rem, 0.8vw, 0.55rem);
+    min-width: 0;
+    padding: 1.25rem 0.15rem 0.15rem;
+    isolation: isolate;
+  }
+
+  .rq-problem-diagnostic__timeline::after {
+    content: "";
+    position: absolute;
+    inset-block-start: 0.78rem;
+    inset-inline-start: calc((var(--rq-step) * var(--rq-active-index)) + ((var(--rq-step) - var(--rq-laser-w)) / 2));
+    z-index: 1;
+    width: min(var(--rq-laser-w), calc(var(--rq-step) - 0.35rem));
+    height: 2px;
+    border-radius: 999px;
+    background: var(--rq-lime);
+    box-shadow:
+      0 0 10px rgba(199, 224, 74, 0.95),
+      0 0 28px rgba(199, 224, 74, 0.36);
+    transition: inset-inline-start 420ms var(--rq-problem-ease-out-back), opacity 220ms var(--rq-ease);
+  }
+
+  .rq-problem-diagnostic__timeline-rail {
+    position: absolute;
+    inset: 0.78rem 0.35rem auto;
+    height: 2px;
+    border-radius: 999px;
+    background:
+      linear-gradient(90deg, rgba(94, 25, 38, 0.32), rgba(94, 25, 38, 0.9), rgba(94, 25, 38, 0.32));
+    box-shadow: 0 0 18px rgba(94, 25, 38, 0.5);
+  }
+
+  .rq-problem-diagnostic__indicator {
+    position: relative;
+    z-index: 2;
+    display: inline-grid;
+    min-width: 0;
+    min-height: 2.65rem;
+    place-items: center;
+    border: 1px solid rgba(94, 25, 38, 0.88);
+    border-radius: 999px;
+    padding: 0 0.35rem;
+    background: rgba(94, 25, 38, 0.22);
+    color: rgba(173, 92, 104, 0.92);
+    font-family: var(--rq-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(247, 244, 238, 0.055);
+    transition: border-color 180ms var(--rq-ease), background-color 180ms var(--rq-ease), color 180ms var(--rq-ease), box-shadow 180ms var(--rq-ease), transform 180ms var(--rq-ease);
+  }
+
+  .rq-problem-diagnostic__indicator::before {
+    content: "";
+    position: absolute;
+    inset-block-start: -0.56rem;
+    inset-inline: 50% auto;
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 999px;
+    background: rgba(94, 25, 38, 0.95);
+    box-shadow: 0 0 12px rgba(94, 25, 38, 0.5);
+    transform: translateX(-50%);
+    transition: background-color 180ms var(--rq-ease), box-shadow 180ms var(--rq-ease);
+  }
+
+  .rq-problem-diagnostic__indicator[aria-current='true'] {
+    border-color: rgba(199, 224, 74, 0.86);
+    background: rgba(199, 224, 74, 0.1);
+    color: var(--rq-lime);
+    box-shadow:
+      0 0 0 1px rgba(199, 224, 74, 0.14),
+      0 0 22px rgba(199, 224, 74, 0.18),
+      inset 0 1px 0 rgba(247, 244, 238, 0.08);
+  }
+
+  .rq-problem-diagnostic__indicator[aria-current='true']::before {
+    background: var(--rq-lime);
+    box-shadow:
+      0 0 8px rgba(199, 224, 74, 0.92),
+      0 0 22px rgba(199, 224, 74, 0.38);
+  }
+
+  .rq-problem-diagnostic__indicator:hover,
+  .rq-problem-diagnostic__indicator:focus-visible {
+    outline: 0;
+    border-color: rgba(199, 224, 74, 0.68);
+    color: var(--rq-lime);
+    transform: translateY(-1px);
+  }
+
+  .rq-problem-diagnostic__indicator:focus-visible {
+    box-shadow:
+      0 0 0 3px rgba(199, 224, 74, 0.26),
+      0 0 22px rgba(199, 224, 74, 0.18);
   }
 
   .rq-problem-diagnostic__poster-meta {
@@ -496,7 +711,7 @@ const stars = Array.from({ length: 5 });
   }
 
   .rq-problem-diagnostic__number {
-    color: rgba(199, 224, 74, 0.82);
+    color: rgba(173, 92, 104, 0.92);
   }
 
   .rq-problem-diagnostic__role {
@@ -504,7 +719,7 @@ const stars = Array.from({ length: 5 });
     font-size: 0.7rem;
   }
 
-  .rq-problem-diagnostic__card--lead .rq-problem-diagnostic__role {
+  .rq-problem-diagnostic__card--lead[aria-selected='true'] .rq-problem-diagnostic__role {
     color: var(--rq-lime);
   }
 
@@ -553,13 +768,18 @@ const stars = Array.from({ length: 5 });
   }
 
   .rq-problem-diagnostic__star.is-active {
+    color: rgba(199, 224, 74, 0.54);
+    text-shadow: 0 0 10px rgba(199, 224, 74, 0.18);
+  }
+
+  .rq-problem-diagnostic__card[aria-selected='true'] .rq-problem-diagnostic__star.is-active {
     color: var(--rq-lime);
     text-shadow: 0 0 16px rgba(199, 224, 74, 0.34);
   }
 
   .rq-problem-diagnostic__tagline {
     max-width: 46rem;
-    margin: -0.25rem 0 0;
+    margin: 0;
     font-family: var(--rq-display), var(--rq-body), system-ui, sans-serif;
     font-size: clamp(1.08rem, 1.6vw, 1.35rem);
     font-weight: 780;
@@ -571,7 +791,9 @@ const stars = Array.from({ length: 5 });
     z-index: 1;
     min-width: 0;
     min-block-size: var(--rq-jaw-min-block-size);
-    margin-top: clamp(0.35rem, 1.6vw, 0.8rem);
+    margin-top: 0;
+    perspective: 980px;
+    perspective-origin: center top;
   }
 
   .rq-problem-diagnostic__panel {
@@ -583,17 +805,19 @@ const stars = Array.from({ length: 5 });
     border-radius: 8px;
     padding: clamp(1.25rem, 3vw, 2.1rem);
     background:
-      linear-gradient(135deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.02) 32%, rgba(94, 25, 38, 0.2)),
-      rgba(22, 18, 20, 0.86);
+      linear-gradient(135deg, rgba(247, 244, 238, 0.08), rgba(247, 244, 238, 0.025) 36%, rgba(94, 25, 38, 0.18)),
+      rgba(13, 11, 12, 0.42);
     color: var(--rq-on-dark);
     box-shadow:
-      0 30px 78px rgba(0, 0, 0, 0.44),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      inset 0 0 0 1px rgba(199, 224, 74, 0.035);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: translateY(0.7rem);
-    transition: opacity 220ms var(--rq-ease), transform 220ms var(--rq-ease), visibility 220ms var(--rq-ease);
+    backface-visibility: hidden;
+    transform: translateY(0.65rem) rotateY(-7deg);
+    transform-origin: center top;
+    transition: opacity 260ms var(--rq-ease), transform 320ms var(--rq-problem-ease-out-back), visibility 260ms var(--rq-ease);
   }
 
   .rq-problem-diagnostic__panel.is-active {
@@ -601,11 +825,11 @@ const stars = Array.from({ length: 5 });
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transform: translateY(0);
+    transform: translateY(0) rotateY(0deg);
   }
 
   .rq-problem-diagnostic__output.is-switching .rq-problem-diagnostic__panel.is-active {
-    animation: rq-problem-panel-in 220ms var(--rq-ease);
+    animation: rq-problem-panel-in 320ms var(--rq-problem-ease-out-back);
   }
 
   .rq-problem-diagnostic__panel:focus-visible {
@@ -709,48 +933,14 @@ const stars = Array.from({ length: 5 });
     outline-offset: 4px;
   }
 
-  @supports (animation-timeline: view()) {
-    @media (min-width: 861px) and (prefers-reduced-motion: no-preference) {
-      .rq-problem-diagnostic__card {
-        animation: rq-problem-card-depth linear both;
-        animation-range: entry 0% exit 100%;
-        animation-timeline: view(inline);
-      }
-
-      .rq-problem-diagnostic__card[aria-current='true'],
-      .rq-problem-diagnostic__card:hover,
-      .rq-problem-diagnostic__card:focus-visible {
-        animation: none;
-        opacity: 1;
-        transform: translate3d(0, 0, 0) rotateY(0deg) rotateX(0deg);
-      }
-    }
-  }
-
-  @keyframes rq-problem-card-depth {
-    0% {
-      opacity: 0.46;
-      transform: translate3d(0, 0.9rem, -70px) rotateY(10deg) rotateX(2deg);
-    }
-    45%,
-    55% {
-      opacity: 0.94;
-      transform: translate3d(0, 0, 22px) rotateY(0deg) rotateX(0deg);
-    }
-    100% {
-      opacity: 0.46;
-      transform: translate3d(0, 0.9rem, -70px) rotateY(-10deg) rotateX(2deg);
-    }
-  }
-
   @keyframes rq-problem-panel-in {
     from {
       opacity: 0;
-      transform: translateY(0.7rem);
+      transform: translateY(0.65rem) rotateY(-7deg);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) rotateY(0deg);
     }
   }
 
@@ -778,7 +968,7 @@ const stars = Array.from({ length: 5 });
 
     .rq-problem-diagnostic__carousel-scene {
       padding-block: 0.65rem 1rem;
-      perspective: none;
+      perspective: 820px;
       scroll-padding-inline: max(1rem, calc((100% - var(--rq-card-w)) / 2));
     }
 
@@ -792,17 +982,25 @@ const stars = Array.from({ length: 5 });
       flex-basis: var(--rq-card-w-lead);
     }
 
-    .rq-problem-diagnostic__card,
-    .rq-problem-diagnostic__card[aria-current='true'],
-    .rq-problem-diagnostic__card:hover,
-    .rq-problem-diagnostic__card:focus-visible {
-      animation: none;
-      transform: none;
+    .rq-problem-diagnostic__card {
+      --rq-card-lift: 0.35rem;
+      --rq-card-depth: -34px;
+    }
+
+    .rq-problem-diagnostic__card[data-rq-problem-side='before'] {
+      --rq-card-rotate: 7deg;
+    }
+
+    .rq-problem-diagnostic__card[data-rq-problem-side='after'] {
+      --rq-card-rotate: -7deg;
+    }
+
+    .rq-problem-diagnostic__card[aria-selected='true'] {
+      --rq-card-lift: 0;
+      --rq-card-depth: 18px;
     }
 
     .rq-problem-diagnostic__card-inner,
-    .rq-problem-diagnostic__frame:nth-child(even) .rq-problem-diagnostic__card-inner,
-    .rq-problem-diagnostic__card[aria-current='true'] .rq-problem-diagnostic__card-inner,
     .rq-problem-diagnostic__card:hover .rq-problem-diagnostic__card-inner,
     .rq-problem-diagnostic__card:focus-visible .rq-problem-diagnostic__card-inner {
       transform: none;
@@ -819,8 +1017,14 @@ const stars = Array.from({ length: 5 });
       gap: 0.9rem;
     }
 
-    .rq-problem-diagnostic__controls {
-      justify-self: start;
+    .rq-problem-diagnostic__stage {
+      grid-template-columns: 2.55rem minmax(0, 1fr) 2.55rem;
+      gap: 0.45rem;
+    }
+
+    .rq-problem-diagnostic__nav {
+      width: 2.55rem;
+      height: 2.55rem;
     }
   }
 
@@ -831,6 +1035,18 @@ const stars = Array.from({ length: 5 });
 
     .rq-problem-diagnostic__poster-title {
       font-size: 1.42rem;
+    }
+
+    .rq-problem-diagnostic__timeline {
+      grid-template-columns: repeat(var(--rq-count), minmax(1.72rem, 1fr));
+      gap: 0.15rem;
+      padding-block-start: 1.08rem;
+    }
+
+    .rq-problem-diagnostic__indicator {
+      min-height: 2.35rem;
+      padding-inline: 0.16rem;
+      font-size: 0.68rem;
     }
 
     .rq-problem-diagnostic__panel-top,
@@ -878,6 +1094,9 @@ const stars = Array.from({ length: 5 });
     .rq-problem-diagnostic__card::before,
     .rq-problem-diagnostic__card::after,
     .rq-problem-diagnostic__card-inner,
+    .rq-problem-diagnostic__indicator,
+    .rq-problem-diagnostic__indicator::before,
+    .rq-problem-diagnostic__timeline::after,
     .rq-problem-diagnostic__panel,
     .rq-problem-diagnostic__output.is-switching .rq-problem-diagnostic__panel.is-active {
       animation: none;
@@ -889,16 +1108,24 @@ const stars = Array.from({ length: 5 });
     }
 
     .rq-problem-diagnostic__card,
-    .rq-problem-diagnostic__card[aria-current='true'],
+    .rq-problem-diagnostic__card[aria-selected='true'],
     .rq-problem-diagnostic__card:hover,
     .rq-problem-diagnostic__card:focus-visible,
     .rq-problem-diagnostic__card-inner,
-    .rq-problem-diagnostic__frame:nth-child(even) .rq-problem-diagnostic__card-inner,
-    .rq-problem-diagnostic__card[aria-current='true'] .rq-problem-diagnostic__card-inner,
+    .rq-problem-diagnostic__card[aria-selected='true'] .rq-problem-diagnostic__card-inner,
     .rq-problem-diagnostic__card:hover .rq-problem-diagnostic__card-inner,
     .rq-problem-diagnostic__card:focus-visible .rq-problem-diagnostic__card-inner,
     .rq-problem-diagnostic__panel {
       transform: none;
+    }
+
+    .rq-problem-diagnostic__card {
+      filter: none;
+      opacity: 0.72;
+    }
+
+    .rq-problem-diagnostic__card[aria-selected='true'] {
+      opacity: 1;
     }
   }
 </style>
@@ -914,7 +1141,9 @@ const stars = Array.from({ length: 5 });
 
     const carousel = root.querySelector('[data-rq-problem-carousel]');
     const output = root.querySelector('[data-rq-problem-output]');
+    const timeline = root.querySelector('[data-rq-problem-timeline]');
     const cards = Array.from(root.querySelectorAll('[data-rq-problem-card]'));
+    const indicators = Array.from(root.querySelectorAll('[data-rq-problem-indicator]'));
     const panels = Array.from(root.querySelectorAll('[data-rq-problem-panel]'));
     const prevButton = root.querySelector('[data-rq-problem-prev]');
     const nextButton = root.querySelector('[data-rq-problem-next]');
@@ -959,7 +1188,7 @@ const stars = Array.from({ length: 5 });
       panelTimer = window.setTimeout(() => {
         output.classList.remove('is-switching');
         panelTimer = 0;
-      }, 260);
+      }, 360);
     };
 
     const scrollCardIntoView = (index) => {
@@ -979,17 +1208,29 @@ const stars = Array.from({ length: 5 });
 
       activeIndex = safeIndex;
       root.dataset.rqActiveIndex = String(activeIndex);
+      if (timeline instanceof HTMLElement) {
+        timeline.style.setProperty('--rq-active-index', String(activeIndex));
+      }
 
       cards.forEach((card, index) => {
         const isActive = index === activeIndex;
-        card.setAttribute('aria-current', String(isActive));
+        const distance = Math.abs(index - activeIndex);
+        card.setAttribute('aria-selected', String(isActive));
+        card.setAttribute('tabindex', isActive ? '0' : '-1');
+        card.setAttribute('data-rq-problem-side', isActive ? 'active' : index < activeIndex ? 'before' : 'after');
+        card.setAttribute('data-rq-problem-distance', distance > 2 ? 'far' : 'near');
       });
 
       panels.forEach((panel, index) => {
         const isActive = index === activeIndex;
         panel.classList.toggle('is-active', isActive);
         panel.setAttribute('aria-hidden', String(!isActive));
+        panel.setAttribute('tabindex', isActive ? '0' : '-1');
         panel.toggleAttribute('inert', !isActive);
+      });
+
+      indicators.forEach((indicator, index) => {
+        indicator.setAttribute('aria-current', String(index === activeIndex));
       });
 
       updateNav();
@@ -1096,6 +1337,46 @@ const stars = Array.from({ length: 5 });
         if (event.key === 'End') {
           event.preventDefault();
           activate(cards.length - 1, { interacted: true, scroll: true, focus: true });
+        }
+      });
+    });
+
+    indicators.forEach((indicator, index) => {
+      indicator.addEventListener('click', () => {
+        activate(index, { interacted: true, scroll: true });
+      });
+
+      indicator.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+          event.preventDefault();
+          moveBy(1);
+          if (indicators[activeIndex] instanceof HTMLElement) {
+            indicators[activeIndex].focus({ preventScroll: true });
+          }
+        }
+
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+          event.preventDefault();
+          moveBy(-1);
+          if (indicators[activeIndex] instanceof HTMLElement) {
+            indicators[activeIndex].focus({ preventScroll: true });
+          }
+        }
+
+        if (event.key === 'Home') {
+          event.preventDefault();
+          activate(0, { interacted: true, scroll: true });
+          if (indicators[activeIndex] instanceof HTMLElement) {
+            indicators[activeIndex].focus({ preventScroll: true });
+          }
+        }
+
+        if (event.key === 'End') {
+          event.preventDefault();
+          activate(cards.length - 1, { interacted: true, scroll: true });
+          if (indicators[activeIndex] instanceof HTMLElement) {
+            indicators[activeIndex].focus({ preventScroll: true });
+          }
         }
       });
     });

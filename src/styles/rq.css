@@ -2639,8 +2639,8 @@ h2 + p {
   overflow: hidden;
   pointer-events: none;
   contain: layout paint style;
-  -webkit-mask-image: radial-gradient(ellipse at 82% 58%, rgba(0, 0, 0, .48) 0%, rgba(0, 0, 0, .4) 26%, rgba(0, 0, 0, .24) 48%, rgba(0, 0, 0, .1) 68%, rgba(0, 0, 0, .04) 100%);
-  mask-image: radial-gradient(ellipse at 82% 58%, rgba(0, 0, 0, .48) 0%, rgba(0, 0, 0, .4) 26%, rgba(0, 0, 0, .24) 48%, rgba(0, 0, 0, .1) 68%, rgba(0, 0, 0, .04) 100%);
+  -webkit-mask-image: radial-gradient(ellipse at 83% 58%, rgba(0, 0, 0, .56) 0%, rgba(0, 0, 0, .5) 25%, rgba(0, 0, 0, .3) 48%, rgba(0, 0, 0, .12) 68%, rgba(0, 0, 0, .05) 100%);
+  mask-image: radial-gradient(ellipse at 83% 58%, rgba(0, 0, 0, .56) 0%, rgba(0, 0, 0, .5) 25%, rgba(0, 0, 0, .3) 48%, rgba(0, 0, 0, .12) 68%, rgba(0, 0, 0, .05) 100%);
 }
 
 .rq-hero__ambient canvas {

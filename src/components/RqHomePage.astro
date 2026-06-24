@@ -105,7 +105,11 @@ const schema = {
       }
 
       function canEnhance() {
-        return !reducedMotionQuery?.matches && window.innerWidth >= MIN_WIDTH && canUseWebGL();
+        return window.innerWidth >= MIN_WIDTH && canUseWebGL();
+      }
+
+      function isStaticMode() {
+        return Boolean(reducedMotionQuery?.matches);
       }
 
       function requestIdle(callback) {
@@ -123,27 +127,44 @@ const schema = {
         window.clearTimeout(resizeTimer);
         resizeTimer = window.setTimeout(() => {
           resizeTimer = 0;
-          if (reducedMotionQuery?.matches || window.innerWidth < MIN_WIDTH) {
+          if (window.innerWidth < MIN_WIDTH) {
             ambient?.dispose();
             ambient = null;
             return;
           }
+
+          if (ambient?.staticMode !== undefined && ambient.staticMode !== isStaticMode()) {
+            ambient.dispose();
+            ambient = null;
+          }
+
+          if (!ambient && shouldRun && !pageHidden) {
+            ensureAmbient();
+            return;
+          }
+
           ambient?.resize();
         }, 160);
       }
 
       async function ensureAmbient() {
-        if (!shouldRun || pageHidden || reducedMotionQuery?.matches || window.innerWidth < MIN_WIDTH) return;
+        if (!shouldRun || pageHidden || window.innerWidth < MIN_WIDTH) return;
+        const staticMode = isStaticMode();
         if (ambient) {
-          ambient.start();
-          return;
+          if (ambient.staticMode !== staticMode) {
+            ambient.dispose();
+            ambient = null;
+          } else {
+            ambient.start();
+            return;
+          }
         }
         if (loading || !canUseWebGL()) return;
 
         loading = true;
         try {
           const {
-            AdditiveBlending,
+            NormalBlending,
             BufferAttribute,
             BufferGeometry,
             Color,
@@ -156,10 +177,10 @@ const schema = {
             WebGLRenderer,
           } = await import('three');
 
-          if (!shouldRun || pageHidden || reducedMotionQuery?.matches || window.innerWidth < MIN_WIDTH) return;
+          if (!shouldRun || pageHidden || window.innerWidth < MIN_WIDTH) return;
 
           ambient = createHeroAmbient(mount, {
-            AdditiveBlending,
+            NormalBlending,
             BufferAttribute,
             BufferGeometry,
             Color,
@@ -170,7 +191,7 @@ const schema = {
             Scene,
             ShaderMaterial,
             WebGLRenderer,
-          });
+          }, { staticMode: isStaticMode() });
           ambient.start();
         } catch {
           ambient?.dispose();
@@ -180,9 +201,9 @@ const schema = {
         }
       }
 
-      function createHeroAmbient(root, three) {
+      function createHeroAmbient(root, three, { staticMode = false } = {}) {
         const {
-          AdditiveBlending,
+          NormalBlending,
           BufferAttribute,
           BufferGeometry,
           Color,
@@ -221,6 +242,7 @@ const schema = {
         let running = false;
         let disposed = false;
         let parallax = 0;
+        let staticRendered = false;
         let lastTime = performance.now();
         const lowPower = (navigator.hardwareConcurrency || 8) <= 4;
         const nodeCount = lowPower ? 86 : 112;
@@ -299,10 +321,10 @@ const schema = {
           transparent: true,
           depthWrite: false,
           depthTest: false,
-          blending: AdditiveBlending,
+          blending: NormalBlending,
           uniforms: {
             uColor: { value: limeColor },
-            uOpacity: { value: 0.35 },
+            uOpacity: { value: 0.38 },
             uPixelRatio: { value: Math.min(window.devicePixelRatio || 1, 1.5) },
             uFogColor: { value: bgColor },
             uFogNear: { value: fog.near },
@@ -349,7 +371,7 @@ const schema = {
           transparent: true,
           depthWrite: false,
           depthTest: false,
-          blending: AdditiveBlending,
+          blending: NormalBlending,
           uniforms: {
             uColor: { value: edgeColor },
             uFogColor: { value: bgColor },
@@ -397,6 +419,7 @@ const schema = {
           renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
           pointMaterial.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio || 1, 1.5);
           renderer.setSize(width, height, false);
+          if (staticMode && staticRendered) renderStatic();
         }
 
         function updatePointer(event) {
@@ -409,10 +432,14 @@ const schema = {
         }
 
         function updateNodes(time) {
-          const rect = root.getBoundingClientRect();
-          const unitPerPx = worldHeight / Math.max(height, 1);
-          const parallaxTarget = -rect.top * 0.25 * unitPerPx;
-          parallax += (parallaxTarget - parallax) * 0.045;
+          if (staticMode) {
+            parallax = 0;
+          } else {
+            const rect = root.getBoundingClientRect();
+            const unitPerPx = worldHeight / Math.max(height, 1);
+            const parallaxTarget = -rect.top * 0.25 * unitPerPx;
+            parallax += (parallaxTarget - parallax) * 0.045;
+          }
           pointer.x += (pointer.tx - pointer.x) * 0.075;
           pointer.y += (pointer.ty - pointer.y) * 0.075;
           pointer.strength += (pointer.target - pointer.strength) * 0.08;
@@ -483,7 +510,7 @@ const schema = {
             const distance = Math.sqrt(distanceSq);
             const closeness = Math.max(0, 1 - distance / threshold);
             const focus = Math.min(1, (glow[i] + glow[j]) * 0.7);
-            const alpha = Math.min(0.1, 0.055 + closeness * 0.038 + focus * 0.028);
+            const alpha = Math.min(0.17, 0.11 + closeness * 0.045 + focus * 0.03);
             const offset = segment * 6;
             linePositions[offset] = a.px;
             linePositions[offset + 1] = a.py;
@@ -500,6 +527,23 @@ const schema = {
           lineGeometry.attributes.aAlpha.needsUpdate = true;
         }
 
+        function renderStatic() {
+          if (disposed || document.hidden) return;
+          parallax = 0;
+          pointer.x = 0;
+          pointer.y = 0;
+          pointer.tx = 0;
+          pointer.ty = 0;
+          pointer.strength = 0;
+          pointer.target = 0;
+          scene.rotation.z = 0;
+          scene.rotation.y = 0;
+          updateNodes(0);
+          updateLines();
+          renderer.render(scene, camera);
+          staticRendered = true;
+        }
+
         function render(now) {
           if (!running || disposed || document.hidden) return;
           const time = now * 0.001;
@@ -514,7 +558,13 @@ const schema = {
         }
 
         function start() {
-          if (running || disposed) return;
+          if (disposed) return;
+          if (staticMode) {
+            stop();
+            renderStatic();
+            return;
+          }
+          if (running) return;
           running = true;
           lastTime = performance.now();
           frameId = window.requestAnimationFrame(render);
@@ -540,10 +590,12 @@ const schema = {
           renderer.domElement.remove();
         }
 
-        window.addEventListener('pointermove', updatePointer, { passive: true });
+        if (!staticMode) {
+          window.addEventListener('pointermove', updatePointer, { passive: true });
+        }
         resize();
 
-        return { start, stop, resize, dispose };
+        return { start, stop, resize, dispose, staticMode };
       }
 
       function startGate() {

@@ -2413,15 +2413,15 @@ h2 + p {
 }
 
 .rq-hero__copy {
-  width: min(100%, 72rem);
+  width: 100%;
 }
 
 .rq-hero .rq-display {
-  max-width: 14ch;
+  max-width: none;
 }
 
 .rq-hero .rq-lead {
-  max-width: 66ch;
+  max-width: none;
 }
 
 .rq-hero .rq-proof-rail {

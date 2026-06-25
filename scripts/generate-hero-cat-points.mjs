@@ -9,7 +9,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const sourcePath = process.argv[2] || 'C:/Users/sirok/Downloads/kocka_body_3d.html';
 const outputPath = resolve(__dirname, '../src/data/heroCatPoints.ts');
 const sourceStep = 2;
-const desktopTarget = 7000;
+const desktopTarget = 8400;
 const lowPowerTarget = 3000;
 
 const html = await readFile(sourcePath, 'utf8');
@@ -45,28 +45,34 @@ try {
       const { data } = context.getImageData(0, 0, canvas.width, canvas.height);
       const alphaThreshold = 40;
       const desktopProfile = {
-        base: 0.2,
-        outline: 1.55,
-        contrast: 1.18,
-        colorVariance: 1.26,
-        head: 1.06,
-        eye: 2.4,
-        eyeQuota: 0.075,
-        headQuota: 0.42,
-        detailQuota: 0.5,
-        detailThreshold: 0.28,
+        base: 0.18,
+        outline: 1.7,
+        contrast: 1.34,
+        colorVariance: 1.48,
+        head: 1.18,
+        eye: 3.05,
+        eyeQuota: 0.095,
+        headQuota: 0.46,
+        detailQuota: 0.6,
+        detailThreshold: 0.24,
+        sizeMin: 0.56,
+        sizeMax: 1.38,
+        sizeScale: 1,
       };
       const lowPowerProfile = {
-        base: 0.16,
-        outline: 1.64,
-        contrast: 1.32,
-        colorVariance: 1.42,
-        head: 1.34,
-        eye: 2.95,
-        eyeQuota: 0.095,
-        headQuota: 0.48,
-        detailQuota: 0.56,
-        detailThreshold: 0.26,
+        base: 0.14,
+        outline: 1.72,
+        contrast: 1.42,
+        colorVariance: 1.52,
+        head: 1.42,
+        eye: 3.25,
+        eyeQuota: 0.105,
+        headQuota: 0.5,
+        detailQuota: 0.58,
+        detailThreshold: 0.25,
+        sizeMin: 0.62,
+        sizeMax: 1.52,
+        sizeScale: 1.04,
       };
       const raw = [];
 
@@ -130,8 +136,8 @@ try {
       const span = Math.max(maxX - minX, maxY - minY) || 1;
       const desktopSelected = selectPointSet(raw, desktopTarget, desktopProfile, 17);
       const lowPowerSelected = selectPointSet(raw, lowPowerTarget, lowPowerProfile, 43);
-      const desktop = buildBuffers(desktopSelected);
-      const lowPower = buildBuffers(lowPowerSelected);
+      const desktop = buildBuffers(desktopSelected, desktopProfile, 17);
+      const lowPower = buildBuffers(lowPowerSelected, lowPowerProfile, 43);
 
       return {
         imageWidth: canvas.width,
@@ -141,14 +147,21 @@ try {
         lowPower,
       };
 
-      function buildBuffers(selected) {
+      function buildBuffers(selected, profile, salt) {
+        const densities = localSelectionDensities(selected);
         const floats = new Float32Array(selected.length * 3);
         const colors = new Uint8Array(selected.length * 3);
+        const sizes = new Float32Array(selected.length);
         const outlines = new Uint8Array(selected.length);
         const details = new Uint8Array(selected.length);
         let minLum = Infinity;
         let maxLum = -Infinity;
         let sumLum = 0;
+        let minSize = Infinity;
+        let maxSize = -Infinity;
+        let sumSize = 0;
+        let fineSizeCount = 0;
+        let broadSizeCount = 0;
         let outlineCount = 0;
         let headCount = 0;
         let eyeCount = 0;
@@ -164,13 +177,20 @@ try {
           colors[offset] = point.r;
           colors[offset + 1] = point.g;
           colors[offset + 2] = point.b;
+          sizes[index] = pointSize(point, densities[index], profile, salt + 101);
           outlines[index] = Math.round(point.outline * 255);
           details[index] = Math.round(point.detail * 255);
 
           const adjustedLum = (0.2126 * point.r + 0.7152 * point.g + 0.0722 * point.b) / 255;
+          const size = sizes[index];
           minLum = Math.min(minLum, adjustedLum);
           maxLum = Math.max(maxLum, adjustedLum);
           sumLum += adjustedLum;
+          minSize = Math.min(minSize, size);
+          maxSize = Math.max(maxSize, size);
+          sumSize += size;
+          if (size < 0.8) fineSizeCount += 1;
+          if (size > 1.16) broadSizeCount += 1;
           if (point.outline > 0.08) outlineCount += 1;
           if (point.head > 0.08) headCount += 1;
           if (point.eye > 0.06) eyeCount += 1;
@@ -181,6 +201,7 @@ try {
         return {
           points: Array.from(floats),
           colors: Array.from(colors),
+          sizes: Array.from(sizes),
           outlines: Array.from(outlines),
           details: Array.from(details),
           stats: {
@@ -188,6 +209,11 @@ try {
             minLum,
             maxLum,
             avgLum: sumLum / selected.length,
+            minSize,
+            maxSize,
+            avgSize: sumSize / selected.length,
+            fineSizeCount,
+            broadSizeCount,
             outlineCount,
             headCount,
             eyeCount,
@@ -195,6 +221,92 @@ try {
             colorVarianceCount,
           },
         };
+      }
+
+      function localSelectionDensities(selected) {
+        const radius = 14;
+        const radiusSq = radius * radius;
+        const cellSize = radius;
+        const buckets = new Map();
+        const rawDensities = new Float32Array(selected.length);
+
+        for (let index = 0; index < selected.length; index += 1) {
+          const point = selected[index];
+          const key = densityKey(point.x, point.y, cellSize);
+          const bucket = buckets.get(key);
+          if (bucket) {
+            bucket.push(index);
+          } else {
+            buckets.set(key, [index]);
+          }
+        }
+
+        for (let index = 0; index < selected.length; index += 1) {
+          const point = selected[index];
+          const cx = Math.floor(point.x / cellSize);
+          const cy = Math.floor(point.y / cellSize);
+          let density = 0;
+
+          for (let gy = cy - 1; gy <= cy + 1; gy += 1) {
+            for (let gx = cx - 1; gx <= cx + 1; gx += 1) {
+              const bucket = buckets.get(`${gx}:${gy}`);
+              if (!bucket) continue;
+
+              for (const neighborIndex of bucket) {
+                if (neighborIndex === index) continue;
+                const neighbor = selected[neighborIndex];
+                const dx = neighbor.x - point.x;
+                const dy = neighbor.y - point.y;
+                const distanceSq = dx * dx + dy * dy;
+                if (distanceSq > radiusSq) continue;
+                density += 1 - Math.sqrt(distanceSq) / radius;
+              }
+            }
+          }
+
+          rawDensities[index] = density;
+        }
+
+        const sorted = Array.from(rawDensities).sort((a, b) => a - b);
+        const low = sorted[Math.floor(sorted.length * 0.12)] ?? 0;
+        const high = sorted[Math.floor(sorted.length * 0.88)] ?? 1;
+        const span = Math.max(0.001, high - low);
+        const densities = new Float32Array(selected.length);
+
+        for (let index = 0; index < selected.length; index += 1) {
+          densities[index] = clamp01((rawDensities[index] - low) / span);
+        }
+
+        return densities;
+      }
+
+      function pointSize(point, density, profile, salt) {
+        const fineDetail = clamp01(
+          point.detail * 0.62 +
+          point.contrast * 0.22 +
+          point.colorVariance * 0.28 +
+          point.eye * 0.52 +
+          point.outline * 0.16 +
+          density * 0.24,
+        );
+        const sparseFlat = clamp01(
+          (1 - point.detail * 0.72 - point.contrast * 0.18 - point.colorVariance * 0.22) *
+          (1 - density * 0.54),
+        );
+        const depthFill = clamp01((point.lum - 0.5) * 0.24 + 0.12) * 0.08;
+        const jitter = (randomUnit(point.x, point.y, salt) - 0.5) * 0.1;
+        const size = (
+          1.12 +
+          sparseFlat * 0.34 +
+          depthFill -
+          fineDetail * 0.5 -
+          density * 0.12 -
+          point.eye * 0.12 -
+          point.outline * 0.05 +
+          jitter
+        ) * profile.sizeScale;
+
+        return clamp(profile.sizeMin, profile.sizeMax, size);
       }
 
       function selectPointSet(points, target, profile, salt) {
@@ -435,6 +547,14 @@ try {
         return Math.max(0, Math.min(1, value));
       }
 
+      function clamp(min, max, value) {
+        return Math.max(min, Math.min(max, value));
+      }
+
+      function densityKey(x, y, cellSize) {
+        return `${Math.floor(x / cellSize)}:${Math.floor(y / cellSize)}`;
+      }
+
       function randomUnit(x, y, salt) {
         return (hashPoint(x, y, salt) + 1) / 4294967297;
       }
@@ -456,7 +576,7 @@ try {
   const desktop = encodePointSet(result.desktop);
   const lowPower = encodePointSet(result.lowPower);
   const output = `// Generated by scripts/generate-hero-cat-points.mjs from ${sourcePath.replaceAll('\\', '/')}.
-// Source PNG is sampled once through canvas getImageData(step=${sourceStep}); runtime decodes baked positions, RGB colors, outline weights, and detail weights.
+// Source PNG is sampled once through canvas getImageData(step=${sourceStep}); runtime decodes baked positions, RGB colors, point sizes, outline weights, and detail weights.
 
 export const HERO_CAT_SOURCE_STEP = ${sourceStep};
 export const HERO_CAT_SOURCE_SAMPLE_COUNT = ${result.sourceCount};
@@ -473,6 +593,9 @@ ${chunkBase64(desktop.pointsBase64)}
 export const HERO_CAT_COLORS_BASE64 = [
 ${chunkBase64(desktop.colorsBase64)}
 ].join('');
+export const HERO_CAT_SIZES_BASE64 = [
+${chunkBase64(desktop.sizesBase64)}
+].join('');
 export const HERO_CAT_OUTLINE_BASE64 = [
 ${chunkBase64(desktop.outlinesBase64)}
 ].join('');
@@ -484,6 +607,9 @@ ${chunkBase64(lowPower.pointsBase64)}
 ].join('');
 export const HERO_CAT_LOW_POWER_COLORS_BASE64 = [
 ${chunkBase64(lowPower.colorsBase64)}
+].join('');
+export const HERO_CAT_LOW_POWER_SIZES_BASE64 = [
+${chunkBase64(lowPower.sizesBase64)}
 ].join('');
 export const HERO_CAT_LOW_POWER_OUTLINE_BASE64 = [
 ${chunkBase64(lowPower.outlinesBase64)}
@@ -509,22 +635,24 @@ ${chunkBase64(lowPower.detailsBase64)}
 function encodePointSet(pointSet) {
   const floats = new Float32Array(pointSet.points);
   const colors = new Uint8Array(pointSet.colors);
+  const sizes = new Float32Array(pointSet.sizes);
   const outlines = new Uint8Array(pointSet.outlines);
   const details = new Uint8Array(pointSet.details);
   return {
     pointsBase64: Buffer.from(new Uint8Array(floats.buffer)).toString('base64'),
     colorsBase64: Buffer.from(colors).toString('base64'),
+    sizesBase64: Buffer.from(new Uint8Array(sizes.buffer)).toString('base64'),
     outlinesBase64: Buffer.from(outlines).toString('base64'),
     detailsBase64: Buffer.from(details).toString('base64'),
   };
 }
 
 function formatStats(stats) {
-  return `{ count: ${stats.count}, head: ${stats.headCount}, eyes: ${stats.eyeCount}, outline: ${stats.outlineCount}, contrast: ${stats.contrastCount}, colorVariance: ${stats.colorVarianceCount}, minLum: ${stats.minLum.toFixed(3)}, maxLum: ${stats.maxLum.toFixed(3)}, avgLum: ${stats.avgLum.toFixed(3)} }`;
+  return `{ count: ${stats.count}, head: ${stats.headCount}, eyes: ${stats.eyeCount}, outline: ${stats.outlineCount}, contrast: ${stats.contrastCount}, colorVariance: ${stats.colorVarianceCount}, fineSize: ${stats.fineSizeCount}, broadSize: ${stats.broadSizeCount}, minSize: ${stats.minSize.toFixed(3)}, maxSize: ${stats.maxSize.toFixed(3)}, avgSize: ${stats.avgSize.toFixed(3)}, minLum: ${stats.minLum.toFixed(3)}, maxLum: ${stats.maxLum.toFixed(3)}, avgLum: ${stats.avgLum.toFixed(3)} }`;
 }
 
 function formatStatsForLog(stats) {
-  return `count=${stats.count}, head=${stats.headCount}, eyes=${stats.eyeCount}, outline=${stats.outlineCount}, contrast=${stats.contrastCount}, colorVariance=${stats.colorVarianceCount}, lum=${stats.minLum.toFixed(3)}/${stats.avgLum.toFixed(3)}/${stats.maxLum.toFixed(3)}`;
+  return `count=${stats.count}, head=${stats.headCount}, eyes=${stats.eyeCount}, outline=${stats.outlineCount}, contrast=${stats.contrastCount}, colorVariance=${stats.colorVarianceCount}, size=${stats.minSize.toFixed(3)}/${stats.avgSize.toFixed(3)}/${stats.maxSize.toFixed(3)}, fine=${stats.fineSizeCount}, broad=${stats.broadSizeCount}, lum=${stats.minLum.toFixed(3)}/${stats.avgLum.toFixed(3)}/${stats.maxLum.toFixed(3)}`;
 }
 
 function chunkBase64(base64) {

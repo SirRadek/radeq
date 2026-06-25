@@ -216,11 +216,13 @@ const schema = {
         const {
           HERO_CAT_COLORS_BASE64,
           HERO_CAT_DETAIL_BASE64,
+          HERO_CAT_SIZES_BASE64,
           HERO_CAT_LOW_POWER_COLORS_BASE64,
           HERO_CAT_LOW_POWER_DETAIL_BASE64,
           HERO_CAT_LOW_POWER_OUTLINE_BASE64,
           HERO_CAT_LOW_POWER_POINT_COUNT,
           HERO_CAT_LOW_POWER_POINTS_BASE64,
+          HERO_CAT_LOW_POWER_SIZES_BASE64,
           HERO_CAT_OUTLINE_BASE64,
           HERO_CAT_POINT_COUNT,
           HERO_CAT_POINTS_BASE64,
@@ -242,6 +244,7 @@ const schema = {
           ? {
               positions: HERO_CAT_LOW_POWER_POINTS_BASE64,
               colors: HERO_CAT_LOW_POWER_COLORS_BASE64,
+              sizes: HERO_CAT_LOW_POWER_SIZES_BASE64,
               outlines: HERO_CAT_LOW_POWER_OUTLINE_BASE64,
               details: HERO_CAT_LOW_POWER_DETAIL_BASE64,
               targetCount: HERO_CAT_LOW_POWER_POINT_COUNT,
@@ -249,24 +252,27 @@ const schema = {
           : {
               positions: HERO_CAT_POINTS_BASE64,
               colors: HERO_CAT_COLORS_BASE64,
+              sizes: HERO_CAT_SIZES_BASE64,
               outlines: HERO_CAT_OUTLINE_BASE64,
               details: HERO_CAT_DETAIL_BASE64,
               targetCount: HERO_CAT_POINT_COUNT,
             };
         const basePositions = decodeFloat32Base64(pointSource.positions);
         const pointColors = decodeUint8Base64(pointSource.colors);
+        const bakedPointSizes = decodeFloat32Base64(pointSource.sizes);
         const pointOutline = decodeUint8Base64(pointSource.outlines);
         const pointDetail = decodeUint8Base64(pointSource.details);
         const pointCount = Math.min(
           pointSource.targetCount,
           Math.floor(basePositions.length / 3),
           Math.floor(pointColors.length / 3),
+          bakedPointSizes.length,
           pointOutline.length,
           pointDetail.length,
         );
+        const pointSizes = bakedPointSizes.subarray(0, pointCount);
         const homePositions = new Float32Array(pointCount * 3);
         const positions = new Float32Array(pointCount * 3);
-        const pointSizes = new Float32Array(pointCount);
         const pointAlpha = new Float32Array(pointCount);
         const pointGeometry = new BufferGeometry();
         const hoverQuery = window.matchMedia?.('(hover: hover) and (pointer: fine)');
@@ -343,7 +349,7 @@ const schema = {
               vOutline = aOutline;
               vDetail = aDetail;
               gl_Position = projectionMatrix * mvPosition;
-              gl_PointSize = uSize * aSize * (1.0 + aOutline * 0.18) * (1.0 - aDetail * 0.16) * uDpr * (uRef / depth);
+              gl_PointSize = uSize * aSize * uDpr * (uRef / depth);
             }
           `,
           fragmentShader: `
@@ -429,10 +435,8 @@ const schema = {
             const offset = index * 3;
             const x = basePositions[offset];
             const y = basePositions[offset + 1];
-            const z = basePositions[offset + 2];
             const n = noise(index, x, y);
             const detail = pointDetail[index] / 255;
-            pointSizes[index] = (0.78 + n * 0.36 + clamp01(z + 0.12) * 0.26) * (1 - detail * 0.2);
             pointAlpha[index] = Math.min(1, 0.82 + n * 0.14 + detail * 0.12);
           }
         }

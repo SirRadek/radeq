@@ -10,6 +10,10 @@ interface Props {
 const { content = homeContent.cs.problems, lang = 'cs' } = Astro.props;
 const items = content.items;
 const stars = Array.from({ length: 5 });
+const panelFrameLabels = lang === 'en'
+  ? { scene: 'SCENE', genre: 'GENRE' }
+  : { scene: 'SCÉNA', genre: 'ŽÁNR' };
+const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
 ---
 
 <section class="rq-section rq-problem-diagnostic" id="co-resim" aria-labelledby="rq-problem-diagnostic-title" data-rq-problem-diagnostic data-rq-active-index="0" data-rq-locale={lang}>
@@ -55,7 +59,7 @@ const stars = Array.from({ length: 5 });
                 tabindex={index === 0 ? '0' : '-1'}
                 data-rq-problem-card
                 data-rq-problem-genre={item.genreKey}
-                style={`--rq-problem-genre-color: ${item.genreColor};`}
+                style={`--rq-problem-genre-color: ${item.genreColor}; --rq-poster-seed: ${index % 3}px; --rq-poster-offset-x: ${index * 17}px; --rq-poster-offset-y: ${index * -11}px; --rq-poster-perf-offset: ${(index % 5) * 3}px;`}
               >
                 <span class="rq-problem-diagnostic__card-inner">
                   <span class="rq-problem-diagnostic__poster-meta">
@@ -103,39 +107,51 @@ const stars = Array.from({ length: 5 });
             data-rq-problem-mini-title={item.symptom}
             data-rq-problem-mini-problem={item.problem}
             data-rq-problem-mini-step={item.step}
+            style={`--rq-problem-genre-color: ${item.genreColor};`}
           >
-            <div class="rq-problem-diagnostic__panel-top">
-              <span class="rq-problem-diagnostic__solution-label">{content.solutionLabel}</span>
-            </div>
-            <h3>{item.symptom}</h3>
-            <dl class="rq-problem-diagnostic__findings">
-              <div>
-                <dt>{content.findingLabels.problem}</dt>
-                <dd>{item.problem}</dd>
+            <div class="rq-problem-diagnostic__script-sheet">
+              <div class="rq-problem-diagnostic__panel-top">
+                <h3>
+                  <span class="rq-problem-diagnostic__scene-number">{panelFrameLabels.scene} {sceneNumber(index)}:</span>
+                  <span class="rq-problem-diagnostic__scene-title">{item.symptom}</span>
+                </h3>
+                <div class="rq-problem-diagnostic__panel-badges">
+                  <span class="rq-problem-diagnostic__panel-genre">
+                    <span>{panelFrameLabels.genre}</span>
+                    {item.genre}
+                  </span>
+                  <span class="rq-problem-diagnostic__solution-label">{content.solutionLabel}</span>
+                </div>
               </div>
-              <div>
-                <dt>{content.findingLabels.cause}</dt>
-                <dd>{item.cause}</dd>
+              <dl class="rq-problem-diagnostic__findings">
+                <div class="rq-problem-diagnostic__finding rq-problem-diagnostic__finding--plot">
+                  <dt>{content.findingLabels.problem}</dt>
+                  <dd>{item.problem}</dd>
+                </div>
+                <div class="rq-problem-diagnostic__finding">
+                  <dt>{content.findingLabels.cause}</dt>
+                  <dd>{item.cause}</dd>
+                </div>
+                <div class="rq-problem-diagnostic__finding">
+                  <dt>{content.findingLabels.verify}</dt>
+                  <dd>{item.verify}</dd>
+                </div>
+                <div class="rq-problem-diagnostic__finding">
+                  <dt>{content.findingLabels.step}</dt>
+                  <dd>{item.step}</dd>
+                </div>
+              </dl>
+              <div class="rq-problem-diagnostic__actions">
+                <a class="rq-btn rq-btn--primary" href="#kontakt">{content.ctaLabel}</a>
+                <a
+                  class="rq-problem-diagnostic__service"
+                  href={`#service-${item.primaryServiceId}`}
+                  data-rq-primary-service-target={item.primaryServiceId}
+                  data-rq-related-service-target={item.relatedServiceIds[0]}
+                >
+                  {content.servicePrefix} <strong>{item.service}</strong>
+                </a>
               </div>
-              <div>
-                <dt>{content.findingLabels.verify}</dt>
-                <dd>{item.verify}</dd>
-              </div>
-              <div>
-                <dt>{content.findingLabels.step}</dt>
-                <dd>{item.step}</dd>
-              </div>
-            </dl>
-            <div class="rq-problem-diagnostic__actions">
-              <a class="rq-btn rq-btn--primary" href="#kontakt">{content.ctaLabel}</a>
-              <a
-                class="rq-problem-diagnostic__service"
-                href={`#service-${item.primaryServiceId}`}
-                data-rq-primary-service-target={item.primaryServiceId}
-                data-rq-related-service-target={item.relatedServiceIds[0]}
-              >
-                {content.servicePrefix} <strong>{item.service}</strong>
-              </a>
             </div>
           </article>
         ))}
@@ -256,7 +272,7 @@ const stars = Array.from({ length: 5 });
     --rq-card-w-lead: clamp(13rem, 21vw, 17rem);
     --rq-card-h: clamp(12.75rem, 17vw, 15.5rem);
     --rq-card-h-lead: clamp(13rem, 18vw, 16rem);
-    --rq-jaw-min-block-size: clamp(26rem, 32vw, 32rem);
+    --rq-jaw-min-block-size: clamp(34rem, 38vw, 40rem);
     --rq-problem-ease-out-back: cubic-bezier(0.18, 1.22, 0.28, 1);
     position: relative;
     display: grid;
@@ -436,6 +452,8 @@ const stars = Array.from({ length: 5 });
     --rq-card-scale: 0.84;
     --rq-card-opacity: 0.2;
     --rq-card-saturate: 0.58;
+    --rq-poster-scan-opacity: 0.3;
+    --rq-poster-perf-opacity: 0.26;
     position: relative;
     display: block;
     width: 100%;
@@ -483,6 +501,16 @@ const stars = Array.from({ length: 5 });
     border: 1px solid color-mix(in srgb, var(--rq-diagnostic-accent) 18%, transparent);
   }
 
+  .rq-problem-diagnostic__frame:nth-child(3n + 2) .rq-problem-diagnostic__card {
+    --rq-poster-scan-opacity: 0.26;
+    --rq-poster-perf-opacity: 0.2;
+  }
+
+  .rq-problem-diagnostic__frame:nth-child(3n) .rq-problem-diagnostic__card {
+    --rq-poster-scan-opacity: 0.34;
+    --rq-poster-perf-opacity: 0.3;
+  }
+
   .rq-problem-diagnostic__card-inner {
     position: relative;
     z-index: 1;
@@ -512,10 +540,45 @@ const stars = Array.from({ length: 5 });
     content: "";
     position: absolute;
     inset: 0;
+    z-index: 0;
+    border-radius: inherit;
     background:
-      linear-gradient(90deg, color-mix(in srgb, var(--rq-diagnostic-accent) 12%, transparent), transparent 1px),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.09), transparent 34%);
-    opacity: 0.38;
+      repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 4px),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E"),
+      linear-gradient(90deg, color-mix(in srgb, var(--rq-diagnostic-accent) 10%, transparent), transparent 1px);
+    background-position:
+      0 var(--rq-poster-seed),
+      var(--rq-poster-offset-x) var(--rq-poster-offset-y),
+      0 0;
+    background-size:
+      auto,
+      180px 180px,
+      4.5rem 4.5rem;
+    mix-blend-mode: overlay;
+    opacity: var(--rq-poster-scan-opacity);
+    pointer-events: none;
+  }
+
+  .rq-problem-diagnostic__card-inner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 0.42rem, rgba(247, 244, 238, var(--rq-poster-perf-opacity)) 0.42rem 0.68rem, transparent 0.68rem 1.08rem),
+      repeating-linear-gradient(0deg, transparent 0 0.42rem, rgba(247, 244, 238, var(--rq-poster-perf-opacity)) 0.42rem 0.68rem, transparent 0.68rem 1.08rem),
+      linear-gradient(180deg, rgba(13, 4, 8, 0.12), rgba(13, 4, 8, 0.58));
+    background-position:
+      0.42rem var(--rq-poster-perf-offset),
+      calc(100% - 0.76rem) calc(0px - var(--rq-poster-perf-offset)),
+      0 0;
+    background-repeat: repeat-y, repeat-y, no-repeat;
+    background-size: 0.34rem 1.08rem, 0.34rem 1.08rem, 100% 100%;
+    box-shadow:
+      inset 0.75rem 0 0 rgba(10, 2, 5, 0.14),
+      inset -0.75rem 0 0 rgba(10, 2, 5, 0.14);
+    opacity: 0.78;
     pointer-events: none;
   }
 
@@ -710,16 +773,20 @@ const stars = Array.from({ length: 5 });
     grid-area: 1 / 1;
     min-width: 0;
     min-block-size: var(--rq-jaw-min-block-size);
-    border: 1px solid rgba(247, 244, 238, 0.13);
+    border: 1px solid color-mix(in srgb, var(--rq-diagnostic-accent) 26%, transparent);
     border-radius: 8px;
-    padding: clamp(1.25rem, 3vw, 2.1rem);
+    padding: clamp(0.55rem, 1.1vw, 0.95rem);
+    overflow: hidden;
+    isolation: isolate;
     background:
-      linear-gradient(135deg, rgba(247, 244, 238, 0.08), rgba(94, 25, 38, 0.2) 38%, rgba(34, 15, 19, 0.62)),
-      rgba(45, 13, 19, 0.5);
+      radial-gradient(95% 145% at 50% 0%, rgba(229, 196, 83, 0.12), transparent 58%),
+      linear-gradient(90deg, rgba(10, 2, 5, 0.72), transparent 18%, transparent 82%, rgba(10, 2, 5, 0.72)),
+      linear-gradient(145deg, rgba(94, 25, 38, 0.9), rgba(34, 15, 19, 0.96) 56%, rgba(17, 6, 8, 0.98));
     color: var(--rq-on-dark);
     box-shadow:
+      0 30px 80px rgba(10, 2, 5, 0.34),
       inset 0 1px 0 rgba(255, 255, 255, 0.08),
-      inset 0 0 0 1px color-mix(in srgb, var(--rq-diagnostic-accent) 4%, transparent);
+      inset 0 0 0 1px color-mix(in srgb, var(--rq-diagnostic-accent) 7%, transparent);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -727,6 +794,19 @@ const stars = Array.from({ length: 5 });
     transform: translateY(0.65rem) rotateY(-7deg);
     transform-origin: center top;
     transition: opacity 260ms var(--rq-ease), transform 320ms var(--rq-problem-ease-out-back), visibility 260ms var(--rq-ease);
+  }
+
+  .rq-problem-diagnostic__panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--rq-diagnostic-accent) 18%, transparent), transparent 1px),
+      linear-gradient(180deg, rgba(247, 244, 238, 0.06), transparent 1px);
+    background-size: 5rem 5rem;
+    opacity: 0.14;
+    pointer-events: none;
   }
 
   .rq-problem-diagnostic__panel.is-active {
@@ -745,64 +825,199 @@ const stars = Array.from({ length: 5 });
     outline-offset: 4px;
   }
 
+  .rq-problem-diagnostic__script-sheet {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: clamp(1.05rem, 2vw, 1.45rem);
+    box-sizing: border-box;
+    min-width: 0;
+    min-block-size: calc(var(--rq-jaw-min-block-size) - clamp(1.1rem, 2.2vw, 1.9rem));
+    border: 1px solid color-mix(in srgb, var(--rq-diagnostic-accent) 36%, #cbb891);
+    border-radius: 8px;
+    padding: clamp(1.05rem, 2.4vw, 1.9rem);
+    overflow: hidden;
+    background:
+      radial-gradient(90% 85% at 12% 5%, rgba(255, 255, 255, 0.62), transparent 48%),
+      linear-gradient(180deg, rgba(255, 252, 244, 0.96), rgba(239, 225, 198, 0.98)),
+      #f3ead8;
+    color: #281b12;
+    box-shadow:
+      0 24px 70px rgba(10, 2, 5, 0.38),
+      0 8px 22px rgba(10, 2, 5, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.84),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+  }
+
+  .rq-problem-diagnostic__script-sheet::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='.3'/%3E%3C/svg%3E"),
+      linear-gradient(90deg, rgba(229, 196, 83, 0.18), transparent 1px);
+    background-size: 160px 160px, 4rem 4rem;
+    opacity: 0.09;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+
+  .rq-problem-diagnostic__script-sheet > * {
+    position: relative;
+    z-index: 1;
+  }
+
   .rq-problem-diagnostic__panel-top {
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0.9rem;
-    margin-bottom: 1.25rem;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: clamp(0.85rem, 2vw, 1.35rem);
+    min-width: 0;
+    padding-bottom: clamp(0.85rem, 1.6vw, 1.15rem);
+    border-bottom: 1px solid color-mix(in srgb, var(--rq-diagnostic-accent) 40%, rgba(40, 27, 18, 0.22));
+  }
+
+  .rq-problem-diagnostic__panel-badges {
+    display: flex;
+    flex: 0 1 auto;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 0.55rem;
+    min-width: 0;
   }
 
   .rq-problem-diagnostic__solution-label {
-    border: 1px solid color-mix(in srgb, var(--rq-diagnostic-accent) 28%, transparent);
+    border: 1px solid color-mix(in srgb, var(--rq-diagnostic-accent) 58%, #5a3906);
     border-radius: var(--rq-r-pill);
-    padding: 0.58rem 0.7rem;
-    background: color-mix(in srgb, var(--rq-diagnostic-accent) 10%, transparent);
-    color: var(--rq-diagnostic-accent);
+    padding: 0.56rem 0.72rem;
+    background: color-mix(in srgb, var(--rq-diagnostic-accent) 22%, #fff6df);
+    color: #4c3108;
+    letter-spacing: 0;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .rq-problem-diagnostic__panel-genre {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.42rem;
+    max-width: 100%;
+    border: 1px solid color-mix(in srgb, var(--rq-problem-genre-color) 54%, rgba(40, 27, 18, 0.28));
+    border-radius: var(--rq-r-pill);
+    padding: 0.52rem 0.68rem;
+    background: color-mix(in srgb, var(--rq-problem-genre-color) 18%, #fff7e7);
+    color: color-mix(in srgb, var(--rq-problem-genre-color) 45%, #281b12);
+    font-family: var(--rq-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+  }
+
+  .rq-problem-diagnostic__panel-genre span {
+    color: #59442d;
+    font-weight: 700;
   }
 
   .rq-problem-diagnostic__panel h3 {
-    max-width: 28ch;
+    display: grid;
+    gap: 0.32rem;
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 34ch;
     margin: 0;
-    color: var(--rq-on-dark);
-    font-family: var(--rq-display), var(--rq-body), system-ui, sans-serif;
-    font-size: clamp(1.45rem, 2.25vw, 2rem);
-    font-weight: 840;
+    color: #20150f;
+    font-family: var(--rq-cinema-display);
+    font-size: clamp(1.55rem, 2.7vw, 2.42rem);
+    font-weight: 700;
     letter-spacing: 0;
-    line-height: 1.06;
-    overflow-wrap: normal;
+    line-height: 0.98;
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
     word-break: normal;
-    hyphens: none;
+    hyphens: auto;
     text-wrap: balance;
+  }
+
+  .rq-problem-diagnostic__scene-number {
+    color: #6a4a12;
+  }
+
+  .rq-problem-diagnostic__scene-title {
+    color: #20150f;
   }
 
   .rq-problem-diagnostic__findings {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0 clamp(1rem, 2vw, 1.4rem);
-    margin: 1rem 0 0;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: clamp(0.75rem, 1.6vw, 1.05rem);
+    min-width: 0;
+    margin: 0;
   }
 
-  .rq-problem-diagnostic__findings div {
+  .rq-problem-diagnostic__finding {
+    position: relative;
     display: grid;
-    gap: 0.42rem;
-    padding-block: 0.82rem;
-    border-top: 1px solid rgba(247, 244, 238, 0.12);
+    align-content: start;
+    gap: 0.48rem;
+    min-width: 0;
+    border: 1px solid rgba(100, 73, 33, 0.22);
+    border-radius: 8px;
+    padding: clamp(0.9rem, 1.7vw, 1.12rem);
+    background: rgba(255, 252, 245, 0.6);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.72),
+      inset 0 -1px 0 rgba(100, 73, 33, 0.06);
+  }
+
+  .rq-problem-diagnostic__finding::before {
+    content: "";
+    width: 2.2rem;
+    height: 2px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--rq-diagnostic-accent) 72%, #8a5c0c);
+    opacity: 0.7;
+  }
+
+  .rq-problem-diagnostic__finding--plot {
+    border-color: color-mix(in srgb, var(--rq-diagnostic-accent) 48%, rgba(100, 73, 33, 0.24));
+    background:
+      linear-gradient(180deg, rgba(255, 249, 233, 0.96), rgba(247, 236, 211, 0.9));
+    box-shadow:
+      0 10px 26px rgba(100, 73, 33, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.86);
   }
 
   .rq-problem-diagnostic__findings dt {
-    color: var(--rq-diagnostic-accent);
+    color: #3a281b;
     font-weight: 800;
     line-height: 1.3;
+    overflow-wrap: anywhere;
   }
 
   .rq-problem-diagnostic__findings dd {
     margin: 0;
-    color: var(--rq-on-dark-2);
-    line-height: 1.5;
-    overflow-wrap: normal;
+    color: #4b3c2d;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
     word-break: normal;
-    hyphens: none;
+    hyphens: auto;
+  }
+
+  .rq-problem-diagnostic__finding--plot dt {
+    color: #24160d;
+  }
+
+  .rq-problem-diagnostic__finding--plot dd {
+    color: #302115;
+    font-size: clamp(1rem, 1.25vw, 1.12rem);
+    font-weight: 720;
+    line-height: 1.52;
   }
 
   .rq-problem-diagnostic__actions {
@@ -810,7 +1025,10 @@ const stars = Array.from({ length: 5 });
     flex-wrap: wrap;
     align-items: center;
     gap: 0.9rem 1rem;
-    margin-top: 1rem;
+    min-width: 0;
+    margin-top: auto;
+    padding-top: clamp(0.8rem, 1.6vw, 1.1rem);
+    border-top: 1px solid color-mix(in srgb, var(--rq-diagnostic-accent) 38%, rgba(40, 27, 18, 0.2));
   }
 
   .rq-problem-diagnostic__actions .rq-btn--primary {
@@ -820,30 +1038,30 @@ const stars = Array.from({ length: 5 });
   }
 
   .rq-problem-diagnostic__service {
-    color: var(--rq-on-dark-2);
+    color: #4a3927;
     font-weight: 740;
     line-height: 1.45;
     text-decoration-line: underline;
-    text-decoration-color: color-mix(in srgb, var(--rq-diagnostic-accent) 36%, transparent);
+    text-decoration-color: color-mix(in srgb, var(--rq-diagnostic-accent) 54%, transparent);
     text-decoration-thickness: 3px;
     text-underline-offset: 4px;
-    overflow-wrap: normal;
+    overflow-wrap: anywhere;
     word-break: normal;
-    hyphens: none;
+    hyphens: auto;
   }
 
   .rq-problem-diagnostic__service strong {
-    color: var(--rq-on-dark);
+    color: #24160d;
     transition: color 180ms var(--rq-ease);
   }
 
   .rq-problem-diagnostic__service:hover {
-    color: var(--rq-on-dark);
+    color: #24160d;
     text-decoration-color: var(--rq-diagnostic-accent);
   }
 
   .rq-problem-diagnostic__service:hover strong {
-    color: var(--rq-diagnostic-accent);
+    color: #6a4308;
   }
 
   .rq-problem-diagnostic__service:focus-visible,
@@ -874,7 +1092,7 @@ const stars = Array.from({ length: 5 });
       --rq-card-w-lead: min(66vw, 17rem);
       --rq-card-h: clamp(12rem, 37vw, 13.75rem);
       --rq-card-h-lead: clamp(12.25rem, 38vw, 14rem);
-      --rq-jaw-min-block-size: auto;
+      --rq-jaw-min-block-size: clamp(40rem, 72vw, 48rem);
     }
 
     .rq-problem-diagnostic__meta-row {
@@ -922,6 +1140,7 @@ const stars = Array.from({ length: 5 });
     .rq-problem-diagnostic__shell {
       --rq-card-w: min(58vw, 15rem);
       --rq-card-w-lead: min(60vw, 15.5rem);
+      --rq-jaw-min-block-size: clamp(49rem, 146vw, 62rem);
     }
 
     .rq-problem-diagnostic__meta-row {
@@ -954,6 +1173,14 @@ const stars = Array.from({ length: 5 });
     .rq-problem-diagnostic__actions {
       align-items: stretch;
       flex-direction: column;
+    }
+
+    .rq-problem-diagnostic__panel-badges {
+      justify-content: flex-start;
+    }
+
+    .rq-problem-diagnostic__panel h3 {
+      font-size: clamp(1.38rem, 8vw, 1.9rem);
     }
 
     .rq-problem-diagnostic__solution-label {

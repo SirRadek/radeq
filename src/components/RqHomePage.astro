@@ -323,9 +323,9 @@ const schema = {
             uDpr: { value: dpr() },
             uRef: { value: refDepth },
             uSize: { value: lowPower ? 5.25 : 4.9 },
-            uSaturation: { value: 1.24 },
-            uContrast: { value: 1.14 },
-            uEdgeDarken: { value: 0.18 },
+            uSaturation: { value: 1.34 },
+            uContrast: { value: 1.21 },
+            uEdgeDarken: { value: 0.45 },
           },
           vertexShader: `
             attribute vec3 acolor;
@@ -371,20 +371,19 @@ const schema = {
               float circle = smoothstep(0.5, 0.16, d);
               float core = smoothstep(0.23, 0.02, d);
               float edge = smoothstep(0.12, 0.62, vOutline);
-              float rim = smoothstep(0.72, 0.94, vOutline);
-              float alpha = (circle * 0.74 + core * 0.26) * uOpacity * vAlpha * (1.0 + edge * 0.22 + rim * 0.48 + vDetail * 0.18);
+              float contour = smoothstep(0.7, 0.94, vOutline);
+              float alpha = (circle * 0.74 + core * 0.26) * uOpacity * vAlpha * (1.0 + edge * 0.2 + contour * 0.34 + vDetail * 0.18);
               if (alpha < 0.006) discard;
               float lum = dot(vColor, vec3(0.2126, 0.7152, 0.0722));
               vec3 adjusted = mix(vec3(lum), vColor, uSaturation);
               adjusted = clamp((adjusted - 0.5) * uContrast + 0.5, 0.0, 1.0);
-              float depthShade = mix(0.84, 1.13, vDepth);
-              vec3 warmColor = adjusted * vec3(1.06, 1.01, 0.92) * depthShade;
-              vec3 shadowColor = vec3(0.24, 0.12, 0.055);
-              vec3 rimColor = vec3(1.0, 0.73, 0.34);
+              float depthShade = mix(0.8, 1.12, vDepth);
+              vec3 warmColor = adjusted * vec3(1.08, 1.0, 0.88) * depthShade;
+              vec3 shadowColor = vec3(0.122, 0.086, 0.071);
+              vec3 inkColor = vec3(0.165, 0.141, 0.114);
               vec3 color = mix(warmColor, shadowColor, edge * uEdgeDarken);
-              color = mix(color, rimColor, rim * (0.48 + core * 0.24));
-              color += rim * core * vec3(0.08, 0.05, 0.015);
-              color = mix(color, adjusted * 1.08, core * (0.06 + vDetail * 0.08) * (1.0 - rim * 0.5));
+              color = mix(color, mix(inkColor, shadowColor, edge), contour * (0.42 + core * 0.16));
+              color = mix(color, adjusted * 1.08, core * (0.05 + vDetail * 0.08) * (1.0 - contour * 0.36));
               gl_FragColor = vec4(color, alpha);
             }
           `,

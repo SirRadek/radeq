@@ -3453,6 +3453,52 @@ body .rq-hero .rq-lead {
   max-width: clamp(48ch, 40vw, 60ch);
 }
 
+/* RD9-P5 #10: cinema continuation for the marquee directly after diagnostics. */
+.rq-marquee.rq-marquee--cinema {
+  --rq-marquee-cinema-gold: #E5C453;
+  --rq-marquee-cinema-bg: #220F13;
+  --rq-marquee-cinema-velvet: #3A0F16;
+  --rq-marquee-cinema-burgundy: #5E1926;
+  --rq-marquee-cinema-rail: clamp(0.9rem, 1.4vw, 1.15rem);
+  isolation: isolate;
+  padding-top: var(--rq-marquee-cinema-rail);
+  border-block: 0;
+  background:
+    radial-gradient(95% 140% at 50% -42%, rgba(229, 196, 83, 0.08), transparent 42%),
+    linear-gradient(180deg, rgba(26, 6, 10, 0.96) 0, rgba(34, 15, 19, 0.98) var(--rq-marquee-cinema-rail), rgba(58, 15, 22, 0.96) 100%),
+    linear-gradient(135deg, var(--rq-marquee-cinema-velvet), var(--rq-marquee-cinema-burgundy) 48%, var(--rq-marquee-cinema-bg));
+  color: color-mix(in srgb, var(--rq-paper, #f7f1e8) 90%, white 10%);
+  box-shadow:
+    inset 0 1px 0 rgba(229, 196, 83, 0.12),
+    inset 0 -1px 0 rgba(229, 196, 83, 0.1),
+    inset 0 20px 36px rgba(10, 2, 5, 0.18);
+}
+
+.rq-marquee.rq-marquee--cinema::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset-block-start: 0;
+  inset-inline: 0;
+  height: var(--rq-marquee-cinema-rail);
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent, rgba(229, 196, 83, 0.15) 12%, rgba(229, 196, 83, 0.15) 88%, transparent) top / 100% 1px no-repeat,
+    linear-gradient(90deg, transparent, rgba(229, 196, 83, 0.15) 12%, rgba(229, 196, 83, 0.15) 88%, transparent) bottom / 100% 1px no-repeat,
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 72 18' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='10' y='5' width='15' height='8' rx='3' fill='%23E5C453' fill-opacity='.18'/%3E%3Crect x='46' y='5' width='15' height='8' rx='3' fill='%23E5C453' fill-opacity='.18'/%3E%3C/svg%3E") center / 72px 18px repeat-x,
+    linear-gradient(180deg, rgba(10, 2, 5, 0.3), rgba(34, 15, 19, 0.58));
+}
+
+.rq-marquee.rq-marquee--cinema .rq-marquee__viewport {
+  position: relative;
+  z-index: 1;
+  padding-block: clamp(0.55rem, 0.9vw, 0.72rem);
+}
+
+.rq-marquee.rq-marquee--cinema .rq-marquee__sep {
+  color: rgba(229, 196, 83, 0.78);
+}
+
 /* RD4: removed leftover Gen-12 @media(min-width:1180px) 2-col hero (proof-rail
    right) — owner wants the heading + content full-width with proof as a band
    below at all widths, not a right-side column. */

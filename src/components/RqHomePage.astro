@@ -319,13 +319,13 @@ const schema = {
           depthTest: false,
           blending: NormalBlending,
           uniforms: {
-            uOpacity: { value: lowPower ? 0.96 : 0.92 },
+            uOpacity: { value: lowPower ? 1 : 0.98 },
             uDpr: { value: dpr() },
             uRef: { value: refDepth },
             uSize: { value: lowPower ? 5.25 : 4.9 },
-            uSaturation: { value: 1.12 },
-            uContrast: { value: 1.07 },
-            uEdgeDarken: { value: 0.05 },
+            uSaturation: { value: 1.24 },
+            uContrast: { value: 1.14 },
+            uEdgeDarken: { value: 0.18 },
           },
           vertexShader: `
             attribute vec3 acolor;
@@ -340,6 +340,7 @@ const schema = {
             varying float vAlpha;
             varying float vOutline;
             varying float vDetail;
+            varying float vDepth;
 
             void main() {
               vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
@@ -348,6 +349,7 @@ const schema = {
               vAlpha = aAlpha;
               vOutline = aOutline;
               vDetail = aDetail;
+              vDepth = clamp(position.z * 0.045 + 0.5, 0.0, 1.0);
               gl_Position = projectionMatrix * mvPosition;
               gl_PointSize = uSize * aSize * uDpr * (uRef / depth);
             }
@@ -362,20 +364,27 @@ const schema = {
             varying float vAlpha;
             varying float vOutline;
             varying float vDetail;
+            varying float vDepth;
 
             void main() {
               float d = length(gl_PointCoord - vec2(0.5));
               float circle = smoothstep(0.5, 0.16, d);
               float core = smoothstep(0.23, 0.02, d);
-              float alpha = (circle * 0.74 + core * 0.26) * uOpacity * vAlpha * (1.0 + vOutline * 0.2 + vDetail * 0.16);
+              float edge = smoothstep(0.12, 0.62, vOutline);
+              float rim = smoothstep(0.72, 0.94, vOutline);
+              float alpha = (circle * 0.74 + core * 0.26) * uOpacity * vAlpha * (1.0 + edge * 0.22 + rim * 0.48 + vDetail * 0.18);
               if (alpha < 0.006) discard;
               float lum = dot(vColor, vec3(0.2126, 0.7152, 0.0722));
               vec3 adjusted = mix(vec3(lum), vColor, uSaturation);
               adjusted = clamp((adjusted - 0.5) * uContrast + 0.5, 0.0, 1.0);
-              vec3 outlineColor = vec3(0.38, 0.23, 0.13);
-              vec3 color = mix(adjusted, outlineColor, vOutline * 0.1);
-              color *= 1.0 - vOutline * uEdgeDarken;
-              color = mix(color, adjusted * 1.05, core * (0.08 + vDetail * 0.06));
+              float depthShade = mix(0.84, 1.13, vDepth);
+              vec3 warmColor = adjusted * vec3(1.06, 1.01, 0.92) * depthShade;
+              vec3 shadowColor = vec3(0.24, 0.12, 0.055);
+              vec3 rimColor = vec3(1.0, 0.73, 0.34);
+              vec3 color = mix(warmColor, shadowColor, edge * uEdgeDarken);
+              color = mix(color, rimColor, rim * (0.48 + core * 0.24));
+              color += rim * core * vec3(0.08, 0.05, 0.015);
+              color = mix(color, adjusted * 1.08, core * (0.06 + vDetail * 0.08) * (1.0 - rim * 0.5));
               gl_FragColor = vec4(color, alpha);
             }
           `,

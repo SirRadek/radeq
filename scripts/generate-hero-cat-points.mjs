@@ -9,8 +9,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const sourcePath = process.argv[2] || 'C:/Users/sirok/Downloads/kocka_body_3d.html';
 const outputPath = resolve(__dirname, '../src/data/heroCatPoints.ts');
 const sourceStep = 2;
-const desktopTarget = 16800;
-const lowPowerTarget = 6000;
+const desktopTarget = 19000;
+const lowPowerTarget = 6800;
 
 const html = await readFile(sourcePath, 'utf8');
 const imgMatch = html.match(/const\s+IMG\s*=\s*"([^"]+)"/);
@@ -45,33 +45,41 @@ try {
       const { data } = context.getImageData(0, 0, canvas.width, canvas.height);
       const alphaThreshold = 40;
       const desktopProfile = {
-        base: 0.18,
-        outline: 1.7,
-        contrast: 1.34,
-        colorVariance: 1.48,
-        head: 1.18,
-        eye: 3.05,
-        eyeQuota: 0.095,
-        headQuota: 0.46,
-        detailQuota: 0.6,
-        detailThreshold: 0.24,
-        sizeMin: 0.56,
-        sizeMax: 1.38,
+        base: 0.27,
+        outline: 2.18,
+        rim: 4.2,
+        contrast: 1.48,
+        colorVariance: 1.68,
+        head: 0.84,
+        eye: 2.95,
+        rimQuota: 0.1,
+        eyeQuota: 0.078,
+        headQuota: 0.36,
+        coverageQuota: 0.39,
+        detailQuota: 0.68,
+        detailThreshold: 0.2,
+        sizeMin: 0.52,
+        sizeMax: 1.48,
+        rimSize: 1.38,
         sizeScale: 1,
       };
       const lowPowerProfile = {
-        base: 0.14,
-        outline: 1.72,
-        contrast: 1.42,
-        colorVariance: 1.52,
-        head: 1.42,
-        eye: 3.25,
-        eyeQuota: 0.105,
-        headQuota: 0.5,
-        detailQuota: 0.58,
-        detailThreshold: 0.25,
-        sizeMin: 0.62,
-        sizeMax: 1.52,
+        base: 0.22,
+        outline: 2.25,
+        rim: 4.35,
+        contrast: 1.56,
+        colorVariance: 1.76,
+        head: 0.98,
+        eye: 3.08,
+        rimQuota: 0.11,
+        eyeQuota: 0.086,
+        headQuota: 0.38,
+        coverageQuota: 0.37,
+        detailQuota: 0.64,
+        detailThreshold: 0.22,
+        sizeMin: 0.58,
+        sizeMax: 1.58,
+        rimSize: 1.5,
         sizeScale: 1.04,
       };
       const raw = [];
@@ -90,27 +98,30 @@ try {
           const { contrast, colorVariance } = localDetail(x, y, r, g, b, lum);
           const { head, eye } = roiWeights(x, y, lum, contrast);
           const detail = clamp01(
-            contrast * 0.42 +
-            colorVariance * 0.46 +
-            outline * 0.22 +
-            head * 0.13 +
+            contrast * 0.48 +
+            colorVariance * 0.52 +
+            outline * 0.28 +
+            head * 0.08 +
             eye * 0.68,
           );
-          const [cr, cg, cb] = adjustColorForHero(r, g, b);
           raw.push({
             index: raw.length,
             x,
             y,
             lum,
-            r: cr,
-            g: cg,
-            b: cb,
+            srcR: r,
+            srcG: g,
+            srcB: b,
+            r,
+            g,
+            b,
             outline,
             contrast,
             colorVariance,
             head,
             eye,
             detail,
+            rim: 0,
           });
         }
       }
@@ -134,6 +145,17 @@ try {
       const centerX = (minX + maxX) * 0.5;
       const centerY = (minY + maxY) * 0.5;
       const span = Math.max(maxX - minX, maxY - minY) || 1;
+      const bodySourceCount = raw.length;
+      const rimPoints = buildRimPoints(raw, centerX, centerY);
+      raw.push(...rimPoints);
+
+      for (const point of raw) {
+        const [cr, cg, cb] = adjustColorForHero(point);
+        point.r = cr;
+        point.g = cg;
+        point.b = cb;
+      }
+
       const desktopSelected = selectPointSet(raw, desktopTarget, desktopProfile, 17);
       const lowPowerSelected = selectPointSet(raw, lowPowerTarget, lowPowerProfile, 43);
       const desktop = buildBuffers(desktopSelected, desktopProfile, 17);
@@ -142,7 +164,8 @@ try {
       return {
         imageWidth: canvas.width,
         imageHeight: canvas.height,
-        sourceCount: raw.length,
+        sourceCount: bodySourceCount,
+        rimSourceCount: rimPoints.length,
         desktop,
         lowPower,
       };
@@ -163,6 +186,7 @@ try {
         let fineSizeCount = 0;
         let broadSizeCount = 0;
         let outlineCount = 0;
+        let rimCount = 0;
         let headCount = 0;
         let eyeCount = 0;
         let contrastCount = 0;
@@ -192,6 +216,7 @@ try {
           if (size < 0.8) fineSizeCount += 1;
           if (size > 1.16) broadSizeCount += 1;
           if (point.outline > 0.08) outlineCount += 1;
+          if (point.rim > 0.5) rimCount += 1;
           if (point.head > 0.08) headCount += 1;
           if (point.eye > 0.06) eyeCount += 1;
           if (point.contrast > 0.22) contrastCount += 1;
@@ -215,6 +240,7 @@ try {
             fineSizeCount,
             broadSizeCount,
             outlineCount,
+            rimCount,
             headCount,
             eyeCount,
             contrastCount,
@@ -281,6 +307,11 @@ try {
       }
 
       function pointSize(point, density, profile, salt) {
+        if (point.rim > 0.5) {
+          const rimJitter = (randomUnit(point.x, point.y, salt + 307) - 0.5) * 0.14;
+          return clamp(profile.sizeMin, profile.sizeMax, (profile.rimSize + rimJitter) * profile.sizeScale);
+        }
+
         const fineDetail = clamp01(
           point.detail * 0.62 +
           point.contrast * 0.22 +
@@ -313,25 +344,46 @@ try {
         const used = new Uint8Array(points.length);
         const selected = [];
 
+        ensureSpatialQuota(
+          Math.round(target * profile.rimQuota),
+          (point) => point.rim > 0.5,
+          (point) => point.rim * profile.rim + point.outline * profile.outline + point.detail * 0.8,
+          Math.max(12, sourceStep * 7),
+          salt + 7,
+          (point) => point.rim > 0.5,
+        );
         ensureQuota(
           Math.round(target * profile.eyeQuota),
-          (point) => point.eye > 0.06,
+          (point) => point.rim < 0.5 && point.eye > 0.06,
           (point) => point.eye * 3.4 + point.contrast * 0.8,
           salt + 11,
         );
+        ensureSpatialQuota(
+          Math.round(target * profile.coverageQuota),
+          (point) => point.rim < 0.5,
+          (point) => point.detail * 1.25 + point.colorVariance * 0.72 + point.contrast * 0.58 + point.outline * 0.34,
+          Math.max(38, Math.round(Math.min(canvas.width, canvas.height) / 8)),
+          salt + 19,
+          (point) => point.rim < 0.5,
+        );
         ensureQuota(
           Math.round(target * profile.headQuota),
-          (point) => point.head > 0.08,
+          (point) => point.rim < 0.5 && point.head > 0.08,
           (point) => point.head * 1.5 + point.colorVariance * 0.7 + point.contrast * 0.45,
           salt + 23,
         );
         ensureQuota(
           Math.round(target * profile.detailQuota),
-          (point) => point.detail > profile.detailThreshold || point.contrast > 0.22 || point.colorVariance > 0.18,
+          (point) => point.rim < 0.5 && (
+            point.detail > profile.detailThreshold ||
+            point.contrast > 0.2 ||
+            point.colorVariance > 0.16
+          ),
           (point) => point.detail * 1.6 + point.colorVariance * 0.65 + point.contrast * 0.55,
           salt + 37,
         );
-        pick(target - selected.length, () => true, () => 0, salt + 53);
+        pick(target - selected.length, (point) => point.rim < 0.5, () => 0, salt + 53);
+        pick(target - selected.length, () => true, () => 0, salt + 59);
 
         if (selected.length < target) {
           throw new Error(`Only selected ${selected.length} points; target is ${target}`);
@@ -351,6 +403,54 @@ try {
             if (predicate(point)) count += 1;
           }
           return count;
+        }
+
+        function ensureSpatialQuota(minCount, predicate, extraWeight, cellSize, quotaSalt, countPredicate = predicate) {
+          const need = minCount - countSelected(countPredicate);
+          if (need <= 0) return;
+
+          const buckets = new Map();
+          for (const point of points) {
+            if (used[point.index] || !predicate(point)) continue;
+            const key = `${Math.floor(point.x / cellSize)}:${Math.floor(point.y / cellSize)}`;
+            const bucket = buckets.get(key);
+            const entry = {
+              point,
+              rank: weightedRank(point, selectionWeight(point, profile) + extraWeight(point), quotaSalt),
+            };
+            if (bucket) {
+              bucket.push(entry);
+            } else {
+              buckets.set(key, [entry]);
+            }
+          }
+
+          const orderedBuckets = Array.from(buckets.entries())
+            .map(([key, bucket]) => ({
+              key,
+              cursor: 0,
+              bucket: bucket.sort((a, b) => a.rank - b.rank || a.point.index - b.point.index),
+            }))
+            .sort((a, b) => hashString(a.key, quotaSalt) - hashString(b.key, quotaSalt));
+
+          let selectedCount = 0;
+          let madeProgress = true;
+          while (selectedCount < need && madeProgress) {
+            madeProgress = false;
+            for (const entry of orderedBuckets) {
+              while (entry.cursor < entry.bucket.length && used[entry.bucket[entry.cursor].point.index]) {
+                entry.cursor += 1;
+              }
+              if (entry.cursor >= entry.bucket.length) continue;
+              const point = entry.bucket[entry.cursor].point;
+              entry.cursor += 1;
+              used[point.index] = 1;
+              selected.push(point);
+              selectedCount += 1;
+              madeProgress = true;
+              if (selectedCount >= need) break;
+            }
+          }
         }
 
         function pick(count, predicate, extraWeight, pickSalt) {
@@ -379,6 +479,7 @@ try {
         return Math.max(
           0.04,
           profile.base +
+          point.rim * profile.rim +
           point.outline * profile.outline +
           point.contrast * profile.contrast +
           point.colorVariance * profile.colorVariance +
@@ -390,6 +491,76 @@ try {
       function weightedRank(point, weight, salt) {
         const random = Math.max(1e-7, randomUnit(point.x, point.y, salt));
         return -Math.log(random) / Math.max(0.04, weight);
+      }
+
+      function buildRimPoints(bodyPoints, centerX, centerY) {
+        const rim = [];
+
+        for (const point of bodyPoints) {
+          if (point.outline < 0.08) continue;
+
+          const normal = outwardNormal(point.x, point.y, centerX, centerY);
+          const tangentX = -normal.y;
+          const tangentY = normal.x;
+          const copies = point.outline > 0.34 ? 2 : 1;
+
+          for (let copy = 0; copy < copies; copy += 1) {
+            const offsetNoise = randomUnit(point.x + copy * 9, point.y - copy * 13, 607);
+            const tangentNoise = randomUnit(point.x - copy * 5, point.y + copy * 17, 613) - 0.5;
+            const offset = sourceStep * (1.18 + copy * 0.62 + offsetNoise * 0.38);
+            const tangentOffset = tangentNoise * sourceStep * 0.72;
+            const x = point.x + normal.x * offset + tangentX * tangentOffset;
+            const y = point.y + normal.y * offset + tangentY * tangentOffset;
+
+            rim.push({
+              index: bodyPoints.length + rim.length,
+              x,
+              y,
+              lum: clamp01(0.68 + point.outline * 0.12 + (1 - point.lum) * 0.04),
+              srcR: 244,
+              srcG: 194,
+              srcB: 106,
+              r: 244,
+              g: 194,
+              b: 106,
+              outline: clamp01(0.9 + point.outline * 0.1),
+              contrast: clamp01(point.contrast * 0.45 + 0.32),
+              colorVariance: clamp01(point.colorVariance * 0.42 + 0.34),
+              head: 0,
+              eye: 0,
+              detail: clamp01(0.82 + point.outline * 0.12),
+              rim: 1,
+            });
+          }
+        }
+
+        return rim;
+      }
+
+      function outwardNormal(x, y, centerX, centerY) {
+        const step = sourceStep;
+        const gx = (
+          alphaAt(x + step, y) -
+          alphaAt(x - step, y) +
+          (alphaAt(x + step, y - step) + alphaAt(x + step, y + step) -
+            alphaAt(x - step, y - step) - alphaAt(x - step, y + step)) * 0.5
+        );
+        const gy = (
+          alphaAt(x, y + step) -
+          alphaAt(x, y - step) +
+          (alphaAt(x - step, y + step) + alphaAt(x + step, y + step) -
+            alphaAt(x - step, y - step) - alphaAt(x + step, y - step)) * 0.5
+        );
+        const length = Math.hypot(gx, gy);
+
+        if (length > 0.001) {
+          return { x: -gx / length, y: -gy / length };
+        }
+
+        const fallbackX = x - centerX;
+        const fallbackY = y - centerY;
+        const fallbackLength = Math.hypot(fallbackX, fallbackY) || 1;
+        return { x: fallbackX / fallbackLength, y: fallbackY / fallbackLength };
       }
 
       function alphaAt(x, y) {
@@ -504,13 +675,29 @@ try {
         return clamp01(nearEmpty * 0.16 + farEmpty * 0.045);
       }
 
-      function adjustColorForHero(r, g, b) {
-        let rr = r / 255;
-        let gg = g / 255;
-        let bb = b / 255;
+      function adjustColorForHero(point) {
+        if (point.rim > 0.5) {
+          const px = (point.x - centerX) / span;
+          const py = (point.y - centerY) / span;
+          const glow = clamp01(0.7 - px * 0.16 - py * 0.12 + point.outline * 0.2);
+          return [
+            Math.round((0.86 + glow * 0.12) * 255),
+            Math.round((0.62 + glow * 0.14) * 255),
+            Math.round((0.28 + glow * 0.1) * 255),
+          ];
+        }
+
+        let rr = point.srcR / 255;
+        let gg = point.srcG / 255;
+        let bb = point.srcB / 255;
         const lum = luma(rr, gg, bb);
-        const saturation = 1.04;
-        const contrast = 1.02;
+        const px = (point.x - centerX) / span;
+        const py = (point.y - centerY) / span;
+        const saturation = 1.16 + point.colorVariance * 0.16;
+        const contrast = 1.08 + point.contrast * 0.12;
+        const keyLight = clamp01(0.52 - px * 0.2 - py * 0.34 + lum * 0.22 + point.detail * 0.08);
+        const formShadow = clamp01(0.32 + px * 0.16 + py * 0.28 - lum * 0.18);
+        const warmTabby = clamp01((rr * 1.18 + gg * 0.7 - bb * 0.4) * 0.55);
 
         rr = clamp01(lum + (rr - lum) * saturation);
         gg = clamp01(lum + (gg - lum) * saturation);
@@ -519,6 +706,11 @@ try {
         rr = clamp01((rr - 0.5) * contrast + 0.5);
         gg = clamp01((gg - 0.5) * contrast + 0.5);
         bb = clamp01((bb - 0.5) * contrast + 0.5);
+
+        const shade = 0.86 + keyLight * 0.25 - formShadow * 0.16;
+        rr = clamp01(rr * shade + warmTabby * 0.035 + keyLight * 0.018);
+        gg = clamp01(gg * shade + warmTabby * 0.018 + keyLight * 0.01);
+        bb = clamp01(bb * (shade - warmTabby * 0.045));
 
         const finalLum = luma(rr, gg, bb);
         if (finalLum > 0.9) {
@@ -569,6 +761,16 @@ try {
         n ^= n >>> 15;
         return n >>> 0;
       }
+
+      function hashString(value, salt = 0) {
+        let n = Math.imul(salt + 1, 0x9e3779b1);
+        for (let index = 0; index < value.length; index += 1) {
+          n ^= value.charCodeAt(index);
+          n = Math.imul(n, 0x85ebca6b);
+          n ^= n >>> 13;
+        }
+        return n >>> 0;
+      }
     },
     { imgSrc: imgMatch[1], sourceStep, desktopTarget, lowPowerTarget },
   );
@@ -576,10 +778,11 @@ try {
   const desktop = encodePointSet(result.desktop);
   const lowPower = encodePointSet(result.lowPower);
   const output = `// Generated by scripts/generate-hero-cat-points.mjs from ${sourcePath.replaceAll('\\', '/')}.
-// Source PNG is sampled once through canvas getImageData(step=${sourceStep}); runtime decodes baked positions, RGB colors, point sizes, outline weights, and detail weights.
+// Source PNG is sampled once through canvas getImageData(step=${sourceStep}); runtime decodes baked positions, RGB colors, point sizes, outline/rim weights, and detail weights.
 
 export const HERO_CAT_SOURCE_STEP = ${sourceStep};
 export const HERO_CAT_SOURCE_SAMPLE_COUNT = ${result.sourceCount};
+export const HERO_CAT_RIM_SOURCE_COUNT = ${result.rimSourceCount};
 export const HERO_CAT_IMAGE_SIZE = { width: ${result.imageWidth}, height: ${result.imageHeight} } as const;
 export const HERO_CAT_POINT_COUNT = ${desktopTarget};
 export const HERO_CAT_LOW_POWER_POINT_COUNT = ${lowPowerTarget};
@@ -624,6 +827,7 @@ ${chunkBase64(lowPower.detailsBase64)}
   console.log(
     [
       `Generated ${outputPath} from ${result.sourceCount} source points: ${desktopTarget} desktop / ${lowPowerTarget} low-power target`,
+      `Generated ${result.rimSourceCount} rim candidates from the alpha contour`,
       `Desktop detail counts: ${formatStatsForLog(result.desktop.stats)}`,
       `Low-power detail counts: ${formatStatsForLog(result.lowPower.stats)}`,
     ].join('\n'),
@@ -648,11 +852,11 @@ function encodePointSet(pointSet) {
 }
 
 function formatStats(stats) {
-  return `{ count: ${stats.count}, head: ${stats.headCount}, eyes: ${stats.eyeCount}, outline: ${stats.outlineCount}, contrast: ${stats.contrastCount}, colorVariance: ${stats.colorVarianceCount}, fineSize: ${stats.fineSizeCount}, broadSize: ${stats.broadSizeCount}, minSize: ${stats.minSize.toFixed(3)}, maxSize: ${stats.maxSize.toFixed(3)}, avgSize: ${stats.avgSize.toFixed(3)}, minLum: ${stats.minLum.toFixed(3)}, maxLum: ${stats.maxLum.toFixed(3)}, avgLum: ${stats.avgLum.toFixed(3)} }`;
+  return `{ count: ${stats.count}, head: ${stats.headCount}, eyes: ${stats.eyeCount}, outline: ${stats.outlineCount}, rim: ${stats.rimCount}, contrast: ${stats.contrastCount}, colorVariance: ${stats.colorVarianceCount}, fineSize: ${stats.fineSizeCount}, broadSize: ${stats.broadSizeCount}, minSize: ${stats.minSize.toFixed(3)}, maxSize: ${stats.maxSize.toFixed(3)}, avgSize: ${stats.avgSize.toFixed(3)}, minLum: ${stats.minLum.toFixed(3)}, maxLum: ${stats.maxLum.toFixed(3)}, avgLum: ${stats.avgLum.toFixed(3)} }`;
 }
 
 function formatStatsForLog(stats) {
-  return `count=${stats.count}, head=${stats.headCount}, eyes=${stats.eyeCount}, outline=${stats.outlineCount}, contrast=${stats.contrastCount}, colorVariance=${stats.colorVarianceCount}, size=${stats.minSize.toFixed(3)}/${stats.avgSize.toFixed(3)}/${stats.maxSize.toFixed(3)}, fine=${stats.fineSizeCount}, broad=${stats.broadSizeCount}, lum=${stats.minLum.toFixed(3)}/${stats.avgLum.toFixed(3)}/${stats.maxLum.toFixed(3)}`;
+  return `count=${stats.count}, head=${stats.headCount}, eyes=${stats.eyeCount}, outline=${stats.outlineCount}, rim=${stats.rimCount}, contrast=${stats.contrastCount}, colorVariance=${stats.colorVarianceCount}, size=${stats.minSize.toFixed(3)}/${stats.avgSize.toFixed(3)}/${stats.maxSize.toFixed(3)}, fine=${stats.fineSizeCount}, broad=${stats.broadSizeCount}, lum=${stats.minLum.toFixed(3)}/${stats.avgLum.toFixed(3)}/${stats.maxLum.toFixed(3)}`;
 }
 
 function chunkBase64(base64) {

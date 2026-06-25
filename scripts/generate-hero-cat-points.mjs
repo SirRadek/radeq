@@ -42,43 +42,53 @@ try {
       const backgroundMaxRgbThreshold = 3;
       const catRoi = {
         // Owner-calibratable high-res source ratios. Coordinates are normalized to kocka_body.png.
+        body: { x: 0.61, y: 0.43, rx: 0.34, ry: 0.2, angle: 0.14 },
         head: { x: 0.3, y: 0.23, rx: 0.16, ry: 0.15, angle: -0.42 },
-        leftEye: { x: 0.26, y: 0.252, rx: 0.028, ry: 0.022, angle: -0.38 },
-        rightEye: { x: 0.349, y: 0.207, rx: 0.025, ry: 0.021, angle: -0.12 },
+        leftEye: { x: 0.26, y: 0.252, rx: 0.033, ry: 0.026, angle: -0.38 },
+        rightEye: { x: 0.349, y: 0.207, rx: 0.03, ry: 0.025, angle: -0.12 },
         nose: { x: 0.444, y: 0.575, rx: 0.036, ry: 0.028, angle: -0.58 },
+        upperPaw: { x: 0.846, y: 0.447, rx: 0.13, ry: 0.055, angle: -0.05 },
+        lowerPaw: { x: 0.823, y: 0.866, rx: 0.112, ry: 0.082, angle: 0.4 },
+        sidePaw: { x: 0.13, y: 0.476, rx: 0.12, ry: 0.05, angle: -0.04 },
+        nearEar: { x: 0.285, y: 0.098, rx: 0.053, ry: 0.115, angle: -0.06 },
+        farEar: { x: 0.388, y: 0.155, rx: 0.052, ry: 0.064, angle: 0.08 },
       };
       const desktopProfile = {
         base: 0.27,
-        outline: 2.34,
-        contrast: 1.54,
+        outline: 3.18,
+        contrast: 1.44,
         colorVariance: 1.74,
         head: 0.9,
-        eye: 3.36,
-        nose: 2.3,
-        eyeQuota: 0.086,
+        eye: 4.28,
+        nose: 2.78,
+        paw: 2.15,
+        eyeQuota: 0.108,
+        pawQuota: 0.072,
         headQuota: 0.34,
         coverageQuota: 0.39,
         detailQuota: 0.66,
         detailThreshold: 0.2,
         sizeMin: 0.45,
-        sizeMax: 1.55,
+        sizeMax: 1.82,
         sizeScale: 1,
       };
       const lowPowerProfile = {
         base: 0.22,
-        outline: 2.4,
-        contrast: 1.62,
+        outline: 3.22,
+        contrast: 1.5,
         colorVariance: 1.82,
         head: 1.02,
-        eye: 3.52,
-        nose: 2.44,
-        eyeQuota: 0.09,
+        eye: 4.4,
+        nose: 2.86,
+        paw: 2.24,
+        eyeQuota: 0.116,
+        pawQuota: 0.078,
         headQuota: 0.36,
         coverageQuota: 0.37,
         detailQuota: 0.63,
         detailThreshold: 0.22,
         sizeMin: 0.45,
-        sizeMax: 1.55,
+        sizeMax: 1.85,
         sizeScale: 1.02,
       };
       const raw = [];
@@ -93,16 +103,30 @@ try {
           const g = data[offset + 1];
           const b = data[offset + 2];
           const lum = pixelLuma(r, g, b);
-          const outline = edgeWeight(x, y);
-          const { contrast, colorVariance } = localDetail(x, y, r, g, b, lum);
-          const { head, eye, leftEye, rightEye, nose } = roiWeights(x, y, lum, contrast);
+          const silhouette = edgeWeight(x, y);
+          const { contrast, colorVariance, angle, gradientStrength } = localDetail(x, y, r, g, b, lum);
+          const {
+            body,
+            head,
+            eye,
+            leftEye,
+            rightEye,
+            nose,
+            paw,
+            upperPaw,
+            lowerPaw,
+            sidePaw,
+            ear,
+          } = roiWeights(x, y, lum, contrast);
+          const outline = inkWeight(silhouette, lum, contrast, colorVariance, eye, nose, paw);
           const detail = clamp01(
             contrast * 0.48 +
             colorVariance * 0.52 +
             outline * 0.28 +
             head * 0.08 +
             eye * 0.7 +
-            nose * 0.34,
+            nose * 0.34 +
+            paw * 0.16,
           );
           raw.push({
             index: raw.length,
@@ -116,13 +140,22 @@ try {
             g,
             b,
             outline,
+            silhouette,
             contrast,
             colorVariance,
+            angle,
+            gradientStrength,
+            body,
             head,
             eye,
             leftEye,
             rightEye,
             nose,
+            paw,
+            upperPaw,
+            lowerPaw,
+            sidePaw,
+            ear,
             detail,
             rim: 0,
           });
@@ -179,9 +212,15 @@ try {
         const sizes = new Float32Array(selected.length);
         const outlines = new Uint8Array(selected.length);
         const details = new Uint8Array(selected.length);
+        const shapes = new Uint8Array(selected.length);
+        const angles = new Uint8Array(selected.length);
+        const aspects = new Uint8Array(selected.length);
         let minLum = Infinity;
         let maxLum = -Infinity;
         let sumLum = 0;
+        let minDepth = Infinity;
+        let maxDepth = -Infinity;
+        let sumDepth = 0;
         let minSize = Infinity;
         let maxSize = -Infinity;
         let sumSize = 0;
@@ -202,25 +241,53 @@ try {
         let rightEyeWeight = 0;
         let contrastCount = 0;
         let colorVarianceCount = 0;
+        let pawCount = 0;
+        let upperPawCount = 0;
+        let lowerPawCount = 0;
+        let sidePawCount = 0;
+        let pawX = 0;
+        let pawY = 0;
+        let pawWeight = 0;
+        let upperPawX = 0;
+        let upperPawY = 0;
+        let upperPawWeight = 0;
+        let lowerPawX = 0;
+        let lowerPawY = 0;
+        let lowerPawWeight = 0;
+        let sidePawX = 0;
+        let sidePawY = 0;
+        let sidePawWeight = 0;
+        let circleShapeCount = 0;
+        let pebbleShapeCount = 0;
+        let dashShapeCount = 0;
+        let contourShapeCount = 0;
 
         for (let index = 0; index < selected.length; index += 1) {
           const point = selected[index];
           const offset = index * 3;
+          const depth = pointDepth(point, densities[index], salt + 307);
+          const shape = pointShape(point, densities[index], salt + 409);
           floats[offset] = (point.x - centerX) / span;
           floats[offset + 1] = -(point.y - centerY) / span;
-          floats[offset + 2] = (point.lum - 0.5) * 0.24;
+          floats[offset + 2] = depth;
           colors[offset] = point.r;
           colors[offset + 1] = point.g;
           colors[offset + 2] = point.b;
           sizes[index] = pointSize(point, densities[index], profile, salt + 101);
           outlines[index] = Math.round(point.outline * 255);
           details[index] = Math.round(point.detail * 255);
+          shapes[index] = shape.shape;
+          angles[index] = Math.round(wrapUnit(shape.angle / (Math.PI * 2)) * 255);
+          aspects[index] = Math.round(clamp01((shape.aspect - 1) / 3.4) * 255);
 
           const adjustedLum = (0.2126 * point.r + 0.7152 * point.g + 0.0722 * point.b) / 255;
           const size = sizes[index];
           minLum = Math.min(minLum, adjustedLum);
           maxLum = Math.max(maxLum, adjustedLum);
           sumLum += adjustedLum;
+          minDepth = Math.min(minDepth, depth);
+          maxDepth = Math.max(maxDepth, depth);
+          sumDepth += depth;
           minSize = Math.min(minSize, size);
           maxSize = Math.max(maxSize, size);
           sumSize += size;
@@ -245,6 +312,34 @@ try {
           if (point.nose > 0.06) noseCount += 1;
           if (point.contrast > 0.22) contrastCount += 1;
           if (point.colorVariance > 0.18) colorVarianceCount += 1;
+          if (point.paw > 0.06) {
+            pawCount += 1;
+            pawX += point.x * point.paw;
+            pawY += point.y * point.paw;
+            pawWeight += point.paw;
+          }
+          if (point.upperPaw > 0.06) {
+            upperPawCount += 1;
+            upperPawX += point.x * point.upperPaw;
+            upperPawY += point.y * point.upperPaw;
+            upperPawWeight += point.upperPaw;
+          }
+          if (point.lowerPaw > 0.06) {
+            lowerPawCount += 1;
+            lowerPawX += point.x * point.lowerPaw;
+            lowerPawY += point.y * point.lowerPaw;
+            lowerPawWeight += point.lowerPaw;
+          }
+          if (point.sidePaw > 0.06) {
+            sidePawCount += 1;
+            sidePawX += point.x * point.sidePaw;
+            sidePawY += point.y * point.sidePaw;
+            sidePawWeight += point.sidePaw;
+          }
+          if (shape.shape === 0) circleShapeCount += 1;
+          if (shape.shape === 1) pebbleShapeCount += 1;
+          if (shape.shape === 2) dashShapeCount += 1;
+          if (shape.shape === 3) contourShapeCount += 1;
         }
 
         return {
@@ -253,11 +348,17 @@ try {
           sizes: Array.from(sizes),
           outlines: Array.from(outlines),
           details: Array.from(details),
+          shapes: Array.from(shapes),
+          angles: Array.from(angles),
+          aspects: Array.from(aspects),
           stats: {
             count: selected.length,
             minLum,
             maxLum,
             avgLum: sumLum / selected.length,
+            minDepth,
+            maxDepth,
+            avgDepth: sumDepth / selected.length,
             minSize,
             maxSize,
             avgSize: sumSize / selected.length,
@@ -270,12 +371,137 @@ try {
             leftEyeCount,
             rightEyeCount,
             noseCount,
+            pawCount,
+            upperPawCount,
+            lowerPawCount,
+            sidePawCount,
             leftEyeCentroid: weightedCentroid(leftEyeX, leftEyeY, leftEyeWeight),
             rightEyeCentroid: weightedCentroid(rightEyeX, rightEyeY, rightEyeWeight),
+            pawCentroid: weightedCentroid(pawX, pawY, pawWeight),
+            upperPawCentroid: weightedCentroid(upperPawX, upperPawY, upperPawWeight),
+            lowerPawCentroid: weightedCentroid(lowerPawX, lowerPawY, lowerPawWeight),
+            sidePawCentroid: weightedCentroid(sidePawX, sidePawY, sidePawWeight),
             contrastCount,
             colorVarianceCount,
+            circleShapeCount,
+            pebbleShapeCount,
+            dashShapeCount,
+            contourShapeCount,
           },
         };
+      }
+
+      function pointDepth(point, density, salt) {
+        const lumaBlurDepth = clamp(-0.12, 0.12, (blurredLumaAt(point.x, point.y, point.lum) - 0.48) * 0.24);
+        const bodyDome = roiEllipseDome(point.x, point.y, catRoi.body, canvas.width, canvas.height);
+        const headDome = roiEllipseDome(point.x, point.y, catRoi.head, canvas.width, canvas.height);
+        const upperPawDome = roiEllipseDome(point.x, point.y, catRoi.upperPaw, canvas.width, canvas.height);
+        const lowerPawDome = roiEllipseDome(point.x, point.y, catRoi.lowerPaw, canvas.width, canvas.height);
+        const sidePawDome = roiEllipseDome(point.x, point.y, catRoi.sidePaw, canvas.width, canvas.height);
+        const nearEarDome = roiEllipseDome(point.x, point.y, catRoi.nearEar, canvas.width, canvas.height);
+        const farEarDome = roiEllipseDome(point.x, point.y, catRoi.farEar, canvas.width, canvas.height);
+        const pawDome = Math.max(upperPawDome, lowerPawDome, sidePawDome);
+        const earDome = Math.max(nearEarDome, farEarDome);
+        const facialFeature = Math.max(point.eye, point.nose);
+        const nx = point.x / canvas.width;
+        const ny = point.y / canvas.height;
+        const rearOutline = clamp01((nx - 0.68) * 1.7 + (0.38 - ny) * 0.35 + point.silhouette * 0.26);
+        const lowerGrounding = clamp01((ny - 0.62) * 1.4) * 0.018;
+        let regionDepth = -0.038;
+
+        regionDepth += bodyDome * 0.058;
+        regionDepth += headDome * 0.108;
+        regionDepth += pawDome * 0.118;
+        regionDepth += facialFeature * 0.142;
+        regionDepth -= earDome * 0.118;
+        regionDepth -= rearOutline * 0.054;
+        regionDepth -= point.silhouette * 0.022;
+        regionDepth -= lowerGrounding;
+
+        const localForm = clamp01(
+          0.24 +
+          bodyDome * 0.28 +
+          headDome * 0.42 +
+          pawDome * 0.52 +
+          facialFeature * 0.58 +
+          density * 0.05 -
+          earDome * 0.24,
+        );
+        const jitter = (randomUnit(point.x, point.y, salt) - 0.5) * 0.006;
+        return clamp(-0.12, 0.16, mix(lumaBlurDepth, regionDepth, localForm) + jitter);
+      }
+
+      function pointShape(point, density, salt) {
+        const feature = Math.max(point.eye, point.nose);
+        const baseAngle = point.gradientStrength > 0.018 ? point.angle : fallbackFurAngle(point);
+        const jitter = (randomUnit(point.x, point.y, salt) - 0.5);
+
+        if (feature > 0.06) {
+          return { shape: 0, angle: baseAngle, aspect: 1 };
+        }
+
+        if (point.silhouette > 0.18 || point.outline > 0.78) {
+          return {
+            shape: 3,
+            angle: baseAngle + jitter * 0.22,
+            aspect: clamp(2.1, 3.25, 2.25 + point.silhouette * 1.22 + point.outline * 0.42),
+          };
+        }
+
+        if (point.paw > 0.06) {
+          return {
+            shape: 1,
+            angle: baseAngle + jitter * 0.45,
+            aspect: clamp(1.02, 1.38, 1.12 + point.paw * 0.1 + Math.abs(jitter) * 0.22),
+          };
+        }
+
+        if (point.head > 0.08) {
+          return { shape: 0, angle: baseAngle, aspect: 1 };
+        }
+
+        return {
+          shape: 2,
+          angle: baseAngle + jitter * 0.35,
+          aspect: clamp(2.85, 4.25, 3.12 + point.detail * 0.55 + point.colorVariance * 0.55 - density * 0.22),
+        };
+      }
+
+      function fallbackFurAngle(point) {
+        const nx = point.x / canvas.width;
+        const ny = point.y / canvas.height;
+        if (point.lowerPaw > 0.06) return catRoi.lowerPaw.angle + Math.PI * 0.5;
+        if (point.upperPaw > 0.06) return catRoi.upperPaw.angle;
+        if (point.sidePaw > 0.06) return catRoi.sidePaw.angle;
+        if (point.head > 0.08) {
+          return Math.atan2(ny - catRoi.head.y, nx - catRoi.head.x) + Math.PI * 0.5;
+        }
+        return Math.atan2(ny - catRoi.body.y, nx - catRoi.body.x) + Math.PI * 0.5;
+      }
+
+      function blurredLumaAt(x, y, fallback) {
+        const offsets = [
+          [0, 0, 2.4],
+          [-sourceStep * 3, 0, 1.3],
+          [sourceStep * 3, 0, 1.3],
+          [0, -sourceStep * 3, 1.3],
+          [0, sourceStep * 3, 1.3],
+          [-sourceStep * 6, -sourceStep * 2, 0.75],
+          [sourceStep * 6, sourceStep * 2, 0.75],
+          [-sourceStep * 2, sourceStep * 6, 0.75],
+          [sourceStep * 2, -sourceStep * 6, 0.75],
+        ];
+        let total = 0;
+        let weight = 0;
+
+        for (const [dx, dy, sampleWeight] of offsets) {
+          const pixel = readPixel(x + dx, y + dy);
+          if (!pixel) continue;
+          total += pixel.lum * sampleWeight;
+          weight += sampleWeight;
+        }
+
+        return weight > 0 ? total / weight : fallback;
       }
 
       function localSelectionDensities(selected) {
@@ -355,25 +581,36 @@ try {
         let size;
 
         if (feature > 0.06) {
-          size = 0.78 - feature * 0.18 - fineDetail * 0.12 + jitter * 0.52;
-          return clamp(0.45, 0.85, size * profile.sizeScale);
+          const eyeBias = point.eye > point.nose ? 1 : 0;
+          size = (eyeBias ? 0.62 : 0.72) - feature * 0.12 - fineDetail * 0.08 + jitter * 0.36;
+          return clamp(0.43, eyeBias ? 0.7 : 0.82, size * profile.sizeScale);
         }
 
-        if (point.outline > 0.12) {
-          size = 1.08 + point.outline * 0.34 + sparseFlat * 0.12 + jitter;
-          return clamp(1, 1.55, size * profile.sizeScale);
+        if (point.paw > 0.06 && point.silhouette < 0.3) {
+          size = 1.2 + point.paw * 0.48 + sparseFlat * 0.14 - density * 0.04 + jitter * 0.78;
+          return clamp(1.04, profile.sizeMax, size * profile.sizeScale);
+        }
+
+        if (point.silhouette > 0.12 || point.outline > 0.68) {
+          size = 1.08 + Math.max(point.silhouette, point.outline * 0.66) * 0.42 + sparseFlat * 0.1 + jitter;
+          return clamp(0.95, 1.62, size * profile.sizeScale);
+        }
+
+        if (point.head > 0.08) {
+          size = 0.82 - point.head * 0.08 - fineDetail * 0.08 + jitter * 0.54;
+          return clamp(0.52, 0.96, size * profile.sizeScale);
         }
 
         if (
           fineDetail > 0.64 ||
           (point.contrast > 0.46 && point.colorVariance > 0.38 && density > 0.34)
         ) {
-          size = 1.02 - fineDetail * 0.22 - density * 0.06 + jitter * 0.62;
-          return clamp(0.55, 1.05, size * profile.sizeScale);
+          size = 1.1 - fineDetail * 0.18 - density * 0.04 + jitter * 0.62;
+          return clamp(0.7, 1.22, size * profile.sizeScale);
         }
 
-        size = 1.02 + sparseFlat * 0.16 + depthFill - density * 0.03 + jitter;
-        return clamp(0.85, 1.25, size * profile.sizeScale);
+        size = 1.14 + sparseFlat * 0.16 + depthFill - density * 0.03 + jitter;
+        return clamp(0.88, 1.34, size * profile.sizeScale);
       }
 
       function selectPointSet(points, target, profile, salt) {
@@ -398,6 +635,13 @@ try {
           (point) => point.eye > 0.06,
           (point) => point.eye * 3.5 + point.contrast * 0.8,
           salt + 11,
+        );
+        ensureSpatialQuota(
+          Math.round(target * profile.pawQuota),
+          (point) => point.paw > 0.06,
+          (point) => point.paw * 2.8 + point.outline * 0.62 + point.colorVariance * 0.44,
+          Math.max(34, Math.round(Math.min(canvas.width, canvas.height) / 12)),
+          salt + 13,
         );
         ensureSpatialQuota(
           Math.round(target * profile.coverageQuota),
@@ -524,7 +768,8 @@ try {
           point.colorVariance * profile.colorVariance +
           point.head * profile.head +
           point.eye * profile.eye +
-          point.nose * profile.nose,
+          point.nose * profile.nose +
+          point.paw * profile.paw,
         );
       }
 
@@ -598,15 +843,26 @@ try {
 
         const avgLum = count ? lumTotal / count : 0;
         const avgColor = count ? colorTotal / count : 0;
+        const left = readPixel(x - sourceStep * 2, y);
+        const right = readPixel(x + sourceStep * 2, y);
+        const up = readPixel(x, y - sourceStep * 2);
+        const down = readPixel(x, y + sourceStep * 2);
+        const gradX = (right?.lum ?? lum) - (left?.lum ?? lum);
+        const gradY = (down?.lum ?? lum) - (up?.lum ?? lum);
+        const gradientStrength = Math.min(1, Math.hypot(gradX, gradY) * 8);
+        const angle = Math.atan2(gradY, gradX) + Math.PI * 0.5;
         return {
           contrast: clamp01(avgLum * 4.8 + maxLum * 0.95),
           colorVariance: clamp01(avgColor * 5 + maxColor * 0.6),
+          angle,
+          gradientStrength,
         };
       }
 
       function roiWeights(x, y, lum, contrast) {
         const w = canvas.width;
         const h = canvas.height;
+        const body = roiEllipseWeight(x, y, catRoi.body, w, h);
         const head = roiEllipseWeight(x, y, catRoi.head, w, h);
         const darkFeature = clamp01((0.32 - lum) * 3.4 + contrast * 0.28);
         const eyeTone = 0.42 + darkFeature * 0.82;
@@ -614,11 +870,26 @@ try {
         const rightEye = clamp01(roiEllipseWeight(x, y, catRoi.rightEye, w, h) * eyeTone);
         const eye = Math.max(leftEye, rightEye);
         const nose = clamp01(roiEllipseWeight(x, y, catRoi.nose, w, h) * (0.76 + contrast * 0.36));
-        return { head, eye, leftEye, rightEye, nose };
+        const upperPaw = roiEllipseWeight(x, y, catRoi.upperPaw, w, h);
+        const lowerPaw = roiEllipseWeight(x, y, catRoi.lowerPaw, w, h);
+        const sidePaw = roiEllipseWeight(x, y, catRoi.sidePaw, w, h);
+        const paw = Math.max(upperPaw, lowerPaw, sidePaw);
+        const nearEar = roiEllipseWeight(x, y, catRoi.nearEar, w, h);
+        const farEar = roiEllipseWeight(x, y, catRoi.farEar, w, h);
+        const ear = Math.max(nearEar, farEar);
+        return { body, head, eye, leftEye, rightEye, nose, paw, upperPaw, lowerPaw, sidePaw, ear };
       }
 
       function roiEllipseWeight(x, y, roi, width, height) {
-        return rotatedEllipseWeight(
+        return clamp01((1 - roiEllipseDistanceSq(x, y, roi, width, height)) * 1.25);
+      }
+
+      function roiEllipseDome(x, y, roi, width, height) {
+        return Math.sqrt(clamp01(1 - roiEllipseDistanceSq(x, y, roi, width, height)));
+      }
+
+      function roiEllipseDistanceSq(x, y, roi, width, height) {
+        return rotatedEllipseDistanceSq(
           x,
           y,
           width * roi.x,
@@ -629,15 +900,14 @@ try {
         );
       }
 
-      function rotatedEllipseWeight(x, y, cx, cy, rx, ry, angle) {
+      function rotatedEllipseDistanceSq(x, y, cx, cy, rx, ry, angle) {
         const cos = Math.cos(angle);
         const sin = Math.sin(angle);
         const dx = x - cx;
         const dy = y - cy;
         const px = (dx * cos + dy * sin) / rx;
         const py = (-dx * sin + dy * cos) / ry;
-        const distance = px * px + py * py;
-        return clamp01((1 - distance) * 1.25);
+        return px * px + py * py;
       }
 
       function edgeWeight(x, y) {
@@ -660,6 +930,14 @@ try {
         }
 
         return clamp01(nearEmpty * 0.16 + farEmpty * 0.045);
+      }
+
+      function inkWeight(silhouette, lum, contrast, colorVariance, eye, nose, paw) {
+        const detailStroke = Math.max(0, contrast - 0.42) * 0.48 + Math.max(0, colorVariance - 0.34) * 0.34;
+        const darkStroke = clamp01((0.21 - lum) * 3.4 + detailStroke);
+        const internalLine = clamp01(darkStroke * 0.58 - paw * 0.12);
+        const featureInk = Math.max(eye * 0.88, nose * 0.62);
+        return clamp01(Math.max(silhouette * 1.28, internalLine, featureInk));
       }
 
       function adjustColorForHero(point) {
@@ -687,6 +965,38 @@ try {
         rr = clamp01(rr * shade + warmTabby * 0.055 + keyLight * 0.016);
         gg = clamp01(gg * shade + warmTabby * 0.024 + keyLight * 0.009);
         bb = clamp01(bb * (shade - warmTabby * 0.06));
+
+        if (point.paw > 0.06 && point.silhouette < 0.22) {
+          const pawWarmth = clamp01(point.paw * 0.34);
+          rr = mix(rr, rr * 1.08 + 0.035, pawWarmth);
+          gg = mix(gg, gg * 1.02 + 0.018, pawWarmth);
+          bb = mix(bb, bb * 0.92, pawWarmth);
+        }
+
+        if (point.eye > 0.04) {
+          const eyeWeight = clamp01(point.eye * 1.28);
+          const pupilWeight = clamp01(point.eye * 0.92 + (0.3 - point.lum) * 2.6);
+          rr = mix(rr, 0.22, eyeWeight * 0.48);
+          gg = mix(gg, 0.29, eyeWeight * 0.52);
+          bb = mix(bb, 0.08, eyeWeight * 0.46);
+          rr = mix(rr, 0.028, pupilWeight * 0.9);
+          gg = mix(gg, 0.025, pupilWeight * 0.9);
+          bb = mix(bb, 0.02, pupilWeight * 0.9);
+        }
+
+        if (point.nose > 0.05) {
+          const noseInk = clamp01(point.nose * 0.76 + (0.36 - point.lum) * 0.8);
+          rr = mix(rr, 0.19, noseInk);
+          gg = mix(gg, 0.09, noseInk);
+          bb = mix(bb, 0.065, noseInk);
+        }
+
+        const ink = clamp01(point.silhouette * 0.86 + Math.max(0, point.outline - 0.58) * 1.04);
+        if (ink > 0.02) {
+          rr = mix(rr, 0.122, ink);
+          gg = mix(gg, 0.086, ink);
+          bb = mix(bb, 0.071, ink);
+        }
 
         const finalLum = luma(rr, gg, bb);
         if (finalLum > 0.9) {
@@ -717,6 +1027,14 @@ try {
 
       function clamp(min, max, value) {
         return Math.max(min, Math.min(max, value));
+      }
+
+      function mix(a, b, t) {
+        return a + (b - a) * t;
+      }
+
+      function wrapUnit(value) {
+        return ((value % 1) + 1) % 1;
       }
 
       function weightedCentroid(sumX, sumY, weight) {
@@ -761,7 +1079,7 @@ try {
   const desktop = encodePointSet(result.desktop);
   const lowPower = encodePointSet(result.lowPower);
   const output = `// Generated by scripts/generate-hero-cat-points.mjs from ${sourcePath.replaceAll('\\', '/')}.
-// Source PNG is sampled once through canvas getImageData(step=${sourceStep}); runtime decodes baked positions, RGB colors, point sizes, outline weights, and detail weights.
+// Source PNG is sampled once through canvas getImageData(step=${sourceStep}); runtime decodes baked positions, RGB colors, point sizes, outline/detail weights, and shape attributes.
 
 export const HERO_CAT_SOURCE_STEP = ${sourceStep};
 export const HERO_CAT_SOURCE_SAMPLE_COUNT = ${result.sourceCount};
@@ -789,6 +1107,15 @@ ${chunkBase64(desktop.outlinesBase64)}
 export const HERO_CAT_DETAIL_BASE64 = [
 ${chunkBase64(desktop.detailsBase64)}
 ].join('');
+export const HERO_CAT_SHAPES_BASE64 = [
+${chunkBase64(desktop.shapesBase64)}
+].join('');
+export const HERO_CAT_ANGLES_BASE64 = [
+${chunkBase64(desktop.anglesBase64)}
+].join('');
+export const HERO_CAT_ASPECTS_BASE64 = [
+${chunkBase64(desktop.aspectsBase64)}
+].join('');
 export const HERO_CAT_LOW_POWER_POINTS_BASE64 = [
 ${chunkBase64(lowPower.pointsBase64)}
 ].join('');
@@ -803,6 +1130,15 @@ ${chunkBase64(lowPower.outlinesBase64)}
 ].join('');
 export const HERO_CAT_LOW_POWER_DETAIL_BASE64 = [
 ${chunkBase64(lowPower.detailsBase64)}
+].join('');
+export const HERO_CAT_LOW_POWER_SHAPES_BASE64 = [
+${chunkBase64(lowPower.shapesBase64)}
+].join('');
+export const HERO_CAT_LOW_POWER_ANGLES_BASE64 = [
+${chunkBase64(lowPower.anglesBase64)}
+].join('');
+export const HERO_CAT_LOW_POWER_ASPECTS_BASE64 = [
+${chunkBase64(lowPower.aspectsBase64)}
 ].join('');
 `;
 
@@ -847,21 +1183,27 @@ function encodePointSet(pointSet) {
   const sizes = new Float32Array(pointSet.sizes);
   const outlines = new Uint8Array(pointSet.outlines);
   const details = new Uint8Array(pointSet.details);
+  const shapes = new Uint8Array(pointSet.shapes);
+  const angles = new Uint8Array(pointSet.angles);
+  const aspects = new Uint8Array(pointSet.aspects);
   return {
     pointsBase64: Buffer.from(new Uint8Array(floats.buffer)).toString('base64'),
     colorsBase64: Buffer.from(colors).toString('base64'),
     sizesBase64: Buffer.from(new Uint8Array(sizes.buffer)).toString('base64'),
     outlinesBase64: Buffer.from(outlines).toString('base64'),
     detailsBase64: Buffer.from(details).toString('base64'),
+    shapesBase64: Buffer.from(shapes).toString('base64'),
+    anglesBase64: Buffer.from(angles).toString('base64'),
+    aspectsBase64: Buffer.from(aspects).toString('base64'),
   };
 }
 
 function formatStats(stats) {
-  return `{ count: ${stats.count}, head: ${stats.headCount}, eyes: ${stats.eyeCount}, leftEye: ${stats.leftEyeCount}, rightEye: ${stats.rightEyeCount}, nose: ${stats.noseCount}, outline: ${stats.outlineCount}, rim: ${stats.rimCount}, contrast: ${stats.contrastCount}, colorVariance: ${stats.colorVarianceCount}, fineSize: ${stats.fineSizeCount}, broadSize: ${stats.broadSizeCount}, minSize: ${stats.minSize.toFixed(3)}, maxSize: ${stats.maxSize.toFixed(3)}, avgSize: ${stats.avgSize.toFixed(3)}, minLum: ${stats.minLum.toFixed(3)}, maxLum: ${stats.maxLum.toFixed(3)}, avgLum: ${stats.avgLum.toFixed(3)}, leftEyeCentroid: ${formatCentroid(stats.leftEyeCentroid)}, rightEyeCentroid: ${formatCentroid(stats.rightEyeCentroid)} }`;
+  return `{ count: ${stats.count}, head: ${stats.headCount}, eyes: ${stats.eyeCount}, leftEye: ${stats.leftEyeCount}, rightEye: ${stats.rightEyeCount}, nose: ${stats.noseCount}, paws: ${stats.pawCount}, upperPaw: ${stats.upperPawCount}, lowerPaw: ${stats.lowerPawCount}, sidePaw: ${stats.sidePawCount}, outline: ${stats.outlineCount}, rim: ${stats.rimCount}, contrast: ${stats.contrastCount}, colorVariance: ${stats.colorVarianceCount}, shapes: { circles: ${stats.circleShapeCount}, pebbles: ${stats.pebbleShapeCount}, dashes: ${stats.dashShapeCount}, contours: ${stats.contourShapeCount} }, fineSize: ${stats.fineSizeCount}, broadSize: ${stats.broadSizeCount}, minSize: ${stats.minSize.toFixed(3)}, maxSize: ${stats.maxSize.toFixed(3)}, avgSize: ${stats.avgSize.toFixed(3)}, minDepth: ${stats.minDepth.toFixed(3)}, maxDepth: ${stats.maxDepth.toFixed(3)}, avgDepth: ${stats.avgDepth.toFixed(3)}, minLum: ${stats.minLum.toFixed(3)}, maxLum: ${stats.maxLum.toFixed(3)}, avgLum: ${stats.avgLum.toFixed(3)}, leftEyeCentroid: ${formatCentroid(stats.leftEyeCentroid)}, rightEyeCentroid: ${formatCentroid(stats.rightEyeCentroid)}, pawCentroid: ${formatCentroid(stats.pawCentroid)}, upperPawCentroid: ${formatCentroid(stats.upperPawCentroid)}, lowerPawCentroid: ${formatCentroid(stats.lowerPawCentroid)}, sidePawCentroid: ${formatCentroid(stats.sidePawCentroid)} }`;
 }
 
 function formatStatsForLog(stats) {
-  return `count=${stats.count}, head=${stats.headCount}, eyes=${stats.eyeCount} (L=${stats.leftEyeCount} ${formatCentroidForLog(stats.leftEyeCentroid)}, R=${stats.rightEyeCount} ${formatCentroidForLog(stats.rightEyeCentroid)}), nose=${stats.noseCount}, outline=${stats.outlineCount}, rim=${stats.rimCount}, contrast=${stats.contrastCount}, colorVariance=${stats.colorVarianceCount}, size=${stats.minSize.toFixed(3)}/${stats.avgSize.toFixed(3)}/${stats.maxSize.toFixed(3)}, fine=${stats.fineSizeCount}, broad=${stats.broadSizeCount}, lum=${stats.minLum.toFixed(3)}/${stats.avgLum.toFixed(3)}/${stats.maxLum.toFixed(3)}`;
+  return `count=${stats.count}, head=${stats.headCount}, eyes=${stats.eyeCount} (L=${stats.leftEyeCount} ${formatCentroidForLog(stats.leftEyeCentroid)}, R=${stats.rightEyeCount} ${formatCentroidForLog(stats.rightEyeCentroid)}), nose=${stats.noseCount}, paws=${stats.pawCount} (upper=${stats.upperPawCount} ${formatCentroidForLog(stats.upperPawCentroid)}, lower=${stats.lowerPawCount} ${formatCentroidForLog(stats.lowerPawCentroid)}, side=${stats.sidePawCount} ${formatCentroidForLog(stats.sidePawCentroid)}), outline=${stats.outlineCount}, rim=${stats.rimCount}, shapes=${stats.circleShapeCount}/${stats.pebbleShapeCount}/${stats.dashShapeCount}/${stats.contourShapeCount}, contrast=${stats.contrastCount}, colorVariance=${stats.colorVarianceCount}, size=${stats.minSize.toFixed(3)}/${stats.avgSize.toFixed(3)}/${stats.maxSize.toFixed(3)}, depth=${stats.minDepth.toFixed(3)}/${stats.avgDepth.toFixed(3)}/${stats.maxDepth.toFixed(3)}, fine=${stats.fineSizeCount}, broad=${stats.broadSizeCount}, lum=${stats.minLum.toFixed(3)}/${stats.avgLum.toFixed(3)}/${stats.maxLum.toFixed(3)}`;
 }
 
 function formatCentroid(centroid) {

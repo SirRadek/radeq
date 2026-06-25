@@ -9,11 +9,21 @@ interface Props {
 
 const { content = homeContent.cs.problems, lang = 'cs' } = Astro.props;
 const items = content.items;
+const carouselCloneCount = Math.min(3, items.length);
+const leadingCarouselClones = items.slice(-carouselCloneCount).map((item, cloneIndex) => ({
+  item,
+  realIndex: items.length - carouselCloneCount + cloneIndex,
+}));
+const trailingCarouselClones = items.slice(0, carouselCloneCount).map((item, realIndex) => ({
+  item,
+  realIndex,
+}));
 const stars = Array.from({ length: 5 });
 const panelFrameLabels = lang === 'en'
   ? { scene: 'SCENE', genre: 'GENRE' }
   : { scene: 'SCÉNA', genre: 'ŽÁNR' };
 const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
+const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-problem-genre-color: ${item.genreColor}; --rq-poster-seed: ${index % 3}px; --rq-poster-offset-x: ${index * 17}px; --rq-poster-offset-y: ${index * -11}px; --rq-poster-perf-offset: ${(index % 5) * 3}px;`;
 ---
 
 <section class="rq-section rq-problem-diagnostic" id="co-resim" aria-labelledby="rq-problem-diagnostic-title" data-rq-problem-diagnostic data-rq-active-index="0" data-rq-locale={lang}>
@@ -36,7 +46,7 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
 
       <div class="rq-problem-diagnostic__board">
         <div class="rq-problem-diagnostic__stage" aria-label={content.controlsAriaLabel}>
-          <button class="rq-problem-diagnostic__nav rq-problem-diagnostic__nav--prev" type="button" aria-label={content.previousLabel} data-rq-problem-prev disabled>
+          <button class="rq-problem-diagnostic__nav rq-problem-diagnostic__nav--prev" type="button" aria-label={content.previousLabel} data-rq-problem-prev>
             <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
               <path d="M15 5 8 12l7 7"></path>
             </svg>
@@ -44,8 +54,52 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
 
           <div class="rq-problem-diagnostic__carousel-scene" data-rq-problem-carousel aria-describedby="rq-problem-severity-legend">
         <ul class="rq-problem-diagnostic__filmstrip" role="tablist" aria-label={content.carouselAriaLabel}>
+          {leadingCarouselClones.map(({ item, realIndex }) => (
+            <li
+              class:list={['rq-problem-diagnostic__frame', item.role === 'lead' && 'rq-problem-diagnostic__frame--lead']}
+              role="presentation"
+              aria-hidden="true"
+              tabindex="-1"
+              data-rq-problem-clone
+              data-rq-problem-clone-side="before"
+              data-rq-problem-real-index={realIndex}
+            >
+              <button
+                class:list={[
+                  'rq-problem-diagnostic__card',
+                  item.role === 'lead' && 'rq-problem-diagnostic__card--lead',
+                ]}
+                type="button"
+                role="presentation"
+                aria-hidden="true"
+                tabindex="-1"
+                inert
+                data-rq-problem-card
+                data-rq-problem-clone
+                data-rq-problem-clone-side="before"
+                data-rq-problem-real-index={realIndex}
+                data-rq-problem-active={realIndex === 0 ? 'true' : 'false'}
+                style={carouselCardStyle(item, realIndex)}
+              >
+                <span class="rq-problem-diagnostic__card-inner">
+                  <span class="rq-problem-diagnostic__poster-meta">
+                    <span class="rq-problem-diagnostic__genre">{item.genre}</span>
+                  </span>
+                  <span class="rq-problem-diagnostic__poster-title">{item.symptom}</span>
+                  <span class="rq-problem-diagnostic__severity">
+                    <span class="rq-sr-only">{content.severitySrPrefix} {item.severity} {content.severitySrSuffix}</span>
+                    <span class="rq-problem-diagnostic__stars" aria-hidden="true">
+                      {stars.map((_, starIndex) => (
+                        <span class:list={['rq-problem-diagnostic__star', starIndex < item.severity && 'is-active']}>★</span>
+                      ))}
+                    </span>
+                  </span>
+                </span>
+              </button>
+            </li>
+          ))}
           {items.map((item, index) => (
-            <li class:list={['rq-problem-diagnostic__frame', item.role === 'lead' && 'rq-problem-diagnostic__frame--lead']} role="presentation">
+            <li class:list={['rq-problem-diagnostic__frame', item.role === 'lead' && 'rq-problem-diagnostic__frame--lead']} role="presentation" data-rq-problem-real-index={index}>
               <button
                 class:list={[
                   'rq-problem-diagnostic__card',
@@ -58,8 +112,54 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
                 aria-controls={`rq-problem-panel-${item.id}`}
                 tabindex={index === 0 ? '0' : '-1'}
                 data-rq-problem-card
+                data-rq-problem-real-index={index}
+                data-rq-problem-active={index === 0 ? 'true' : 'false'}
                 data-rq-problem-genre={item.genreKey}
-                style={`--rq-problem-genre-color: ${item.genreColor}; --rq-poster-seed: ${index % 3}px; --rq-poster-offset-x: ${index * 17}px; --rq-poster-offset-y: ${index * -11}px; --rq-poster-perf-offset: ${(index % 5) * 3}px;`}
+                style={carouselCardStyle(item, index)}
+              >
+                <span class="rq-problem-diagnostic__card-inner">
+                  <span class="rq-problem-diagnostic__poster-meta">
+                    <span class="rq-problem-diagnostic__genre">{item.genre}</span>
+                  </span>
+                  <span class="rq-problem-diagnostic__poster-title">{item.symptom}</span>
+                  <span class="rq-problem-diagnostic__severity">
+                    <span class="rq-sr-only">{content.severitySrPrefix} {item.severity} {content.severitySrSuffix}</span>
+                    <span class="rq-problem-diagnostic__stars" aria-hidden="true">
+                      {stars.map((_, starIndex) => (
+                        <span class:list={['rq-problem-diagnostic__star', starIndex < item.severity && 'is-active']}>★</span>
+                      ))}
+                    </span>
+                  </span>
+                </span>
+              </button>
+            </li>
+          ))}
+          {trailingCarouselClones.map(({ item, realIndex }) => (
+            <li
+              class:list={['rq-problem-diagnostic__frame', item.role === 'lead' && 'rq-problem-diagnostic__frame--lead']}
+              role="presentation"
+              aria-hidden="true"
+              tabindex="-1"
+              data-rq-problem-clone
+              data-rq-problem-clone-side="after"
+              data-rq-problem-real-index={realIndex}
+            >
+              <button
+                class:list={[
+                  'rq-problem-diagnostic__card',
+                  item.role === 'lead' && 'rq-problem-diagnostic__card--lead',
+                ]}
+                type="button"
+                role="presentation"
+                aria-hidden="true"
+                tabindex="-1"
+                inert
+                data-rq-problem-card
+                data-rq-problem-clone
+                data-rq-problem-clone-side="after"
+                data-rq-problem-real-index={realIndex}
+                data-rq-problem-active={realIndex === 0 ? 'true' : 'false'}
+                style={carouselCardStyle(item, realIndex)}
               >
                 <span class="rq-problem-diagnostic__card-inner">
                   <span class="rq-problem-diagnostic__poster-meta">
@@ -441,6 +541,14 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
     scroll-snap-align: center;
   }
 
+  .rq-problem-diagnostic__frame[data-rq-problem-clone] {
+    cursor: pointer;
+  }
+
+  .rq-problem-diagnostic__frame[data-rq-problem-clone] .rq-problem-diagnostic__card {
+    pointer-events: none;
+  }
+
   .rq-problem-diagnostic__frame--lead {
     flex-basis: var(--rq-card-w-lead);
   }
@@ -582,8 +690,8 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
     pointer-events: none;
   }
 
-  .rq-problem-diagnostic__card[data-rq-problem-distance='near']:not([aria-selected='true']) .rq-problem-diagnostic__card-inner,
-  .rq-problem-diagnostic__card[data-rq-problem-distance='far']:not([aria-selected='true']) .rq-problem-diagnostic__card-inner {
+  .rq-problem-diagnostic__card[data-rq-problem-distance='near']:not([data-rq-problem-active='true']) .rq-problem-diagnostic__card-inner,
+  .rq-problem-diagnostic__card[data-rq-problem-distance='far']:not([data-rq-problem-active='true']) .rq-problem-diagnostic__card-inner {
     background:
       linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(94, 25, 38, 0.28) 38%, rgba(45, 13, 19, 0.84)),
       var(--rq-diagnostic-cherry-glass);
@@ -594,7 +702,8 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
     min-block-size: var(--rq-card-h-lead);
   }
 
-  .rq-problem-diagnostic__card[aria-selected='true'] {
+  .rq-problem-diagnostic__card[aria-selected='true'],
+  .rq-problem-diagnostic__card[data-rq-problem-active='true'] {
     --rq-card-lift: -0.25rem;
     --rq-card-depth: 42px;
     --rq-card-rotate: 0deg;
@@ -604,8 +713,8 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
     z-index: 3;
   }
 
-  .rq-problem-diagnostic__card:hover:not([aria-selected='true'])::before,
-  .rq-problem-diagnostic__card:focus-visible:not([aria-selected='true'])::before {
+  .rq-problem-diagnostic__card:hover:not([data-rq-problem-active='true'])::before,
+  .rq-problem-diagnostic__card:focus-visible:not([data-rq-problem-active='true'])::before {
     opacity: 0.42;
   }
 
@@ -615,11 +724,14 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
   }
 
   .rq-problem-diagnostic__card[aria-selected='true']::before,
-  .rq-problem-diagnostic__card[aria-selected='true']::after {
+  .rq-problem-diagnostic__card[aria-selected='true']::after,
+  .rq-problem-diagnostic__card[data-rq-problem-active='true']::before,
+  .rq-problem-diagnostic__card[data-rq-problem-active='true']::after {
     opacity: 1;
   }
 
-  .rq-problem-diagnostic__card[aria-selected='true'] .rq-problem-diagnostic__card-inner {
+  .rq-problem-diagnostic__card[aria-selected='true'] .rq-problem-diagnostic__card-inner,
+  .rq-problem-diagnostic__card[data-rq-problem-active='true'] .rq-problem-diagnostic__card-inner {
     border-color: color-mix(in srgb, var(--rq-diagnostic-accent) 38%, transparent);
     background:
       linear-gradient(160deg, rgba(255, 255, 255, 0.1), rgba(122, 31, 43, 0.32) 40%, rgba(34, 15, 19, 0.9));
@@ -659,13 +771,14 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
       inset 0 1px 0 rgba(255, 255, 255, 0.13);
   }
 
-  .rq-problem-diagnostic__card[aria-selected='true'] .rq-problem-diagnostic__poster-title {
+  .rq-problem-diagnostic__card[aria-selected='true'] .rq-problem-diagnostic__poster-title,
+  .rq-problem-diagnostic__card[data-rq-problem-active='true'] .rq-problem-diagnostic__poster-title {
     color: var(--rq-diagnostic-accent);
     text-shadow: 0 0 16px color-mix(in srgb, var(--rq-diagnostic-accent) 26%, transparent);
   }
 
-  .rq-problem-diagnostic__filmstrip:has(.rq-problem-diagnostic__card:hover) .rq-problem-diagnostic__card:not(:hover):not([aria-selected='true']),
-  .rq-problem-diagnostic__filmstrip:has(.rq-problem-diagnostic__card:focus-visible) .rq-problem-diagnostic__card:not(:focus-visible):not([aria-selected='true']) {
+  .rq-problem-diagnostic__filmstrip:has(.rq-problem-diagnostic__card:hover) .rq-problem-diagnostic__card:not(:hover):not([data-rq-problem-active='true']),
+  .rq-problem-diagnostic__filmstrip:has(.rq-problem-diagnostic__card:focus-visible) .rq-problem-diagnostic__card:not(:focus-visible):not([data-rq-problem-active='true']) {
     opacity: 0.38;
   }
 
@@ -743,7 +856,8 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
     text-shadow: 0 0 8px rgba(229, 196, 83, 0.4);
   }
 
-  .rq-problem-diagnostic__card[aria-selected='true'] .rq-problem-diagnostic__star.is-active {
+  .rq-problem-diagnostic__card[aria-selected='true'] .rq-problem-diagnostic__star.is-active,
+  .rq-problem-diagnostic__card[data-rq-problem-active='true'] .rq-problem-diagnostic__star.is-active {
     color: var(--rq-diagnostic-accent);
     text-shadow: 0 0 8px rgba(229, 196, 83, 0.4);
   }
@@ -1120,7 +1234,8 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
       --rq-card-depth: -34px;
     }
 
-    .rq-problem-diagnostic__card[aria-selected='true'] {
+    .rq-problem-diagnostic__card[aria-selected='true'],
+    .rq-problem-diagnostic__card[data-rq-problem-active='true'] {
       --rq-card-lift: 0;
       --rq-card-depth: 18px;
     }
@@ -1243,10 +1358,12 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
 
     .rq-problem-diagnostic__card,
     .rq-problem-diagnostic__card[aria-selected='true'],
+    .rq-problem-diagnostic__card[data-rq-problem-active='true'],
     .rq-problem-diagnostic__card:hover,
     .rq-problem-diagnostic__card:focus-visible,
     .rq-problem-diagnostic__card-inner,
     .rq-problem-diagnostic__card[aria-selected='true'] .rq-problem-diagnostic__card-inner,
+    .rq-problem-diagnostic__card[data-rq-problem-active='true'] .rq-problem-diagnostic__card-inner,
     .rq-problem-diagnostic__card:hover .rq-problem-diagnostic__card-inner,
     .rq-problem-diagnostic__card:focus-visible .rq-problem-diagnostic__card-inner,
     .rq-problem-diagnostic__panel {
@@ -1258,7 +1375,8 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
       opacity: 0.72;
     }
 
-    .rq-problem-diagnostic__card[aria-selected='true'] {
+    .rq-problem-diagnostic__card[aria-selected='true'],
+    .rq-problem-diagnostic__card[data-rq-problem-active='true'] {
       opacity: 1;
     }
   }
@@ -1275,7 +1393,8 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
 
     const carousel = root.querySelector('[data-rq-problem-carousel]');
     const output = root.querySelector('[data-rq-problem-output]');
-    const cards = Array.from(root.querySelectorAll('[data-rq-problem-card]'));
+    const allCards = Array.from(root.querySelectorAll('[data-rq-problem-card]'));
+    const cards = allCards.filter((card) => !card.hasAttribute('data-rq-problem-clone'));
     const panels = Array.from(root.querySelectorAll('[data-rq-problem-panel]'));
     const prevButton = root.querySelector('[data-rq-problem-prev]');
     const nextButton = root.querySelector('[data-rq-problem-next]');
@@ -1289,6 +1408,7 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
     let scrollSettleTimer = 0;
     let panelTimer = 0;
     let coverflowFrame = 0;
+    let isLoopJumping = false;
 
     const markInteracted = () => {
       userHasInteracted = true;
@@ -1313,9 +1433,29 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
       coverflowFrame = 0;
     };
 
+    const prefersReducedMotion = () => reducedMotionQuery?.matches === true;
+
+    const normalizeIndex = (index) => {
+      const count = cards.length;
+      return ((index % count) + count) % count;
+    };
+
+    const isCloneCard = (card) => card instanceof HTMLElement && card.hasAttribute('data-rq-problem-clone');
+
+    const readRealIndex = (card) => {
+      const index = Number(card?.getAttribute('data-rq-problem-real-index'));
+      return Number.isInteger(index) && index >= 0 && index < cards.length ? index : 0;
+    };
+
+    const findLoopClone = (realIndex, side) => allCards.find((card) => (
+      isCloneCard(card)
+        && card.getAttribute('data-rq-problem-clone-side') === side
+        && readRealIndex(card) === realIndex
+    ));
+
     const updateNav = () => {
-      prevButton?.toggleAttribute('disabled', activeIndex === 0);
-      nextButton?.toggleAttribute('disabled', activeIndex === cards.length - 1);
+      prevButton?.removeAttribute('disabled');
+      nextButton?.removeAttribute('disabled');
     };
 
     const animatePanel = () => {
@@ -1330,11 +1470,20 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
       }, 360);
     };
 
-    const scrollCardIntoView = (index) => {
-      cards[index]?.scrollIntoView({
-        behavior: reducedMotionQuery?.matches ? 'auto' : 'smooth',
-        block: 'nearest',
-        inline: 'center',
+    const scrollCardIntoView = (index, options = {}) => {
+      const card = options.card instanceof HTMLElement ? options.card : cards[index];
+      if (!(card instanceof HTMLElement)) return;
+
+      const carouselRect = carousel.getBoundingClientRect();
+      const cardRect = card.getBoundingClientRect();
+      const left = carousel.scrollLeft
+        + cardRect.left
+        - carouselRect.left
+        - (carouselRect.width - cardRect.width) / 2;
+
+      carousel.scrollTo({
+        left,
+        behavior: options.instant || prefersReducedMotion() ? 'auto' : 'smooth',
       });
     };
 
@@ -1366,11 +1515,13 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
       const carouselRect = carousel.getBoundingClientRect();
       const carouselCenter = carouselRect.left + carouselRect.width / 2;
       const renderRange = carouselRect.width * 0.9;
-      const reducedMotion = reducedMotionQuery?.matches === true;
+      const reducedMotion = prefersReducedMotion();
 
-      cards.forEach((card, index) => {
+      allCards.forEach((card) => {
         if (!(card instanceof HTMLElement)) return;
 
+        const realIndex = readRealIndex(card);
+        const isActive = realIndex === activeIndex;
         const rect = card.getBoundingClientRect();
         const cardWidth = Math.max(rect.width, 1);
         const cardCenter = rect.left + rect.width / 2;
@@ -1378,13 +1529,13 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
         const absRawDistance = Math.abs(rawDistance);
 
         if (reducedMotion) {
-          card.setAttribute('data-rq-problem-distance', index === activeIndex ? 'active' : 'near');
+          card.setAttribute('data-rq-problem-distance', isActive ? 'active' : 'near');
           setCardCoverflow(card, {
             rotate: 0,
             lift: 0,
             depth: 0,
             scale: 1,
-            opacity: index === activeIndex ? 1 : 0.72,
+            opacity: isActive ? 1 : 0.72,
             saturate: 1,
           });
           return;
@@ -1408,9 +1559,8 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
 
         const distance = Math.max(-2.6, Math.min(2.6, rawDistance));
         const absDistance = Math.abs(distance);
-        const isActive = index === activeIndex;
 
-        card.setAttribute('data-rq-problem-distance', absDistance > 2 ? 'far' : 'near');
+        card.setAttribute('data-rq-problem-distance', isActive ? 'active' : absDistance > 2 ? 'far' : 'near');
         setCardCoverflow(card, {
           rotate: rotationFromDistance(distance),
           lift: isActive ? -0.25 : Math.min(absDistance * 0.42, 0.95),
@@ -1428,7 +1578,7 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
     };
 
     const activate = (nextIndex, options = {}) => {
-      const safeIndex = Math.max(0, Math.min(nextIndex, cards.length - 1));
+      const safeIndex = normalizeIndex(nextIndex);
       const previousIndex = activeIndex;
       const shouldAnimate = safeIndex !== activeIndex || options.forceAnimation;
 
@@ -1436,6 +1586,17 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
 
       activeIndex = safeIndex;
       root.dataset.rqActiveIndex = String(activeIndex);
+
+      allCards.forEach((card) => {
+        const isActive = readRealIndex(card) === activeIndex;
+        card.setAttribute('data-rq-problem-active', String(isActive));
+
+        if (!isCloneCard(card)) return;
+        card.setAttribute('aria-hidden', 'true');
+        card.setAttribute('role', 'presentation');
+        card.setAttribute('tabindex', '-1');
+        card.toggleAttribute('inert', true);
+      });
 
       cards.forEach((card, index) => {
         const isActive = index === activeIndex;
@@ -1464,7 +1625,10 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
         }));
       }
       if (shouldAnimate) animatePanel();
-      if (options.scroll) scrollCardIntoView(activeIndex);
+      if (options.scroll) scrollCardIntoView(activeIndex, {
+        card: options.scrollTarget,
+        instant: options.instant,
+      });
       if (options.focus) cards[activeIndex]?.focus({ preventScroll: true });
     };
 
@@ -1488,36 +1652,68 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
       }
     });
 
-    const closestCardIndex = () => {
+    const closestCardInfo = () => {
       const carouselRect = carousel.getBoundingClientRect();
       const carouselCenter = carouselRect.left + carouselRect.width / 2;
-      let closestIndex = activeIndex;
+      let closest = {
+        card: cards[activeIndex],
+        isClone: false,
+        realIndex: activeIndex,
+      };
       let closestDistance = Number.POSITIVE_INFINITY;
 
-      cards.forEach((card, index) => {
+      allCards.forEach((card) => {
+        if (!(card instanceof HTMLElement)) return;
+
         const rect = card.getBoundingClientRect();
         const cardCenter = rect.left + rect.width / 2;
         const distance = Math.abs(cardCenter - carouselCenter);
 
         if (distance < closestDistance) {
           closestDistance = distance;
-          closestIndex = index;
+          closest = {
+            card,
+            isClone: isCloneCard(card),
+            realIndex: readRealIndex(card),
+          };
         }
       });
 
-      return closestIndex;
+      return closest;
+    };
+
+    const silentJumpToRealCard = (realIndex) => {
+      const card = cards[realIndex];
+      if (!(card instanceof HTMLElement)) return;
+
+      isLoopJumping = true;
+      clearScrollTimer();
+      root.classList.remove('is-scrolling');
+      scrollCardIntoView(realIndex, { card, instant: true });
+
+      window.requestAnimationFrame(() => {
+        isLoopJumping = false;
+        requestCoverflow();
+      });
     };
 
     const settleScroll = () => {
       clearScrollTimer();
       root.classList.remove('is-scrolling');
 
+      if (isLoopJumping) return;
       if (!diagnosticInView || document.hidden) return;
-      activate(closestCardIndex(), { interacted: userHasInteracted });
+      const closest = closestCardInfo();
+      activate(closest.realIndex, { interacted: userHasInteracted });
+      if (closest.isClone) {
+        silentJumpToRealCard(closest.realIndex);
+        return;
+      }
       requestCoverflow();
     };
 
     const scheduleScrollSettle = () => {
+      if (isLoopJumping) return;
       if (!diagnosticInView || document.hidden) return;
 
       root.classList.add('is-scrolling');
@@ -1527,11 +1723,16 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
     };
 
     const moveBy = (direction, options = {}) => {
-      const nextIndex = Math.max(0, Math.min(activeIndex + direction, cards.length - 1));
+      const rawIndex = activeIndex + direction;
+      const nextIndex = normalizeIndex(rawIndex);
+      const loopSide = rawIndex < 0 ? 'before' : rawIndex >= cards.length ? 'after' : '';
+      const scrollTarget = loopSide ? findLoopClone(nextIndex, loopSide) || cards[nextIndex] : cards[nextIndex];
+
       activate(nextIndex, {
         interacted: true,
         scroll: true,
         focus: options.focus,
+        scrollTarget,
       });
     };
 
@@ -1542,11 +1743,14 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
 
       const card = frame.querySelector('[data-rq-problem-card]');
       if (!(card instanceof HTMLElement)) return;
-      const index = cards.indexOf(card);
-      if (index < 0) return;
+      const index = readRealIndex(card);
       if (card.getAttribute('data-rq-problem-distance') === 'hidden') return;
 
-      activate(index, { interacted: true, scroll: true });
+      activate(index, {
+        interacted: true,
+        scroll: true,
+        scrollTarget: card,
+      });
     });
 
     cards.forEach((card, index) => {
@@ -1594,13 +1798,13 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
       clearScrollTimer();
       root.classList.remove('is-scrolling');
       requestCoverflow();
-      if (diagnosticInView) scrollCardIntoView(activeIndex);
+      if (diagnosticInView) scrollCardIntoView(activeIndex, { instant: true });
     };
 
     const handleReducedMotionChange = () => {
       root.classList.remove('is-scrolling');
       requestCoverflow();
-      if (diagnosticInView) scrollCardIntoView(activeIndex);
+      if (diagnosticInView) scrollCardIntoView(activeIndex, { instant: true });
     };
 
     window.addEventListener('resize', handleResize, { passive: true });
@@ -1623,7 +1827,12 @@ const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
       },
     });
 
-    activate(0, { forceAnimation: false });
+    activate(0, { forceAnimation: false, scroll: true, instant: true });
+
+    window.requestAnimationFrame(() => {
+      scrollCardIntoView(activeIndex, { instant: true });
+      requestCoverflow();
+    });
 
     window.addEventListener('pagehide', () => {
       clearScrollTimer();

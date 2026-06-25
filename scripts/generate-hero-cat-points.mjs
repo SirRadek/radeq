@@ -9,8 +9,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const sourcePath = process.argv[2] || 'C:/Users/sirok/Downloads/kocka_body_3d.html';
 const outputPath = resolve(__dirname, '../src/data/heroCatPoints.ts');
 const sourceStep = 2;
-const desktopTarget = 8400;
-const lowPowerTarget = 3000;
+const desktopTarget = 16800;
+const lowPowerTarget = 6000;
 
 const html = await readFile(sourcePath, 'utf8');
 const imgMatch = html.match(/const\s+IMG\s*=\s*"([^"]+)"/);

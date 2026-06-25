@@ -213,6 +213,7 @@ const schema = {
           BufferAttribute,
           BufferGeometry,
           Color,
+          DynamicDrawUsage,
           Group,
           PerspectiveCamera,
           Points,
@@ -230,6 +231,7 @@ const schema = {
           HERO_CAT_MAX_POINTS_BASE64,
           HERO_CAT_MAX_SIZES_BASE64,
           HERO_CAT_SIZES_BASE64,
+          HERO_CAT_SIZE_RANGE,
           HERO_CAT_LOW_POWER_COLORS_BASE64,
           HERO_CAT_LOW_POWER_DETAIL_BASE64,
           HERO_CAT_LOW_POWER_POINT_COUNT,
@@ -290,22 +292,41 @@ const schema = {
         const pointPixelSize = qualityMode === 'max'
           ? 3.05
           : qualityMode === 'desktop'
-            ? 3.55
+            ? 3.15
             : qualityMode === 'low'
-              ? 4.65
-              : 5.4;
-        const basePositions = decodeFloat32Base64(pointSource.positions);
-        const pointColors = decodeUint8Base64(pointSource.colors);
-        const bakedPointSizes = decodeFloat32Base64(pointSource.sizes);
-        const pointDetail = decodeUint8Base64(pointSource.details);
-        const pointCount = Math.min(
+              ? 5.05
+              : 5.85;
+        const decodedPositions = decodeFloat32Base64(pointSource.positions);
+        const decodedColors = decodeUint8Base64(pointSource.colors);
+        const decodedPointSizes = decodeUint8Base64(pointSource.sizes);
+        const decodedPointDetail = decodeUint8Base64(pointSource.details);
+        const targetPointCount = Math.min(
           pointSource.targetCount,
-          Math.floor(basePositions.length / 3),
-          Math.floor(pointColors.length / 3),
-          bakedPointSizes.length,
-          pointDetail.length,
+          Math.floor(decodedPositions.length / 3),
+          Math.floor(decodedColors.length / 3),
+          decodedPointSizes.length,
+          decodedPointDetail.length,
         );
-        const pointSizes = bakedPointSizes.subarray(0, pointCount);
+        const decodedPointCount = Math.min(
+          Math.floor(decodedPositions.length / 3),
+          Math.floor(decodedColors.length / 3),
+          decodedPointSizes.length,
+          decodedPointDetail.length,
+        );
+        const pointData = selectPointData(
+          decodedPositions,
+          decodedColors,
+          decodedPointSizes,
+          decodedPointDetail,
+          decodedPointCount,
+          targetPointCount,
+          qualityMode,
+        );
+        const basePositions = pointData.positions;
+        const pointColors = pointData.colors;
+        const pointSizes = pointData.sizes;
+        const pointDetail = pointData.details;
+        const pointCount = pointData.count;
         const homePositions = new Float32Array(pointCount * 3);
         const positions = new Float32Array(pointCount * 3);
         const pointAlpha = new Float32Array(pointCount);
@@ -321,6 +342,9 @@ const schema = {
         const pointer = { x: 0, y: 0, active: false, coarse: false, id: null };
         const projection = new Vector3();
         let scatterSettled = true;
+        const scatterPointLimit = lowPower ? pointCount : Math.min(pointCount, 36000);
+        const scatterIndices = buildScatterIndices(scatterPointLimit);
+        const scatterCount = scatterIndices ? scatterIndices.length : pointCount;
 
         camera.position.z = refDepth;
         renderer.setClearColor(bgColor, 0);
@@ -341,9 +365,11 @@ const schema = {
         let staticRendered = false;
 
         seedPointAttributes();
-        pointGeometry.setAttribute('position', new BufferAttribute(positions, 3));
+        const positionAttribute = new BufferAttribute(positions, 3);
+        positionAttribute.setUsage(DynamicDrawUsage);
+        pointGeometry.setAttribute('position', positionAttribute);
         pointGeometry.setAttribute('acolor', new BufferAttribute(pointColors, 3, true));
-        pointGeometry.setAttribute('aSize', new BufferAttribute(pointSizes, 1));
+        pointGeometry.setAttribute('aSize', new BufferAttribute(pointSizes, 1, true));
         pointGeometry.setAttribute('aAlpha', new BufferAttribute(pointAlpha, 1));
         pointGeometry.setAttribute('aDetail', new BufferAttribute(pointDetail, 1, true));
 
@@ -357,6 +383,8 @@ const schema = {
             uDpr: { value: dpr() },
             uRef: { value: refDepth },
             uSize: { value: pointPixelSize },
+            uSizeMin: { value: HERO_CAT_SIZE_RANGE?.min ?? 0.5 },
+            uSizeRange: { value: (HERO_CAT_SIZE_RANGE?.max ?? 1.2) - (HERO_CAT_SIZE_RANGE?.min ?? 0.5) },
             uSaturation: { value: 1 },
             uContrast: { value: 1 },
           },
@@ -368,6 +396,8 @@ const schema = {
             uniform float uDpr;
             uniform float uRef;
             uniform float uSize;
+            uniform float uSizeMin;
+            uniform float uSizeRange;
             varying vec3 vColor;
             varying float vAlpha;
             varying float vDetail;
@@ -381,7 +411,7 @@ const schema = {
               vDetail = aDetail;
               vDepth = clamp(position.z * 0.035 + 0.5, 0.0, 1.0);
               gl_Position = projectionMatrix * mvPosition;
-              gl_PointSize = uSize * aSize * uDpr * (uRef / depth);
+              gl_PointSize = uSize * (uSizeMin + aSize * uSizeRange) * uDpr * (uRef / depth);
             }
           `,
           fragmentShader: `
@@ -453,6 +483,50 @@ const schema = {
           return bytes;
         }
 
+        function selectPointData(sourcePositions, sourceColors, sourceSizes, sourceDetails, sourceCount, targetCount, salt) {
+          const count = Math.min(sourceCount, Math.max(0, targetCount));
+          if (count >= sourceCount) {
+            return {
+              positions: sourcePositions.subarray(0, sourceCount * 3),
+              colors: sourceColors.subarray(0, sourceCount * 3),
+              sizes: sourceSizes.subarray(0, sourceCount),
+              details: sourceDetails.subarray(0, sourceCount),
+              count: sourceCount,
+            };
+          }
+
+          const positions = new Float32Array(count * 3);
+          const colors = new Uint8Array(count * 3);
+          const sizes = new Uint8Array(count);
+          const details = new Uint8Array(count);
+          const bucketSize = sourceCount / Math.max(1, count);
+          const saltValue = salt === 'ultra' ? 193 : salt === 'low' ? 97 : 31;
+
+          for (let index = 0; index < count; index += 1) {
+            const start = Math.floor(index * bucketSize);
+            const end = Math.min(sourceCount - 1, Math.floor((index + 1) * bucketSize) - 1);
+            const span = Math.max(1, end - start + 1);
+            const sourceBaseOffset = start * 3;
+            const pick = start + Math.min(
+              span - 1,
+              Math.floor(noise(start + saltValue, sourcePositions[sourceBaseOffset], sourcePositions[sourceBaseOffset + 1]) * span),
+            );
+            const sourceOffset = pick * 3;
+            const targetOffset = index * 3;
+
+            positions[targetOffset] = sourcePositions[sourceOffset];
+            positions[targetOffset + 1] = sourcePositions[sourceOffset + 1];
+            positions[targetOffset + 2] = sourcePositions[sourceOffset + 2];
+            colors[targetOffset] = sourceColors[sourceOffset];
+            colors[targetOffset + 1] = sourceColors[sourceOffset + 1];
+            colors[targetOffset + 2] = sourceColors[sourceOffset + 2];
+            sizes[index] = sourceSizes[pick];
+            details[index] = sourceDetails[pick];
+          }
+
+          return { positions, colors, sizes, details, count };
+        }
+
         function clamp01(value) {
           return Math.max(0, Math.min(1, value));
         }
@@ -460,6 +534,23 @@ const schema = {
         function noise(index, x, y) {
           const value = Math.sin((index + 1) * 12.9898 + x * 78.233 + y * 37.719) * 43758.5453;
           return value - Math.floor(value);
+        }
+
+        function buildScatterIndices(limit) {
+          const targetCount = Math.max(1, Math.floor(limit));
+          if (targetCount >= pointCount) return null;
+
+          const indices = new Uint32Array(targetCount);
+          const bucketSize = pointCount / targetCount;
+          for (let index = 0; index < targetCount; index += 1) {
+            const start = Math.floor(index * bucketSize);
+            const end = Math.min(pointCount - 1, Math.floor((index + 1) * bucketSize) - 1);
+            const span = Math.max(1, end - start + 1);
+            const offset = start * 3;
+            const jitter = Math.floor(noise(start, basePositions[offset], basePositions[offset + 1]) * span);
+            indices[index] = start + Math.min(span - 1, jitter);
+          }
+          return indices;
         }
 
         function seedPointAttributes() {
@@ -623,7 +714,8 @@ const schema = {
             points.updateMatrixWorld(true);
           }
 
-          for (let index = 0; index < pointCount; index += 1) {
+          for (let scatterIndex = 0; scatterIndex < scatterCount; scatterIndex += 1) {
+            const index = scatterIndices ? scatterIndices[scatterIndex] : scatterIndex;
             const offset = index * 3;
             const homeX = homePositions[offset];
             const homeY = homePositions[offset + 1];

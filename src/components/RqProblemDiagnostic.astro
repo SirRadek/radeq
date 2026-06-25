@@ -20,9 +20,8 @@ const trailingCarouselClones = items.slice(0, carouselCloneCount).map((item, rea
 }));
 const stars = Array.from({ length: 5 });
 const panelFrameLabels = lang === 'en'
-  ? { scene: 'SCENE', genre: 'GENRE' }
-  : { scene: 'SCÉNA', genre: 'ŽÁNR' };
-const sceneNumber = (index: number) => String(index + 1).padStart(2, '0');
+  ? { genre: 'GENRE' }
+  : { genre: 'ŽÁNR' };
 const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-problem-genre-color: ${item.genreColor}; --rq-poster-seed: ${index % 3}px; --rq-poster-offset-x: ${index * 17}px; --rq-poster-offset-y: ${index * -11}px; --rq-poster-perf-offset: ${(index % 5) * 3}px;`;
 ---
 
@@ -79,6 +78,7 @@ const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-p
                 data-rq-problem-clone-side="before"
                 data-rq-problem-real-index={realIndex}
                 data-rq-problem-active={realIndex === 0 ? 'true' : 'false'}
+                data-rq-problem-pixel-variant={realIndex % 3}
                 style={carouselCardStyle(item, realIndex)}
               >
                 <span class="rq-problem-diagnostic__card-inner">
@@ -115,6 +115,7 @@ const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-p
                 data-rq-problem-real-index={index}
                 data-rq-problem-active={index === 0 ? 'true' : 'false'}
                 data-rq-problem-genre={item.genreKey}
+                data-rq-problem-pixel-variant={index % 3}
                 style={carouselCardStyle(item, index)}
               >
                 <span class="rq-problem-diagnostic__card-inner">
@@ -159,6 +160,7 @@ const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-p
                 data-rq-problem-clone-side="after"
                 data-rq-problem-real-index={realIndex}
                 data-rq-problem-active={realIndex === 0 ? 'true' : 'false'}
+                data-rq-problem-pixel-variant={realIndex % 3}
                 style={carouselCardStyle(item, realIndex)}
               >
                 <span class="rq-problem-diagnostic__card-inner">
@@ -212,7 +214,6 @@ const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-p
             <div class="rq-problem-diagnostic__script-sheet">
               <div class="rq-problem-diagnostic__panel-top">
                 <h3>
-                  <span class="rq-problem-diagnostic__scene-number">{panelFrameLabels.scene} {sceneNumber(index)}:</span>
                   <span class="rq-problem-diagnostic__scene-title">{item.symptom}</span>
                 </h3>
                 <div class="rq-problem-diagnostic__panel-badges">
@@ -220,7 +221,6 @@ const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-p
                     <span>{panelFrameLabels.genre}</span>
                     {item.genre}
                   </span>
-                  <span class="rq-problem-diagnostic__solution-label">{content.solutionLabel}</span>
                 </div>
               </div>
               <dl class="rq-problem-diagnostic__findings">
@@ -272,6 +272,9 @@ const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-p
     --rq-diagnostic-accent: #E5C453;
     --rq-diagnostic-accent-ink: #2A1705;
     --rq-diagnostic-accent-soft: rgba(229, 196, 83, 0.18);
+    --rq-poster-pixel-a: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Cpath%20fill='%23fff8d6'%20fill-opacity='.82'%20d='M2%202h2v2H2zM10%202h2v2h-2zM18%204h2v2h-2zM4%2010h2v2H4zM14%2012h2v2h-2zM20%2018h2v2h-2zM8%2020h2v2H8z'/%3E%3Cpath%20fill='%23e5c453'%20fill-opacity='.72'%20d='M6%204h2v2H6zM16%208h2v2h-2zM2%2016h2v2H2zM12%2020h2v2h-2z'/%3E%3C/svg%3E");
+    --rq-poster-pixel-b: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Cpath%20fill='%23fff3c2'%20fill-opacity='.78'%20d='M4%202h2v2H4zM14%202h2v2h-2zM20%206h2v2h-2zM8%208h2v2H8zM2%2012h2v2H2zM16%2014h2v2h-2zM10%2018h2v2h-2z'/%3E%3Cpath%20fill='%23f3d66a'%20fill-opacity='.66'%20d='M12%206h2v2h-2zM4%2016h2v2H4zM20%2020h2v2h-2zM18%2010h2v2h-2z'/%3E%3C/svg%3E");
+    --rq-poster-pixel-c: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Cpath%20fill='%23ffe8a3'%20fill-opacity='.74'%20d='M2%204h2v2H2zM12%204h2v2h-2zM6%208h2v2H6zM18%208h2v2h-2zM10%2012h2v2h-2zM20%2014h2v2h-2zM4%2020h2v2H4z'/%3E%3Cpath%20fill='%23fff9df'%20fill-opacity='.7'%20d='M16%202h2v2h-2zM2%2010h2v2H2zM14%2016h2v2h-2zM8%2018h2v2H8z'/%3E%3C/svg%3E");
     --rq-cinema-display: 'Oswald', 'Barlow Condensed', system-ui, sans-serif;
     position: relative;
     isolation: isolate;
@@ -356,7 +359,6 @@ const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-p
     line-height: 1.65;
   }
 
-  .rq-problem-diagnostic__solution-label,
   .rq-problem-diagnostic__severity-legend strong {
     font-family: var(--rq-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.78rem;
@@ -400,13 +402,15 @@ const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-p
   }
 
   .rq-problem-diagnostic__board {
+    --rq-diagnostic-board-pad-x: clamp(0.85rem, 2vw, 1.35rem);
+    --rq-diagnostic-board-pad-y: clamp(0.85rem, 2vw, 1.35rem);
     position: relative;
     display: grid;
     gap: clamp(0.7rem, 1.4vw, 1rem);
     min-width: 0;
     border: 1px solid rgba(247, 244, 238, 0.16);
     border-radius: 8px;
-    padding: clamp(0.85rem, 2vw, 1.35rem);
+    padding: var(--rq-diagnostic-board-pad-y) var(--rq-diagnostic-board-pad-x);
     overflow: clip;
     isolation: isolate;
     background:
@@ -441,14 +445,15 @@ const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-p
   .rq-problem-diagnostic__stage {
     position: relative;
     z-index: 1;
-    display: grid;
-    grid-template-columns: 2.9rem minmax(0, 1fr) 2.9rem;
-    align-items: center;
-    gap: clamp(0.45rem, 1.1vw, 0.75rem);
+    display: block;
+    margin-inline: calc(-1 * var(--rq-diagnostic-board-pad-x));
     min-width: 0;
   }
 
   .rq-problem-diagnostic__nav {
+    position: absolute;
+    top: 50%;
+    z-index: 4;
     display: inline-grid;
     width: 2.9rem;
     height: 2.9rem;
@@ -459,7 +464,16 @@ const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-p
     color: var(--rq-diagnostic-accent);
     cursor: pointer;
     box-shadow: none;
+    transform: translateY(-50%);
     transition: border-color 180ms var(--rq-ease), background-color 180ms var(--rq-ease), color 180ms var(--rq-ease), opacity 180ms var(--rq-ease), transform 180ms var(--rq-ease), box-shadow 180ms var(--rq-ease);
+  }
+
+  .rq-problem-diagnostic__nav--prev {
+    left: clamp(0.45rem, 1.2vw, 0.9rem);
+  }
+
+  .rq-problem-diagnostic__nav--next {
+    right: clamp(0.45rem, 1.2vw, 0.9rem);
   }
 
   .rq-problem-diagnostic__nav svg {
@@ -479,7 +493,7 @@ const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-p
     outline: 0;
     background-color: rgba(247, 244, 238, 0.07);
     color: var(--rq-diagnostic-accent);
-    transform: translateY(-1px);
+    transform: translateY(calc(-50% - 1px));
     box-shadow: 0 0 24px color-mix(in srgb, var(--rq-diagnostic-accent) 16%, transparent);
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
@@ -497,7 +511,7 @@ const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-p
     border-color: color-mix(in srgb, var(--rq-diagnostic-accent) 24%, transparent);
     background: transparent;
     box-shadow: none;
-    transform: none;
+    transform: translateY(-50%);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
@@ -560,6 +574,10 @@ const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-p
     --rq-card-scale: 0.84;
     --rq-card-opacity: 0.2;
     --rq-card-saturate: 0.58;
+    --rq-poster-pixel-texture: var(--rq-poster-pixel-a);
+    --rq-poster-pixel-opacity: 0.12;
+    --rq-poster-pixel-grid-opacity: 0.46;
+    --rq-poster-pixel-size: 34px;
     --rq-poster-scan-opacity: 0.3;
     --rq-poster-perf-opacity: 0.26;
     position: relative;
@@ -610,13 +628,27 @@ const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-p
   }
 
   .rq-problem-diagnostic__frame:nth-child(3n + 2) .rq-problem-diagnostic__card {
+    --rq-poster-pixel-opacity: 0.1;
+    --rq-poster-pixel-grid-opacity: 0.4;
     --rq-poster-scan-opacity: 0.26;
     --rq-poster-perf-opacity: 0.2;
   }
 
   .rq-problem-diagnostic__frame:nth-child(3n) .rq-problem-diagnostic__card {
+    --rq-poster-pixel-opacity: 0.14;
+    --rq-poster-pixel-grid-opacity: 0.52;
     --rq-poster-scan-opacity: 0.34;
     --rq-poster-perf-opacity: 0.3;
+  }
+
+  .rq-problem-diagnostic__card[data-rq-problem-pixel-variant='1'] {
+    --rq-poster-pixel-texture: var(--rq-poster-pixel-b);
+    --rq-poster-pixel-size: 38px;
+  }
+
+  .rq-problem-diagnostic__card[data-rq-problem-pixel-variant='2'] {
+    --rq-poster-pixel-texture: var(--rq-poster-pixel-c);
+    --rq-poster-pixel-size: 30px;
   }
 
   .rq-problem-diagnostic__card-inner {
@@ -651,19 +683,23 @@ const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-p
     z-index: 0;
     border-radius: inherit;
     background:
-      repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 4px),
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E"),
+      var(--rq-poster-pixel-texture),
+      repeating-conic-gradient(from 45deg, rgba(255, 248, 214, var(--rq-poster-pixel-grid-opacity)) 0 25%, transparent 0 50%),
+      repeating-linear-gradient(0deg, rgba(255, 255, 255, var(--rq-poster-scan-opacity)) 0 1px, transparent 1px 4px),
       linear-gradient(90deg, color-mix(in srgb, var(--rq-diagnostic-accent) 10%, transparent), transparent 1px);
     background-position:
-      0 var(--rq-poster-seed),
       var(--rq-poster-offset-x) var(--rq-poster-offset-y),
+      calc(var(--rq-poster-offset-x) / 2) var(--rq-poster-seed),
+      0 var(--rq-poster-seed),
       0 0;
     background-size:
+      var(--rq-poster-pixel-size) var(--rq-poster-pixel-size),
+      8px 8px,
       auto,
-      180px 180px,
       4.5rem 4.5rem;
-    mix-blend-mode: overlay;
-    opacity: var(--rq-poster-scan-opacity);
+    mix-blend-mode: screen;
+    opacity: var(--rq-poster-pixel-opacity);
+    image-rendering: pixelated;
     pointer-events: none;
   }
 
@@ -710,6 +746,8 @@ const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-p
     --rq-card-scale: 1;
     --rq-card-opacity: 1;
     --rq-card-saturate: 1.08;
+    --rq-poster-pixel-opacity: 0.17;
+    --rq-poster-pixel-grid-opacity: 0.58;
     z-index: 3;
   }
 
@@ -1003,17 +1041,6 @@ const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-p
     min-width: 0;
   }
 
-  .rq-problem-diagnostic__solution-label {
-    border: 1px solid color-mix(in srgb, var(--rq-diagnostic-accent) 58%, #5a3906);
-    border-radius: var(--rq-r-pill);
-    padding: 0.56rem 0.72rem;
-    background: color-mix(in srgb, var(--rq-diagnostic-accent) 22%, #fff6df);
-    color: #4c3108;
-    letter-spacing: 0;
-    text-align: center;
-    white-space: normal;
-  }
-
   .rq-problem-diagnostic__panel-genre {
     display: inline-flex;
     align-items: center;
@@ -1056,10 +1083,6 @@ const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-p
     word-break: normal;
     hyphens: auto;
     text-wrap: balance;
-  }
-
-  .rq-problem-diagnostic__scene-number {
-    color: #6a4a12;
   }
 
   .rq-problem-diagnostic__scene-title {
@@ -1263,11 +1286,6 @@ const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-p
       gap: 0.9rem;
     }
 
-    .rq-problem-diagnostic__stage {
-      grid-template-columns: 2.55rem minmax(0, 1fr) 2.55rem;
-      gap: 0.45rem;
-    }
-
     .rq-problem-diagnostic__nav {
       width: 2.55rem;
       height: 2.55rem;
@@ -1296,10 +1314,6 @@ const carouselCardStyle = (item: typeof items[number], index: number) => `--rq-p
 
     .rq-problem-diagnostic__panel h3 {
       font-size: clamp(1.38rem, 8vw, 1.9rem);
-    }
-
-    .rq-problem-diagnostic__solution-label {
-      width: fit-content;
     }
 
     .rq-problem-diagnostic__actions .rq-btn {

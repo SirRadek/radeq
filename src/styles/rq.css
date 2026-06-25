@@ -56,6 +56,7 @@ body::before {
 body::after {
   bottom: 0;
   background: linear-gradient(0deg, var(--rq-bg) 0%, rgba(247, 244, 238, 0) 100%);
+  transition: opacity 520ms var(--rq-ease);
 }
 
 body {
@@ -3443,6 +3444,17 @@ body::after {
   top: auto !important;
   bottom: 0 !important;
   background: linear-gradient(0deg, var(--rq-bg) 0%, rgba(247, 244, 238, 0) 100%) !important;
+  transition: opacity 520ms var(--rq-ease) !important;
+}
+
+body.is-footer-visible::after {
+  opacity: 0 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after {
+    transition: none !important;
+  }
 }
 /* Hero proof-rail desktop override. Higher specificity keeps this scoped override stable in the existing cascade. */
 body .rq-hero .rq-display {

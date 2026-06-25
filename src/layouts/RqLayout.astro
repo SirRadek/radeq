@@ -6,14 +6,14 @@ import '../styles/rq.css';
 interface Props {
   title: string;
   description: string;
-  lang: Locale;
+  lang?: Locale;
   canonicalPath?: string;
   alternatePath?: string;
   alternateLang?: Locale;
   allowStoredStyle?: boolean;
 }
 
-const { title, description, lang, canonicalPath, alternatePath, alternateLang } = Astro.props;
+const { title, description, lang = 'cs', canonicalPath, alternatePath, alternateLang } = Astro.props;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 const siteUrl = Astro.site ?? new URL(Astro.url.origin);
 const canonicalUrl = new URL(canonicalPath ? `${basePath}${canonicalPath}` : Astro.url.pathname, siteUrl).toString();
@@ -44,5 +44,42 @@ const alternateUrl = alternatePath ? new URL(`${basePath}${alternatePath}`, site
   <body>
     <MeasurementTracker client:load />
     <slot />
+    <script is:inline>
+      (() => {
+        const readyKey = 'rqFooterFogReady';
+        const root = document.documentElement;
+        const body = document.body;
+
+        if (!body || root.dataset[readyKey] === 'true') return;
+        root.dataset[readyKey] = 'true';
+
+        const footer = document.querySelector('.rq-site-footer');
+        const setFooterVisible = (isVisible) => {
+          body.classList.toggle('is-footer-visible', isVisible);
+        };
+
+        if (!footer || !('IntersectionObserver' in window)) {
+          setFooterVisible(false);
+          root.dataset[readyKey] = 'false';
+          return;
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+          const isVisible = entries.some((entry) => entry.isIntersecting);
+          setFooterVisible(isVisible);
+        }, {
+          rootMargin: '0px 0px 48px 0px',
+          threshold: 0,
+        });
+
+        observer.observe(footer);
+
+        window.addEventListener('pagehide', () => {
+          observer.disconnect();
+          setFooterVisible(false);
+          root.dataset[readyKey] = 'false';
+        }, { once: true });
+      })();
+    </script>
   </body>
 </html>

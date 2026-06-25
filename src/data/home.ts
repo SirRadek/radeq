@@ -60,7 +60,6 @@ export type HomeContent = {
     severitySrPrefix: string;
     severitySrSuffix: string;
     tagline: string;
-    solutionLabel: string;
     findingLabels: {
       problem: string;
       cause: string;
@@ -1154,7 +1153,6 @@ export const homeContent = {
       severitySrPrefix: 'Dopad na provoz:',
       severitySrSuffix: 'z 5 hvězd.',
       tagline: 'Režírujte svůj byznys sami. Nabízíme víc než průměr.',
-      solutionLabel: 'Návrh řešení',
       findingLabels: {
         problem: 'Zápletka',
         cause: 'Pravděpodobná příčina',
@@ -1464,7 +1462,6 @@ export const homeContent = {
       severitySrPrefix: 'Operational impact:',
       severitySrSuffix: 'out of 5 stars.',
       tagline: 'Direct your business yourself. We offer more than average.',
-      solutionLabel: 'Suggested solution',
       findingLabels: {
         problem: 'The plot',
         cause: 'Likely cause',

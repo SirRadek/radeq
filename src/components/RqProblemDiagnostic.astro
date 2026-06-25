@@ -321,14 +321,10 @@ const stars = Array.from({ length: 5 });
     place-items: center;
     border: 1px solid rgba(199, 224, 74, 0.34);
     border-radius: 999px;
-    background:
-      radial-gradient(circle at 50% 0%, rgba(199, 224, 74, 0.16), transparent 58%),
-      rgba(94, 25, 38, 0.72);
+    background: transparent;
     color: var(--rq-lime);
     cursor: pointer;
-    box-shadow:
-      0 0 0 1px rgba(13, 11, 12, 0.48),
-      0 0 28px rgba(199, 224, 74, 0.1);
+    box-shadow: none;
     transition: border-color 180ms var(--rq-ease), background-color 180ms var(--rq-ease), color 180ms var(--rq-ease), opacity 180ms var(--rq-ease), transform 180ms var(--rq-ease), box-shadow 180ms var(--rq-ease);
   }
 
@@ -340,30 +336,36 @@ const stars = Array.from({ length: 5 });
     stroke-linecap: round;
     stroke-linejoin: round;
     stroke-width: 2.2;
+    filter: drop-shadow(0 1px 2px rgba(13, 11, 12, 0.72));
   }
 
   .rq-problem-diagnostic__nav:hover,
   .rq-problem-diagnostic__nav:focus-visible {
     border-color: rgba(199, 224, 74, 0.78);
     outline: 0;
-    background:
-      radial-gradient(circle at 50% 0%, rgba(199, 224, 74, 0.28), transparent 62%),
-      rgba(94, 25, 38, 0.86);
+    background-color: rgba(247, 244, 238, 0.07);
     color: var(--rq-lime);
     transform: translateY(-1px);
-    box-shadow:
-      0 0 0 1px rgba(13, 11, 12, 0.48),
-      0 0 34px rgba(199, 224, 74, 0.2);
+    box-shadow: 0 0 24px rgba(199, 224, 74, 0.14);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
   }
 
   .rq-problem-diagnostic__nav:focus-visible {
-    box-shadow: 0 0 0 3px rgba(199, 224, 74, 0.24);
+    outline: 2px solid rgba(199, 224, 74, 0.82);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 3px rgba(13, 11, 12, 0.42), 0 0 24px rgba(199, 224, 74, 0.18);
   }
 
   .rq-problem-diagnostic__nav:disabled {
     cursor: default;
     opacity: 0.42;
+    border-color: rgba(199, 224, 74, 0.24);
+    background: transparent;
+    box-shadow: none;
     transform: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 
   .rq-problem-diagnostic__carousel-scene {
@@ -1242,11 +1244,21 @@ const stars = Array.from({ length: 5 });
       });
     };
 
-    cards.forEach((card, index) => {
-      card.addEventListener('click', () => {
-        activate(index, { interacted: true, scroll: true });
-      });
+    carousel.addEventListener('click', (event) => {
+      const target = event.target instanceof Element ? event.target : null;
+      const frame = target?.closest('.rq-problem-diagnostic__frame');
+      if (!frame || !carousel.contains(frame)) return;
 
+      const card = frame.querySelector('[data-rq-problem-card]');
+      if (!(card instanceof HTMLElement)) return;
+      const index = cards.indexOf(card);
+      if (index < 0) return;
+      if (card.getAttribute('data-rq-problem-distance') === 'hidden') return;
+
+      activate(index, { interacted: true, scroll: true });
+    });
+
+    cards.forEach((card, index) => {
       card.addEventListener('keydown', (event) => {
         if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault();

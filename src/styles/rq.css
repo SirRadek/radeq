@@ -1347,8 +1347,18 @@ p {
 
 .rq-services-bento__grid.has-rq-progress-ring.is-rotation-ready .rq-service-tile.is-featured::after {
   z-index: 2;
-  --rq-progress: 8deg;
-  background: conic-gradient(from -90deg, var(--rq-burgundy, #7A1F2B) var(--rq-progress, 0deg), transparent 0);
+  --rq-progress: 18deg;
+  background: conic-gradient(
+    from -90deg,
+    color-mix(in srgb, var(--rq-burgundy, #7A1F2B) 1%, transparent) 0deg,
+    color-mix(in srgb, var(--rq-burgundy, #7A1F2B) 24%, transparent) 4deg,
+    color-mix(in srgb, var(--rq-burgundy, #7A1F2B) 82%, transparent) 10deg,
+    var(--rq-burgundy, #7A1F2B) 16deg,
+    var(--rq-burgundy, #7A1F2B) calc(var(--rq-progress, 0deg) - 6deg),
+    color-mix(in srgb, var(--rq-burgundy, #7A1F2B) 58%, transparent) calc(var(--rq-progress, 0deg) - 2deg),
+    transparent var(--rq-progress, 0deg),
+    transparent 360deg
+  );
   opacity: var(--rq-progress-arc-alpha, .72);
   filter: blur(var(--rq-progress-softness, 0px));
   animation: rq-service-progress-ring var(--rq-service-rotation-ms, 20000ms) linear forwards;
@@ -1482,13 +1492,19 @@ p {
 
 @keyframes rq-service-progress-ring {
   0% {
-    --rq-progress: 8deg;
+    --rq-progress: 18deg;
+    --rq-progress-arc-alpha: 0;
+    --rq-progress-softness: 0.8px;
+  }
+
+  2.4% {
     --rq-progress-arc-alpha: 0.72;
-    --rq-progress-softness: 0px;
+    --rq-progress-softness: 0.18px;
   }
 
   96% {
     --rq-progress-arc-alpha: 0.72;
+    --rq-progress-softness: 0.18px;
   }
 
   100% {

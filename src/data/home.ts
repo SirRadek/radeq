@@ -1,5 +1,7 @@
 import type { Locale } from './locales';
 
+export type ProblemGenreKey = 'western' | 'drama' | 'comedy' | 'horror' | 'silent-film' | 'detective';
+
 export type HomeNavItem = {
   href: string;
   label: string;
@@ -47,7 +49,6 @@ export type HomeContent = {
     eyebrow: string;
     title: string;
     lead: string;
-    badgeText: string;
     severityLegend: {
       strong: string;
       text: string;
@@ -59,7 +60,6 @@ export type HomeContent = {
     severitySrPrefix: string;
     severitySrSuffix: string;
     tagline: string;
-    roleLabels: Record<string, string>;
     solutionLabel: string;
     findingLabels: {
       problem: string;
@@ -73,6 +73,9 @@ export type HomeContent = {
       id: string;
       role: 'lead' | 'support';
       severity: number;
+      genre: string;
+      genreKey: ProblemGenreKey;
+      genreColor: string;
       hook: string;
       symptom: string;
       problem: string;
@@ -272,11 +275,23 @@ export type HomeContent = {
   };
 };
 
+const problemGenreColors: Record<ProblemGenreKey, string> = {
+  western: '#D2B48C',
+  drama: '#AAB7B8',
+  comedy: '#F4D03F',
+  horror: '#C0392B',
+  'silent-film': '#7F8C8D',
+  detective: '#2E4053',
+};
+
 const csProblems: HomeContent['problems']['items'] = [
   {
     id: 'web-poptavky',
     role: 'lead',
     severity: 5,
+    genre: 'Komedie',
+    genreKey: 'comedy',
+    genreColor: problemGenreColors.comedy,
     hook: 'Návštěvník přijde, rozhlédne se a odejde bez jasné cesty ke kontaktu.',
     symptom: 'Web nevede k poptávce',
     problem: 'Web jen existuje, ale návštěvník nedojde ke kontaktu.',
@@ -291,6 +306,9 @@ const csProblems: HomeContent['problems']['items'] = [
     id: 'nejasny-krok',
     role: 'lead',
     severity: 5,
+    genre: 'Komedie',
+    genreKey: 'comedy',
+    genreColor: problemGenreColors.comedy,
     hook: 'Dobrá služba zůstane bez odezvy, když další krok není vidět na první pohled.',
     symptom: 'Nabídka / další krok není jasný',
     problem: 'Zákazník nerozumí nabídce nebo neví, kam pokračovat.',
@@ -305,6 +323,9 @@ const csProblems: HomeContent['problems']['items'] = [
     id: 'poptavky-email',
     role: 'support',
     severity: 4,
+    genre: 'Western',
+    genreKey: 'western',
+    genreColor: problemGenreColors.western,
     hook: 'Každá zpráva má vlastní dějovou linku a nikdo nevidí, v jaké je scéně.',
     symptom: 'Poptávky se ztrácí v e-mailech',
     problem: 'Poptávky přijdou, ale další krok se řeší ručně a bez jasného stavu.',
@@ -319,6 +340,9 @@ const csProblems: HomeContent['problems']['items'] = [
     id: 'rucni-data',
     role: 'support',
     severity: 4,
+    genre: 'Western',
+    genreKey: 'western',
+    genreColor: problemGenreColors.western,
     hook: 'Stejná data hrají ve více systémech a pokaždé je někdo přepisuje znovu.',
     symptom: 'Data/úkoly přepisujete ručně',
     problem: 'Data přepisujete mezi tabulkami pořád dokola.',
@@ -333,6 +357,9 @@ const csProblems: HomeContent['problems']['items'] = [
     id: 'fakturace-papiry',
     role: 'support',
     severity: 5,
+    genre: 'Horor',
+    genreKey: 'horror',
+    genreColor: problemGenreColors.horror,
     hook: 'Přes den děláte práci pro klienty, večer doháníte administrativu.',
     symptom: 'Fakturace a papírování po večerech',
     problem: 'Doklady, podklady a opakované administrativní kroky se vrací ve chvíli, kdy už má být hotovo.',
@@ -347,6 +374,9 @@ const csProblems: HomeContent['problems']['items'] = [
     id: 'zacatek-ai',
     role: 'support',
     severity: 4,
+    genre: 'Drama',
+    genreKey: 'drama',
+    genreColor: problemGenreColors.drama,
     hook: 'Trailerů je hodně, ale chybí scénář, kde AI opravdu pomůže vašemu provozu.',
     symptom: 'Nevím, kde začít / kde dává smysl AI',
     problem: 'Máte víc možností než jistoty a nechcete začít drahým nástrojem naslepo.',
@@ -361,6 +391,9 @@ const csProblems: HomeContent['problems']['items'] = [
     id: 'mereni-prehled',
     role: 'support',
     severity: 3,
+    genre: 'Drama',
+    genreKey: 'drama',
+    genreColor: problemGenreColors.drama,
     hook: 'Bez přehledu se špatně pozná, která scéna vydělává a která jen zabírá čas.',
     symptom: 'Chybí měření a přehled',
     problem: 'Nevíte, co na webu nebo v procesu měřit.',
@@ -375,6 +408,9 @@ const csProblems: HomeContent['problems']['items'] = [
     id: 'opakujici-dotazy',
     role: 'lead',
     severity: 4,
+    genre: 'Western',
+    genreKey: 'western',
+    genreColor: problemGenreColors.western,
     hook: 'Zákazník se ptá na cenu, termín nebo postup a vy znovu píšete odpověď, kterou už jste psali mnohokrát.',
     symptom: 'Pořád odpovídáte na stejné dotazy',
     problem: 'Opakované dotazy berou čas a každá odpověď vzniká ručně.',
@@ -389,6 +425,9 @@ const csProblems: HomeContent['problems']['items'] = [
     id: 'prvni-kontakt-mimo-pracovni-dobu',
     role: 'lead',
     severity: 5,
+    genre: 'Němý film',
+    genreKey: 'silent-film',
+    genreColor: problemGenreColors['silent-film'],
     hook: 'Poptávka přijde večer, ale první užitečná reakce vznikne až ve chvíli, kdy už řešíte další práci.',
     symptom: 'První kontakt čeká do rána nebo do pondělí',
     problem: 'Zájemce nedostane základní odpověď ani jasný další krok ve chvíli, kdy má zájem.',
@@ -403,6 +442,9 @@ const csProblems: HomeContent['problems']['items'] = [
     id: 'poptavka-bez-podkladu',
     role: 'support',
     severity: 4,
+    genre: 'Detektivka',
+    genreKey: 'detective',
+    genreColor: problemGenreColors.detective,
     hook: 'Zákazník napíše „kolik by to stálo“, ale chybí rozsah, termín, fotky nebo rozhodující detaily.',
     symptom: 'Poptávka přijde bez důležitých podkladů',
     problem: 'Nacenění nebo odpověď se zdržuje, protože informace musíte doptávat ručně.',
@@ -417,6 +459,9 @@ const csProblems: HomeContent['problems']['items'] = [
     id: 'follow-up-poptavek',
     role: 'lead',
     severity: 4,
+    genre: 'Detektivka',
+    genreKey: 'detective',
+    genreColor: problemGenreColors.detective,
     hook: 'Nabídka odejde a další připomenutí závisí na tom, jestli si na ni někdo včas vzpomene.',
     symptom: 'Po odeslání nabídky se follow-up ztrácí',
     problem: 'Rozpracované poptávky zůstávají bez dalšího kroku, i když zákazník ještě nerozhodl.',
@@ -431,6 +476,9 @@ const csProblems: HomeContent['problems']['items'] = [
     id: 'terminy-bez-pripomenuti',
     role: 'support',
     severity: 4,
+    genre: 'Němý film',
+    genreKey: 'silent-film',
+    genreColor: problemGenreColors['silent-film'],
     hook: 'Schůzka je domluvená, ale potvrzení, instrukce a připomenutí pořád držíte v hlavě.',
     symptom: 'Termíny a podklady se musí připomínat ručně',
     problem: 'Klienti zapomínají termíny, chodí nepřipravení nebo posílají podklady na poslední chvíli.',
@@ -445,6 +493,9 @@ const csProblems: HomeContent['problems']['items'] = [
     id: 'ukoly-po-schuzce',
     role: 'support',
     severity: 4,
+    genre: 'Detektivka',
+    genreKey: 'detective',
+    genreColor: problemGenreColors.detective,
     hook: 'Schůzka proběhne dobře, ale zápis, úkoly a další e-mail vznikají až později nebo vůbec.',
     symptom: 'Úkoly po schůzce zůstávají v poznámkách',
     problem: 'Dohodnuté kroky se rozpadnou mezi poznámky, e-mail a paměť lidí.',
@@ -459,6 +510,9 @@ const csProblems: HomeContent['problems']['items'] = [
     id: 'emaily-bez-priorit',
     role: 'support',
     severity: 3,
+    genre: 'Horor',
+    genreKey: 'horror',
+    genreColor: problemGenreColors.horror,
     hook: 'V jednom proudu leží poptávky, dotazy, urgence, interní věci i zprávy, které počkají.',
     symptom: 'Den začíná tříděním e-mailů a zpráv',
     problem: 'Hodně času padne jen na rozhodování, čemu se věnovat dřív.',
@@ -473,6 +527,9 @@ const csProblems: HomeContent['problems']['items'] = [
     id: 'stav-zakazek-v-hlave',
     role: 'support',
     severity: 4,
+    genre: 'Western',
+    genreKey: 'western',
+    genreColor: problemGenreColors.western,
     hook: 'Víte, že se na něčem pracuje, ale přesný stav, termín a další krok se musí dohledávat.',
     symptom: 'Stav zakázek a termínů nosíte v hlavě',
     problem: 'Přehled o zakázkách závisí na paměti, e-mailech a jednotlivých tabulkách.',
@@ -490,6 +547,9 @@ const enProblems: HomeContent['problems']['items'] = [
     id: 'web-poptavky',
     role: 'lead',
     severity: 5,
+    genre: 'Comedy',
+    genreKey: 'comedy',
+    genreColor: problemGenreColors.comedy,
     hook: 'Visitors arrive, look around, and leave without a clear route to contact.',
     symptom: 'The website does not create enquiries',
     problem: 'The website exists, but visitors do not reach the contact step.',
@@ -504,6 +564,9 @@ const enProblems: HomeContent['problems']['items'] = [
     id: 'nejasny-krok',
     role: 'lead',
     severity: 5,
+    genre: 'Comedy',
+    genreKey: 'comedy',
+    genreColor: problemGenreColors.comedy,
     hook: 'A good service gets no response when the next step is not visible at first glance.',
     symptom: 'The offer / next step is not clear',
     problem: 'Customers do not understand the offer or do not know where to continue.',
@@ -518,6 +581,9 @@ const enProblems: HomeContent['problems']['items'] = [
     id: 'poptavky-email',
     role: 'support',
     severity: 4,
+    genre: 'Western',
+    genreKey: 'western',
+    genreColor: problemGenreColors.western,
     hook: 'Every message has its own plotline and nobody can see which scene it is in.',
     symptom: 'Enquiries get lost in email',
     problem: 'Enquiries arrive, but the next step is handled manually and without a clear status.',
@@ -532,6 +598,9 @@ const enProblems: HomeContent['problems']['items'] = [
     id: 'rucni-data',
     role: 'support',
     severity: 4,
+    genre: 'Western',
+    genreKey: 'western',
+    genreColor: problemGenreColors.western,
     hook: 'The same data appears in several systems and someone retypes it every time.',
     symptom: 'You retype data/tasks manually',
     problem: 'You keep moving data between spreadsheets by hand.',
@@ -546,6 +615,9 @@ const enProblems: HomeContent['problems']['items'] = [
     id: 'fakturace-papiry',
     role: 'support',
     severity: 5,
+    genre: 'Horror',
+    genreKey: 'horror',
+    genreColor: problemGenreColors.horror,
     hook: 'You do client work during the day and catch up with admin in the evening.',
     symptom: 'Invoicing and paperwork take evenings',
     problem: 'Documents, source material, and repeated admin steps come back when the work should already be done.',
@@ -560,6 +632,9 @@ const enProblems: HomeContent['problems']['items'] = [
     id: 'zacatek-ai',
     role: 'support',
     severity: 4,
+    genre: 'Drama',
+    genreKey: 'drama',
+    genreColor: problemGenreColors.drama,
     hook: 'There are many trailers, but no script for where AI would actually help your operation.',
     symptom: 'I do not know where to start / where AI makes sense',
     problem: 'You have more options than certainty and do not want to start with an expensive tool blindly.',
@@ -574,6 +649,9 @@ const enProblems: HomeContent['problems']['items'] = [
     id: 'mereni-prehled',
     role: 'support',
     severity: 3,
+    genre: 'Drama',
+    genreKey: 'drama',
+    genreColor: problemGenreColors.drama,
     hook: 'Without a clear view, it is hard to tell which scene earns money and which only takes time.',
     symptom: 'Measurement and overview are missing',
     problem: 'You do not know what to measure on the website or in the process.',
@@ -588,6 +666,9 @@ const enProblems: HomeContent['problems']['items'] = [
     id: 'opakujici-dotazy',
     role: 'lead',
     severity: 4,
+    genre: 'Western',
+    genreKey: 'western',
+    genreColor: problemGenreColors.western,
     hook: 'A customer asks about price, timing, or process and you write the same answer you have written many times before.',
     symptom: 'You keep answering the same questions',
     problem: 'Repeated questions consume time and every answer is written manually.',
@@ -602,6 +683,9 @@ const enProblems: HomeContent['problems']['items'] = [
     id: 'prvni-kontakt-mimo-pracovni-dobu',
     role: 'lead',
     severity: 5,
+    genre: 'Silent film',
+    genreKey: 'silent-film',
+    genreColor: problemGenreColors['silent-film'],
     hook: 'An enquiry arrives in the evening, but the first useful response happens only when you are already handling other work.',
     symptom: 'First contact waits until morning or Monday',
     problem: 'The prospect does not get a basic answer or a clear next step while their interest is fresh.',
@@ -616,6 +700,9 @@ const enProblems: HomeContent['problems']['items'] = [
     id: 'poptavka-bez-podkladu',
     role: 'support',
     severity: 4,
+    genre: 'Detective',
+    genreKey: 'detective',
+    genreColor: problemGenreColors.detective,
     hook: 'A customer writes "how much would it cost", but scope, timing, photos, or deciding details are missing.',
     symptom: 'Enquiries arrive without important details',
     problem: 'Pricing or answering is delayed because you have to ask for missing information manually.',
@@ -630,6 +717,9 @@ const enProblems: HomeContent['problems']['items'] = [
     id: 'follow-up-poptavek',
     role: 'lead',
     severity: 4,
+    genre: 'Detective',
+    genreKey: 'detective',
+    genreColor: problemGenreColors.detective,
     hook: 'The offer is sent, and the next reminder depends on whether someone remembers it in time.',
     symptom: 'Follow-up gets lost after an offer is sent',
     problem: 'Open enquiries remain without a next step even though the customer has not decided yet.',
@@ -644,6 +734,9 @@ const enProblems: HomeContent['problems']['items'] = [
     id: 'terminy-bez-pripomenuti',
     role: 'support',
     severity: 4,
+    genre: 'Silent film',
+    genreKey: 'silent-film',
+    genreColor: problemGenreColors['silent-film'],
     hook: 'The appointment is agreed, but confirmation, instructions, and reminders still live in your head.',
     symptom: 'Appointments and materials need manual reminders',
     problem: 'Clients forget appointments, arrive unprepared, or send materials at the last minute.',
@@ -658,6 +751,9 @@ const enProblems: HomeContent['problems']['items'] = [
     id: 'ukoly-po-schuzce',
     role: 'support',
     severity: 4,
+    genre: 'Detective',
+    genreKey: 'detective',
+    genreColor: problemGenreColors.detective,
     hook: 'The meeting goes well, but notes, tasks, and the next email are created later or not at all.',
     symptom: 'Post-meeting tasks stay in notes',
     problem: 'Agreed next steps fall apart between notes, email, and people’s memory.',
@@ -672,6 +768,9 @@ const enProblems: HomeContent['problems']['items'] = [
     id: 'emaily-bez-priorit',
     role: 'support',
     severity: 3,
+    genre: 'Horror',
+    genreKey: 'horror',
+    genreColor: problemGenreColors.horror,
     hook: 'Enquiries, questions, urgent messages, internal matters, and things that can wait all sit in one stream.',
     symptom: 'The day starts by sorting email and messages',
     problem: 'A lot of time is spent only deciding what deserves attention first.',
@@ -686,6 +785,9 @@ const enProblems: HomeContent['problems']['items'] = [
     id: 'stav-zakazek-v-hlave',
     role: 'support',
     severity: 4,
+    genre: 'Western',
+    genreKey: 'western',
+    genreColor: problemGenreColors.western,
     hook: 'You know something is being worked on, but the exact status, deadline, and next step have to be searched for.',
     symptom: 'Job status and deadlines live in your head',
     problem: 'The overview of jobs depends on memory, emails, and separate spreadsheets.',
@@ -1041,22 +1143,17 @@ export const homeContent = {
       eyebrow: 'Co řeším',
       title: 'Poznáváte některý z těchto problémů?',
       lead: 'Vyberte signál, který sedí nejvíc. Ukážu pravděpodobnou příčinu, co ověřím a první rozumný krok bez zbytečné omáčky.',
-      badgeText: '15 typických signálů',
       severityLegend: {
-        strong: 'Index závažnosti',
-        text: 'ukazuje dopad problému na chod firmy. Hvězdy nejsou hodnocení služby.',
+        strong: 'Dopad na provoz',
+        text: 'Hvězdy ukazují, jak rychle problém brzdí poptávky, čas nebo přehled. Nejde o hodnocení služby.',
       },
       controlsAriaLabel: 'Posun karuselu',
       previousLabel: 'Předchozí problém',
       nextLabel: 'Další problém',
-      carouselAriaLabel: 'Typické problémy',
-      severitySrPrefix: 'Index závažnosti:',
-      severitySrSuffix: 'z 5.',
+      carouselAriaLabel: 'Karusel s 15 typickými signály problémů',
+      severitySrPrefix: 'Dopad na provoz:',
+      severitySrSuffix: 'z 5 hvězd.',
       tagline: 'Režírujte svůj byznys sami. Nabízíme víc než průměr.',
-      roleLabels: {
-        lead: 'V HLAVNÍ ROLI',
-        support: 'DÁLE HRAJÍ',
-      },
       solutionLabel: 'Návrh řešení',
       findingLabels: {
         problem: 'Zápletka',
@@ -1356,22 +1453,17 @@ export const homeContent = {
       eyebrow: 'What I solve',
       title: 'Do any of these problems look familiar?',
       lead: 'Choose the signal that fits best. I will show the likely cause, what I would verify, and the first sensible step without unnecessary theatre.',
-      badgeText: '15 typical signals',
       severityLegend: {
-        strong: 'Business impact',
-        text: 'shows how strongly the problem affects operations. Stars are not a service rating.',
+        strong: 'Operational impact',
+        text: 'Stars show how quickly the problem slows enquiries, time, or visibility. They are not a service rating.',
       },
       controlsAriaLabel: 'Carousel controls',
       previousLabel: 'Previous problem',
       nextLabel: 'Next problem',
-      carouselAriaLabel: 'Typical problems',
-      severitySrPrefix: 'Business impact:',
-      severitySrSuffix: 'out of 5.',
+      carouselAriaLabel: 'Carousel with 15 typical problem signals',
+      severitySrPrefix: 'Operational impact:',
+      severitySrSuffix: 'out of 5 stars.',
       tagline: 'Direct your business yourself. We offer more than average.',
-      roleLabels: {
-        lead: 'STARRING',
-        support: 'ALSO FEATURING',
-      },
       solutionLabel: 'Suggested solution',
       findingLabels: {
         problem: 'The plot',

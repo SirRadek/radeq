@@ -3,11 +3,11 @@ export const routePages = {
     path: '/kontakt/',
     title: 'Kontakt | Radeq.cz',
     description:
-      'Pošlete stručnou poptávku na nový web, redesign, audit nebo rychlou opravu webu. Bez telefonu a bez závazku.',
+      'Pošlete stručnou poptávku na nový web, redesign, audit nebo rychlou opravu webu. Bez závazku.',
     eyebrow: 'Radeq.cz / Kontakt',
     h1: 'Kontakt',
     lead:
-      'Napište pár vět. Stačí typ webu, současný stav a co se má zlepšit. Odpověď půjde přes e-mail, ne přes veřejný telefon.',
+      'Napište pár vět. Stačí typ webu, současný stav a co se má zlepšit. Ozvu se e-mailem, nebo zavolejte na +420 730 634 439.',
     primaryCta: 'Chci probrat web',
     secondaryCta: 'Zobrazit ukázky práce',
     secondaryHref: '/ukazky/',
@@ -23,7 +23,7 @@ export const routePages = {
       },
       {
         title: 'E-mail',
-        text: 'Pro přímý kontakt používejte info@radeq.cz nebo poptavky@radeq.cz. Telefon v této vlně nezveřejňuji.',
+        text: 'Pro přímý kontakt používejte info@radeq.cz nebo poptavky@radeq.cz. Nebo zavolejte na +420 730 634 439.',
       },
     ],
   },

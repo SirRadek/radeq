@@ -233,6 +233,7 @@ export type HomeContent = {
     submitLabel: string;
     notePrefix: string;
     noteEmail: string;
+    notePhone: string;
     status: {
       sending: string;
       success: string;
@@ -247,6 +248,7 @@ export type HomeContent = {
     connectionLinks: readonly HomeNavItem[];
     legal: string;
     contactEmail: string;
+    contactPhone: string;
   };
   guide: {
     toggleLabel: string;
@@ -1339,6 +1341,7 @@ export const homeContent = {
       submitLabel: 'Odeslat poptávku',
       notePrefix: 'Nebo napište přímo na',
       noteEmail: 'info@radeq.cz',
+      notePhone: '+420 730 634 439',
       status: {
         sending: 'Odesílám…',
         success: 'Děkuji, poptávka odeslána. Ozvu se co nejdřív.',
@@ -1356,6 +1359,7 @@ export const homeContent = {
       ],
       legal: '© 2026 Radek Široký — RadeQ.cz · IČO 08748811 · Praha · celá ČR',
       contactEmail: 'info@radeq.cz',
+      contactPhone: '+420 730 634 439',
     },
     guide: {
       toggleLabel: 'Rychlá navigace',
@@ -1666,6 +1670,7 @@ export const homeContent = {
       submitLabel: 'Send enquiry',
       notePrefix: 'Or write directly to',
       noteEmail: 'info@radeq.cz',
+      notePhone: '+420 730 634 439',
       status: {
         sending: 'Sending…',
         success: 'Thank you, the enquiry has been sent. I will reply as soon as possible.',
@@ -1683,6 +1688,7 @@ export const homeContent = {
       ],
       legal: '© 2026 Radek Široký — RadeQ.cz · ID No. 08748811 · Prague · Czech Republic',
       contactEmail: 'info@radeq.cz',
+      contactPhone: '+420 730 634 439',
     },
     guide: {
       toggleLabel: 'Quick navigation',

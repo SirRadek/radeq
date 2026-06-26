@@ -20,6 +20,8 @@ const resolve = (href: string) => {
   if (base && (href === base || href.startsWith(`${base}/`))) return href;
   return `${base}${href}`;
 };
+const contactNotePhone = content.contact.notePhone ?? '+420 730 634 439';
+const contactNotePhoneLabel = lang === 'en' ? 'Prefer a call?' : 'Radši telefon?';
 const typewriterWords = content.hero.typewriter.words.join('|');
 const schema = {
   '@context': 'https://schema.org',
@@ -2014,6 +2016,7 @@ const schema = {
     </form>
 
     <p class="rq-contact-note">{content.contact.notePrefix} <a href={`mailto:${content.contact.noteEmail}`}>{content.contact.noteEmail}</a></p>
+    <p class="rq-contact-note">{contactNotePhoneLabel} <a href={`tel:${contactNotePhone.replace(/\s/g, '')}`}>{contactNotePhone}</a></p>
 
     <script is:inline define:vars={{
       leadsUrl: resolve('/api/leads'),

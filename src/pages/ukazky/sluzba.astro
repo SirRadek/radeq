@@ -28,12 +28,6 @@ const services = [
   ['Poradenství', 'Úprava pracovního místa, pohybové návyky a jednoduchý domácí plán.', '450 Kč / 30 min']
 ];
 
-const reviews = [
-  ['Po letech sedavé práce jsem konečně pochopila, co moje záda potřebují. Cviky byly jednoduché a účinné.', 'Martina, 38 let'],
-  ['Klára mi všechno vysvětlila lidsky a bez strašení. Po pár návštěvách jsem se vrátil k běhu.', 'Petr, 44 let'],
-  ['Oceňuji klidný přístup, přesný plán a možnost objednat si termín online bez telefonování.', 'Lenka, 52 let']
-];
-
 const faqs = [
   ['Berete pojišťovny?', 'Tato ukázková ordinace je koncipovaná jako přímá platba klientem. Doklad pro případné proplacení zaměstnavatelem nebo pojišťovnou lze vystavit.'],
   ['Potřebuji doporučení od lékaře?', 'Na běžnou fyzioterapii doporučení nepotřebujete. Pokud máte čerstvý úraz, neurologické příznaky nebo výrazné zhoršení stavu, je vhodné nejdřív kontaktovat lékaře.'],
@@ -44,7 +38,7 @@ const faqs = [
 
 <LegacyLayout
   title="Fyzioterapie Klára Veselá | Bolesti zad a online rezervace"
-  description="Modelový web fyzioterapie s online rezervací, službami, FAQ, recenzemi a důvěryhodnou lokální prezentací."
+  description="Modelový web fyzioterapie s online rezervací, službami, FAQ a důvěryhodnou lokální prezentací."
 >
   <div class="kv-page">
     <div class="kv-demo-banner" role="banner">
@@ -184,13 +178,9 @@ const faqs = [
           <span>Recenze</span>
           <h2 id="recenze-title">Krátké zkušenosti klientů.</h2>
         </div>
-        <div class="kv-review-grid">
-          {reviews.map(([quote, author]) => (
-            <figure class="kv-review">
-              <blockquote>„{quote}“</blockquote>
-              <figcaption>{author}</figcaption>
-            </figure>
-          ))}
+        <div class="kv-note">
+          <strong>Ukázka záměrně neobsahuje vymyšlené recenze.</strong>
+          <span>V reálném projektu sem patří skutečné ohlasy klientů.</span>
         </div>
       </section>
 

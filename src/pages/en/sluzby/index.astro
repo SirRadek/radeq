@@ -1,67 +1,67 @@
 ---
-import RqLayout from '../../layouts/RqLayout.astro';
-import RqHeader from '../../components/RqHeader.astro';
-import RqFooter from '../../components/RqFooter.astro';
-import RqGuide from '../../components/RqGuide.astro';
-import { homeContent } from '../../data/home';
+import RqLayout from '../../../layouts/RqLayout.astro';
+import RqHeader from '../../../components/RqHeader.astro';
+import RqFooter from '../../../components/RqFooter.astro';
+import RqGuide from '../../../components/RqGuide.astro';
+import { homeContent } from '../../../data/home';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const nav = [
-  { href: base + '/#co-resim', label: 'Co řeším' },
-  { href: base + '/#sluzby', label: 'Služby' },
-  { href: base + '/#jak-pracuji', label: 'Jak pracuji' },
-  { href: base + '/#ceny', label: 'Ceny' },
-  { href: base + '/ukazky/', label: 'Ukázky' },
-  { href: base + '/#kontakt', label: 'Kontakt' },
+  { href: base + '/en/#co-resim', label: 'What I solve' },
+  { href: base + '/en/#sluzby', label: 'Services' },
+  { href: base + '/en/#jak-pracuji', label: 'How I work' },
+  { href: base + '/en/#ceny', label: 'Pricing' },
+  { href: base + '/ukazky/', label: 'Examples' },
+  { href: base + '/en/#kontakt', label: 'Contact' },
 ];
 
-const services = homeContent.cs.services.items;
+const services = homeContent.en.services.items;
 const steps = [
   {
     number: '1.',
-    title: 'Problém',
-    text: 'krátce popíšete, co řešíte; navrhnu nejmenší rozumný krok.',
+    title: 'Problem',
+    text: "you briefly describe what you're solving; I propose the smallest sensible step.",
   },
   {
     number: '2.',
-    title: 'Ověření',
-    text: 'postavím a otestuju (formuláře, mobil, rychlost, SEO základ).',
+    title: 'Verification',
+    text: 'I build and test it (forms, mobile, speed, SEO basics).',
   },
   {
     number: '3.',
-    title: 'Předání',
-    text: 'dostanete hotové a otestované, drobnosti zvládnete sami.',
+    title: 'Handover',
+    text: 'you get it finished and tested, and can manage the small things yourself.',
   },
 ];
 ---
 
 <RqLayout
-  title="Služby | RadeQ.cz"
-  description="Weby, e-shopy, automatizace a data pro živnostníky a malé firmy — rozsah i cena dopředu."
-  lang="cs"
+  title="Services | RadeQ.cz"
+  description="Websites, e-shops, automation, and data for sole traders and small businesses — scope and price upfront."
+  lang="en"
 >
-  <RqHeader content={{ navItems: nav }} alternateLabel="EN" alternatePath="/en/sluzby/" />
+  <RqHeader content={{ navItems: nav }} alternateLabel="CS" alternatePath="/sluzby/" />
 
   <main class="rq-services-page">
     <section class="rq-section rq-services-hero" id="top">
-      <p class="rq-eyebrow">Služby</p>
-      <h1 class="rq-display">Co pro vás udělám</h1>
+      <p class="rq-eyebrow">Services</p>
+      <h1 class="rq-display">What I'll do for you</h1>
       <p class="rq-lead">
-        Weby, e-shopy, automatizace a data pro živnostníky a malé firmy. Vyberte,
-        co řešíte — rozsah i cenu řeknu dopředu.
+        Websites, e-shops, automation, and data for sole traders and small businesses.
+        Pick what you're solving — I'll tell you the scope and price upfront.
       </p>
       <div class="rq-actions">
-        <a class="rq-btn rq-btn--primary" href={base + '/#kontakt'}>Napsat poptávku</a>
-        <a class="rq-btn rq-btn--ghost" href={base + '/ukazky/'}>Ukázky práce</a>
+        <a class="rq-btn rq-btn--primary" href={base + '/en/#kontakt'}>Send an enquiry</a>
+        <a class="rq-btn rq-btn--ghost" href={base + '/ukazky/'}>See examples</a>
       </div>
     </section>
 
     <section class="rq-section rq-services-list" id="sluzby" aria-labelledby="rq-services-title">
-      <p class="rq-eyebrow">Vyberte, co řešíte</p>
-      <h2 class="rq-h2" id="rq-services-title">Služby podle toho, co potřebujete</h2>
+      <p class="rq-eyebrow">Pick what you're solving</p>
+      <h2 class="rq-h2" id="rq-services-title">Services based on what you need</h2>
       <p class="rq-services-note">
-        Weby: jednostránkový od 9 900 Kč · firemní web (1–5 stran) od 25 000 Kč ·
-        redesign staršího webu 35 000–75 000 Kč.
+        Websites: one-page from CZK 9,900 · company website (1–5 pages) from CZK 25,000 ·
+        redesign of an older site CZK 35,000–75,000.
       </p>
 
       <div class="rq-services-grid">
@@ -78,10 +78,10 @@ const steps = [
       </div>
     </section>
 
-    <section class="rq-section rq-process" id="postup" aria-labelledby="rq-process-title">
-      <p class="rq-eyebrow">Jak to probíhá</p>
-      <h2 class="rq-h2" id="rq-process-title">Od problému k předanému výsledku.</h2>
-      <ol class="rq-process-grid" aria-label="Postup spolupráce">
+    <section class="rq-section rq-process" id="process" aria-labelledby="rq-process-title">
+      <p class="rq-eyebrow">How it works</p>
+      <h2 class="rq-h2" id="rq-process-title">From the problem to a delivered result.</h2>
+      <ol class="rq-process-grid" aria-label="Collaboration process">
         {steps.map((step) => (
           <li class="rq-card rq-step">
             <h3><span>{step.number}</span> {step.title}</h3>
@@ -89,19 +89,19 @@ const steps = [
           </li>
         ))}
       </ol>
-      <a class="rq-process-link" href={base + '/#jak-pracuji'}>Podrobný postup</a>
+      <a class="rq-process-link" href={base + '/en/#jak-pracuji'}>Detailed process</a>
     </section>
 
-    <section class="rq-section rq-services-cta" aria-label="Poptávka">
+    <section class="rq-section rq-services-cta" aria-label="Enquiry">
       <div class="rq-services-cta__panel">
-        <p>Nevíte, co potřebujete? Napište pár vět a doporučím první krok.</p>
-        <a class="rq-btn rq-services-cta__button" href={base + '/#kontakt'}>Napsat poptávku</a>
+        <p>Not sure what you need? Send a few sentences and I'll suggest a first step.</p>
+        <a class="rq-btn rq-services-cta__button" href={base + '/en/#kontakt'}>Send an enquiry</a>
       </div>
     </section>
   </main>
 
-  <RqFooter navItems={nav} />
-  <RqGuide />
+  <RqFooter navItems={nav} content={homeContent.en.footer} homeHref="/en/" />
+  <RqGuide content={homeContent.en.guide} lang="en" />
 </RqLayout>
 
 <style>

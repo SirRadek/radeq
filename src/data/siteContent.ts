@@ -392,11 +392,18 @@ export const siteContent = {
       items: [
         {
           name: 'Audit webu s plánem',
-          price: '2 900-4 900 Kč',
+          price: 'od 4 900 Kč',
           text: 'Pro firmy, které nevědí, jestli web opravit, předělat, nebo postavit znovu.',
           includes: ['slabá místa webu', 'prioritní plán', 'odhad další práce'],
           cta: 'Začít auditem',
           featured: true,
+        },
+        {
+          name: 'Jednostránkový web',
+          price: 'od 9 900 Kč',
+          text: 'Jedna stránka s jasnou nabídkou a poptávkovým formulářem pro rychlý start.',
+          includes: ['1 strana', 'poptávkový formulář', 'základní SEO'],
+          cta: 'Probrat jednostránkový web',
         },
         {
           name: 'Startovací firemní web',
@@ -767,11 +774,18 @@ export const siteContent = {
       items: [
         {
           name: 'Website audit with a plan',
-          price: 'CZK 2,900-4,900',
+          price: 'from CZK 4,900',
           text: 'For companies unsure whether to repair, redesign, or rebuild the website from a cleaner base.',
           includes: ['weak spots', 'priority plan', 'next-work estimate'],
           cta: 'Start with audit',
           featured: true,
+        },
+        {
+          name: 'One-page website',
+          price: 'from CZK 9,900',
+          text: 'One page with a clear offer and enquiry form for a quick start.',
+          includes: ['1 page', 'enquiry form', 'SEO basics'],
+          cta: 'Discuss a one-page website',
         },
         {
           name: 'Starter company website',

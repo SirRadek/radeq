@@ -805,8 +805,8 @@ const csServices: HomeContent['services']['items'] = [
     slot: 'web',
     featured: true,
     price: 'od 9 900 Kč',
-    title: 'Web a redesign',
-    result: 'Výsledek: web, který návštěvníkovi rychle vysvětlí nabídku a přivádí poptávky.',
+    title: 'Jednostránkový web',
+    result: 'Výsledek: jednostránkový web, který návštěvníkovi rychle vysvětlí nabídku a přivádí poptávky.',
     outputs: [
       'rychlý jednostránkový web (Astro) + poptávkový formulář',
       'základní SEO pro Google i Seznam + měření',
@@ -857,7 +857,7 @@ const csServices: HomeContent['services']['items'] = [
     slot: 'audit',
     className: 'rq-service-tile--audit',
     flag: 'Nízkorizikový start',
-    price: '4 900 Kč',
+    price: 'od 4 900 Kč',
     title: 'Audit webu nebo procesu',
     result: 'Výsledek: víte, co nejvíc brzdí a co řešit první — cenu odečtu z realizace.',
     outputs: [
@@ -874,8 +874,8 @@ const enServices: HomeContent['services']['items'] = [
     slot: 'web',
     featured: true,
     price: 'from CZK 9,900',
-    title: 'Website and redesign',
-    result: 'Result: a website that explains the offer quickly and brings in measurable enquiries.',
+    title: 'One-page website',
+    result: 'Result: a one-page website that explains the offer quickly and brings in measurable enquiries.',
     outputs: [
       'fast one-page website (Astro) + enquiry form',
       'SEO basics for Google and Seznam + measurement',
@@ -926,7 +926,7 @@ const enServices: HomeContent['services']['items'] = [
     slot: 'audit',
     className: 'rq-service-tile--audit',
     flag: 'Low-risk start',
-    price: 'CZK 4,900',
+    price: 'from CZK 4,900',
     title: 'Website or process audit',
     result: 'Result: you know what slows things down most and what to fix first - the audit is deducted from implementation.',
     outputs: [
@@ -1128,7 +1128,7 @@ export const homeContent = {
       journeyNote: 'Postup od problému k ověřenému výsledku.',
       proofAriaLabel: 'Důkazy a orientační ceny',
       proofItems: [
-        { label: 'Web od 9 900 Kč', text: 'jasná nabídka a měřitelné poptávky' },
+        { label: 'Jednostránkový web od 9 900 Kč', text: '1 strana + formulář; firemní web od 25 000 Kč' },
         { label: 'Audit od 4 900 Kč', text: 'zjistíte, co brzdí; audit odečtu z realizace' },
         { label: 'Postavím · změřím · předám', text: 'bez závislosti na dodavateli' },
       ],
@@ -1340,7 +1340,7 @@ export const homeContent = {
       topics: {
         ceny: {
           chipLabel: 'Kolik to stojí',
-          text: 'Audit od 4 900 Kč, web od 9 900 Kč, e-shop od 19 900 Kč, automatizace od 12 000 Kč. Měsíční správa od 2 500 Kč. Přesně po krátké domluvě.',
+          text: 'Audit od 4 900 Kč, jednostránkový web od 9 900 Kč, firemní web od 25 000 Kč, e-shop od 19 900 Kč, automatizace od 12 000 Kč. Měsíční správa od 2 500 Kč. Přesně po krátké domluvě.',
           href: '#ceny',
           label: 'Přejít na ceny',
           followups: [
@@ -1437,7 +1437,7 @@ export const homeContent = {
       journeyNote: 'A path from problem to verified result.',
       proofAriaLabel: 'Proof points and indicative prices',
       proofItems: [
-        { label: 'Website from CZK 9,900', text: 'clear offer and measurable enquiries' },
+        { label: 'One-page website from CZK 9,900', text: '1 page + enquiry form; company website from CZK 25,000' },
         { label: 'Audit from CZK 4,900', text: 'find what slows things down; audit deducted from implementation' },
         { label: 'Build · measure · hand off', text: 'without supplier lock-in' },
       ],
@@ -1649,7 +1649,7 @@ export const homeContent = {
       topics: {
         ceny: {
           chipLabel: 'How much does it cost',
-          text: 'Audit from CZK 4,900, website from CZK 9,900, e-shop from CZK 19,900, automation from CZK 12,000. Monthly care from CZK 2,500. Exact scope follows a short discussion.',
+          text: 'Audit from CZK 4,900, one-page website from CZK 9,900, company website from CZK 25,000, e-shop from CZK 19,900, automation from CZK 12,000. Monthly care from CZK 2,500. Exact scope follows a short discussion.',
           href: '#ceny',
           label: 'Go to pricing',
           followups: [

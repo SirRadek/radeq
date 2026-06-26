@@ -1154,6 +1154,14 @@ const schema = {
     </div>
   </section>
 
+  <section class="rq-section" aria-labelledby="rq-guarantee-title">
+    <article class="rq-guarantee">
+      <p class="rq-eyebrow">{content.guarantee.eyebrow}</p>
+      <h3 id="rq-guarantee-title">{content.guarantee.title}</h3>
+      <p>{content.guarantee.text}</p>
+    </article>
+  </section>
+
   <script is:inline define:vars={{ serviceLiveFallback: content.services.liveFallback, serviceLivePrefix: content.services.livePrefix }}>
     (() => {
       const grid = document.querySelector('[data-rq-service-rotator]');
@@ -1880,11 +1888,6 @@ const schema = {
 
   <section id="jak-pracuji" class="rq-section rq-process">
     <RqJourney content={content.journey} lang={lang} />
-    <article class="rq-guarantee">
-      <p class="rq-eyebrow">{content.guarantee.eyebrow}</p>
-      <h3>{content.guarantee.title}</h3>
-      <p>{content.guarantee.text}</p>
-    </article>
   </section>
 
   <section class="rq-section rq-pricing" id="ceny" aria-labelledby="ceny-title">
@@ -1930,6 +1933,29 @@ const schema = {
             </span>
           </a>
         ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="rq-section rq-about" id="kdo-jsem" aria-labelledby="rq-about-title">
+    <div class="rq-about__media">
+      <img
+        class="rq-about__photo"
+        src={resolve(content.about.photo.src)}
+        srcset={`${resolve(content.about.photo.src)} 1x, ${resolve(content.about.photo.src2x)} 2x`}
+        width={content.about.photo.width}
+        height={content.about.photo.height}
+        alt={content.about.photo.alt}
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+    <div class="rq-about__body">
+      <p class="rq-eyebrow">{content.about.eyebrow}</p>
+      <h2 id="rq-about-title" class="rq-h2">{content.about.title}</h2>
+      <p class="rq-about__name">{content.about.name}</p>
+      <div class="rq-about__copy">
+        {content.about.paragraphs.map((p) => <p>{p}</p>)}
       </div>
     </div>
   </section>

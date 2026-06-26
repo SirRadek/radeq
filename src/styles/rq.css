@@ -3515,3 +3515,80 @@ body .rq-hero .rq-lead {
 /* RD4: removed leftover Gen-12 @media(min-width:1180px) 2-col hero (proof-rail
    right) — owner wants the heading + content full-width with proof as a band
    below at all widths, not a right-side column. */
+
+.rq-about {
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.42fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5.5rem);
+}
+
+.rq-about__media {
+  position: relative;
+  width: min(100%, 32rem);
+  aspect-ratio: 4 / 5;
+  justify-self: center;
+  padding: clamp(0.45rem, 1vw, 0.75rem);
+  border: 1px solid color-mix(in srgb, var(--rq-burgundy) 20%, var(--rq-line));
+  border-radius: calc(var(--rq-r) + 10px);
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--rq-surface) 92%, var(--rq-bg)), var(--rq-bg-sunken));
+  box-shadow: 0 24px 70px rgba(28, 26, 23, 0.14);
+}
+
+.rq-about__media::before {
+  content: "";
+  position: absolute;
+  inset: clamp(0.8rem, 2vw, 1.25rem) clamp(-0.7rem, -1vw, -0.35rem) clamp(-0.7rem, -1vw, -0.35rem) clamp(0.8rem, 2vw, 1.25rem);
+  z-index: -1;
+  border-radius: calc(var(--rq-r) + 8px);
+  background: color-mix(in srgb, var(--rq-burgundy-tint) 72%, transparent);
+}
+
+.rq-about__photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 1px solid color-mix(in srgb, var(--rq-burgundy) 16%, var(--rq-line));
+  border-radius: var(--rq-r);
+  object-fit: cover;
+}
+
+.rq-about__body {
+  max-width: 68ch;
+}
+
+.rq-about__name {
+  margin: clamp(0.85rem, 1.2vw, 1.05rem) 0 0;
+  color: var(--rq-burgundy-strong);
+  font-family: var(--rq-display), var(--rq-body), system-ui, sans-serif;
+  font-size: clamp(1.05rem, 0.7vw + 0.95rem, 1.35rem);
+  font-weight: 800;
+}
+
+.rq-about__copy {
+  display: grid;
+  gap: clamp(0.85rem, 1.2vw, 1.05rem);
+  margin-top: clamp(1.2rem, 2vw, 1.8rem);
+  color: var(--rq-ink-2);
+}
+
+.rq-about__copy p {
+  margin: 0;
+  line-height: 1.75;
+}
+
+@media (max-width: 860px) {
+  .rq-about {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .rq-about__media {
+    width: min(100%, 28rem);
+  }
+
+  .rq-about__body {
+    max-width: none;
+  }
+}

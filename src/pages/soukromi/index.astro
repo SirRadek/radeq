@@ -1,44 +1,122 @@
 ---
-import CommandHeader from '../../components/CommandHeader.astro';
-import ContactTerminal from '../../components/ContactTerminal';
-import { routePages } from '../../data/routePages';
-import { siteContent } from '../../data/siteContent';
-import { withBaseHref } from '../../lib/links';
-import LegacyLayout from '../../layouts/LegacyLayout.astro';
+import RqLayout from '../../layouts/RqLayout.astro';
+import RqHeader from '../../components/RqHeader.astro';
+import RqFooter from '../../components/RqFooter.astro';
+import RqGuide from '../../components/RqGuide.astro';
 
-const content = siteContent.cs;
-const page = routePages.soukromi;
-const secondaryHref = withBaseHref(page.secondaryHref);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const nav = [
+  { href: base + '/#co-resim', label: 'Co řeším' },
+  { href: base + '/#sluzby', label: 'Služby' },
+  { href: base + '/#jak-pracuji', label: 'Jak pracuji' },
+  { href: base + '/#ceny', label: 'Ceny' },
+  { href: base + '/ukazky/', label: 'Ukázky' },
+  { href: base + '/#kontakt', label: 'Kontakt' },
+];
 ---
 
-<LegacyLayout title={page.title} description={page.description} lang={content.layout.lang}>
-  <CommandHeader
-    content={content.header}
-    locale={content.layout.lang}
-    homePath="/"
-    showStyleToggle={false}
-  />
-  <main class="route-page">
-    <section class="route-page__hero" id="top" aria-labelledby="route-title">
-      <p class="section-code">{page.eyebrow}</p>
-      <h1 id="route-title">{page.h1}</h1>
-      <p>{page.lead}</p>
-      <ul class="route-page__points">
-        {page.points.map((point) => <li>{point}</li>)}
-      </ul>
-      <div class="route-page__actions">
-        <a class="button-primary" href="#terminal" data-track="cta_primary_click">{page.primaryCta}</a>
-        <a class="button-secondary" href={secondaryHref}>{page.secondaryCta}</a>
+<RqLayout
+  title="Soukromí a poptávky | RadeQ.cz"
+  description="Jak nakládám s údaji z formuláře a měřením webu — srozumitelně a střídmě."
+  lang="cs"
+>
+  <RqHeader content={{ navItems: nav }} alternateLabel="EN" alternatePath="/en/soukromi/" />
+
+  <main class="rq-privacy-page">
+    <section class="rq-section rq-privacy-hero" id="top">
+      <p class="rq-eyebrow">Soukromí</p>
+      <h1 class="rq-display">Soukromí a poptávky</h1>
+      <p class="rq-lead">
+        Formulář sbírá jen údaje potřebné k odpovědi na poptávku. Měření je anonymní —
+        bez osobních údajů a bez obsahu zpráv.
+      </p>
+      <div class="rq-actions">
+        <a class="rq-btn rq-btn--primary" href={base + '/#kontakt'}>Napsat poptávku</a>
+        <a class="rq-btn rq-btn--ghost" href={base + '/sluzby/'}>Zpět na služby</a>
       </div>
     </section>
-    <section class="route-page__details" aria-label={page.h1}>
-      {page.sections.map((section) => (
-        <article>
-          <h2>{section.title}</h2>
-          <p>{section.text}</p>
+
+    <section class="rq-section rq-privacy-detail" aria-labelledby="rq-privacy-detail-title">
+      <p class="rq-eyebrow">Jak to mám nastavené</p>
+      <h2 class="rq-h2" id="rq-privacy-detail-title">Co sbírám a co ne</h2>
+
+      <div class="rq-privacy-grid">
+        <article class="rq-card rq-privacy-card">
+          <h3>Údaje z formuláře</h3>
+          <p>
+            Používají se k odpovědi na poptávku a domluvě dalšího kroku. Neposílejte hesla,
+            platební údaje ani interní dokumenty.
+          </p>
         </article>
-      ))}
+        <article class="rq-card rq-privacy-card">
+          <h3>Měření webu</h3>
+          <p>
+            Měřím jen základní, anonymní pohyb po stránce — bez osobních údajů, bez obsahu zpráv
+            a bez sledování napříč weby. Pokročilejší analytiku přidávám jen po samostatné domluvě.
+          </p>
+        </article>
+        <article class="rq-card rq-privacy-card">
+          <h3>Předání člověku</h3>
+          <p>
+            Poptávka nekončí automatickým rozhodnutím. Nejasné nebo citlivé věci řeším ručně
+            a s jasnými hranicemi.
+          </p>
+        </article>
+      </div>
     </section>
-    <ContactTerminal locale={content.layout.lang} content={content.terminal} client:load />
   </main>
-</LegacyLayout>
+
+  <RqFooter navItems={nav} />
+  <RqGuide />
+</RqLayout>
+
+<style>
+  .rq-privacy-page :is(h1, h2, h3) {
+    letter-spacing: 0;
+  }
+
+  .rq-privacy-hero {
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.4rem);
+    padding-block-start: clamp(5rem, 9vw, 8rem);
+  }
+
+  .rq-privacy-hero .rq-display {
+    max-width: 13ch;
+  }
+
+  .rq-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.35rem;
+  }
+
+  .rq-privacy-detail {
+    padding-block-start: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .rq-privacy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: 1.1rem;
+    margin-top: clamp(1.6rem, 3vw, 2.4rem);
+  }
+
+  .rq-privacy-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    padding: clamp(1.15rem, 2vw, 1.45rem);
+  }
+
+  .rq-privacy-card h3 {
+    font-size: clamp(1.25rem, 2vw, 1.65rem);
+    line-height: 1.12;
+  }
+
+  .rq-privacy-card p {
+    color: var(--rq-ink-2);
+    line-height: 1.55;
+  }
+</style>

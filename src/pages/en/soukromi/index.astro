@@ -1,0 +1,122 @@
+---
+import RqLayout from '../../../layouts/RqLayout.astro';
+import RqHeader from '../../../components/RqHeader.astro';
+import RqFooter from '../../../components/RqFooter.astro';
+import RqGuide from '../../../components/RqGuide.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const nav = [
+  { href: base + '/en/#co-resim', label: 'What I solve' },
+  { href: base + '/en/#sluzby', label: 'Services' },
+  { href: base + '/en/#jak-pracuji', label: 'How I work' },
+  { href: base + '/en/#ceny', label: 'Pricing' },
+  { href: base + '/ukazky/', label: 'Examples' },
+  { href: base + '/en/#kontakt', label: 'Contact' },
+];
+---
+
+<RqLayout
+  title="Privacy and enquiries | RadeQ.cz"
+  description="How I handle form data and website measurement — clearly and sparingly."
+  lang="en"
+>
+  <RqHeader content={{ navItems: nav }} alternateLabel="CS" alternatePath="/soukromi/" />
+
+  <main class="rq-privacy-page">
+    <section class="rq-section rq-privacy-hero" id="top">
+      <p class="rq-eyebrow">Privacy</p>
+      <h1 class="rq-display">Privacy and enquiries</h1>
+      <p class="rq-lead">
+        The form only collects what's needed to reply to your enquiry. Measurement is anonymous —
+        no personal data and no message content.
+      </p>
+      <div class="rq-actions">
+        <a class="rq-btn rq-btn--primary" href={base + '/en/#kontakt'}>Send an enquiry</a>
+        <a class="rq-btn rq-btn--ghost" href={base + '/en/sluzby/'}>Back to services</a>
+      </div>
+    </section>
+
+    <section class="rq-section rq-privacy-detail" aria-labelledby="rq-privacy-detail-title">
+      <p class="rq-eyebrow">How I have it set up</p>
+      <h2 class="rq-h2" id="rq-privacy-detail-title">What I collect and what I don't</h2>
+
+      <div class="rq-privacy-grid">
+        <article class="rq-card rq-privacy-card">
+          <h3>Form data</h3>
+          <p>
+            Used to reply to your enquiry and arrange the next step. Don't send passwords,
+            payment details, or internal documents.
+          </p>
+        </article>
+        <article class="rq-card rq-privacy-card">
+          <h3>Website measurement</h3>
+          <p>
+            I only measure basic, anonymous page activity — no personal data, no message content,
+            and no cross-site tracking. Anything more advanced I add only by separate agreement.
+          </p>
+        </article>
+        <article class="rq-card rq-privacy-card">
+          <h3>Handled by a person</h3>
+          <p>
+            An enquiry doesn't end with an automated decision. Unclear or sensitive things I handle
+            manually, with clear boundaries.
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <RqFooter navItems={nav} />
+  <RqGuide />
+</RqLayout>
+
+<style>
+  .rq-privacy-page :is(h1, h2, h3) {
+    letter-spacing: 0;
+  }
+
+  .rq-privacy-hero {
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.4rem);
+    padding-block-start: clamp(5rem, 9vw, 8rem);
+  }
+
+  .rq-privacy-hero .rq-display {
+    max-width: 13ch;
+  }
+
+  .rq-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.35rem;
+  }
+
+  .rq-privacy-detail {
+    padding-block-start: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .rq-privacy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: 1.1rem;
+    margin-top: clamp(1.6rem, 3vw, 2.4rem);
+  }
+
+  .rq-privacy-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    padding: clamp(1.15rem, 2vw, 1.45rem);
+  }
+
+  .rq-privacy-card h3 {
+    font-size: clamp(1.25rem, 2vw, 1.65rem);
+    line-height: 1.12;
+  }
+
+  .rq-privacy-card p {
+    color: var(--rq-ink-2);
+    line-height: 1.55;
+  }
+</style>

@@ -1121,6 +1121,61 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
     }
   }
 
+  @media (min-width: 1024px) {
+    .rq-problem-diagnostic__inner {
+      width: var(--rq-page-w);
+      max-width: var(--rq-page-w);
+    }
+
+    .rq-problem-diagnostic__head {
+      margin-bottom: clamp(1.4rem, 2.6vw, 2.2rem);
+    }
+
+    .rq-problem-diagnostic__board {
+      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+      grid-template-areas:
+        "stage output"
+        "tagline output";
+      align-items: start;
+      column-gap: clamp(1.4rem, 2.8vw, 2.6rem);
+      row-gap: clamp(0.7rem, 1.4vw, 1.1rem);
+      --rq-card-h: clamp(9rem, 12vw, 11rem);
+      --rq-card-h-lead: clamp(9.5rem, 12.5vw, 11.5rem);
+      --rq-jaw-min-block-size: clamp(24rem, 28vw, 27rem);
+    }
+
+    .rq-problem-diagnostic__stage {
+      grid-area: stage;
+      margin-inline: 0;
+      align-self: center;
+    }
+
+    .rq-problem-diagnostic__tagline {
+      grid-area: tagline;
+      margin-top: 0;
+      align-self: start;
+    }
+
+    .rq-problem-diagnostic__output {
+      grid-area: output;
+      align-self: start;
+    }
+
+    .rq-problem-diagnostic__script-sheet {
+      gap: clamp(0.7rem, 1.3vw, 1rem);
+      padding: clamp(0.95rem, 1.7vw, 1.4rem);
+      min-block-size: 0;
+    }
+
+    .rq-problem-diagnostic__findings {
+      gap: clamp(0.6rem, 1vw, 0.85rem);
+    }
+
+    .rq-problem-diagnostic__panel-top {
+      padding-bottom: clamp(0.65rem, 1.2vw, 0.95rem);
+    }
+  }
+
   @media (max-width: 860px) {
     .rq-problem-diagnostic__head {
       display: grid;

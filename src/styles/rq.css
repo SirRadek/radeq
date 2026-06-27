@@ -3014,8 +3014,8 @@ h2 + p {
 .rq-pricing,
 .rq-ukazky-teaser__inner,
 .rq-services-bento .rq-bleed__inner {
-  width: var(--rq-page-w-wide);
-  max-width: var(--rq-page-w-wide);
+  width: var(--rq-page-w);
+  max-width: var(--rq-page-w);
   margin-inline: auto;
 }
 

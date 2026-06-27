@@ -1150,7 +1150,7 @@ export const homeContent = {
       journeyNote: 'Postup od problému k ověřenému výsledku.',
       proofAriaLabel: 'Důkazy a orientační ceny',
       proofItems: [
-        { label: 'Jednostránkový web od 9 900 Kč', text: '1 strana + formulář; firemní web od 25 000 Kč' },
+        { label: 'Jednostránkový web od 9 900 Kč', text: '1 strana + kontaktní formulář, spuštění za pár dní' },
         { label: 'Audit od 4 900 Kč', text: 'zjistíte, co brzdí; audit odečtu z realizace' },
         { label: 'Postavím · změřím · předám', text: 'bez závislosti na dodavateli' },
       ],
@@ -1280,7 +1280,7 @@ export const homeContent = {
       projectItems: [
         { name: 'Jednostránkový web', price: 'od 9 900 Kč' },
         { name: 'Firemní web (1–5 stran)', price: 'od 25 000 Kč' },
-        { name: 'Redesign staršího webu', price: '35 000–75 000 Kč' },
+        { name: 'Redesign staršího webu', price: 'od 9 900 Kč' },
         { name: 'E-shop', price: 'od 19 900 Kč' },
         { name: 'Automatizace procesů', price: 'od 12 000 Kč' },
         { name: 'Data a AI pomocníci', price: 'od 15 000 Kč' },
@@ -1394,7 +1394,7 @@ export const homeContent = {
       topics: {
         ceny: {
           chipLabel: 'Kolik to stojí',
-          text: 'Audit od 4 900 Kč, jednostránkový web od 9 900 Kč, firemní web od 25 000 Kč, e-shop od 19 900 Kč, automatizace od 12 000 Kč. Měsíční správa od 2 500 Kč. Přesně po krátké domluvě.',
+          text: 'Orientačně: web od 9 900 Kč, audit od 4 900 Kč. Kompletní ceník máte v sekci Ceny níž — přesnou cenu doladíme po krátké domluvě.',
           href: '#ceny',
           label: 'Přejít na ceny',
           followups: [
@@ -1491,7 +1491,7 @@ export const homeContent = {
       journeyNote: 'A path from problem to verified result.',
       proofAriaLabel: 'Proof points and indicative prices',
       proofItems: [
-        { label: 'One-page website from CZK 9,900', text: '1 page + enquiry form; company website from CZK 25,000' },
+        { label: 'One-page website from CZK 9,900', text: '1 page + contact form, live in a few days' },
         { label: 'Audit from CZK 4,900', text: 'find what slows things down; audit deducted from implementation' },
         { label: 'Build · measure · hand off', text: 'without supplier lock-in' },
       ],
@@ -1621,7 +1621,7 @@ export const homeContent = {
       projectItems: [
         { name: 'One-page website', price: 'from CZK 9,900' },
         { name: 'Company website (1–5 pages)', price: 'from CZK 25,000' },
-        { name: 'Redesign of an older site', price: 'CZK 35,000–75,000' },
+        { name: 'Redesign of an older site', price: 'from CZK 9,900' },
         { name: 'E-shop', price: 'from CZK 19,900' },
         { name: 'Process automation', price: 'from CZK 12,000' },
         { name: 'Data & AI assistants', price: 'from CZK 15,000' },
@@ -1735,7 +1735,7 @@ export const homeContent = {
       topics: {
         ceny: {
           chipLabel: 'How much does it cost',
-          text: 'Audit from CZK 4,900, one-page website from CZK 9,900, company website from CZK 25,000, e-shop from CZK 19,900, automation from CZK 12,000. Monthly care from CZK 2,500. Exact scope follows a short discussion.',
+          text: 'Roughly: website from CZK 9,900, audit from CZK 4,900. The full price list is in the Pricing section below — exact pricing follows a short discussion.',
           href: '#ceny',
           label: 'Go to pricing',
           followups: [

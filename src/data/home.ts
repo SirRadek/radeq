@@ -1123,7 +1123,7 @@ export const homeContent = {
       items: [
         { href: '#co-resim', label: 'Co řeším' },
         { href: '#sluzby', label: 'Služby' },
-        { href: '#jak-pracuji', label: 'Postup' },
+        { href: '#jak-pracuji', label: 'Jak pracuji' },
         { href: '#ceny', label: 'Ceny' },
         { href: '/ukazky/', label: 'Ukázky' },
         { href: '#kontakt', label: 'Kontakt' },
@@ -1167,7 +1167,7 @@ export const homeContent = {
       carouselAriaLabel: 'Karusel s 15 typickými signály problémů',
       severitySrPrefix: 'Dopad na provoz:',
       severitySrSuffix: 'z 5 hvězd.',
-      tagline: 'Režírujte svůj byznys sami. Nabízíme víc než průměr.',
+      tagline: 'Režírujte svůj byznys sami. Nabízím víc než průměr.',
       findingLabels: {
         problem: 'Zápletka',
         cause: 'Pravděpodobná příčina',
@@ -1390,7 +1390,7 @@ export const homeContent = {
           label: 'Přejít na služby',
           followups: [
             { key: 'ceny', label: 'Ceny' },
-            { key: 'spoluprace', label: 'Postup' },
+            { key: 'spoluprace', label: 'Jak pracuji' },
           ],
         },
         spoluprace: {
@@ -1410,7 +1410,7 @@ export const homeContent = {
           label: 'Přejít na kontakt',
           followups: [
             { key: 'sluzby', label: 'Služby' },
-            { key: 'spoluprace', label: 'Postup' },
+            { key: 'spoluprace', label: 'Jak pracuji' },
           ],
         },
       },
@@ -1452,7 +1452,7 @@ export const homeContent = {
       items: [
         { href: '#co-resim', label: 'What I solve' },
         { href: '#sluzby', label: 'Services' },
-        { href: '#jak-pracuji', label: 'Process' },
+        { href: '#jak-pracuji', label: 'How I work' },
         { href: '#ceny', label: 'Pricing' },
         { href: '/ukazky/', label: 'Examples' },
         { href: '#kontakt', label: 'Contact' },
@@ -1496,7 +1496,7 @@ export const homeContent = {
       carouselAriaLabel: 'Carousel with 15 typical problem signals',
       severitySrPrefix: 'Operational impact:',
       severitySrSuffix: 'out of 5 stars.',
-      tagline: 'Direct your business yourself. We offer more than average.',
+      tagline: 'Direct your business yourself. I offer more than average.',
       findingLabels: {
         problem: 'The plot',
         cause: 'Likely cause',
@@ -1719,7 +1719,7 @@ export const homeContent = {
           label: 'Go to services',
           followups: [
             { key: 'ceny', label: 'Pricing' },
-            { key: 'spoluprace', label: 'Process' },
+            { key: 'spoluprace', label: 'How I work' },
           ],
         },
         spoluprace: {
@@ -1739,7 +1739,7 @@ export const homeContent = {
           label: 'Go to contact',
           followups: [
             { key: 'sluzby', label: 'Services' },
-            { key: 'spoluprace', label: 'Process' },
+            { key: 'spoluprace', label: 'How I work' },
           ],
         },
       },

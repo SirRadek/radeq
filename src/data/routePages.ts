@@ -23,7 +23,7 @@ export const routePages = {
       },
       {
         title: 'E-mail',
-        text: 'Pro přímý kontakt používejte info@radeq.cz nebo poptavky@radeq.cz. Nebo zavolejte na +420 730 634 439.',
+        text: 'Pro přímý kontakt používejte info@radeq.cz. Nebo zavolejte na +420 730 634 439.',
       },
     ],
   },

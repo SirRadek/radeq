@@ -8,14 +8,13 @@ const resolve = (h) => {
 };
 const logoMask = `${base}/brand/radeq-logo-b-mask.png`;
 const navItems = content.navItems ?? content.items ?? [];
-const headerAriaLabel = content.ariaLabel ?? "Hlavní navigace";
 const navAriaLabel = content.navAriaLabel ?? "Hlavní navigace";
 const brandAriaLabel = content.brandAriaLabel ?? "RadeQ.cz";
 const homeHref = content.homeHref ?? "/";
 const ctaHref = content.ctaHref ?? "/#kontakt";
 ---
 
-<header class="rq-site-header" aria-label={headerAriaLabel}>
+<header class="rq-site-header">
   <div class="rq-site-header__inner">
     <a
       class="rq-site-header__logo rq-logo"

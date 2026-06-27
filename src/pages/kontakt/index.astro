@@ -2,6 +2,8 @@
 import RqLayout from '../../layouts/RqLayout.astro';
 import RqHeader from '../../components/RqHeader.astro';
 import RqFooter from '../../components/RqFooter.astro';
+import RqContactForm from '../../components/RqContactForm.astro';
+import { homeContent } from '../../data/home';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const nav = [
@@ -30,7 +32,7 @@ const nav = [
         do 1 pracovního dne, bez závazku.
       </p>
       <div class="rq-actions">
-        <a class="rq-btn rq-btn--primary" href={base + '/#kontakt'}>Napsat poptávku</a>
+        <a class="rq-btn rq-btn--primary" href="#poptavka">Napsat poptávku</a>
         <a class="rq-btn rq-btn--ghost" href={base + '/ukazky/'}>Ukázky práce</a>
       </div>
     </section>
@@ -59,6 +61,10 @@ const nav = [
           <p>Ozvu se do 1 pracovního dne.</p>
         </article>
       </div>
+    </section>
+
+    <section class="rq-section" id="poptavka">
+      <RqContactForm content={homeContent.cs.contact} lang="cs" />
     </section>
 
     <section class="rq-section rq-contact-process" aria-labelledby="rq-contact-process-title">

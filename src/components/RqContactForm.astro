@@ -1,0 +1,101 @@
+---
+import type { HomeContent } from '../data/home';
+import type { Locale } from '../data/locales';
+
+interface Props {
+  content: HomeContent['contact'];
+  lang: Locale;
+}
+
+const { content, lang } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const resolve = (href: string) => {
+  if (!href || !href.startsWith('/')) return href;
+  if (base && (href === base || href.startsWith(`${base}/`))) return href;
+  return `${base}${href}`;
+};
+---
+
+<form class="rq-contact-form" method="post" action={resolve('/api/leads')} id="rq-lead-form">
+  <div class="rq-form-field">
+    <label for="rq-lead-name">{content.fields.name}</label>
+    <input id="rq-lead-name" name="name" type="text" autocomplete="name" required />
+  </div>
+
+  <div class="rq-form-field">
+    <label for="rq-lead-email">{content.fields.email}</label>
+    <input id="rq-lead-email" name="email" type="email" autocomplete="email" required />
+  </div>
+
+  <div class="rq-form-field">
+    <label for="rq-lead-current">{content.fields.projectType}</label>
+    <select id="rq-lead-current" name="project_type">
+      {content.projectOptions.map((option) => <option value={option.value}>{option.label}</option>)}
+    </select>
+  </div>
+
+  <div class="rq-form-field">
+    <label for="rq-lead-need">{content.fields.message}</label>
+    <textarea id="rq-lead-need" name="message" rows="6" required></textarea>
+  </div>
+
+  <details class="rq-form-optional">
+    <summary>{content.optionalSummary}</summary>
+    <div class="rq-form-optional__grid">
+      <div class="rq-form-field">
+        <label for="rq-lead-budget">{content.fields.budget}</label>
+        <select id="rq-lead-budget" name="budget_range">
+          {content.budgetOptions.map((option) => <option value={option.value}>{option.label}</option>)}
+        </select>
+      </div>
+      <div class="rq-form-field">
+        <label for="rq-lead-deadline">{content.fields.deadline}</label>
+        <input id="rq-lead-deadline" name="deadline" type="text" autocomplete="off" placeholder={content.fields.deadlinePlaceholder} />
+      </div>
+    </div>
+  </details>
+
+  <div class="rq-hp" aria-hidden="true">
+    <label>{content.fields.honeypot}<input type="text" name="honeypot" tabindex="-1" autocomplete="off" /></label>
+  </div>
+  <button class="rq-btn rq-btn--primary" type="submit">{content.submitLabel}</button>
+  <p class="rq-form-status" id="rq-lead-status" role="status" aria-live="polite"></p>
+</form>
+
+<script is:inline define:vars={{
+  leadsUrl: resolve('/api/leads'),
+  leadLocale: lang,
+  statusSending: content.status.sending,
+  statusSuccess: content.status.success,
+  statusFailureHtml: content.status.failureHtml,
+}}>
+  (() => {
+    const form = document.getElementById("rq-lead-form");
+    const statusEl = document.getElementById("rq-lead-status");
+    if (!form) return;
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      if (fd.get("honeypot")) return;
+      const payload = {
+        name: fd.get("name") || "", email: fd.get("email") || "",
+        project_type: fd.get("project_type") || "", message: fd.get("message") || "",
+        company: "", audience: "", deadline: fd.get("deadline") || "", current_url: "", budget_range: fd.get("budget_range") || "",
+        honeypot: "", source_path: location.pathname + location.search,
+        referrer: document.referrer || "", locale: leadLocale
+      };
+      statusEl.textContent = statusSending;
+      try {
+        const r = await fetch(leadsUrl, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
+        const ct = r.headers.get("content-type") || "";
+        if (!ct.includes("application/json")) throw new Error("nojson");
+        const res = await r.json();
+        if (!r.ok || !res.ok) throw new Error((res.details && res.details.join(" ")) || res.error || "fail");
+        form.reset();
+        statusEl.textContent = statusSuccess;
+      } catch (err) {
+        statusEl.innerHTML = statusFailureHtml;
+      }
+    });
+  })();
+</script>

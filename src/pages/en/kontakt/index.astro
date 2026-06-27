@@ -2,6 +2,8 @@
 import RqLayout from '../../../layouts/RqLayout.astro';
 import RqHeader from '../../../components/RqHeader.astro';
 import RqFooter from '../../../components/RqFooter.astro';
+import RqContactForm from '../../../components/RqContactForm.astro';
+import { homeContent } from '../../../data/home';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const nav = [
@@ -30,7 +32,7 @@ const nav = [
         what should improve. I'll reply within 1 working day, no commitment.
       </p>
       <div class="rq-actions">
-        <a class="rq-btn rq-btn--primary" href={base + '/en/#kontakt'}>Send an enquiry</a>
+        <a class="rq-btn rq-btn--primary" href="#poptavka">Send an enquiry</a>
         <a class="rq-btn rq-btn--ghost" href={base + '/ukazky/'}>See examples</a>
       </div>
     </section>
@@ -59,6 +61,10 @@ const nav = [
           <p>I'll reply within 1 working day.</p>
         </article>
       </div>
+    </section>
+
+    <section class="rq-section" id="poptavka">
+      <RqContactForm content={homeContent.en.contact} lang="en" />
     </section>
 
     <section class="rq-section rq-contact-process" aria-labelledby="rq-contact-process-title">

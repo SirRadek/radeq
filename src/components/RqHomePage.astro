@@ -1102,23 +1102,6 @@ const schema = {
 
   <RqProblemDiagnostic content={content.problems} lang={lang} />
 
-  <section class="rq-marquee rq-marquee--cinema rq-bleed" aria-label={content.marquee.ariaLabel} data-rq-marquee>
-    <div class="rq-marquee__viewport">
-      <div class="rq-marquee__track" data-rq-marquee-track>
-        {[0, 1].map((groupIndex) => (
-          <span class="rq-marquee__group" data-rq-marquee-group={groupIndex === 0 ? 'true' : undefined} aria-hidden={groupIndex === 1 ? 'true' : undefined}>
-            {content.marquee.items.map((item) => (
-              <>
-                <span class="rq-marquee__item">{item}</span>
-                <span class="rq-marquee__sep" aria-hidden="true">•</span>
-              </>
-            ))}
-          </span>
-        ))}
-      </div>
-    </div>
-  </section>
-
   <section id="sluzby" class="rq-section rq-bleed rq-services-bento" aria-labelledby="rq-sluzby-title">
     <div class="rq-bleed__inner">
       <p class="rq-eyebrow">{content.services.eyebrow}</p>

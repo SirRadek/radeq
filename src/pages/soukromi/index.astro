@@ -2,7 +2,6 @@
 import RqLayout from '../../layouts/RqLayout.astro';
 import RqHeader from '../../components/RqHeader.astro';
 import RqFooter from '../../components/RqFooter.astro';
-import RqGuide from '../../components/RqGuide.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const nav = [
@@ -67,7 +66,6 @@ const nav = [
   </main>
 
   <RqFooter navItems={nav} />
-  <RqGuide />
 </RqLayout>
 
 <style>

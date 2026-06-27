@@ -15,6 +15,21 @@ const nav = [
 ];
 
 const services = homeContent.cs.services.items;
+const extraServices = [
+  {
+    price: 'od 25 000 Kč',
+    title: 'Firemní web (1–5 stran)',
+    result: 'Vícestránkový web s jasnou nabídkou, strukturou a kontaktem.',
+    outputs: ['1–5 podstránek', 'textová struktura', 'SEO základ a formulář'],
+  },
+  {
+    price: '35 000–75 000 Kč',
+    title: 'Redesign staršího webu',
+    result: 'Přestavba webu, který potřebuje lepší obsah, mobil, rychlost a důvěryhodnost.',
+    outputs: ['audit současného webu', 'nová struktura a texty', 'kontrola před spuštěním'],
+  },
+];
+const guarantee = homeContent.cs.guarantee;
 const steps = [
   {
     number: '1.',
@@ -64,7 +79,7 @@ const steps = [
       </p>
 
       <div class="rq-services-grid">
-        {services.map((service) => (
+        {[...services, ...extraServices].map((service) => (
           <article class="rq-card rq-service-card">
             <p class="rq-service-card__price">{service.price}</p>
             <h3>{service.title}</h3>
@@ -89,6 +104,14 @@ const steps = [
         ))}
       </ol>
       <a class="rq-process-link" href={base + '/#jak-pracuji'}>Podrobný postup</a>
+    </section>
+
+    <section class="rq-section rq-services-guarantee" aria-labelledby="rq-services-guarantee-title">
+      <article class="rq-guarantee">
+        <p class="rq-eyebrow">{guarantee.eyebrow}</p>
+        <h2 class="rq-h2" id="rq-services-guarantee-title">{guarantee.title}</h2>
+        <p>{guarantee.text}</p>
+      </article>
     </section>
 
     <section class="rq-section rq-services-cta" aria-label="Poptávka">
@@ -125,8 +148,14 @@ const steps = [
   }
 
   .rq-services-list,
-  .rq-process {
+  .rq-process,
+  .rq-services-guarantee {
     padding-block-start: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .rq-services-guarantee .rq-h2 {
+    max-width: 48rem;
+    color: var(--rq-surface);
   }
 
   .rq-services-note {

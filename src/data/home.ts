@@ -1287,7 +1287,7 @@ export const homeContent = {
         { name: 'Audit webu nebo procesu', price: 'od 4 900 Kč' },
       ],
       ariaLabel: 'Tarify péče po spuštění',
-      note: 'Nechcete paušál? Bloky hodin 5/15/40 h (od 1 100 Kč/h). Audit lze odečíst z realizace. Nejsem plátce DPH — ceny jsou konečné.',
+      note: 'Nechcete paušál? Bloky hodin 5/15/40 h (od 1 100 Kč/h). Nejsem plátce DPH — ceny jsou konečné.',
       items: [
         { title: 'Klid', price: '2 500 Kč', suffix: '/měs.', text: 'provoz, zálohy, drobné úpravy (1 h), máte komu zavolat', ctaLabel: 'Chci Klid' },
         { title: 'Růst', price: '6 000 Kč', suffix: '/měs.', text: 'vše z Klidu + SEO/výkon hlídání, měsíční report, 3 h vývoje', ctaLabel: 'Chci Růst', featured: true, badge: 'Doporučeno' },
@@ -1628,7 +1628,7 @@ export const homeContent = {
         { name: 'Website or process audit', price: 'from CZK 4,900' },
       ],
       ariaLabel: 'Post-launch care plans',
-      note: 'Do not want a retainer? Hour blocks 5/15/40 h (from CZK 1,100/h). Audit can be deducted from implementation. I am not a VAT payer - prices are final.',
+      note: 'Do not want a retainer? Hour blocks 5/15/40 h (from CZK 1,100/h). I am not a VAT payer - prices are final.',
       items: [
         { title: 'Calm', price: 'CZK 2,500', suffix: '/mo.', text: 'operation, backups, small edits (1 h), someone to call', ctaLabel: 'I want Calm' },
         { title: 'Growth', price: 'CZK 6,000', suffix: '/mo.', text: 'everything in Calm + SEO/performance monitoring, monthly report, 3 h of development', ctaLabel: 'I want Growth', featured: true, badge: 'Recommended' },

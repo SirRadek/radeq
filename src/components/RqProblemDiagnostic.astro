@@ -238,6 +238,7 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
                 >
                   {content.servicePrefix} <strong>{item.service}</strong>
                 </a>
+                <a class="rq-problem-diagnostic__back" href="#diagnostika">{lang === 'en' ? '↑ Back to symptoms' : '↑ Zpět na výběr'}</a>
               </div>
             </div>
           </article>
@@ -1176,6 +1177,29 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
     }
   }
 
+  .rq-problem-diagnostic__back {
+    display: none;
+  }
+
+  @media (max-width: 1023px) {
+    .rq-problem-diagnostic__back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-top: 0.2rem;
+      font-family: var(--rq-mono), ui-monospace, monospace;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: var(--rq-diagnostic-accent);
+      text-decoration: none;
+    }
+
+    .rq-problem-diagnostic__back:hover {
+      text-decoration: underline;
+    }
+  }
+
   @media (max-width: 860px) {
     .rq-problem-diagnostic__head {
       display: grid;
@@ -1591,6 +1615,14 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
         card: options.scrollTarget,
         instant: options.instant,
       });
+      if (options.interacted && safeIndex !== previousIndex && typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches) {
+        const activePanel = panels[activeIndex];
+        if (activePanel) {
+          window.requestAnimationFrame(() => {
+            activePanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          });
+        }
+      }
       if (options.focus) cards[activeIndex]?.focus({ preventScroll: true });
     };
 

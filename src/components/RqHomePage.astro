@@ -13,7 +13,8 @@ interface Props {
   lang?: Locale;
 }
 
-const { content = homeContent.cs, lang = 'cs' } = Astro.props;
+const { content: providedContent, lang = 'cs' } = Astro.props;
+const content: HomeContent = providedContent ?? homeContent.cs;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const resolve = (href: string) => {
   if (!href || !href.startsWith('/')) return href;
@@ -1880,19 +1881,35 @@ const schema = {
     <h2 class="rq-h2" id="ceny-title">{content.pricing.title}</h2>
     <p class="rq-lead">{content.pricing.lead}</p>
 
-    <div class="rq-pricing-grid" data-rq-reveal aria-label={content.pricing.ariaLabel}>
-      {content.pricing.items.map((item) => (
-        <article class:list={['rq-card', 'rq-price-card', item.featured && 'rq-price-card--featured']}>
-          {item.badge && <span class="rq-price-card__badge">{item.badge}</span>}
-          <h3 class="rq-price-card__title">{item.title}</h3>
-          <p class="rq-price-card__price">{item.price}{item.suffix && <span>{item.suffix}</span>}</p>
-          <p class="rq-price-card__text">{item.text}</p>
-          <a class:list={['rq-btn', item.featured ? 'rq-btn--primary' : 'rq-btn--ghost']} href="#kontakt">{item.ctaLabel}</a>
-        </article>
-      ))}
+    <div class="rq-pricing-project" data-rq-reveal aria-labelledby="ceny-project-title">
+      <h3 class="rq-pricing-project__title" id="ceny-project-title">{content.pricing.projectTitle}</h3>
+      <div class="rq-pricing-project__grid" aria-label={content.pricing.projectTitle}>
+        {content.pricing.projectItems.map((item) => (
+          <article class="rq-card rq-pricing-project__item">
+            <h4>{item.name}</h4>
+            <p class="rq-pricing-project__price">{item.price}</p>
+          </article>
+        ))}
+      </div>
+      <p class="rq-pricing-note rq-pricing-project__note">{content.pricing.projectNote}</p>
     </div>
 
-    <p class="rq-pricing-note">{content.pricing.note}</p>
+    <div class="rq-pricing-project rq-pricing-project--care" aria-labelledby="ceny-care-title">
+      <h3 class="rq-pricing-project__title" id="ceny-care-title">{content.pricing.careTitle}</h3>
+      <div class="rq-pricing-grid" data-rq-reveal aria-label={content.pricing.ariaLabel}>
+        {content.pricing.items.map((item) => (
+          <article class:list={['rq-card', 'rq-price-card', item.featured && 'rq-price-card--featured']}>
+            {item.badge && <span class="rq-price-card__badge">{item.badge}</span>}
+            <h3 class="rq-price-card__title">{item.title}</h3>
+            <p class="rq-price-card__price">{item.price}{item.suffix && <span>{item.suffix}</span>}</p>
+            <p class="rq-price-card__text">{item.text}</p>
+            <a class:list={['rq-btn', item.featured ? 'rq-btn--primary' : 'rq-btn--ghost']} href="#kontakt">{item.ctaLabel}</a>
+          </article>
+        ))}
+      </div>
+
+      <p class="rq-pricing-note">{content.pricing.note}</p>
+    </div>
   </section>
 
   <section class="rq-bleed rq-ukazky-teaser" id="ukazky-teaser" aria-labelledby="ukazky-teaser-title">
@@ -2045,3 +2062,81 @@ const schema = {
 <RqFooter navItems={content.nav.items} content={content.footer} homeHref={content.nav.homeHref} />
 <RqGuide content={content.guide} lang={lang} />
 <RqMotion />
+
+<style>
+  .rq-pricing-project {
+    margin-top: clamp(1.75rem, 4vw, 3rem);
+  }
+
+  .rq-pricing-project--care {
+    margin-top: clamp(2.25rem, 5vw, 4rem);
+  }
+
+  .rq-pricing-project__title {
+    margin: 0;
+    color: var(--rq-ink);
+    font-family: var(--rq-display);
+    font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+    line-height: 1.15;
+  }
+
+  .rq-pricing-project__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(0.75rem, 2vw, 1rem);
+    margin-top: clamp(1rem, 2.5vw, 1.5rem);
+    max-width: 980px;
+  }
+
+  .rq-pricing-project__item {
+    display: flex;
+    min-width: 0;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: clamp(1rem, 2vw, 1.25rem);
+  }
+
+  .rq-pricing-project__item h4,
+  .rq-pricing-project__price {
+    margin: 0;
+  }
+
+  .rq-pricing-project__item h4 {
+    color: var(--rq-ink);
+    font-family: Inter, system-ui, sans-serif;
+    font-size: clamp(1rem, 1.5vw, 1.1rem);
+    line-height: 1.35;
+  }
+
+  .rq-pricing-project__price {
+    color: var(--rq-burgundy-strong);
+    font-family: var(--rq-display);
+    font-size: clamp(1.05rem, 1.7vw, 1.25rem);
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .rq-pricing-project__note {
+    margin-top: 1rem;
+  }
+
+  @media (max-width: 720px) {
+    .rq-pricing-project__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .rq-pricing-project__item {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .rq-pricing-project__price {
+      text-align: left;
+      white-space: normal;
+    }
+  }
+</style>

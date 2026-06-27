@@ -182,6 +182,13 @@ export type HomeContent = {
     eyebrow: string;
     title: string;
     lead: string;
+    projectTitle: string;
+    projectNote: string;
+    careTitle: string;
+    projectItems: readonly {
+      name: string;
+      price: string;
+    }[];
     ariaLabel: string;
     note: string;
     items: readonly {
@@ -1266,7 +1273,19 @@ export const homeContent = {
     pricing: {
       eyebrow: 'Ceny',
       title: 'Orientační ceny bez překvapení.',
-      lead: 'Péče po spuštění pro menší weby, e-shopy a automatizace. Vybereme jen rozsah, který dává smysl.',
+      lead: 'Realizace a péče jsou dvě různé služby: nejdřív orientační ceny projektů, níže paušály péče po spuštění.',
+      projectTitle: 'Projektové realizace',
+      projectNote: 'Ceny realizací jsou orientační (od) — přesný rozsah a cenu řekneme po krátké domluvě. Jediná pevná sazba je práce od 1 100 Kč/h (bloky 5/15/40 h).',
+      careTitle: 'Péče po spuštění',
+      projectItems: [
+        { name: 'Jednostránkový web', price: 'od 9 900 Kč' },
+        { name: 'Firemní web (1–5 stran)', price: 'od 25 000 Kč' },
+        { name: 'Redesign staršího webu', price: '35 000–75 000 Kč' },
+        { name: 'E-shop', price: 'od 19 900 Kč' },
+        { name: 'Automatizace procesů', price: 'od 12 000 Kč' },
+        { name: 'Data a AI pomocníci', price: 'od 15 000 Kč' },
+        { name: 'Audit webu nebo procesu', price: 'od 4 900 Kč' },
+      ],
       ariaLabel: 'Tarify péče po spuštění',
       note: 'Nechcete paušál? Bloky hodin 5/15/40 h (od 1 100 Kč/h). Audit lze odečíst z realizace. Nejsem plátce DPH — ceny jsou konečné.',
       items: [
@@ -1595,7 +1614,19 @@ export const homeContent = {
     pricing: {
       eyebrow: 'Pricing',
       title: 'Indicative prices without surprises.',
-      lead: 'Post-launch care for smaller websites, e-shops, and automations. We choose only the scope that makes sense.',
+      lead: 'Project delivery and care are separate services: first indicative project prices, then post-launch care plans.',
+      projectTitle: 'Project work',
+      projectNote: 'Project prices are indicative (from) — exact scope and price after a short chat. The only fixed rate is work from CZK 1,100/h (blocks of 5/15/40 h).',
+      careTitle: 'Post-launch care',
+      projectItems: [
+        { name: 'One-page website', price: 'from CZK 9,900' },
+        { name: 'Company website (1–5 pages)', price: 'from CZK 25,000' },
+        { name: 'Redesign of an older site', price: 'CZK 35,000–75,000' },
+        { name: 'E-shop', price: 'from CZK 19,900' },
+        { name: 'Process automation', price: 'from CZK 12,000' },
+        { name: 'Data & AI assistants', price: 'from CZK 15,000' },
+        { name: 'Website or process audit', price: 'from CZK 4,900' },
+      ],
       ariaLabel: 'Post-launch care plans',
       note: 'Do not want a retainer? Hour blocks 5/15/40 h (from CZK 1,100/h). Audit can be deducted from implementation. I am not a VAT payer - prices are final.',
       items: [

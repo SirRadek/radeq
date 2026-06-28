@@ -1206,6 +1206,7 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
     .rq-problem-diagnostic__back {
       display: inline-flex;
       align-items: center;
+      min-height: 44px;
       gap: 0.3rem;
       margin-top: 0.2rem;
       font-family: var(--rq-mono), ui-monospace, monospace;
@@ -1228,11 +1229,11 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
     }
 
     .rq-problem-diagnostic__shell {
-      --rq-card-w: min(64vw, 16rem);
-      --rq-card-w-lead: min(66vw, 17rem);
-      --rq-card-h: clamp(12rem, 37vw, 13.75rem);
-      --rq-card-h-lead: clamp(12.25rem, 38vw, 14rem);
-      --rq-jaw-min-block-size: clamp(40rem, 72vw, 48rem);
+      --rq-card-w: min(58vw, 15rem);
+      --rq-card-w-lead: min(60vw, 16rem);
+      --rq-card-h: clamp(8.5rem, 28vw, 11rem);
+      --rq-card-h-lead: clamp(9rem, 29vw, 11.5rem);
+      --rq-jaw-min-block-size: clamp(18rem, 40vw, 26rem);
     }
 
     .rq-problem-diagnostic__meta-row {
@@ -1279,9 +1280,20 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
 
   @media (max-width: 640px) {
     .rq-problem-diagnostic__shell {
-      --rq-card-w: min(58vw, 15rem);
-      --rq-card-w-lead: min(60vw, 15.5rem);
-      --rq-jaw-min-block-size: clamp(49rem, 146vw, 62rem);
+      --rq-card-w: min(54vw, 14rem);
+      --rq-card-w-lead: min(58vw, 15rem);
+      --rq-jaw-min-block-size: clamp(16rem, 38vw, 22rem);
+    }
+
+    /* kill 100vw stage bleed (30px přetok) — content-w=100% sníží board-pad-inline,
+       takže stage drží full-width filmstrip, ale nepřetéká přes viewport */
+    .rq-problem-diagnostic__board {
+      --rq-diagnostic-board-content-w: 100%;
+    }
+
+    /* panel roste dle obsahu, ne pevný 62rem floor (žrout délky) */
+    .rq-problem-diagnostic__script-sheet {
+      min-block-size: 0;
     }
 
     .rq-problem-diagnostic__meta-row {
@@ -1290,8 +1302,8 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
     }
 
     .rq-problem-diagnostic__nav {
-      width: 2.55rem;
-      height: 2.55rem;
+      width: 2.75rem;
+      height: 2.75rem;
     }
 
     .rq-problem-diagnostic__findings {

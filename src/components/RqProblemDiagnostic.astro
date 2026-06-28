@@ -1132,34 +1132,55 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
       margin-bottom: clamp(1.4rem, 2.6vw, 2.2rem);
     }
 
+    /* B: skrýt mřížkový box — sekce má vlastní pozadí, karusel splyne */
+    .rq-problem-diagnostic__board::before {
+      display: none;
+    }
+
+    /* A: vertikální stack — filmstrip nahoře, panel pod ním, tagline dole */
     .rq-problem-diagnostic__board {
-      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+      grid-template-columns: 1fr;
       grid-template-areas:
-        "stage output"
-        "tagline output";
-      align-items: start;
-      column-gap: clamp(1.4rem, 2.8vw, 2.6rem);
-      row-gap: clamp(0.7rem, 1.4vw, 1.1rem);
-      --rq-card-h: clamp(9rem, 12vw, 11rem);
-      --rq-card-h-lead: clamp(9.5rem, 12.5vw, 11.5rem);
-      --rq-jaw-min-block-size: clamp(24rem, 28vw, 27rem);
+        "stage"
+        "output"
+        "tagline";
+      row-gap: clamp(0.5rem, 1.2vw, 1rem);
+      --rq-card-h: clamp(7.5rem, 10vw, 8.5rem);
+      --rq-card-h-lead: clamp(8rem, 10.5vw, 9rem);
+      --rq-jaw-min-block-size: clamp(22rem, 26vw, 26rem);
     }
 
     .rq-problem-diagnostic__stage {
       grid-area: stage;
-      margin-inline: 0;
-      align-self: center;
-    }
-
-    .rq-problem-diagnostic__tagline {
-      grid-area: tagline;
-      margin-top: 0;
-      align-self: start;
     }
 
     .rq-problem-diagnostic__output {
       grid-area: output;
-      align-self: start;
+      position: relative;
+      width: 100%;
+      max-width: 1080px;
+      margin-inline: auto;
+      margin-top: 1.4rem;
+    }
+
+    /* connector: zobáček od panelu k aktivní kartě (panel má overflow:hidden → na __output) */
+    .rq-problem-diagnostic__output::before {
+      content: "";
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 0 12px 12px 12px;
+      border-style: solid;
+      border-color: transparent transparent #f3ead8 transparent;
+    }
+
+    .rq-problem-diagnostic__tagline {
+      grid-area: tagline;
+      text-align: center;
+      max-width: 48ch;
+      margin-inline: auto;
+      margin-top: 1.2rem;
     }
 
     .rq-problem-diagnostic__script-sheet {

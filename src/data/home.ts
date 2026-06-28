@@ -1163,7 +1163,7 @@ export const homeContent = {
     problems: {
       eyebrow: 'Co řeším',
       title: 'Poznáváte některý z těchto problémů?',
-      lead: 'Vyberte signál, který sedí nejvíc. Ukážu pravděpodobnou příčinu, co ověřím a první rozumný krok bez zbytečné omáčky.',
+      lead: 'Vyberte signál, který sedí nejvíc. Ukážu pravděpodobnou příčinu, co prověřím a první rozumný krok.',
       severityLegend: {
         strong: 'Dopad na provoz',
         text: 'Hvězdy ukazují, jak rychle problém brzdí poptávky, čas nebo přehled. Nejde o hodnocení služby.',
@@ -1174,11 +1174,11 @@ export const homeContent = {
       carouselAriaLabel: 'Karusel s 15 typickými signály problémů',
       severitySrPrefix: 'Dopad na provoz:',
       severitySrSuffix: 'z 5 hvězd.',
-      tagline: 'Režírujte svůj byznys sami. Nabízím víc než průměr.',
+      tagline: 'Vyberte, co vás brzdí. Navrhnu nejmenší krok, který má smysl.',
       findingLabels: {
-        problem: 'Zápletka',
-        cause: 'Pravděpodobná příčina',
-        verify: 'Co ověřím',
+        problem: 'Co se děje',
+        cause: 'Kde bývá příčina',
+        verify: 'Co prověřím',
         step: 'První krok',
       },
       ctaLabel: 'Napsat poptávku',
@@ -1218,7 +1218,7 @@ export const homeContent = {
         start: {
           eyebrow: 'Problém',
           title: 'Web nevede k poptávce',
-          problemLabel: 'Zápletka',
+          problemLabel: 'Co se děje',
           problem: 'Web jen existuje, ale návštěvník nedojde ke kontaktu.',
           stepLabel: 'První krok',
           step: 'krátký audit a úprava struktury + jasné CTA.',
@@ -1273,7 +1273,7 @@ export const homeContent = {
     pricing: {
       eyebrow: 'Ceny',
       title: 'Orientační ceny bez překvapení.',
-      lead: 'Realizace a péče jsou dvě různé služby: nejdřív orientační ceny projektů, níže paušály péče po spuštění.',
+      lead: 'Realizace a péče jsou dvě různé služby: jednorázové orientační ceny projektů a měsíční paušály péče po spuštění.',
       projectTitle: 'Projektové realizace',
       projectNote: 'Ceny realizací jsou orientační (od) — přesný rozsah a cenu řekneme po krátké domluvě. Jediná pevná sazba je práce od 1 100 Kč/h (bloky 5/15/40 h).',
       careTitle: 'Péče po spuštění',
@@ -1504,7 +1504,7 @@ export const homeContent = {
     problems: {
       eyebrow: 'What I solve',
       title: 'Do any of these problems look familiar?',
-      lead: 'Choose the signal that fits best. I will show the likely cause, what I would verify, and the first sensible step without unnecessary theatre.',
+      lead: 'Choose the signal that fits best. I will show the likely cause, what I would verify, and the first sensible step.',
       severityLegend: {
         strong: 'Operational impact',
         text: 'Stars show how quickly the problem slows enquiries, time, or visibility. They are not a service rating.',
@@ -1515,11 +1515,11 @@ export const homeContent = {
       carouselAriaLabel: 'Carousel with 15 typical problem signals',
       severitySrPrefix: 'Operational impact:',
       severitySrSuffix: 'out of 5 stars.',
-      tagline: 'Direct your business yourself. I offer more than average.',
+      tagline: 'Choose what holds you back. I will suggest the smallest step that makes sense.',
       findingLabels: {
-        problem: 'The plot',
-        cause: 'Likely cause',
-        verify: 'What I verify',
+        problem: 'What is happening',
+        cause: 'Where the cause lies',
+        verify: 'What I will verify',
         step: 'First step',
       },
       ctaLabel: 'Send an enquiry',
@@ -1559,7 +1559,7 @@ export const homeContent = {
         start: {
           eyebrow: 'Problem',
           title: 'The website does not create enquiries',
-          problemLabel: 'The plot',
+          problemLabel: 'What is happening',
           problem: 'The website exists, but visitors do not reach the contact step.',
           stepLabel: 'First step',
           step: 'a short audit, structure cleanup, and clear calls to action.',
@@ -1614,7 +1614,7 @@ export const homeContent = {
     pricing: {
       eyebrow: 'Pricing',
       title: 'Indicative prices without surprises.',
-      lead: 'Project delivery and care are separate services: first indicative project prices, then post-launch care plans.',
+      lead: 'Project delivery and care are separate services: one-off indicative project prices and monthly post-launch care plans.',
       projectTitle: 'Project work',
       projectNote: 'Project prices are indicative (from) — exact scope and price after a short chat. The only fixed rate is work from CZK 1,100/h (blocks of 5/15/40 h).',
       careTitle: 'Post-launch care',

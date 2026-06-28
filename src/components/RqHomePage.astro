@@ -1881,34 +1881,39 @@ const schema = {
     <h2 class="rq-h2" id="ceny-title">{content.pricing.title}</h2>
     <p class="rq-lead">{content.pricing.lead}</p>
 
-    <div class="rq-pricing-project" data-rq-reveal aria-labelledby="ceny-project-title">
-      <h3 class="rq-pricing-project__title" id="ceny-project-title">{content.pricing.projectTitle}</h3>
-      <div class="rq-pricing-project__grid" aria-label={content.pricing.projectTitle}>
-        {content.pricing.projectItems.map((item) => (
-          <article class="rq-card rq-pricing-project__item">
-            <h4>{item.name}</h4>
-            <p class="rq-pricing-project__price">{item.price}</p>
-          </article>
-        ))}
-      </div>
-      <p class="rq-pricing-note rq-pricing-project__note">{content.pricing.projectNote}</p>
-    </div>
-
-    <div class="rq-pricing-project rq-pricing-project--care" aria-labelledby="ceny-care-title">
-      <h3 class="rq-pricing-project__title" id="ceny-care-title">{content.pricing.careTitle}</h3>
-      <div class="rq-pricing-grid" data-rq-reveal aria-label={content.pricing.ariaLabel}>
-        {content.pricing.items.map((item) => (
-          <article class:list={['rq-card', 'rq-price-card', item.featured && 'rq-price-card--featured']}>
-            {item.badge && <span class="rq-price-card__badge">{item.badge}</span>}
-            <h3 class="rq-price-card__title">{item.title}</h3>
-            <p class="rq-price-card__price">{item.price}{item.suffix && <span>{item.suffix}</span>}</p>
-            <p class="rq-price-card__text">{item.text}</p>
-            <a class:list={['rq-btn', item.featured ? 'rq-btn--primary' : 'rq-btn--ghost']} href="#kontakt">{item.ctaLabel}</a>
-          </article>
-        ))}
+    <div class="rq-pricing__board" data-rq-reveal>
+      <div class="rq-pricing-project rq-pricing-project--list" aria-labelledby="ceny-project-title">
+        <p class="rq-pricing__kicker">{lang === 'en' ? 'One-off' : 'Jednorázově'}</p>
+        <h3 class="rq-pricing-project__title" id="ceny-project-title">{content.pricing.projectTitle}</h3>
+        <ul class="rq-pricing-project__list" aria-label={content.pricing.projectTitle}>
+          {content.pricing.projectItems.map((item) => (
+            <li class="rq-pricing-project__list-item">
+              <span class="rq-pricing-project__list-name">{item.name}</span>
+              <span class="rq-pricing-project__list-dots" aria-hidden="true"></span>
+              <span class="rq-pricing-project__price">{item.price}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="rq-pricing-note rq-pricing-project__note">{content.pricing.projectNote}</p>
       </div>
 
-      <p class="rq-pricing-note">{content.pricing.note}</p>
+      <div class="rq-pricing-project rq-pricing-project--care" aria-labelledby="ceny-care-title">
+        <p class="rq-pricing__kicker">{lang === 'en' ? 'Monthly' : 'Měsíčně'}</p>
+        <h3 class="rq-pricing-project__title" id="ceny-care-title">{content.pricing.careTitle}</h3>
+        <div class="rq-pricing-grid" aria-label={content.pricing.ariaLabel}>
+          {content.pricing.items.map((item) => (
+            <article class:list={['rq-card', 'rq-price-card', item.featured && 'rq-price-card--featured']}>
+              {item.badge && <span class="rq-price-card__badge">{item.badge}</span>}
+              <h3 class="rq-price-card__title">{item.title}</h3>
+              <p class="rq-price-card__price">{item.price}{item.suffix && <span>{item.suffix}</span>}</p>
+              <p class="rq-price-card__text">{item.text}</p>
+              <a class:list={['rq-btn', item.featured ? 'rq-btn--primary' : 'rq-btn--ghost']} href="#kontakt">{item.ctaLabel}</a>
+            </article>
+          ))}
+        </div>
+
+        <p class="rq-pricing-note">{content.pricing.note}</p>
+      </div>
     </div>
   </section>
 
@@ -1982,12 +1987,33 @@ const schema = {
 <RqMotion />
 
 <style>
-  .rq-pricing-project {
+  .rq-pricing__board {
     margin-top: clamp(1.75rem, 4vw, 3rem);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 4vw, 3rem);
+    align-items: start;
   }
 
-  .rq-pricing-project--care {
-    margin-top: clamp(2.25rem, 5vw, 4rem);
+  @media (min-width: 1180px) {
+    .rq-pricing__board {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 2.15fr);
+      gap: clamp(2rem, 3.5vw, 3.5rem);
+    }
+  }
+
+  .rq-pricing-project {
+    min-width: 0;
+  }
+
+  .rq-pricing__kicker {
+    margin: 0 0 0.45rem;
+    font-family: var(--rq-mono), ui-monospace, monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--rq-burgundy-strong);
   }
 
   .rq-pricing-project__title {
@@ -1998,63 +2024,56 @@ const schema = {
     line-height: 1.15;
   }
 
-  .rq-pricing-project__grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(0.75rem, 2vw, 1rem);
-    margin-top: clamp(1rem, 2.5vw, 1.5rem);
-    max-width: 980px;
+  .rq-pricing-project__list {
+    list-style: none;
+    margin: clamp(1rem, 2.5vw, 1.4rem) 0 0;
+    padding: 0;
   }
 
-  .rq-pricing-project__item {
+  .rq-pricing-project__list-item {
     display: flex;
-    min-width: 0;
     align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: clamp(1rem, 2vw, 1.25rem);
+    gap: 0.5rem;
+    padding-block: clamp(0.6rem, 1.4vw, 0.85rem);
+    border-bottom: 1px solid color-mix(in srgb, var(--rq-ink) 13%, transparent);
   }
 
-  .rq-pricing-project__item h4,
-  .rq-pricing-project__price {
-    margin: 0;
+  .rq-pricing-project__list-item:first-child {
+    border-top: 1px solid color-mix(in srgb, var(--rq-ink) 13%, transparent);
   }
 
-  .rq-pricing-project__item h4 {
+  .rq-pricing-project__list-name {
     color: var(--rq-ink);
     font-family: Inter, system-ui, sans-serif;
-    font-size: clamp(1rem, 1.5vw, 1.1rem);
-    line-height: 1.35;
+    font-size: clamp(0.98rem, 1.4vw, 1.08rem);
+    line-height: 1.3;
+  }
+
+  .rq-pricing-project__list-dots {
+    flex: 1;
+    align-self: center;
+    border-bottom: 1px dotted color-mix(in srgb, var(--rq-ink) 32%, transparent);
+    margin-inline: 0.4rem;
+    transform: translateY(-0.18em);
   }
 
   .rq-pricing-project__price {
     color: var(--rq-burgundy-strong);
     font-family: var(--rq-display);
-    font-size: clamp(1.05rem, 1.7vw, 1.25rem);
+    font-size: clamp(1.02rem, 1.6vw, 1.18rem);
     font-weight: 700;
     line-height: 1.2;
-    text-align: right;
     white-space: nowrap;
+    margin: 0;
   }
 
   .rq-pricing-project__note {
     margin-top: 1rem;
   }
 
-  @media (max-width: 720px) {
-    .rq-pricing-project__grid {
-      grid-template-columns: 1fr;
-    }
-
-    .rq-pricing-project__item {
-      align-items: flex-start;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-
-    .rq-pricing-project__price {
-      text-align: left;
-      white-space: normal;
+  @media (max-width: 480px) {
+    .rq-pricing-project__list-dots {
+      display: none;
     }
   }
 </style>

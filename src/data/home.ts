@@ -1131,9 +1131,7 @@ export const homeContent = {
         { href: '#co-resim', label: 'Co řeším' },
         { href: '#sluzby', label: 'Služby' },
         { href: '#jak-pracuji', label: 'Jak pracuji' },
-        { href: '#ceny', label: 'Ceny' },
-        { href: '/ukazky/', label: 'Ukázky' },
-        { href: '#kontakt', label: 'Kontakt' },
+        { href: '#ceny', label: 'Ceny' },        { href: '#kontakt', label: 'Kontakt' },
       ],
     },
     hero: {
@@ -1156,7 +1154,7 @@ export const homeContent = {
       ],
       actions: {
         primary: { href: '#kontakt', label: 'Napsat poptávku' },
-        secondary: { href: '#ukazky-teaser', label: 'Ukázky práce' },
+        secondary: { href: '#ceny', label: 'Ceník' },
         micro: 'Nezávazně. Ozvu se do 1 pracovního dne.',
       },
     },
@@ -1472,9 +1470,7 @@ export const homeContent = {
         { href: '#co-resim', label: 'What I solve' },
         { href: '#sluzby', label: 'Services' },
         { href: '#jak-pracuji', label: 'How I work' },
-        { href: '#ceny', label: 'Pricing' },
-        { href: '/ukazky/', label: 'Examples' },
-        { href: '#kontakt', label: 'Contact' },
+        { href: '#ceny', label: 'Pricing' },        { href: '#kontakt', label: 'Contact' },
       ],
     },
     hero: {
@@ -1497,7 +1493,7 @@ export const homeContent = {
       ],
       actions: {
         primary: { href: '#kontakt', label: 'Send an enquiry' },
-        secondary: { href: '#ukazky-teaser', label: 'Work examples' },
+        secondary: { href: '#ceny', label: 'Pricing' },
         micro: 'No obligation. I reply within 1 business day.',
       },
     },

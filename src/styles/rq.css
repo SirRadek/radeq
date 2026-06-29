@@ -32,6 +32,12 @@
 }
 
 html,
+/* iOS Safari (URL lišta dole): html bg = footer carbon, ať mezera pod footrem
+   / over-scroll nesvítí bíle (canvas pozadí) */
+html {
+  background: var(--rq-carbon);
+}
+
 body {
   background: var(--rq-bg) !important;
   overflow-x: clip;
@@ -1553,11 +1559,11 @@ p {
   .rq-services-bento__grid {
     grid-template-columns: 1fr;
     grid-template-areas:
+      "audit"
       "web"
       "shop"
       "automation"
-      "data"
-      "audit";
+      "data";
   }
 
   .rq-service-tile,
@@ -3756,5 +3762,24 @@ body .rq-hero .rq-lead {
 
   .rq-journey.is-expanded .rq-journey-panel__more-hide {
     display: inline;
+  }
+
+  /* footer zhustit: logo full, nav+spojení vedle sebe, menší padding + iOS safe-area */
+  .rq-site-footer__inner {
+    padding-block: 1.6rem 1rem;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .rq-site-footer__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.1rem 1.25rem;
+  }
+
+  .rq-site-footer__grid > div:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .rq-site-footer__bottom {
+    margin-top: 1.1rem;
   }
 }

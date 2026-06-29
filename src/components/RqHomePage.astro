@@ -1917,32 +1917,7 @@ const schema = {
     </div>
   </section>
 
-  <section class="rq-bleed rq-ukazky-teaser" id="ukazky-teaser" aria-labelledby="ukazky-teaser-title">
-    <div class="rq-section rq-ukazky-teaser__inner">
-      <p class="rq-eyebrow">{content.showcase.eyebrow}</p>
-      <h2 class="rq-h2" id="ukazky-teaser-title">{content.showcase.title}</h2>
-      <div class="rq-ukazky-bento" data-rq-reveal>
-        {content.showcase.items.map((item) => (
-          <a class:list={['rq-card', 'rq-ukazky-bento-card', item.className]} href={resolve(item.href)}>
-            <span class="rq-ukazky-bento-card__model" aria-hidden="true">
-              <span class="rq-ukazky-bento-card__layer rq-ukazky-bento-card__layer--code"></span>
-              <span class="rq-ukazky-bento-card__layer rq-ukazky-bento-card__layer--data"></span>
-              <span class="rq-ukazky-bento-card__layer rq-ukazky-bento-card__layer--ui"></span>
-              <span class="rq-ukazky-bento-card__laser rq-ukazky-bento-card__laser--top"></span>
-              <span class="rq-ukazky-bento-card__laser rq-ukazky-bento-card__laser--bottom"></span>
-            </span>
-            <span class="rq-ukazky-bento-card__content">
-              <span class="rq-ukazky-bento-card__badge">{item.badge}</span>
-              <span class="rq-ukazky-bento-card__kicker">{item.kicker}</span>
-              <strong class="rq-ukazky-bento-card__title">{item.title}</strong>
-              <span class="rq-ukazky-bento-card__text">{item.text}</span>
-              <span class="rq-ukazky-bento-card__link">{item.linkLabel}</span>
-            </span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
+  {/* Ukázky teaser odebráno (owner 2026-06-28). content.showcase data ponecháno — používá journey „Výsledek" náhled (řeší brainstorm B). */}
 
   <section class="rq-section rq-about" id="kdo-jsem" aria-labelledby="rq-about-title">
     <div class="rq-about__media">

@@ -130,6 +130,51 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
                   </span>
                 </span>
               </button>
+              <article
+                class:list={['rq-problem-diagnostic__panel', index === 0 && 'is-active']}
+                id={`rq-problem-panel-${item.id}`}
+                role="tabpanel"
+                tabindex={index === 0 ? '0' : '-1'}
+                aria-labelledby={`rq-problem-card-${item.id}`}
+                aria-hidden={index === 0 ? 'false' : 'true'}
+                inert={index !== 0 ? true : undefined}
+                data-rq-problem-panel
+                data-rq-problem-mini-title={item.symptom}
+                data-rq-problem-mini-problem={item.problem}
+                data-rq-problem-mini-step={item.step}
+                style={`--rq-problem-genre-color: ${item.genreColor};`}
+              >
+                <div class="rq-problem-diagnostic__script-sheet">
+                  <div class="rq-problem-diagnostic__panel-top">
+                    <h3><span class="rq-problem-diagnostic__scene-title">{item.symptom}</span></h3>
+                  </div>
+                  <dl class="rq-problem-diagnostic__findings">
+                    <div class="rq-problem-diagnostic__finding rq-problem-diagnostic__finding--plot">
+                      <dt>{content.findingLabels.problem}</dt><dd>{item.problem}</dd>
+                    </div>
+                    <div class="rq-problem-diagnostic__finding">
+                      <dt>{content.findingLabels.cause}</dt><dd>{item.cause}</dd>
+                    </div>
+                    <div class="rq-problem-diagnostic__finding">
+                      <dt>{content.findingLabels.verify}</dt><dd>{item.verify}</dd>
+                    </div>
+                    <div class="rq-problem-diagnostic__finding">
+                      <dt>{content.findingLabels.step}</dt><dd>{item.step}</dd>
+                    </div>
+                  </dl>
+                  <div class="rq-problem-diagnostic__actions">
+                    <a class="rq-btn rq-btn--primary" href="#kontakt">{content.ctaLabel}</a>
+                    <a
+                      class="rq-problem-diagnostic__service"
+                      href={`#service-${item.primaryServiceId}`}
+                      data-rq-primary-service-target={item.primaryServiceId}
+                      data-rq-related-service-target={item.relatedServiceIds[0]}
+                    >
+                      {content.servicePrefix} <strong>{item.service}</strong>
+                    </a>
+                  </div>
+                </div>
+              </article>
             </li>
           ))}
           {trailingCarouselClones.map(({ item, realIndex }) => (
@@ -184,70 +229,6 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
         </div>
 
       <p class="rq-problem-diagnostic__tagline" id="rq-problem-carousel-tagline">{content.tagline}</p>
-
-      <div class="rq-problem-diagnostic__output" aria-live="off" data-rq-problem-output>
-        {items.map((item, index) => (
-          <article
-            class:list={[
-              'rq-problem-diagnostic__panel',
-              index === 0 && 'is-active',
-            ]}
-            id={`rq-problem-panel-${item.id}`}
-            role="tabpanel"
-            tabindex={index === 0 ? '0' : '-1'}
-            aria-labelledby={`rq-problem-card-${item.id}`}
-            aria-hidden={index === 0 ? 'false' : 'true'}
-            inert={index !== 0 ? true : undefined}
-            data-rq-problem-panel
-            data-rq-problem-mini-title={item.symptom}
-            data-rq-problem-mini-problem={item.problem}
-            data-rq-problem-mini-step={item.step}
-            style={`--rq-problem-genre-color: ${item.genreColor};`}
-          >
-            <div class="rq-problem-diagnostic__script-sheet">
-              <div class="rq-problem-diagnostic__panel-top">
-                <h3>
-                  <span class="rq-problem-diagnostic__scene-title">{item.symptom}</span>
-                </h3>
-              </div>
-              <dl class="rq-problem-diagnostic__findings">
-                <div class="rq-problem-diagnostic__finding rq-problem-diagnostic__finding--plot">
-                  <dt>{content.findingLabels.problem}</dt>
-                  <dd>{item.problem}</dd>
-                </div>
-                <div class="rq-problem-diagnostic__finding rq-problem-diagnostic__finding--secondary">
-                  <dt>{content.findingLabels.cause}</dt>
-                  <dd>{item.cause}</dd>
-                </div>
-                <div class="rq-problem-diagnostic__finding rq-problem-diagnostic__finding--secondary">
-                  <dt>{content.findingLabels.verify}</dt>
-                  <dd>{item.verify}</dd>
-                </div>
-                <div class="rq-problem-diagnostic__finding">
-                  <dt>{content.findingLabels.step}</dt>
-                  <dd>{item.step}</dd>
-                </div>
-              </dl>
-              <button class="rq-problem-diagnostic__more" type="button" data-rq-problem-more aria-expanded="false">
-                <span class="rq-problem-diagnostic__more-show">{lang === 'en' ? 'More detail' : 'Víc detailů'}</span>
-                <span class="rq-problem-diagnostic__more-hide">{lang === 'en' ? 'Less' : 'Míň'}</span>
-              </button>
-              <div class="rq-problem-diagnostic__actions">
-                <a class="rq-btn rq-btn--primary" href="#kontakt">{content.ctaLabel}</a>
-                <a
-                  class="rq-problem-diagnostic__service"
-                  href={`#service-${item.primaryServiceId}`}
-                  data-rq-primary-service-target={item.primaryServiceId}
-                  data-rq-related-service-target={item.relatedServiceIds[0]}
-                >
-                  {content.servicePrefix} <strong>{item.service}</strong>
-                </a>
-                <a class="rq-problem-diagnostic__back" href="#diagnostika">{lang === 'en' ? '↑ Back to symptoms' : '↑ Zpět na výběr'}</a>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
       </div>
     </div>
   </div>
@@ -363,7 +344,10 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
     --rq-card-w-lead: clamp(13rem, 21vw, 17rem);
     --rq-card-h: clamp(12.75rem, 17vw, 15.5rem);
     --rq-card-h-lead: clamp(13rem, 18vw, 16rem);
-    --rq-jaw-min-block-size: clamp(34rem, 38vw, 40rem);
+    /* slot = jednotná coverflow buňka: aktivní = panel, sousedi = poster (vykukují) */
+    --rq-slot-w: clamp(19rem, 88vw, 23rem);
+    --rq-slot-h: clamp(23rem, 92vw, 26rem);
+    --rq-jaw-min-block-size: var(--rq-slot-h);
     --rq-problem-ease-out-back: cubic-bezier(0.18, 1.22, 0.28, 1);
     position: relative;
     display: grid;
@@ -523,7 +507,7 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
     padding-block: 0.9rem 0.75rem;
     perspective: 1160px;
     perspective-origin: center;
-    scroll-padding-inline: max(1rem, calc((100% - var(--rq-card-w)) / 2));
+    scroll-padding-inline: max(1rem, calc((100% - var(--rq-slot-w)) / 2));
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -541,14 +525,16 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
     gap: clamp(0.55rem, 1.3vw, 0.95rem);
     min-width: max-content;
     margin: 0;
-    padding: 0 max(1rem, calc((100% - var(--rq-card-w)) / 2));
+    padding: 0 max(1rem, calc((100% - var(--rq-slot-w)) / 2));
     list-style: none;
     transform-style: preserve-3d;
   }
 
   .rq-problem-diagnostic__frame {
-    flex: 0 0 var(--rq-card-w);
+    flex: 0 0 var(--rq-slot-w);
     min-width: 0;
+    block-size: var(--rq-slot-h);
+    position: relative;
     scroll-snap-align: center;
   }
 
@@ -561,7 +547,7 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
   }
 
   .rq-problem-diagnostic__frame--lead {
-    flex-basis: var(--rq-card-w-lead);
+    flex-basis: var(--rq-slot-w);
   }
 
   .rq-problem-diagnostic__card {
@@ -574,8 +560,11 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
     --rq-poster-dot-field: none;
     --rq-poster-dot-opacity: 0.3;
     --rq-poster-perf-opacity: 0.26;
-    position: relative;
-    display: block;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     width: 100%;
     min-width: 0;
     border: 0;
@@ -848,20 +837,9 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
     line-height: 1.35;
   }
 
-  .rq-problem-diagnostic__output {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    min-width: 0;
-    min-block-size: var(--rq-jaw-min-block-size);
-    margin-top: 0;
-    perspective: 980px;
-    perspective-origin: center top;
-  }
-
   .rq-problem-diagnostic__panel {
-    position: relative;
-    grid-area: 1 / 1;
+    position: absolute;
+    inset: 0;
     min-width: 0;
     min-block-size: var(--rq-jaw-min-block-size);
     border: 1px solid color-mix(in srgb, var(--rq-diagnostic-accent) 26%, transparent);
@@ -882,7 +860,7 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
     visibility: hidden;
     pointer-events: none;
     backface-visibility: hidden;
-    transform: translateY(0.65rem) rotateY(-7deg);
+    transform: translateY(0.5rem);
     transform-origin: center top;
     transition: opacity 260ms var(--rq-ease), transform 320ms var(--rq-problem-ease-out-back), visibility 260ms var(--rq-ease);
   }
@@ -900,6 +878,7 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
     pointer-events: none;
   }
 
+  /* aktivní panel = JS-řízená .is-active třída (NE :has — to se neinvaliduje při změně atributu) */
   .rq-problem-diagnostic__panel.is-active {
     opacity: 1;
     visibility: visible;
@@ -907,8 +886,11 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
     transform: translateY(0) rotateY(0deg);
   }
 
-  .rq-problem-diagnostic__output.is-switching .rq-problem-diagnostic__panel.is-active {
-    animation: rq-problem-panel-in 320ms var(--rq-problem-ease-out-back);
+  /* aktivní poster (real frame) se skryje svým vlastním atributem → panel je vidět místo něj */
+  .rq-problem-diagnostic__frame:not([data-rq-problem-clone]) .rq-problem-diagnostic__card[data-rq-problem-active='true'] {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
   }
 
   .rq-problem-diagnostic__panel:focus-visible {
@@ -1065,15 +1047,6 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
     line-height: 1.52;
   }
 
-  /* toggle „víc detailů" jen na mobilu (desktop ukazuje vše) */
-  .rq-problem-diagnostic__more {
-    display: none;
-  }
-
-  .rq-problem-diagnostic__more-hide {
-    display: none;
-  }
-
   .rq-problem-diagnostic__actions {
     display: flex;
     flex-wrap: wrap;
@@ -1124,17 +1097,6 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
     outline-offset: 4px;
   }
 
-  @keyframes rq-problem-panel-in {
-    from {
-      opacity: 0;
-      transform: translateY(0.65rem) rotateY(-7deg);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) rotateY(0deg);
-    }
-  }
-
   @media (min-width: 1024px) {
     .rq-problem-diagnostic__inner {
       width: var(--rq-page-w);
@@ -1150,46 +1112,14 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
       display: none;
     }
 
-    /* A: vertikální stack — filmstrip nahoře, panel pod ním, tagline dole */
-    .rq-problem-diagnostic__board {
-      grid-template-columns: 1fr;
-      grid-template-areas:
-        "stage"
-        "output"
-        "tagline";
-      row-gap: clamp(0.5rem, 1.2vw, 1rem);
-      --rq-card-h: clamp(7.5rem, 10vw, 8.5rem);
-      --rq-card-h-lead: clamp(8rem, 10.5vw, 9rem);
-      --rq-jaw-min-block-size: clamp(22rem, 26vw, 26rem);
-    }
-
-    .rq-problem-diagnostic__stage {
-      grid-area: stage;
-    }
-
-    .rq-problem-diagnostic__output {
-      grid-area: output;
-      position: relative;
-      width: 100%;
-      max-width: 1080px;
-      margin-inline: auto;
-      margin-top: 1.4rem;
-    }
-
-    /* connector: zobáček od panelu k aktivní kartě (panel má overflow:hidden → na __output) */
-    .rq-problem-diagnostic__output::before {
-      content: "";
-      position: absolute;
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      border-width: 0 12px 12px 12px;
-      border-style: solid;
-      border-color: transparent transparent #f3ead8 transparent;
+    /* desktop slot: širší buňka (2-sloupcové findings), nižší než mobil */
+    .rq-problem-diagnostic__shell {
+      --rq-slot-w: clamp(42rem, 64vw, 58rem);
+      --rq-slot-h: clamp(37rem, 50vw, 40rem);
+      --rq-jaw-min-block-size: var(--rq-slot-h);
     }
 
     .rq-problem-diagnostic__tagline {
-      grid-area: tagline;
       text-align: center;
       max-width: 48ch;
       margin-inline: auto;
@@ -1198,7 +1128,7 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
 
     .rq-problem-diagnostic__script-sheet {
       gap: clamp(0.7rem, 1.3vw, 1rem);
-      padding: clamp(0.95rem, 1.7vw, 1.4rem);
+      padding: clamp(1rem, 1.7vw, 1.5rem);
       min-block-size: 0;
     }
 
@@ -1208,30 +1138,6 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
 
     .rq-problem-diagnostic__panel-top {
       padding-bottom: clamp(0.65rem, 1.2vw, 0.95rem);
-    }
-  }
-
-  .rq-problem-diagnostic__back {
-    display: none;
-  }
-
-  @media (max-width: 1023px) {
-    .rq-problem-diagnostic__back {
-      display: inline-flex;
-      align-items: center;
-      min-height: 44px;
-      gap: 0.3rem;
-      margin-top: 0.2rem;
-      font-family: var(--rq-mono), ui-monospace, monospace;
-      font-size: 0.82rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      color: var(--rq-diagnostic-accent);
-      text-decoration: none;
-    }
-
-    .rq-problem-diagnostic__back:hover {
-      text-decoration: underline;
     }
   }
 
@@ -1256,17 +1162,13 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
     .rq-problem-diagnostic__carousel-scene {
       padding-block: 0.65rem 1rem;
       perspective: 820px;
-      scroll-padding-inline: max(1rem, calc((100% - var(--rq-card-w)) / 2));
+      scroll-padding-inline: max(1rem, calc((100% - var(--rq-slot-w)) / 2));
     }
 
     .rq-problem-diagnostic__filmstrip {
       gap: 0.85rem;
-      padding-inline: max(1rem, calc((100% - var(--rq-card-w)) / 2));
+      padding-inline: max(1rem, calc((100% - var(--rq-slot-w)) / 2));
       transform-style: flat;
-    }
-
-    .rq-problem-diagnostic__frame--lead {
-      flex-basis: var(--rq-card-w-lead);
     }
 
     .rq-problem-diagnostic__card {
@@ -1293,98 +1195,76 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
 
   @media (max-width: 640px) {
     .rq-problem-diagnostic__shell {
-      --rq-card-w: min(54vw, 14rem);
-      --rq-card-w-lead: min(58vw, 15rem);
-      --rq-jaw-min-block-size: clamp(16rem, 38vw, 22rem);
+      --rq-slot-h: 45rem;
+      --rq-jaw-min-block-size: var(--rq-slot-h);
     }
 
-    /* kill 100vw stage bleed (30px přetok) — content-w=100% sníží board-pad-inline,
-       takže stage drží full-width filmstrip, ale nepřetéká přes viewport */
+    /* kill 100vw stage bleed (30px přetok) — content-w=100% sníží board-pad-inline */
     .rq-problem-diagnostic__board {
       --rq-diagnostic-board-content-w: 100%;
     }
 
-    /* panel roste dle obsahu, ne pevný 62rem floor (žrout délky) */
-    .rq-problem-diagnostic__script-sheet {
-      min-block-size: 0;
+    /* mobil: lead odstavec je redundantní s tagline → pryč, ať se karusel vejde na obrazovku */
+    .rq-problem-diagnostic__lead {
+      display: none;
     }
 
     .rq-problem-diagnostic__meta-row {
       display: grid;
-      gap: 0.9rem;
-    }
-
-    .rq-problem-diagnostic__nav {
-      width: 2.75rem;
-      height: 2.75rem;
-    }
-
-    /* output velikost dle AKTIVNÍHO panelu, ne nejvyššího z 15 → mizí obří prázdno */
-    .rq-problem-diagnostic__panel:not(.is-active) {
-      position: absolute;
-      inset: 0;
-    }
-
-    /* kompaktnější findings — méně padding, menší font, ať se panel vejde */
-    .rq-problem-diagnostic__findings {
-      grid-template-columns: 1fr;
       gap: 0.5rem;
     }
 
+    /* mobil: legenda hvězd je nice-to-have → pryč, aby se karusel vešel na obrazovku */
+    .rq-problem-diagnostic__severity-legend {
+      display: none;
+    }
+
+    .rq-problem-diagnostic__title {
+      font-size: 1.55rem;
+      line-height: 1.18;
+    }
+
+    .rq-problem-diagnostic__nav {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+
+    /* kompaktní panel — všech 5 řádků (titulek + 4 body + CTA) bez clipu */
+    .rq-problem-diagnostic__panel {
+      padding: 0.35rem;
+    }
+
+    .rq-problem-diagnostic__script-sheet {
+      min-block-size: 0;
+      gap: 0.4rem;
+      padding: 0.7rem 0.8rem;
+    }
+
+    .rq-problem-diagnostic__panel h3 {
+      font-size: 1.08rem;
+    }
+
+    .rq-problem-diagnostic__findings {
+      grid-template-columns: 1fr;
+      gap: 0.32rem;
+    }
+
     .rq-problem-diagnostic__finding {
-      padding: 0.7rem 0.85rem;
+      padding: 0.35rem 0.6rem;
     }
 
     .rq-problem-diagnostic__findings dt {
-      font-size: 0.92rem;
+      font-size: 0.76rem;
+      margin-bottom: 0.05rem;
     }
 
     .rq-problem-diagnostic__findings dd {
-      font-size: 0.92rem;
-      line-height: 1.42;
+      font-size: 0.83rem;
+      line-height: 1.28;
     }
 
-    /* zjednodušený panel: příčina/ověření schované za „víc detailů" */
-    .rq-problem-diagnostic__finding--secondary {
-      display: none;
-    }
-
-    .rq-problem-diagnostic.is-expanded .rq-problem-diagnostic__finding--secondary {
-      display: grid;
-    }
-
-    .rq-problem-diagnostic__more {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      min-height: 44px;
-      align-self: start;
-      margin: 0;
-      padding: 0.3rem 0;
-      background: none;
-      border: 0;
-      color: var(--rq-diagnostic-accent);
-      font-family: var(--rq-mono), ui-monospace, monospace;
-      font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      cursor: pointer;
-    }
-
-    .rq-problem-diagnostic__more::after {
-      content: "▾";
-    }
-
-    .rq-problem-diagnostic.is-expanded .rq-problem-diagnostic__more::after {
-      content: "▴";
-    }
-
-    .rq-problem-diagnostic.is-expanded .rq-problem-diagnostic__more-show {
-      display: none;
-    }
-
-    .rq-problem-diagnostic.is-expanded .rq-problem-diagnostic__more-hide {
-      display: inline;
+    .rq-problem-diagnostic__actions {
+      gap: 0.4rem;
     }
   }
 
@@ -1438,8 +1318,7 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
     .rq-problem-diagnostic__card::before,
     .rq-problem-diagnostic__card::after,
     .rq-problem-diagnostic__card-inner,
-    .rq-problem-diagnostic__panel,
-    .rq-problem-diagnostic__output.is-switching .rq-problem-diagnostic__panel.is-active {
+    .rq-problem-diagnostic__panel {
       animation: none;
       transition: none;
     }
@@ -1725,14 +1604,6 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
         card: options.scrollTarget,
         instant: options.instant,
       });
-      if (options.interacted && safeIndex !== previousIndex && typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches) {
-        const activePanel = panels[activeIndex];
-        if (activePanel) {
-          window.requestAnimationFrame(() => {
-            activePanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          });
-        }
-      }
       if (options.focus) cards[activeIndex]?.focus({ preventScroll: true });
     };
 
@@ -1754,18 +1625,6 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
       if (!window.dispatchEvent(focusEvent)) {
         event.preventDefault();
       }
-    });
-
-    // mobil: toggle „víc detailů" — schová/ukáže sekundární findings (příčina/ověření)
-    root.addEventListener('click', (event) => {
-      const moreBtn = event.target instanceof Element
-        ? event.target.closest('[data-rq-problem-more]')
-        : null;
-      if (!moreBtn || !root.contains(moreBtn)) return;
-      const expanded = root.classList.toggle('is-expanded');
-      root.querySelectorAll('[data-rq-problem-more]').forEach((btn) => {
-        btn.setAttribute('aria-expanded', String(expanded));
-      });
     });
 
     const closestCardInfo = () => {

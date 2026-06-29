@@ -3,7 +3,6 @@ import { homeContent, type HomeContent } from '../data/home';
 import type { Locale } from '../data/locales';
 import RqContactForm from './RqContactForm.astro';
 import RqFooter from './RqFooter.astro';
-import RqGuide from './RqGuide.astro';
 import RqHeader from './RqHeader.astro';
 import RqJourney from './RqJourney.astro';
 import RqMotion from './RqMotion.astro';
@@ -1958,7 +1957,6 @@ const schema = {
 
 <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 <RqFooter navItems={content.nav.items} content={content.footer} homeHref={content.nav.homeHref} />
-<RqGuide content={content.guide} lang={lang} />
 <RqMotion />
 
 <style>

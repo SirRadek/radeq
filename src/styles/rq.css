@@ -65,6 +65,14 @@ body::after {
   transition: opacity 520ms var(--rq-ease);
 }
 
+/* mobil: spodní světlý „fog" je position:fixed bottom:0 → na tmavém footeru +
+   nad iOS spodní URL lištou působí jako bílý pruh „na konci stránky". Pryč. */
+@media (max-width: 860px) {
+  body::after {
+    display: none;
+  }
+}
+
 body {
   margin: 0;
   color: var(--rq-ink);
@@ -3764,22 +3772,40 @@ body .rq-hero .rq-lead {
     display: inline;
   }
 
-  /* footer zhustit: logo full, nav+spojení vedle sebe, menší padding + iOS safe-area */
+  /* footer zhustit: logo full, nav+spojení vedle sebe, tagline pryč, menší vše + safe-area */
   .rq-site-footer__inner {
-    padding-block: 1.6rem 1rem;
-    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    padding-block: 1.25rem 0.85rem;
+    padding-bottom: max(0.85rem, env(safe-area-inset-bottom));
+  }
+
+  .rq-site-footer__tagline {
+    display: none;
+  }
+
+  .rq-site-footer__logo {
+    width: clamp(7rem, 26vw, 8.5rem);
   }
 
   .rq-site-footer__grid {
     grid-template-columns: 1fr 1fr;
-    gap: 1.1rem 1.25rem;
+    gap: 0.85rem 1.25rem;
   }
 
   .rq-site-footer__grid > div:first-child {
     grid-column: 1 / -1;
+    margin-bottom: 0.1rem;
+  }
+
+  .rq-site-footer__title {
+    margin-bottom: 0.5rem;
+  }
+
+  .rq-site-footer__links {
+    gap: 0.1rem;
   }
 
   .rq-site-footer__bottom {
-    margin-top: 1.1rem;
+    margin-top: 0.85rem;
+    padding-top: 0.85rem;
   }
 }

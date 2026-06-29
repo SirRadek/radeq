@@ -1306,8 +1306,29 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
       height: 2.75rem;
     }
 
+    /* output velikost dle AKTIVNÍHO panelu, ne nejvyššího z 15 → mizí obří prázdno */
+    .rq-problem-diagnostic__panel:not(.is-active) {
+      position: absolute;
+      inset: 0;
+    }
+
+    /* kompaktnější findings — méně padding, menší font, ať se panel vejde */
     .rq-problem-diagnostic__findings {
       grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .rq-problem-diagnostic__finding {
+      padding: 0.7rem 0.85rem;
+    }
+
+    .rq-problem-diagnostic__findings dt {
+      font-size: 0.92rem;
+    }
+
+    .rq-problem-diagnostic__findings dd {
+      font-size: 0.92rem;
+      line-height: 1.42;
     }
   }
 

@@ -235,11 +235,11 @@ const previewLabels = lang === 'en'
             <dt>{content.panelLabels.solve}</dt>
             <dd>{phase.solve}</dd>
           </div>
-          <div>
+          <div class="rq-journey-panel__item--secondary">
             <dt>{content.panelLabels.duration}</dt>
             <dd>{phase.duration}.</dd>
           </div>
-          <div>
+          <div class="rq-journey-panel__item--secondary">
             <dt>{content.panelLabels.process}</dt>
             <dd>{phase.process}</dd>
           </div>
@@ -248,6 +248,11 @@ const previewLabels = lang === 'en'
             <dd>{phase.benefit}</dd>
           </div>
         </dl>
+
+        <button class="rq-journey-panel__more" type="button" data-rq-journey-more aria-expanded="false">
+          <span class="rq-journey-panel__more-show">{lang === 'en' ? 'More detail' : 'Víc detailů'}</span>
+          <span class="rq-journey-panel__more-hide">{lang === 'en' ? 'Less' : 'Míň'}</span>
+        </button>
 
         <ul class="rq-journey-tags" aria-label={`${content.panelLabels.tagListAriaPrefix} ${phase.title}`}>
           {phase.tags.map((tag) => (
@@ -266,3 +271,20 @@ const previewLabels = lang === 'en'
     {trustPoints.map((point) => <li>{point}</li>)}
   </ul>
 </div>
+
+<script is:inline>
+  (() => {
+    document.querySelectorAll('[data-rq-journey]').forEach((root) => {
+      root.addEventListener('click', (event) => {
+        const btn = event.target instanceof Element
+          ? event.target.closest('[data-rq-journey-more]')
+          : null;
+        if (!btn || !root.contains(btn)) return;
+        const expanded = root.classList.toggle('is-expanded');
+        root.querySelectorAll('[data-rq-journey-more]').forEach((b) => {
+          b.setAttribute('aria-expanded', String(expanded));
+        });
+      });
+    });
+  })();
+</script>

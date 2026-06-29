@@ -215,11 +215,11 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
                   <dt>{content.findingLabels.problem}</dt>
                   <dd>{item.problem}</dd>
                 </div>
-                <div class="rq-problem-diagnostic__finding">
+                <div class="rq-problem-diagnostic__finding rq-problem-diagnostic__finding--secondary">
                   <dt>{content.findingLabels.cause}</dt>
                   <dd>{item.cause}</dd>
                 </div>
-                <div class="rq-problem-diagnostic__finding">
+                <div class="rq-problem-diagnostic__finding rq-problem-diagnostic__finding--secondary">
                   <dt>{content.findingLabels.verify}</dt>
                   <dd>{item.verify}</dd>
                 </div>
@@ -228,6 +228,10 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
                   <dd>{item.step}</dd>
                 </div>
               </dl>
+              <button class="rq-problem-diagnostic__more" type="button" data-rq-problem-more aria-expanded="false">
+                <span class="rq-problem-diagnostic__more-show">{lang === 'en' ? 'More detail' : 'Víc detailů'}</span>
+                <span class="rq-problem-diagnostic__more-hide">{lang === 'en' ? 'Less' : 'Míň'}</span>
+              </button>
               <div class="rq-problem-diagnostic__actions">
                 <a class="rq-btn rq-btn--primary" href="#kontakt">{content.ctaLabel}</a>
                 <a
@@ -1061,6 +1065,15 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
     line-height: 1.52;
   }
 
+  /* toggle „víc detailů" jen na mobilu (desktop ukazuje vše) */
+  .rq-problem-diagnostic__more {
+    display: none;
+  }
+
+  .rq-problem-diagnostic__more-hide {
+    display: none;
+  }
+
   .rq-problem-diagnostic__actions {
     display: flex;
     flex-wrap: wrap;
@@ -1329,6 +1342,49 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
     .rq-problem-diagnostic__findings dd {
       font-size: 0.92rem;
       line-height: 1.42;
+    }
+
+    /* zjednodušený panel: příčina/ověření schované za „víc detailů" */
+    .rq-problem-diagnostic__finding--secondary {
+      display: none;
+    }
+
+    .rq-problem-diagnostic.is-expanded .rq-problem-diagnostic__finding--secondary {
+      display: grid;
+    }
+
+    .rq-problem-diagnostic__more {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      min-height: 44px;
+      align-self: start;
+      margin: 0;
+      padding: 0.3rem 0;
+      background: none;
+      border: 0;
+      color: var(--rq-diagnostic-accent);
+      font-family: var(--rq-mono), ui-monospace, monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+    }
+
+    .rq-problem-diagnostic__more::after {
+      content: "▾";
+    }
+
+    .rq-problem-diagnostic.is-expanded .rq-problem-diagnostic__more::after {
+      content: "▴";
+    }
+
+    .rq-problem-diagnostic.is-expanded .rq-problem-diagnostic__more-show {
+      display: none;
+    }
+
+    .rq-problem-diagnostic.is-expanded .rq-problem-diagnostic__more-hide {
+      display: inline;
     }
   }
 
@@ -1698,6 +1754,18 @@ const carouselCardStyle = (item: typeof items[number], index: number) => [
       if (!window.dispatchEvent(focusEvent)) {
         event.preventDefault();
       }
+    });
+
+    // mobil: toggle „víc detailů" — schová/ukáže sekundární findings (příčina/ověření)
+    root.addEventListener('click', (event) => {
+      const moreBtn = event.target instanceof Element
+        ? event.target.closest('[data-rq-problem-more]')
+        : null;
+      if (!moreBtn || !root.contains(moreBtn)) return;
+      const expanded = root.classList.toggle('is-expanded');
+      root.querySelectorAll('[data-rq-problem-more]').forEach((btn) => {
+        btn.setAttribute('aria-expanded', String(expanded));
+      });
     });
 
     const closestCardInfo = () => {

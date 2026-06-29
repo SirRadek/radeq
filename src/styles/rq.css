@@ -2204,6 +2204,15 @@ p {
   overflow-wrap: anywhere;
 }
 
+/* „víc detailů" toggle jen na mobilu (desktop ukazuje vše) */
+.rq-journey-panel__more {
+  display: none;
+}
+
+.rq-journey-panel__more-hide {
+  display: none;
+}
+
 .rq-journey-tags {
   display: flex;
   flex-wrap: wrap;
@@ -3706,5 +3715,46 @@ body .rq-hero .rq-lead {
 
   .rq-journey-panel__grid {
     gap: 0.7rem clamp(0.8rem, 2vw, 1.2rem);
+  }
+
+  /* zjednodušený krok: Jak dlouho / Jak probíhá schované za „víc detailů" */
+  .rq-journey-panel__item--secondary {
+    display: none;
+  }
+
+  .rq-journey.is-expanded .rq-journey-panel__item--secondary {
+    display: block;
+  }
+
+  .rq-journey-panel__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 44px;
+    padding: 0.3rem 0;
+    background: none;
+    border: 0;
+    color: var(--rq-burgundy-strong);
+    font-family: var(--rq-mono), ui-monospace, monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+  }
+
+  .rq-journey-panel__more::after {
+    content: "▾";
+  }
+
+  .rq-journey.is-expanded .rq-journey-panel__more::after {
+    content: "▴";
+  }
+
+  .rq-journey.is-expanded .rq-journey-panel__more-show {
+    display: none;
+  }
+
+  .rq-journey.is-expanded .rq-journey-panel__more-hide {
+    display: inline;
   }
 }

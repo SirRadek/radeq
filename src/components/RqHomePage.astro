@@ -1918,6 +1918,45 @@ const schema = {
         <p class="rq-pricing-note">{content.pricing.note}</p>
       </div>
     </div>
+
+    <div class="rq-sr-only">
+      <table>
+        <caption>{lang === 'en' ? 'One-off projects — guide prices' : 'Jednorázové realizace — orientační ceny'}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{lang === 'en' ? 'Service' : 'Služba'}</th>
+            <th scope="col">{lang === 'en' ? 'Guide price' : 'Orientační cena'}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {content.pricing.projectItems.map((item) => (
+            <tr>
+              <th scope="row">{item.name}</th>
+              <td>{item.price}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <table>
+        <caption>{lang === 'en' ? 'Monthly care plans' : 'Měsíční péče po spuštění'}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{lang === 'en' ? 'Plan' : 'Tarif'}</th>
+            <th scope="col">{lang === 'en' ? 'Includes' : 'Co obsahuje'}</th>
+            <th scope="col">{lang === 'en' ? 'Price' : 'Cena'}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {content.pricing.items.map((item) => (
+            <tr>
+              <th scope="row">{item.title}</th>
+              <td>{item.text}</td>
+              <td>{item.price}{item.suffix}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   </section>
 
   {/* Ukázky teaser odebráno (owner 2026-06-28). content.showcase data ponecháno — používá journey „Výsledek" náhled (řeší brainstorm B). */}

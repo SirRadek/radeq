@@ -30,6 +30,9 @@ const schema = {
   name: 'RadeQ.cz',
   description: content.schema.description,
   url: content.schema.url,
+  image: 'https://radeq.cz/og-default.jpg',
+  priceRange: '$$',
+  telephone: contactNotePhone,
   areaServed: content.schema.areaServed,
   founder: { '@type': 'Person', name: content.schema.founderName },
   address: {
@@ -38,6 +41,7 @@ const schema = {
     addressCountry: content.schema.addressCountry,
   },
   knowsAbout: content.schema.knowsAbout,
+  sameAs: ['https://github.com/SirRadek', 'https://cz.linkedin.com/in/sirradek'],
 };
 ---
 

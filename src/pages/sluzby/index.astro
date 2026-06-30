@@ -47,6 +47,60 @@ const steps = [
     text: 'dostanete hotové a otestované, drobnosti zvládnete sami.',
   },
 ];
+
+const siteUrl = 'https://radeq.cz';
+const allServices = [...services, ...extraServices];
+
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@graph': allServices.map((s) => ({
+    '@type': 'Service',
+    name: s.title,
+    description: s.result,
+    provider: { '@type': 'ProfessionalService', name: 'RadeQ.cz', url: siteUrl },
+    areaServed: { '@type': 'Country', name: 'Czech Republic' },
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'CZK',
+      price: Number(String(s.price).replace(/[^\d]/g, '')) || undefined,
+      description: s.price,
+      url: siteUrl + '/sluzby/',
+    },
+  })),
+};
+
+const faqItems = [
+  {
+    q: 'Kolik stojí nový web?',
+    a: 'Jednostránkový web od 9 900 Kč, firemní web o 1–5 stranách od 25 000 Kč. Přesnou cenu řeknu po krátkém zadání.',
+  },
+  {
+    q: 'Co je audit webu a k čemu slouží?',
+    a: 'Audit od 4 900 Kč zhodnotí rychlost, SEO, mobilní zobrazení a navrhne konkrétní plán oprav. Když navážeme redesignem, cenu auditu odečtu z realizace.',
+  },
+  {
+    q: 'Jak dlouho trvá nový web?',
+    a: 'Jednostránkový web spustím za pár dní, vícestránkový podle rozsahu po krátké domluvě.',
+  },
+  {
+    q: 'Jak probíhá předání hotového webu?',
+    a: 'Dostanete otestovaný web (formuláře, mobil, rychlost, SEO základ), nastavené měření konverzí a srozumitelný návod — běžné úpravy zvládnete sami.',
+  },
+  {
+    q: 'Jsi plátce DPH?',
+    a: 'Nejsem plátce DPH, uvedené ceny jsou konečné.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((it) => ({
+    '@type': 'Question',
+    name: it.q,
+    acceptedAnswer: { '@type': 'Answer', text: it.a },
+  })),
+};
 ---
 
 <RqLayout
@@ -114,6 +168,19 @@ const steps = [
       </article>
     </section>
 
+    <section class="rq-section rq-services-faq" id="faq" aria-labelledby="rq-faq-title">
+      <p class="rq-eyebrow">FAQ</p>
+      <h2 class="rq-h2" id="rq-faq-title">Často kladené otázky</h2>
+      <div class="rq-faq">
+        {faqItems.map((it) => (
+          <article class="rq-faq__item">
+            <h3>{it.q}</h3>
+            <p>{it.a}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
     <section class="rq-section rq-services-cta" aria-label="Poptávka">
       <div class="rq-services-cta__panel">
         <p>Nevíte, co potřebujete? Napište pár vět a doporučím první krok.</p>
@@ -121,6 +188,9 @@ const steps = [
       </div>
     </section>
   </main>
+
+  <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
   <RqFooter navItems={nav} />
 </RqLayout>
@@ -282,6 +352,35 @@ const steps = [
   .rq-services-cta__button:hover {
     color: #fff;
     background: transparent;
+  }
+
+  .rq-services-faq {
+    padding-block-start: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .rq-faq {
+    display: grid;
+    gap: 0.9rem;
+    margin-top: clamp(1.6rem, 3vw, 2.4rem);
+  }
+
+  .rq-faq__item {
+    border: 1px solid var(--rq-line);
+    border-radius: var(--rq-r);
+    padding: clamp(1rem, 2vw, 1.4rem);
+    background: var(--rq-surface);
+  }
+
+  .rq-faq__item h3 {
+    font-size: clamp(1.05rem, 1.7vw, 1.3rem);
+    line-height: 1.2;
+  }
+
+  .rq-faq__item p {
+    margin-top: 0.5rem;
+    max-width: 80ch;
+    color: var(--rq-ink-2);
+    line-height: 1.6;
   }
 
   @media (max-width: 720px) {

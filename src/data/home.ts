@@ -1154,7 +1154,7 @@ export const homeContent = {
       ],
       actions: {
         primary: { href: '#kontakt', label: 'Napsat poptávku' },
-        secondary: { href: '#ceny', label: 'Ceník' },
+        secondary: { href: '#ceny', label: 'Ceny' },
         micro: 'Nezávazně. Ozvu se do 1 pracovního dne.',
       },
     },
@@ -1372,7 +1372,7 @@ export const homeContent = {
       connectionTitle: 'Spojení',
       connectionLinks: [
         { href: '/#kontakt', label: 'Napsat poptávku' },
-        { href: '/#ceny', label: 'Ceník' },
+        { href: '/#ceny', label: 'Ceny' },
       ],
       legal: '© 2026 Radek Široký — RadeQ.cz · IČO 08748811 · Praha · celá ČR',
       contactEmail: 'info@radeq.cz',
@@ -1392,7 +1392,7 @@ export const homeContent = {
       topics: {
         ceny: {
           chipLabel: 'Kolik to stojí',
-          text: 'Orientačně: web od 9 900 Kč, audit od 4 900 Kč. Kompletní ceník máte v sekci Ceny níž — přesnou cenu doladíme po krátké domluvě.',
+          text: 'Orientačně: web od 9 900 Kč, audit od 4 900 Kč. Kompletní přehled máte v sekci Ceny níž — přesnou cenu doladíme po krátké domluvě.',
           href: '#ceny',
           label: 'Přejít na ceny',
           followups: [

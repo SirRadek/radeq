@@ -1,7 +1,7 @@
 # Radeq.cz Website Architecture
 
-Last updated: 2026-06-12
-Next review: 2026-06-18
+Last updated: 2026-06-30
+Next review: 2026-07-07
 Status: active
 Slug: `radeq`
 Primary repository: `SirRadek/radeq`
@@ -11,9 +11,9 @@ Visibility: public repository, with private reference assets excluded by policy
 
 ## Purpose And Scope
 
-Radeq.cz is a public static website for selling complete websites and redesigns for small businesses, with supporting proof, pricing, handoff, and lead capture. The current product surface is the Czech route `/`, the English route `/en/`, Czech static public showcase routes under `/ukazky/`, a fixed public homepage offer, a static three-step primary service path, a separate secondary-services block, a pricing section, optional compatibility/demo routes under `/demo/<module>/` and `/en/demo/<module>/`, a light/dark visual mode toggle, an optional 3D mascot enhancement, and a Cloudflare D1-backed lead capture endpoint.
+Radeq.cz is a public static website for selling **websites, data and practical automation** for sole traders and small businesses, with supporting proof, pricing, handoff, and lead capture. The current product surface is the Czech route `/`, the English route `/en/`, Czech static public showcase routes under `/ukazky/`, a fixed public homepage offer, a static three-step primary service path, a separate secondary-services block, a pricing section, optional compatibility/demo routes under `/demo/<module>/` and `/en/demo/<module>/`, a light/dark visual mode toggle, an optional 3D mascot enhancement, and a Cloudflare D1-backed lead capture endpoint.
 
-Business positioning lock, implemented locally on 2026-06-11: the public homepage focuses on complete websites and redesigns for small businesses, not WordPress/WooCommerce repairs. The primary offer covers structure, content, design, implementation, performance/SEO basics, testing, and clear handoff. WordPress, WooCommerce, Shopify, SEO, automation, AI helpers, PC support, migrations, and custom development may remain as secondary or implementation-specific paths, but they must not dominate the first viewport or CTA hierarchy. The paid entry product is `Audit webu s plánem` / `Website audit with a plan`, and the primary CTA starts a website conversation at `#terminal`.
+Business positioning lock — **RE-LOCKED by the owner on 2026-06-30** (supersedes the 2026-06-11 complete-websites-only lock; the owner explicitly changed direction, which `offer_positioning_conversion` permits): the public offer is **websites, data and practical automation** (`Weby, data a automatizace`) for sole traders and small businesses. Websites/redesigns remain the accessible entry; **process/data automation is now a co-primary, high-margin pillar — not a secondary path** — provided every automation claim is backed by proof (a case study, a before/after, or a working prototype on the client's real data), never hype and never a guaranteed "zero errors" promise. The paid entry product is `Audit webu nebo procesu — od 4 900 Kč` / `Website or process audit — from 4 900 Kč` (the audit fee is credited toward the realization), and the primary CTA starts an audit/website conversation at `#terminal`. **Focus guardrail carried over from 2026-06-11:** the homepage must still read as a clear, focused offer to this audience — not a broad do-everything portfolio; secondary surfaces (WordPress/WooCommerce/Shopify, SEO, migrations, PC support, AI helpers, the 3D mascot) must not sprawl the first viewport or blur the primary CTA. The earlier `Audit webu s plánem` naming and the acquisition plan's `rychlá oprava 2 900–4 900 Kč` framing are both superseded by the single `Audit webu nebo procesu od 4 900 Kč` entry product (an audit, not a fix).
 
 Out of scope for the current architecture:
 

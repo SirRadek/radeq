@@ -1,5 +1,29 @@
 # Radeq.cz Website Work Log
 
+## 2026-06-30 Offer Positioning RE-LOCK (websites, data & automation)
+
+Date: 2026-06-30
+Request or trigger: owner stated the Radeq definition is evolving and the newest variant makes the most sense, and explicitly re-directed the public positioning (which `offer_positioning_conversion` permits "unless the owner explicitly changes direction again").
+Mode: WRITE_ALLOWED for Autopilot governance records (mesh node + architecture + acquisition docs) only. No site runtime, Cloudflare, DNS, D1, mailbox, payment, or deploy change.
+
+Decision:
+
+- Public offer re-locked from "complete websites, automation secondary" to **websites, data and practical automation** for sole traders and small businesses; process/data automation is now a co-primary, high-margin pillar (backed by proof, not hype), with websites/redesigns as the accessible entry.
+- Paid entry product unified to `Audit webu nebo procesu od 4 900 Kč` (an audit, credited toward realization) — supersedes the old `Audit webu s plánem` name AND the acquisition plan's `rychlá oprava 2 900–4 900` fix framing.
+- Focus guardrail kept from 2026-06-11: the homepage must stay a focused offer, not a broad do-everything portfolio.
+
+Mesh impact:
+
+- `offer_positioning_conversion.yaml`: updated `why`/`objective`; stop_conditions now include `offer_sprawls_beyond_web_data_automation`, `paid_entry_reframed_as_fix_or_renamed`, `automation_or_ai_claimed_without_proof` (replacing `secondary_services_dominate_first_viewport`); required_checks add `offer_stays_within_web_data_automation` + `automation_claim_backed_by_proof`.
+- `architecture.md`: positioning-lock paragraph + opening definition + review date updated.
+
+Basis: brainstorm `docs/acquisition/brainstorm-acquisition-development-briefing.md` + codex round-1 (`docs/acquisition/brainstorm-codex-round1.md`) + Opus opposition. Both families converged: the live site (`src/data/home.ts` H1 "Weby, data a automatizace", entry "Audit webu nebo procesu od 4 900") had already drifted to this positioning, so the stale governance lock — not the messages — was the thing out of date. This re-lock makes governance, site, and acquisition messages coherent.
+
+Open / next:
+
+- The live site already matches the new positioning; before any cold automation-led claim, add automation PROOF (case studies / before-after) per the new `automation_claim_backed_by_proof` check.
+- Acquisition runtime tooling (scraper / `/audit`) stays deferred per the plan's "validate the offer before you build the machine".
+
 ## 2026-06-14 PR 2 Merged To Default Branch
 
 Date: 2026-06-14

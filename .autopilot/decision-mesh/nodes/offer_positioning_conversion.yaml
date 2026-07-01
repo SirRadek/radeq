@@ -2,7 +2,7 @@ id: offer_positioning_conversion
 type: product_strategy_contract
 name: Primary offer and conversion path
 question: "Does this change preserve the first public offer, target buyer, paid entry product, CTA hierarchy, and homepage scope?"
-why: "The owner corrected the business direction on 2026-06-11: Radeq should focus on complete websites, not narrow itself to WordPress/WooCommerce repairs. The homepage still must avoid reading as a broad unrelated portfolio and should guide visitors toward a clear complete-website conversation."
+why: "The owner set the direction on 2026-06-11 (focus on complete websites, not WP/WooCommerce repairs) and RE-LOCKED it on 2026-06-30: Radeq is now positioned as websites, data and practical automation ('Weby, data a automatizace') for sole traders and small businesses. Websites/redesigns are the accessible entry; process/data automation is a co-primary, high-margin pillar (no longer 'secondary, must not dominate'), backed by proof not hype. The homepage must still read as a focused offer (not a broad do-everything portfolio) and guide visitors to a clear audit/website CTA. Paid entry product: 'Audit webu nebo procesu od 4 900 Kč' — an audit credited toward realization, not a 'rychlá oprava 2 900-4 900' fix and not the old 'Audit webu s plánem' name."
 signals:
   - positioning
   - primary offer
@@ -41,7 +41,8 @@ required_checks:
   - paid_entry_product_lock
   - cta_hierarchy_lock
   - homepage_scope_check
-  - secondary_services_below_primary
+  - offer_stays_within_web_data_automation
+  - automation_claim_backed_by_proof
   - proof_and_safety_message
   - design_seo_tradeoff_declared
   - mobile_first_viewport_check
@@ -50,14 +51,16 @@ required_checks:
 stop_conditions:
   - primary_offer_unclear
   - homepage_reads_as_broad_portfolio
+  - offer_sprawls_beyond_web_data_automation
   - paid_entry_product_unapproved
+  - paid_entry_reframed_as_fix_or_renamed
+  - automation_or_ai_claimed_without_proof
   - cta_generic_or_conflicting
   - abcd_public_choice_overrides_offer
-  - secondary_services_dominate_first_viewport
   - safety_testing_proof_missing
   - implementation_without_scope_lock
 objective:
-  - "Keep the homepage focused on complete websites for small businesses: structure, content, design, implementation, performance/SEO basics, and clear handoff."
-  - "Do not lock WordPress/WooCommerce repair as the primary public niche unless the owner explicitly changes direction again."
-  - "Define an owner-approved paid entry product for the complete-website path before product runtime implementation."
-  - "Route visitors toward a concrete complete-website CTA before broader services, portfolio effects, automation, AI, or visual experiments."
+  - "Keep the homepage on the focused triad — websites, data, and practical automation — for sole traders and small businesses; do not let it sprawl into a generic do-everything portfolio."
+  - "Treat process/data automation as a co-primary, high-margin pillar (no longer 'secondary, below complete websites'); keep websites/redesigns as the accessible entry, automation as the high-margin path."
+  - "Keep the owner-approved paid entry product 'Audit webu nebo procesu od 4 900 Kč' (an audit, credited toward realization) — not a 'rychlá oprava 2 900-4 900' fix and not the old 'Audit webu s plánem' name."
+  - "Back every public automation/AI claim with proof (case study, before/after, or a working prototype on real data); never promise Google positions, a specific PageSpeed number, or 'zero errors'."

@@ -1,5 +1,16 @@
 # Radeq.cz Website Work Log
 
+## 2026-07-01 Audit "od" scope breakdown + all emails unified to `siroky@radeq.cz`
+
+Date: 2026-07-01
+Trigger: owner directed (1) explaining the audit `od 2 900 Kč` by listing scope dimensions — what is audited, the output, the process, how complex — so the "od" reads as fair senior-time pricing, not vagueness; and (2) unifying every site-facing email to `siroky@radeq.cz` (visible copy, form notification, metadata).
+
+Decision + implementation (deployed version `6f09c860`, commit `d52da78`, branch `new`):
+- Audit-door card gained a compact scope sub-block (mono labels, no priced ladder): **Co auditujeme** web·proces·obojí / **Co dostanete (výstup)** priority + odhad rozsahu a ceny realizace + co (ne)řešit / **Proč „od"** malý web ~hodina (2 900), větší web/proces po krátké nezávazné domluvě, vždy audit + celý odečet z realizace. A visible priced tier menu stays forbidden (bigger scope quoted privately after the free scoping call); noun "audit" kept; kontrola/oprava/rychlá framing not introduced.
+- All emails → `siroky@radeq.cz`: home.ts (visible/footer/guide), routePages, RqFooter, kontakt CS/EN, leadNotificationEmail (`to`+`from`; `replyTo` still the visitor's email), `send_email` binding (wrangler.toml + committed example), JSON-LD (`email` + `contactPoint.email`), tests. Grep gate `rg "info@radeq\.cz|poptavky@radeq\.cz" src/ functions/ wrangler.toml wrangler.worker.example.toml` = 0 hits. Doc-truth: architecture.md notification-email notes updated (130/139).
+- OPEN OWNER ITEM: `siroky@radeq.cz` must be a **verified Cloudflare Email Routing destination** or the form notification silently won't deliver (fail-soft — lead is still stored in D1, visitor still sees success). The deploy token lacks Email Routing scope, so this can't be verified via API — verify in the CF dashboard (Email → Destination addresses).
+- Verified: build (30 pages), 61/61 tests, live workers.dev render (scope block + siroky@ visible + 0 old emails + JSON-LD email = siroky@).
+
 ## 2026-07-01 Audit entry price lowered to `od 2 900 Kč` (still an audit, not a fix)
 
 Date: 2026-07-01

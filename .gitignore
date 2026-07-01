@@ -27,6 +27,9 @@ pnpm-debug.log*
 .dev.vars
 .dev.vars.*
 
+# acquisition CRM (may hold lead data — keep out of git)
+docs/acquisition/CRM-leady-radeq.xlsx
+
 # macOS-specific files
 .DS_Store
 

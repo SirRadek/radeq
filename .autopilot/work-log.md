@@ -1,5 +1,23 @@
 # Radeq.cz Website Work Log
 
+## 2026-07-01 Lead notifications migrated to Resend (send path was silently broken)
+
+Date: 2026-07-01
+Trigger: owner asked whether a Cloudflare "Email Worker" was needed after verifying `siroky@radeq.cz`. A 3-lens verification workflow (authoritative CF docs + code-trace + deliverability adversary, all Opus) found TWO problems and converged on a fix.
+
+Findings:
+- **No Email Worker needed** — an `email()` handler is for INBOUND mail; lead notifications are OUTBOUND. Confirmed across all three lenses.
+- **The send path was silently broken.** `leadNotificationEmail.ts` called `env.EMAIL.send({to, from:{email,name}, replyTo, subject, text})` — a plain object — but the Cloudflare `[[send_email]]` binding requires an `EmailMessage` from `cloudflare:email` built from a raw MIME string (or the newer object API where `from` is a string + an onboarded sending domain). Our shape matched neither, so `.send()` would throw on every real lead → caught by the fail-soft try/catch → lead stored, no email. Green tests never caught it (they mock `.send()` and assert only the object shape).
+- **Deliverability (DNS-confirmed):** radeq.cz MX = Fastmail; SPF `?all` excludes Cloudflare; only Fastmail DKIM selectors (fm1/fm2/fm3) exist; `_dmarc.radeq.cz = p=none`. A CF send AS `siroky@radeq.cz` would have no aligned SPF/DKIM (+ From==To self-send) → Junk risk.
+
+Decision (owner picked Resend from a 3-option AskUserQuestion):
+- Migrated the notification off the CF `send_email` binding to **Resend** (`fetch` POST to `api.resend.com/emails`, `Authorization: Bearer ${RESEND_API_KEY}`). Resend DKIM-signs for `radeq.cz` → aligned, inbox-reliable, and JSON fields eliminate the raw-MIME header-injection surface.
+- `sendLeadNotificationEmail(apiKey, lead, id, createdAt, fetchImpl=fetch)`: skips when the key is absent, throws on non-2xx (status-only error, no key/PII) so the caller logs fail-soft. `from = 'Radeq.cz poptávky <siroky@radeq.cz>'`, `to = siroky@`, `reply_to = visitor`.
+- Removed the now-unused `[[send_email]]` binding from `wrangler.toml` + `wrangler.worker.example.toml`; `RESEND_API_KEY` is a Worker secret (+ local `.dev.vars`). Env types updated (`worker/index.ts`, `functions/api/leads.ts`); tests rewritten to mock `fetch` and assert the Resend payload + fail-soft.
+- Verified: 0 typecheck errors in the touched `.ts`, 61/61 tests, build 30 pages. Deployed live.
+
+OPEN OWNER ITEM (notifications stay skipped until done): (1) sign up at resend.com; (2) add + verify `radeq.cz` as a sending domain (Resend generates DKIM + return-path DNS records — add them on Cloudflare DNS; they do NOT touch the Fastmail inbound MX); (3) create an API key; (4) `npx wrangler secret put RESEND_API_KEY`; (5) add `RESEND_API_KEY=...` to local `.dev.vars`; (6) redeploy. The earlier Cloudflare Email Routing destination verification of siroky@ is no longer required.
+
 ## 2026-07-01 Audit "od" scope breakdown + all emails unified to `siroky@radeq.cz`
 
 Date: 2026-07-01

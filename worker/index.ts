@@ -1,11 +1,10 @@
 import { onRequestOptions as onLeadOptions, onRequestPost as onLeadPost } from '../functions/api/leads';
 import { onRequestOptions as onMeasureOptions, onRequestPost as onMeasurePost } from '../functions/api/measure';
-import type { SendEmailBinding } from '../src/lib/leadNotificationEmail';
 
 interface Env {
   ASSETS: AssetsFetcher;
   LEADS_DB?: D1Database;
-  EMAIL?: SendEmailBinding;
+  RESEND_API_KEY?: string;
   PSI_API_KEY?: string;
   MEASURE_RATE_LIMIT?: KVNamespace;
 }

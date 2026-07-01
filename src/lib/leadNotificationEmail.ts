@@ -1,38 +1,52 @@
 import type { LeadSubmission } from './leads';
 
-export interface SendEmailBinding {
-  send(message: LeadNotificationMessage): Promise<unknown>;
-}
-
 export interface LeadNotificationMessage {
   to: string;
-  from: {
-    email: string;
-    name: string;
-  };
-  replyTo: {
-    email: string;
-    name: string;
-  };
+  from: string;
+  replyTo: string;
   subject: string;
   text: string;
 }
 
 const notificationTo = 'siroky@radeq.cz';
-const notificationFrom = {
-  email: 'siroky@radeq.cz',
-  name: 'Radeq.cz poptávky',
-};
+const notificationFrom = 'Radeq.cz poptávky <siroky@radeq.cz>';
+const resendEndpoint = 'https://api.resend.com/emails';
 
 export async function sendLeadNotificationEmail(
-  email: SendEmailBinding | undefined,
+  apiKey: string | undefined,
   lead: LeadSubmission,
   leadId: string,
   createdAt: string,
+  fetchImpl: typeof fetch = fetch,
 ): Promise<'sent' | 'skipped'> {
-  if (!email) return 'skipped';
+  if (!apiKey) return 'skipped';
 
-  await email.send(createLeadNotificationEmail(lead, leadId, createdAt));
+  const message = createLeadNotificationEmail(lead, leadId, createdAt);
+  const response = await fetchImpl(resendEndpoint, {
+    method: 'POST',
+    headers: {
+      authorization: `Bearer ${apiKey}`,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: message.from,
+      to: message.to,
+      reply_to: message.replyTo,
+      subject: message.subject,
+      text: message.text,
+    }),
+  });
+
+  if (!response.ok) {
+    let detail = '';
+    try {
+      detail = (await response.text()).slice(0, 200);
+    } catch {
+      // Response body not readable; the status code alone is enough to diagnose.
+    }
+    throw new Error(`resend_http_${response.status}${detail ? ` ${detail}` : ''}`);
+  }
+
   return 'sent';
 }
 
@@ -44,10 +58,7 @@ export function createLeadNotificationEmail(
   return {
     to: notificationTo,
     from: notificationFrom,
-    replyTo: {
-      email: lead.email,
-      name: lead.name,
-    },
+    replyTo: lead.email,
     subject: cleanSubject(`Nová poptávka: ${lead.project_type} - ${lead.name}`),
     text: [
       'Nová poptávka z Radeq.cz',

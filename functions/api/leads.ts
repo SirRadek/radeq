@@ -1,9 +1,9 @@
 import { createLeadId, validateLeadSubmission } from '../../src/lib/leads';
-import { sendLeadNotificationEmail, type SendEmailBinding } from '../../src/lib/leadNotificationEmail';
+import { sendLeadNotificationEmail } from '../../src/lib/leadNotificationEmail';
 
 interface Env {
   LEADS_DB?: D1Database;
-  EMAIL?: SendEmailBinding;
+  RESEND_API_KEY?: string;
 }
 
 interface PagesContext {
@@ -99,7 +99,7 @@ export async function onRequestPost(context: PagesContext) {
   }
 
   try {
-    await sendLeadNotificationEmail(env.EMAIL, lead, id, createdAt);
+    await sendLeadNotificationEmail(env.RESEND_API_KEY, lead, id, createdAt);
   } catch (error) {
     console.error('Lead notification email failed', {
       leadId: id,

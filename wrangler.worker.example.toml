@@ -13,7 +13,7 @@ binding = "LEADS_DB"
 database_name = "LEADS_DB"
 database_id = "replace-with-production-d1-database-id"
 
-[[send_email]]
-name = "EMAIL"
-destination_address = "siroky@radeq.cz"
-allowed_sender_addresses = ["siroky@radeq.cz"]
+# Lead notifications are sent via Resend (fetch to https://api.resend.com/emails)
+# using the RESEND_API_KEY secret. Set it with:
+#   npx wrangler secret put RESEND_API_KEY
+# and add RESEND_API_KEY=... to a local .dev.vars for `wrangler dev`.

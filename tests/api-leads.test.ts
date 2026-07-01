@@ -39,16 +39,17 @@ describe('lead Pages Function', () => {
     expect(calls[1]?.values).toContain('siroky@radeq.cz');
   });
 
-  it('sends a lead notification email after storage succeeds', async () => {
-    const sent: unknown[] = [];
-    const { env } = createLeadEnv({
-      EMAIL: {
-        send: async (message: unknown) => {
-          sent.push(message);
-          return { messageId: 'msg_123' };
-        },
-      },
+  it('sends a lead notification email through Resend after storage succeeds', async () => {
+    const calls: Array<{ url: unknown; init: RequestInit }> = [];
+    const fetchMock = vi.fn(async (url: unknown, init: RequestInit) => {
+      calls.push({ url, init });
+      return new Response(JSON.stringify({ id: 'email_123' }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      });
     });
+    vi.stubGlobal('fetch', fetchMock);
+    const { env } = createLeadEnv({ RESEND_API_KEY: 'test_key' });
 
     const response = await onRequestPost({
       request: new Request('https://radeq.cz/api/leads', {
@@ -60,24 +61,30 @@ describe('lead Pages Function', () => {
     });
 
     expect(response.status).toBe(201);
-    expect(sent).toHaveLength(1);
-    expect(sent[0]).toMatchObject({
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(calls[0]?.url).toBe('https://api.resend.com/emails');
+    expect(calls[0]?.init.method).toBe('POST');
+    const headers = calls[0]?.init.headers as Record<string, string>;
+    expect(headers.authorization).toBe('Bearer test_key');
+    const payload = JSON.parse(calls[0]?.init.body as string) as Record<string, unknown>;
+    expect(payload).toMatchObject({
       to: 'siroky@radeq.cz',
-      from: { email: 'siroky@radeq.cz', name: 'Radeq.cz poptávky' },
-      replyTo: { email: 'siroky@radeq.cz', name: 'Jan Siroky' },
+      from: 'Radeq.cz poptávky <siroky@radeq.cz>',
+      reply_to: 'siroky@radeq.cz',
     });
-    expect(JSON.stringify(sent[0])).toContain('Need fast lead routing.');
+    expect(payload.subject).toContain('Nová poptávka');
+    expect(payload.text).toContain('Need fast lead routing.');
+
+    vi.unstubAllGlobals();
   });
 
   it('keeps the stored lead response when email notification fails', async () => {
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
-    const { env } = createLeadEnv({
-      EMAIL: {
-        send: async () => {
-          throw new Error('email service unavailable');
-        },
-      },
+    const fetchMock = vi.fn(async () => {
+      throw new Error('email service unavailable');
     });
+    vi.stubGlobal('fetch', fetchMock);
+    const { env } = createLeadEnv({ RESEND_API_KEY: 'test_key' });
 
     const response = await onRequestPost({
       request: new Request('https://radeq.cz/api/leads', {
@@ -100,6 +107,7 @@ describe('lead Pages Function', () => {
     });
 
     consoleError.mockRestore();
+    vi.unstubAllGlobals();
   });
 
   it('returns a setup error when D1 is not bound', async () => {

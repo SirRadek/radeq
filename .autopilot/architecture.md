@@ -35,16 +35,16 @@ In this project:
 - Cloudflare Pages Function-compatible lead handler at `/api/leads`
 - Worker adapter at `worker/index.ts` routing `/api/leads` to the existing lead handler and all other requests to static assets
 - Cloudflare D1 schema and local integration gate
-- Cloudflare Email Sending Worker binding for fail-soft lead notifications to `poptavky@radeq.cz` on the GitHub branch; not active on the current Cloudflare production rollback
+- Resend (`https://api.resend.com/emails`) for fail-soft lead notifications to `siroky@radeq.cz`, sent from the Worker via `fetch` using the `RESEND_API_KEY` secret (migrated off the Cloudflare `send_email` binding on 2026-07-01; deployed live)
 - Playwright and Vitest verification
 
 External to this project:
 
 - Cloudflare account configuration and real production D1 database ID
-- Cloudflare Email Sending account/zone configuration and dashboard-level delivery logs
+- Resend account + `radeq.cz` sending-domain verification (DKIM + return-path DNS on Cloudflare) and Resend dashboard delivery logs
 - GitHub repository hosting and GitHub Pages deployment environment
 - Fastmail human mailbox hosting for `siroky@radeq.cz`, `info@radeq.cz`, and `poptavky@radeq.cz`
-- future non-Cloudflare transactional email provider/backend, if the owner changes scope
+- Resend adopted 2026-07-01 as the transactional email provider (replaced the Cloudflare `send_email` binding for deliverability: aligned DKIM for `radeq.cz`, no dependence on the Fastmail-only root SPF)
 - future Autopilot dashboard or project inventory system
 
 ## Repository Boundary
@@ -109,7 +109,7 @@ Lead API:
 - `functions/api/leads.ts` handles `POST /api/leads` and `OPTIONS`.
 - `worker/index.ts` adapts the same lead handler for the production Worker runtime and serves static assets through the Worker `ASSETS` binding.
 - `src/lib/leads.ts` owns payload creation, validation, field limits, context minimization, and lead IDs.
-- `src/lib/leadNotificationEmail.ts` owns the server-side email notification message sent after successful D1 storage when the GitHub branch is deployed with an `EMAIL` binding.
+- `src/lib/leadNotificationEmail.ts` owns the server-side lead notification: it builds the message and POSTs it to Resend (`api.resend.com/emails`) after successful D1 storage, authenticating with the `RESEND_API_KEY` secret (returns `skipped` when the secret is absent; throws on a non-2xx Resend response so the caller logs it fail-soft).
 - `migrations/0001_create_leads.sql` defines the D1 `leads` table and indexes.
 
 ## Data Flow
@@ -127,7 +127,7 @@ Visitor
   -> minimizeLeadContext()
   -> LEADS_DB.prepare(...).bind(...).run()
   -> D1 table `leads`
-  -> EMAIL.send(...) notification to siroky@radeq.cz when deployed with an EMAIL binding (owner unified all site emails to siroky@radeq.cz on 2026-07-01)
+  -> Resend POST notification to siroky@radeq.cz via the RESEND_API_KEY secret (owner unified all site emails to siroky@radeq.cz + migrated notifications from the CF send_email binding to Resend on 2026-07-01)
   -> manual export or future dashboard review
 ```
 
@@ -136,8 +136,8 @@ Lead notification behavior:
 - Email is sent only after successful D1 storage.
 - The visitor-facing API response remains successful if the email notification fails.
 - Email failures are logged with lead ID, error code, and generic message only; customer details are not printed to runtime logs.
-- The notification uses `siroky@radeq.cz` as sender and destination, with `replyTo` set to the visitor's submitted email. (All site-facing emails were unified to `siroky@radeq.cz` on 2026-07-01 — visible copy, form fallback, `send_email` binding, and JSON-LD metadata; `siroky@radeq.cz` must be a verified Cloudflare Email Routing destination for the notification to deliver.)
-- Owner requested GitHub-only staging on 2026-06-12, so the current Cloudflare Worker production deployment was rolled back to version `747d1ab3-ff49-497b-8cb8-917c67d0153d` and does not currently run the notification code.
+- The notification is sent from `siroky@radeq.cz` to `siroky@radeq.cz` via Resend, with `reply_to` set to the visitor's submitted email. Delivery requires the `RESEND_API_KEY` secret AND a Resend-verified `radeq.cz` sending domain (DKIM + return-path DNS records added on Cloudflare — these do not conflict with the Fastmail inbound MX); until both exist the send is skipped/failed fail-soft and the lead is still stored in D1. (All site-facing emails were unified to `siroky@radeq.cz` on 2026-07-01 — visible copy, form notification, and JSON-LD metadata.)
+- History: owner requested GitHub-only staging on 2026-06-12 (production rolled back to `747d1ab3-ff49-497b-8cb8-917c67d0153d`). Superseded on 2026-07-01 — the current Worker (Resend notification path + /audit tool + the site rework) is deployed live to production; the notification fires fail-soft once `RESEND_API_KEY` and the Resend sending domain are configured.
 
 Required lead fields:
 
@@ -215,7 +215,7 @@ Cloudflare Worker production behavior:
 - base path is `/`
 - `wrangler.toml` is ignored locally because it contains environment-specific production binding details
 - safe committed Worker config lives in `wrangler.worker.example.toml`
-- current Worker production rollback uses the previous `ASSETS` and `LEADS_DB` shape; the pushed GitHub branch additionally expects `EMAIL` when deployed
+- the deployed Worker uses `ASSETS`, `LEADS_DB`, and `MEASURE_RATE_LIMIT` (KV) bindings plus the `PSI_API_KEY`, `TURNSTILE_SECRET`, and `RESEND_API_KEY` secrets; `RESEND_API_KEY` is optional (absent → lead notifications are skipped fail-soft)
 
 Cloudflare Pages path behavior:
 
@@ -228,7 +228,7 @@ Cloudflare Pages path behavior:
 - `wrangler.toml` must remain untracked/ignored when it contains production binding IDs.
 - `wrangler.example.toml` is a template only.
 - D1 binding is required at runtime; missing binding returns a controlled setup error.
-- EMAIL binding is optional at code level so a missing or failing email binding cannot lose a stored lead when the notification branch is deployed.
+- The `RESEND_API_KEY` secret is optional at code level: a missing or failing Resend send cannot lose a stored lead. The send is wrapped in try/catch and only a status-level error (no customer PII, no API key) is logged.
 - API responses use JSON, `cache-control: no-store`, and CORS headers for POST/OPTIONS.
 - `public/_headers` defines security headers and immutable caching for hashed Astro assets.
 - Private original reference assets must not be shipped or sent to external models.

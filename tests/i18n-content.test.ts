@@ -16,7 +16,7 @@ describe('localized site content', () => {
       expect(content.systems.items).toHaveLength(8);
       expect(content.systems.secondaryTitle).toBeTruthy();
       expect(content.systems.items.some((item) => 'demoModule' in item)).toBe(false);
-      expect(content.pricing.items).toHaveLength(4);
+      expect(content.pricing.items).toHaveLength(5);
       expect(content.pricing.items.some((item) => 'featured' in item && item.featured)).toBe(true);
       expect(content.terminal.examples).toContain('submit');
     }
@@ -38,8 +38,8 @@ describe('localized site content', () => {
     expect(siteContent.cs.terminal.projectOptions).toEqual([
       'Nový firemní web',
       'Redesign staršího webu',
-      'Audit webu s plánem',
-      'Rychlá oprava webu',
+      'Audit webu nebo procesu',
+      'Něco jiného',
       'Webová péče a rozvoj',
       'Nejsem si jistý, potřebuji poradit',
     ]);
@@ -55,17 +55,17 @@ describe('localized site content', () => {
       [
         'Nový firemní web',
         'Redesign staršího webu',
-        'Audit webu s plánem',
-        'Rychlá oprava webu',
+        'Audit webu nebo procesu',
+        'Něco jiného',
         'Webová péče a rozvoj',
         'Nejsem si jistý, potřebuji poradit',
       ],
     );
-    expect(siteContent.cs.pricing.items[0].name).toBe('Audit webu s plánem');
+    expect(siteContent.cs.pricing.items[0].name).toBe('Audit webu nebo procesu');
     expect(siteContent.en.hero.title).toContain('small businesses');
     expect(siteContent.en.header.cta).toBe('Discuss website');
     expect(siteContent.en.header.navItems).toHaveLength(4);
-    expect(siteContent.en.pricing.items[0].name).toBe('Website audit with a plan');
+    expect(siteContent.en.pricing.items[0].name).toBe('Website or process audit');
   });
 
   it('keeps homepage copy free of public agent hype and fake guarantees', () => {

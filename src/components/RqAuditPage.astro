@@ -1,0 +1,466 @@
+---
+import AuditTool from './AuditTool';
+import RqFooter from './RqFooter.astro';
+import RqHeader from './RqHeader.astro';
+import RqMotion from './RqMotion.astro';
+import { auditContent, type AuditContent } from '../data/audit';
+import { homeContent, type HomeContent } from '../data/home';
+import type { Locale } from '../data/locales';
+
+interface Props {
+  content?: AuditContent;
+  home?: HomeContent;
+  lang?: Locale;
+}
+
+const { lang = 'cs' } = Astro.props;
+const content = Astro.props.content ?? auditContent[lang];
+const home = Astro.props.home ?? homeContent[lang];
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const homePath = lang === 'en' ? '/en/' : '/';
+const resolve = (href: string) => {
+  if (!href || !href.startsWith('/')) return href;
+  if (base && (href === base || href.startsWith(`${base}/`))) return href;
+  return `${base}${href}`;
+};
+const navItems = home.nav.items.map((item) => ({
+  ...item,
+  href: item.href.startsWith('#') ? `${homePath}${item.href}` : item.href,
+}));
+const navContent = {
+  ...home.nav,
+  navItems,
+  homeHref: homePath,
+};
+const contactHref = resolve(lang === 'en' ? '/en/#kontakt' : '/#kontakt');
+const measurePath = resolve('/api/measure');
+---
+
+<RqHeader content={navContent} alternateLabel={home.seo.alternateLabel} alternatePath={content.seo.alternatePath} />
+
+<main>
+  <section class="rq-section rq-audit-page" id="audit" aria-labelledby="rq-audit-title">
+    <div class="rq-audit-page__intro" data-rq-reveal>
+      <h1 class="rq-display" id="rq-audit-title">{content.page.title}</h1>
+      <p class="rq-lead">{content.page.lead}</p>
+      <ul class="rq-audit-page__points" aria-label={lang === 'en' ? 'Measurement boundaries' : 'Hranice měření'}>
+        {content.page.points.map((point) => (
+          <li>{point}</li>
+        ))}
+      </ul>
+    </div>
+
+    <AuditTool client:load locale={lang} content={content.tool} measurePath={measurePath} contactHref={contactHref} />
+  </section>
+</main>
+
+<RqFooter navItems={navItems} content={home.footer} homeHref={homePath} />
+<RqMotion />
+
+<style>
+  .rq-audit-page {
+    display: grid;
+    grid-template-columns: minmax(0, 0.78fr) minmax(20rem, 1.22fr);
+    gap: clamp(2rem, 4vw, 4rem);
+    align-items: start;
+    min-height: calc(100vh - 6rem);
+    padding-top: clamp(7rem, 12vw, 10rem);
+  }
+
+  .rq-audit-page__intro {
+    position: sticky;
+    top: 7rem;
+    min-width: 0;
+  }
+
+  .rq-audit-page__intro .rq-display {
+    margin-bottom: 1.25rem;
+  }
+
+  .rq-audit-page__points {
+    list-style: none;
+    padding: 0;
+    margin: clamp(1.5rem, 3vw, 2rem) 0 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .rq-audit-page__points li {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: var(--rq-ink-muted);
+    font-family: var(--rq-mono), ui-monospace, monospace;
+    font-size: 0.84rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .rq-audit-page__points li::before {
+    content: "";
+    width: 0.48rem;
+    height: 0.48rem;
+    border-radius: 999px;
+    background: var(--rq-burgundy);
+    box-shadow: 0 0 0 0.32rem color-mix(in srgb, var(--rq-burgundy) 12%, transparent);
+    flex: 0 0 auto;
+  }
+
+  .audit-tool {
+    position: relative;
+    min-width: 0;
+    border-radius: 20px;
+    border: 1px solid rgba(230, 224, 212, 0.1);
+    background:
+      radial-gradient(70% 80% at 8% 4%, rgba(199, 224, 74, 0.07), transparent 60%),
+      linear-gradient(135deg, #17140f 0%, #11100c 100%);
+    color: #F1EDE4;
+    padding: clamp(1rem, 2.8vw, 1.5rem);
+    box-shadow: 0 30px 60px rgba(28, 26, 23, 0.2);
+    overflow: hidden;
+  }
+
+  .audit-tool::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(247, 244, 238, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(247, 244, 238, 0.025) 1px, transparent 1px);
+    background-size: 4rem 4rem;
+    pointer-events: none;
+  }
+
+  .audit-tool > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .audit-tool__form {
+    display: grid;
+    gap: 1rem;
+    border-radius: 14px;
+    border: 1px solid #E6E0D4;
+    background: #F7F4EE;
+    color: #1C1A17;
+    padding: clamp(1.1rem, 2.8vw, 1.6rem);
+  }
+
+  .audit-tool__field {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .audit-tool__field label,
+  .audit-tool__card-label,
+  .audit-tool__qualifier legend,
+  .audit-tool__measured span {
+    font-family: var(--rq-mono), ui-monospace, monospace;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .audit-tool__field label,
+  .audit-tool__card-label,
+  .audit-tool__measured span {
+    color: #7A1F2B;
+  }
+
+  .audit-tool__card-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .audit-tool__card-label::before {
+    content: "";
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: currentColor;
+  }
+
+  .audit-tool__field input {
+    width: 100%;
+    min-height: 3.25rem;
+    border: 1px solid #D7CEBF;
+    border-radius: 10px;
+    background: #FFFFFF;
+    color: #1C1A17;
+    padding: 0.85rem 1rem;
+    font: 600 1rem/1.35 var(--rq-body), system-ui, sans-serif;
+    outline: none;
+  }
+
+  .audit-tool__field input:focus {
+    border-color: #7A1F2B;
+    box-shadow: 0 0 0 3px rgba(122, 31, 43, 0.14);
+  }
+
+  .audit-tool__consent,
+  .audit-tool__status,
+  .audit-tool__close p,
+  .audit-tool__measured {
+    margin: 0;
+    color: #4F4942;
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .audit-tool__actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .audit-tool__submit {
+    min-width: 10rem;
+  }
+
+  .audit-tool__status {
+    min-height: 1.5rem;
+    font-weight: 600;
+  }
+
+  .audit-tool__status--result {
+    min-height: 0;
+    font-family: var(--rq-display), var(--rq-body), system-ui, sans-serif;
+    font-size: clamp(1.15rem, 2.1vw, 1.45rem);
+    font-weight: 800;
+    line-height: 1.25;
+  }
+
+  .audit-tool__status[data-status="loading"] {
+    color: #7A1F2B;
+  }
+
+  .audit-tool__status[data-status="ok"] {
+    color: #2A3508;
+  }
+
+  .audit-tool__status[data-status="no_field_data"] {
+    color: #5E1622;
+  }
+
+  .audit-tool__status[data-status="invalid_url"],
+  .audit-tool__status[data-status="unreachable"],
+  .audit-tool__status[data-status="psi_error"],
+  .audit-tool__status[data-status="rate_limited"] {
+    color: #7A1F2B;
+  }
+
+  .audit-tool__result {
+    display: grid;
+    gap: 1.15rem;
+    margin-top: 1rem;
+    border-radius: 14px;
+    border: 1px solid #E6E0D4;
+    background: #F7F4EE;
+    color: #1C1A17;
+    padding: clamp(1.1rem, 3vw, 1.7rem);
+  }
+
+  .audit-tool__result-header {
+    display: grid;
+    gap: 0.85rem;
+    border-bottom: 1px solid #E6E0D4;
+    padding-bottom: 1rem;
+  }
+
+  .audit-tool__measured {
+    display: grid;
+    gap: 0.35rem;
+    border: 1px solid #E6E0D4;
+    border-radius: 12px;
+    background: #FFFFFF;
+    padding: 0.85rem 1rem;
+  }
+
+  .audit-tool__measured strong {
+    color: #1C1A17;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+
+  .audit-tool__cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(0.95rem, 2vw, 1.15rem);
+  }
+
+  .audit-tool__card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+    align-content: start;
+    border: 1px solid #E6E0D4;
+    border-radius: 12px;
+    background: #FFFFFF;
+    padding: clamp(1.15rem, 2.4vw, 1.45rem);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  }
+
+  .audit-tool__card:hover {
+    border-color: rgba(122, 31, 43, 0.22);
+    box-shadow: 0 10px 30px rgba(28, 26, 23, 0.05);
+    transform: translateY(-2px);
+  }
+
+  .audit-tool__card-title {
+    margin: 0;
+    color: #1C1A17;
+    font-family: var(--rq-display), var(--rq-body), system-ui, sans-serif;
+    font-size: clamp(1.18rem, 2.2vw, 1.48rem);
+    font-weight: 800;
+    line-height: 1.18;
+    overflow-wrap: anywhere;
+  }
+
+  .audit-tool__card-block {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .audit-tool__card p {
+    margin: 0;
+    color: #1C1A17;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+  }
+
+  .audit-tool__result[data-status="no_field_data"] .audit-tool__card:first-child,
+  .audit-tool__result[data-status="invalid_url"] .audit-tool__card,
+  .audit-tool__result[data-status="unreachable"] .audit-tool__card,
+  .audit-tool__result[data-status="psi_error"] .audit-tool__card,
+  .audit-tool__result[data-status="rate_limited"] .audit-tool__card {
+    border-color: rgba(122, 31, 43, 0.28);
+    background: #FFF9F7;
+  }
+
+  .audit-tool__close {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid #E6E0D4;
+    border-radius: 12px;
+    background: #FFFFFF;
+    padding: 1rem;
+  }
+
+  .audit-tool__close p {
+    max-width: 34rem;
+  }
+
+  .audit-tool__cta {
+    flex: 0 0 auto;
+  }
+
+  .audit-tool__qualifier {
+    border: 1px solid #E6E0D4;
+    border-radius: 12px;
+    background: #FFFFFF;
+    padding: 1rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+  }
+
+  .audit-tool__qualifier legend {
+    color: #4F4942;
+    padding: 0;
+  }
+
+  .audit-tool__toggle-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem;
+    border: 1px solid #E6E0D4;
+    border-radius: 999px;
+    background: #FFFFFF;
+  }
+
+  .audit-tool__toggle-group label {
+    cursor: pointer;
+  }
+
+  .audit-tool__toggle-group input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .audit-tool__toggle-group span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.25rem;
+    min-width: 3rem;
+    border-radius: 999px;
+    padding: 0.35rem 0.8rem;
+    color: #4F4942;
+    font-weight: 700;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .audit-tool__toggle-group input:checked + span {
+    background: #7A1F2B;
+    color: #FFFFFF;
+  }
+
+  .audit-tool__toggle-group input:focus-visible + span {
+    outline: 2px solid #7A1F2B;
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 980px) {
+    .rq-audit-page {
+      grid-template-columns: 1fr;
+      padding-top: clamp(6rem, 16vw, 8rem);
+    }
+
+    .rq-audit-page__intro {
+      position: static;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .audit-tool__cards {
+      grid-template-columns: 1fr;
+    }
+
+    .audit-tool__close {
+      align-items: stretch;
+      grid-template-columns: 1fr;
+    }
+
+    .audit-tool__cta,
+    .audit-tool__submit {
+      width: 100%;
+    }
+
+    .audit-tool__actions {
+      align-items: stretch;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .audit-tool__qualifier {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .audit-tool__toggle-group {
+      width: fit-content;
+    }
+  }
+</style>

@@ -126,8 +126,8 @@ export function validateLeadSubmission(input: unknown): LeadValidationResult {
     errors.push('Email does not look valid.');
   }
 
-  if (data.current_url && !isHttpUrl(data.current_url)) {
-    errors.push('Current URL must start with http:// or https://.');
+  if (data.current_url && !isPublicHttpUrl(data.current_url)) {
+    errors.push('Current URL must be a public http:// or https:// address.');
   }
 
   if (errors.length > 0) {
@@ -157,13 +157,53 @@ function isLikelyEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-function isHttpUrl(value: string): boolean {
+export function isPublicHttpUrl(value: string): boolean {
   try {
     const url = new URL(value);
-    return url.protocol === 'http:' || url.protocol === 'https:';
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') return false;
+    if (url.port) return false;
+    if (url.username || url.password) return false;
+
+    const hostname = normalizeHostname(url.hostname);
+    if (!hostname) return false;
+    if (hostname === 'localhost' || hostname.endsWith('.localhost')) return false;
+    if (hostname === 'local' || hostname.endsWith('.local')) return false;
+    if (hostname === 'internal' || hostname.endsWith('.internal')) return false;
+
+    const ipv4 = parseIpv4(hostname);
+    if (ipv4) return false;
+    if (isIpv6Literal(hostname)) return false;
+
+    return true;
   } catch {
     return false;
   }
+}
+
+function normalizeHostname(hostname: string): string {
+  const withoutBrackets = hostname.startsWith('[') && hostname.endsWith(']')
+    ? hostname.slice(1, -1)
+    : hostname;
+
+  return withoutBrackets.toLowerCase().replace(/\.$/, '');
+}
+
+function parseIpv4(hostname: string): [number, number, number, number] | null {
+  const parts = hostname.split('.');
+  if (parts.length !== 4) return null;
+
+  const octets = parts.map((part) => {
+    if (!/^\d{1,3}$/.test(part)) return Number.NaN;
+    const value = Number(part);
+    return value >= 0 && value <= 255 ? value : Number.NaN;
+  });
+
+  if (octets.some(Number.isNaN)) return null;
+  return octets as [number, number, number, number];
+}
+
+function isIpv6Literal(hostname: string): boolean {
+  return hostname.includes(':');
 }
 
 function isObjectRecord(value: unknown): value is Record<string, unknown> {

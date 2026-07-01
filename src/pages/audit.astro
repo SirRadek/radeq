@@ -1,0 +1,18 @@
+---
+import RqAuditPage from '../components/RqAuditPage.astro';
+import { auditContent } from '../data/audit';
+import RqLayout from '../layouts/RqLayout.astro';
+
+const content = auditContent.cs;
+---
+
+<RqLayout
+  title={content.seo.title}
+  description={content.seo.description}
+  lang="cs"
+  canonicalPath={content.seo.canonicalPath}
+  alternatePath={content.seo.alternatePath}
+  alternateLang="en"
+>
+  <RqAuditPage content={content} lang="cs" />
+</RqLayout>

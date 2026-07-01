@@ -73,6 +73,16 @@ const resolve = (href: string) => {
     const form = document.getElementById("rq-lead-form");
     const statusEl = document.getElementById("rq-lead-status");
     if (!form) return;
+    const params = new URLSearchParams(location.search);
+    const currentUrlHint = (params.get("current_url") || "").slice(0, 240);
+    const projectTypeHint = params.get("project_type") || "";
+    const projectSelect = form.elements.namedItem("project_type");
+
+    if (projectTypeHint && projectSelect instanceof HTMLSelectElement) {
+      const matchingOption = Array.from(projectSelect.options).find((option) => option.value === projectTypeHint);
+      if (matchingOption) projectSelect.value = matchingOption.value;
+    }
+
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const fd = new FormData(form);
@@ -80,7 +90,7 @@ const resolve = (href: string) => {
       const payload = {
         name: fd.get("name") || "", email: fd.get("email") || "",
         project_type: fd.get("project_type") || "", message: fd.get("message") || "",
-        company: "", audience: "", deadline: fd.get("deadline") || "", current_url: "", budget_range: fd.get("budget_range") || "",
+        company: "", audience: "", deadline: fd.get("deadline") || "", current_url: currentUrlHint, budget_range: fd.get("budget_range") || "",
         honeypot: "", source_path: location.pathname + location.search,
         referrer: document.referrer || "", locale: leadLocale
       };

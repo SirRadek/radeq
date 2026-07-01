@@ -197,7 +197,7 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
     width: 100%;
     max-width: 80rem;
     margin: 0 auto;
-    padding: clamp(3rem, 6vw, 6rem) 1.5rem;
+    padding: clamp(1.5rem, 4.5vh, 4.25rem) 1.5rem;
     background:
       radial-gradient(70% 80% at 8% 4%, rgba(199, 224, 74, 0.06), transparent 60%),
       linear-gradient(135deg, #17140f 0%, #11100c 100%);
@@ -233,7 +233,7 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
     position: relative;
     z-index: 2;
     max-width: 42.5rem;
-    margin-bottom: 3.5rem;
+    margin-bottom: clamp(1.5rem, 3.2vh, 2.5rem);
   }
 
   .section-eyebrow {
@@ -274,7 +274,7 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
   /* Tab Navigation Wrapper */
   .diag-tabs-container {
     position: relative;
-    margin-bottom: 2.5rem;
+    margin-bottom: clamp(1rem, 2.5vh, 2rem);
     width: 100%;
     z-index: 2;
   }
@@ -364,7 +364,7 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
     color: var(--rq-ink);
     border-radius: var(--rq-r);
     border: 1px solid var(--rq-line);
-    padding: clamp(1.75rem, 4vw, 3.5rem);
+    padding: clamp(1.25rem, 3.2vh, 2.5rem);
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
     z-index: 2;
     transition: all 0.3s var(--rq-ease);
@@ -657,7 +657,7 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
   /* Responsiveness */
   @media (max-width: 960px) {
     .rq-diagnostic-section {
-      padding: 4rem 1.25rem;
+      padding: clamp(1.5rem, 4.5vh, 3.5rem) 1.25rem;
     }
 
     .panel-header {
@@ -679,7 +679,7 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
     }
 
     .diag-panel-wrapper {
-      padding: 2rem 1.5rem;
+      padding: clamp(1.25rem, 3vh, 2rem) 1.5rem;
     }
   }
 

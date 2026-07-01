@@ -10,18 +10,14 @@ export interface LeadNotificationMessage {
 
 const notificationTo = 'siroky@radeq.cz';
 const notificationFrom = 'Radeq.cz poptávky <siroky@radeq.cz>';
+const confirmationFrom = 'Radeq.cz <siroky@radeq.cz>';
 const resendEndpoint = 'https://api.resend.com/emails';
 
-export async function sendLeadNotificationEmail(
-  apiKey: string | undefined,
-  lead: LeadSubmission,
-  leadId: string,
-  createdAt: string,
-  fetchImpl: typeof fetch = fetch,
-): Promise<'sent' | 'skipped'> {
-  if (!apiKey) return 'skipped';
-
-  const message = createLeadNotificationEmail(lead, leadId, createdAt);
+async function postToResend(
+  apiKey: string,
+  message: LeadNotificationMessage,
+  fetchImpl: typeof fetch,
+): Promise<'sent'> {
   const response = await fetchImpl(resendEndpoint, {
     method: 'POST',
     headers: {
@@ -48,6 +44,28 @@ export async function sendLeadNotificationEmail(
   }
 
   return 'sent';
+}
+
+// Owner-facing notification: a new lead landed.
+export async function sendLeadNotificationEmail(
+  apiKey: string | undefined,
+  lead: LeadSubmission,
+  leadId: string,
+  createdAt: string,
+  fetchImpl: typeof fetch = fetch,
+): Promise<'sent' | 'skipped'> {
+  if (!apiKey) return 'skipped';
+  return postToResend(apiKey, createLeadNotificationEmail(lead, leadId, createdAt), fetchImpl);
+}
+
+// Visitor-facing confirmation: acknowledge the submitted inquiry in their locale.
+export async function sendLeadConfirmationEmail(
+  apiKey: string | undefined,
+  lead: LeadSubmission,
+  fetchImpl: typeof fetch = fetch,
+): Promise<'sent' | 'skipped'> {
+  if (!apiKey) return 'skipped';
+  return postToResend(apiKey, createLeadConfirmationEmail(lead), fetchImpl);
 }
 
 export function createLeadNotificationEmail(
@@ -80,6 +98,57 @@ export function createLeadNotificationEmail(
     ]
       .filter(Boolean)
       .join('\n'),
+  };
+}
+
+export function createLeadConfirmationEmail(lead: LeadSubmission): LeadNotificationMessage {
+  const english = lead.locale.toLowerCase().startsWith('en');
+  return english ? englishConfirmation(lead) : czechConfirmation(lead);
+}
+
+function czechConfirmation(lead: LeadSubmission): LeadNotificationMessage {
+  return {
+    to: lead.email,
+    from: confirmationFrom,
+    replyTo: notificationTo,
+    subject: 'Děkujeme za vaši poptávku — Radeq.cz',
+    text: [
+      `Dobrý den ${lead.name},`,
+      '',
+      'děkuji za vaši poptávku přes radeq.cz — v pořádku dorazila a co nejdřív se vám ozvu (obvykle do jednoho pracovního dne).',
+      '',
+      'Co jste odeslal(a):',
+      `Typ: ${lead.project_type}`,
+      `Zpráva: ${lead.message}`,
+      '',
+      'Kdybyste chtěl(a) cokoli doplnit, stačí odpovědět na tento e-mail.',
+      '',
+      'Radek Široký',
+      'radeq.cz · siroky@radeq.cz',
+    ].join('\n'),
+  };
+}
+
+function englishConfirmation(lead: LeadSubmission): LeadNotificationMessage {
+  return {
+    to: lead.email,
+    from: confirmationFrom,
+    replyTo: notificationTo,
+    subject: 'Thanks for your inquiry — Radeq.cz',
+    text: [
+      `Hi ${lead.name},`,
+      '',
+      "thanks for your inquiry via radeq.cz — it arrived safely and I'll get back to you soon (usually within one business day).",
+      '',
+      'What you sent:',
+      `Type: ${lead.project_type}`,
+      `Message: ${lead.message}`,
+      '',
+      'If you would like to add anything, just reply to this email.',
+      '',
+      'Radek Široký',
+      'radeq.cz · siroky@radeq.cz',
+    ].join('\n'),
   };
 }
 

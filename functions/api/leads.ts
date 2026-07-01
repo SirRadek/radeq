@@ -1,5 +1,8 @@
 import { createLeadId, validateLeadSubmission } from '../../src/lib/leads';
-import { sendLeadNotificationEmail } from '../../src/lib/leadNotificationEmail';
+import {
+  sendLeadConfirmationEmail,
+  sendLeadNotificationEmail,
+} from '../../src/lib/leadNotificationEmail';
 
 interface Env {
   LEADS_DB?: D1Database;
@@ -98,13 +101,24 @@ export async function onRequestPost(context: PagesContext) {
     return jsonResponse({ ok: false, error: 'Lead could not be stored.' }, 500);
   }
 
-  try {
-    await sendLeadNotificationEmail(env.RESEND_API_KEY, lead, id, createdAt);
-  } catch (error) {
+  const [notifyResult, confirmResult] = await Promise.allSettled([
+    sendLeadNotificationEmail(env.RESEND_API_KEY, lead, id, createdAt),
+    sendLeadConfirmationEmail(env.RESEND_API_KEY, lead),
+  ]);
+
+  if (notifyResult.status === 'rejected') {
     console.error('Lead notification email failed', {
       leadId: id,
-      code: getEmailErrorCode(error),
-      message: error instanceof Error ? error.message : 'Unknown email error',
+      code: getEmailErrorCode(notifyResult.reason),
+      message: notifyResult.reason instanceof Error ? notifyResult.reason.message : 'Unknown email error',
+    });
+  }
+
+  if (confirmResult.status === 'rejected') {
+    console.error('Lead confirmation email failed', {
+      leadId: id,
+      code: getEmailErrorCode(confirmResult.reason),
+      message: confirmResult.reason instanceof Error ? confirmResult.reason.message : 'Unknown email error',
     });
   }
 

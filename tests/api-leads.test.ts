@@ -39,7 +39,7 @@ describe('lead Pages Function', () => {
     expect(calls[1]?.values).toContain('siroky@radeq.cz');
   });
 
-  it('sends a lead notification email through Resend after storage succeeds', async () => {
+  it('sends an owner notification and a visitor confirmation through Resend', async () => {
     const calls: Array<{ url: unknown; init: RequestInit }> = [];
     const fetchMock = vi.fn(async (url: unknown, init: RequestInit) => {
       calls.push({ url, init });
@@ -61,19 +61,59 @@ describe('lead Pages Function', () => {
     });
 
     expect(response.status).toBe(201);
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(calls[0]?.url).toBe('https://api.resend.com/emails');
-    expect(calls[0]?.init.method).toBe('POST');
-    const headers = calls[0]?.init.headers as Record<string, string>;
-    expect(headers.authorization).toBe('Bearer test_key');
-    const payload = JSON.parse(calls[0]?.init.body as string) as Record<string, unknown>;
-    expect(payload).toMatchObject({
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    for (const call of calls) {
+      expect(call.url).toBe('https://api.resend.com/emails');
+      expect(call.init.method).toBe('POST');
+      expect((call.init.headers as Record<string, string>).authorization).toBe('Bearer test_key');
+    }
+
+    const payloads = calls.map((call) => JSON.parse(call.init.body as string) as Record<string, unknown>);
+    const notify = payloads.find((p) => String(p.subject).includes('Nová poptávka'));
+    const confirm = payloads.find((p) => String(p.subject).includes('Děkujeme'));
+
+    expect(notify).toMatchObject({
       to: 'siroky@radeq.cz',
       from: 'Radeq.cz poptávky <siroky@radeq.cz>',
       reply_to: 'siroky@radeq.cz',
     });
-    expect(payload.subject).toContain('Nová poptávka');
-    expect(payload.text).toContain('Need fast lead routing.');
+    expect(String(notify?.text)).toContain('Need fast lead routing.');
+
+    expect(confirm).toBeDefined();
+    expect(confirm).toMatchObject({
+      to: 'siroky@radeq.cz',
+      from: 'Radeq.cz <siroky@radeq.cz>',
+    });
+    expect(String(confirm?.text)).toContain('Jan Siroky');
+
+    vi.unstubAllGlobals();
+  });
+
+  it('localizes the visitor confirmation to English for en locales', async () => {
+    const calls: Array<{ init: RequestInit }> = [];
+    const fetchMock = vi.fn(async (_url: unknown, init: RequestInit) => {
+      calls.push({ init });
+      return new Response(JSON.stringify({ id: 'email_123' }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      });
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    const { env } = createLeadEnv({ RESEND_API_KEY: 'test_key' });
+
+    await onRequestPost({
+      request: new Request('https://radeq.cz/api/leads', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ ...completeLead, locale: 'en-US' }),
+      }),
+      env,
+    });
+
+    const payloads = calls.map((call) => JSON.parse(call.init.body as string) as Record<string, unknown>);
+    const confirm = payloads.find((p) => String(p.subject).includes('Thanks for your inquiry'));
+    expect(confirm).toBeDefined();
+    expect(String(confirm?.text)).toContain('Hi Jan Siroky');
 
     vi.unstubAllGlobals();
   });

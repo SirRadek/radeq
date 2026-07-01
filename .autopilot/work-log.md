@@ -16,6 +16,11 @@ Decision (owner picked Resend from a 3-option AskUserQuestion):
 - Removed the now-unused `[[send_email]]` binding from `wrangler.toml` + `wrangler.worker.example.toml`; `RESEND_API_KEY` is a Worker secret (+ local `.dev.vars`). Env types updated (`worker/index.ts`, `functions/api/leads.ts`); tests rewritten to mock `fetch` and assert the Resend payload + fail-soft.
 - Verified: 0 typecheck errors in the touched `.ts`, 61/61 tests, build 30 pages. Deployed live.
 
+Follow-up same day — visitor auto-confirmation (owner asked "a z formuláře?"):
+- Added `sendLeadConfirmationEmail()` + a shared `postToResend()` helper. On submit the Worker now sends TWO Resend emails concurrently (`Promise.allSettled`, each fail-soft, independent logging): the owner notification AND a localized (CS/EN by `lead.locale`) "thank you, I'll get back to you" confirmation to the visitor (`to = lead.email`, `from = 'Radeq.cz <siroky@radeq.cz>'`, `reply_to = siroky@`). Concurrency keeps the form response fast; both share the one `RESEND_API_KEY`.
+- 62/62 tests (added an owner+visitor two-send assertion + an EN-locale confirmation test). Deployed live.
+- KNOWN HARDENING (open): `/api/leads` has NO Turnstile and NO rate-limit. The visitor confirmation sends mail to a visitor-supplied address, so an attacker can drive unsolicited "thank you" backscatter to arbitrary addresses and burn Resend quota. The form was already abusable for owner-spam; the confirmation extends it to third parties. Recommended fix: gate `/api/leads` with the existing Turnstile (already wired for /audit) and/or a per-IP KV rate-limit (the `MEASURE_RATE_LIMIT` pattern). Not yet done — flagged to owner.
+
 OPEN OWNER ITEM (notifications stay skipped until done): (1) sign up at resend.com; (2) add + verify `radeq.cz` as a sending domain (Resend generates DKIM + return-path DNS records — add them on Cloudflare DNS; they do NOT touch the Fastmail inbound MX); (3) create an API key; (4) `npx wrangler secret put RESEND_API_KEY`; (5) add `RESEND_API_KEY=...` to local `.dev.vars`; (6) redeploy. The earlier Cloudflare Email Routing destination verification of siroky@ is no longer required.
 
 ## 2026-07-01 Audit "od" scope breakdown + all emails unified to `siroky@radeq.cz`

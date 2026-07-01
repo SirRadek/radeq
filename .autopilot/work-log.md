@@ -1,5 +1,16 @@
 # Radeq.cz Website Work Log
 
+## 2026-07-01 Audit entry price lowered to `od 2 900 Kč` (still an audit, not a fix)
+
+Date: 2026-07-01
+Trigger: owner directed lowering the audit entry — a small site is auditable in ~1 hour — from 4 900 to ~2 900, and to factor it into the measurement-surfacing plan. Pressure-tested via a 3-lens brainstorm (price / surfacing / risk).
+
+Decision:
+- Paid entry price lowered from `od 4 900 Kč` to `od 2 900 Kč` — FLAT, no tier ladder (a visible ladder would re-introduce a forbidden public choice; `od` scales bigger web+process audits silently in the private quote after the free scoping call).
+- CRITICAL framing guard: 2 900 is the exact number the 2026-06-30 re-lock rejected as a `rychlá oprava 2 900–4 900` fix. The NUMBER is fine; the FIX-FRAMING is what the lock governs. The entry stays an AUDIT (credited, web-or-process); the kontrola/oprava/rychlá framing remains forbidden even at 2 900. Credited line rewritten to name the ~1h scope and make the credit TOTAL/unconditional (keeps the anchor neutralized at the smaller sum).
+- Lock amended FIRST (this record + `offer_positioning_conversion.yaml:5,65` + `architecture.md:16` + this master-plan) BEFORE the runtime edit.
+- Runtime (downstream): all ~10 `4 900` surfaces migrated to `2 900` in one pass (home.ts, audit.ts, measure.ts, both locales); the free-vs-paid firewall on `/audit` sharpened (the perceived gap shrinks at 2 900); plus 3 measurement-surfacing surfaces (hero ghost / end-of-"Co řeším" strip / "DŮKAZ" strip above pricing), price named only on the above-pricing strip.
+
 ## 2026-06-30 Offer Positioning RE-LOCK (websites, data & automation)
 
 Date: 2026-06-30

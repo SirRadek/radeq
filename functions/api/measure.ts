@@ -1,11 +1,19 @@
 import { isPublicHttpUrl } from '../../src/lib/leads';
 
-type MeasureStatus = 'ok' | 'no_field_data' | 'unreachable' | 'psi_error' | 'rate_limited' | 'invalid_url';
+type MeasureStatus =
+  | 'ok'
+  | 'no_field_data'
+  | 'unreachable'
+  | 'psi_error'
+  | 'rate_limited'
+  | 'invalid_url'
+  | 'verification_failed';
 type MeasureLocale = 'cs' | 'en';
 
 interface Env {
   // TODO pre-launch: set PSI_API_KEY as a Cloudflare secret for production volume.
   PSI_API_KEY?: string;
+  TURNSTILE_SECRET?: string;
   MEASURE_RATE_LIMIT?: KVNamespace;
 }
 
@@ -67,7 +75,13 @@ interface RateLimitResult {
   retryAfterSeconds?: number;
 }
 
+interface TurnstileVerifyResponse {
+  success?: boolean;
+  'error-codes'?: string[];
+}
+
 const PSI_ENDPOINT = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed';
+const TURNSTILE_SITEVERIFY_ENDPOINT = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 const RATE_LIMIT_MAX = 5;
 const RATE_LIMIT_WINDOW_SECONDS = 10 * 60;
 const RATE_LIMIT_WINDOW_MS = RATE_LIMIT_WINDOW_SECONDS * 1000;
@@ -93,6 +107,19 @@ export async function onRequestPost(context: PagesContext) {
 
   if (!measuredUrl || !isPublicHttpUrl(measuredUrl)) {
     return jsonResponse(createFailureResponse('invalid_url', measuredUrl ?? '', locale), 400);
+  }
+
+  const turnstileSecret = env.TURNSTILE_SECRET?.trim();
+  if (turnstileSecret) {
+    const verified = await verifyTurnstile(
+      turnstileSecret,
+      readTurnstileToken(body),
+      getCfConnectingIp(request),
+    );
+
+    if (!verified) {
+      return jsonResponse(createFailureResponse('verification_failed', measuredUrl, locale), 403);
+    }
   }
 
   const rateLimit = await checkRateLimit(request, env);
@@ -178,6 +205,10 @@ function readString(input: unknown, key: string): string {
   return typeof value === 'string' ? value : '';
 }
 
+function readTurnstileToken(input: unknown): string {
+  return readString(input, 'turnstileToken') || readString(input, 'cf-turnstile-response');
+}
+
 function normalizeSubmittedUrl(value: string): string | null {
   const trimmed = value.replace(/[\u0000-\u001f\u007f]/g, ' ').trim();
   if (!trimmed || trimmed.length > 2048) return null;
@@ -214,8 +245,7 @@ async function checkRateLimit(request: Request, env: Env): Promise<RateLimitResu
   const clientIp = getClientIp(request);
   const key = `measure:${clientIp || 'unknown'}`;
 
-  // TODO pre-launch: bind MEASURE_RATE_LIMIT KV in wrangler; this fallback is isolate-local only.
-  // TODO pre-launch: add Turnstile to the form if anonymous measurement starts seeing abuse.
+  // TODO pre-launch: configure PUBLIC_TURNSTILE_SITE_KEY (build env), TURNSTILE_SECRET (CF secret), and bind MEASURE_RATE_LIMIT KV; this fallback is isolate-local only.
   if (env.MEASURE_RATE_LIMIT) {
     return checkKvRateLimit(env.MEASURE_RATE_LIMIT, key);
   }
@@ -298,6 +328,42 @@ function getClientIp(request: Request): string {
   return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? '';
 }
 
+function getCfConnectingIp(request: Request): string {
+  return request.headers.get('cf-connecting-ip')?.trim() ?? '';
+}
+
+async function verifyTurnstile(secret: string, token: string, remoteip: string): Promise<boolean> {
+  const trimmedToken = token.trim();
+  if (!trimmedToken || trimmedToken.length > 2048) return false;
+
+  const payload = new URLSearchParams({
+    secret,
+    response: trimmedToken,
+  });
+
+  if (remoteip) {
+    payload.set('remoteip', remoteip);
+  }
+
+  try {
+    const response = await fetch(TURNSTILE_SITEVERIFY_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/x-www-form-urlencoded',
+      },
+      body: payload,
+    });
+
+    if (!response.ok) return false;
+
+    const body = (await response.json()) as TurnstileVerifyResponse;
+    return body.success === true;
+  } catch {
+    return false;
+  }
+}
+
 function classifyPsiError(response: Response, body: PsiResponse): MeasureStatus {
   const message = [
     body.error?.status,
@@ -328,6 +394,8 @@ function httpStatusForMeasureStatus(status: MeasureStatus): number {
   switch (status) {
     case 'invalid_url':
       return 400;
+    case 'verification_failed':
+      return 403;
     case 'rate_limited':
       return 429;
     case 'unreachable':
@@ -561,6 +629,11 @@ const failureCopy: Record<MeasureLocale, Record<MeasureStatus, MeasureFinding>> 
       meaning: 'Měřím jen adresu, kterou zadáte, a nepřijímám localhost, interní domény, IP adresy ani nestandardní porty.',
       verify: 'Zadejte veřejnou adresu webu; interní nebo testovací prostředí patří do ručního auditu.',
     },
+    verification_failed: {
+      signal: 'Ověření návštěvníka neproběhlo',
+      meaning: 'Měření teď nepustím bez platného ověření, aby nástroj nešel zneužívat k automatickému měření.',
+      verify: 'Obnovte prosím potvrzení a zkuste to znovu, nebo pošlete adresu rovnou do poptávky na lidský audit.',
+    },
     unreachable: {
       signal: 'Google PSI web nenačetl',
       meaning: 'Strojový náhled nemá použitelný výstup, protože PSI stránku nedokázalo změřit.',
@@ -592,6 +665,11 @@ const failureCopy: Record<MeasureLocale, Record<MeasureStatus, MeasureFinding>> 
       signal: 'The address is not a public http/https URL',
       meaning: 'I measure only the address you enter, and I do not accept localhost, internal domains, IP addresses, or non-standard ports.',
       verify: 'Enter the public website address; internal or staging environments belong in a manual audit.',
+    },
+    verification_failed: {
+      signal: 'Visitor verification did not pass',
+      meaning: 'I will not run the machine preview without a valid verification, so the tool cannot be abused for automated measurements.',
+      verify: 'Refresh the verification and try again, or send the address directly through the human audit request.',
     },
     unreachable: {
       signal: 'Google PSI could not load the website',

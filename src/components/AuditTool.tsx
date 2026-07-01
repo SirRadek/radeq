@@ -1,9 +1,37 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { AuditContent } from '../data/audit';
 import type { Locale } from '../data/locales';
 
-type MeasureStatus = 'ok' | 'no_field_data' | 'unreachable' | 'psi_error' | 'rate_limited' | 'invalid_url';
+type MeasureStatus =
+  | 'ok'
+  | 'no_field_data'
+  | 'unreachable'
+  | 'psi_error'
+  | 'rate_limited'
+  | 'invalid_url'
+  | 'verification_failed';
+type StatusState = MeasureStatus | 'idle' | 'loading';
 type AutomationAnswer = 'yes' | 'no';
+type TurnstileWidgetId = string;
+
+interface TurnstileApi {
+  render(container: HTMLElement, options: TurnstileRenderOptions): TurnstileWidgetId;
+  reset(widgetId?: TurnstileWidgetId): void;
+  remove?(widgetId: TurnstileWidgetId): void;
+}
+
+interface TurnstileRenderOptions {
+  sitekey: string;
+  callback(token: string): void;
+  'expired-callback'(): void;
+  'error-callback'(): void;
+}
+
+declare global {
+  interface Window {
+    turnstile?: TurnstileApi;
+  }
+}
 
 interface MeasureFinding {
   signal: string;
@@ -24,31 +52,88 @@ interface Props {
   contactHref: string;
 }
 
+const TURNSTILE_SITE_KEY = String(import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '').trim();
+const TURNSTILE_SCRIPT_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+
+let turnstileScriptPromise: Promise<void> | null = null;
+
 export default function AuditTool({ locale, content, measurePath, contactHref }: Props) {
   const [url, setUrl] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState<MeasureResponse | null>(null);
   const [statusMessage, setStatusMessage] = useState('');
+  const [inlineStatus, setInlineStatus] = useState<StatusState>('idle');
+  const [turnstileToken, setTurnstileToken] = useState('');
   const [automationAnswer, setAutomationAnswer] = useState<AutomationAnswer>('no');
+  const turnstileContainerRef = useRef<HTMLDivElement | null>(null);
+  const turnstileWidgetIdRef = useRef<TurnstileWidgetId | null>(null);
+  const isTurnstileEnabled = TURNSTILE_SITE_KEY.length > 0;
 
   const ctaHref = useMemo(() => {
     const measuredUrl = result && result.status !== 'invalid_url' ? result.measuredUrl : '';
     const projectType = automationAnswer === 'yes' ? content.automationProjectType : content.auditProjectType;
     return createContactHref(contactHref, measuredUrl, projectType);
   }, [automationAnswer, contactHref, content.auditProjectType, content.automationProjectType, result]);
-  const statusState = result?.status ?? (isSubmitting ? 'loading' : 'idle');
+  const statusState = result?.status ?? (isSubmitting ? 'loading' : inlineStatus);
   const isAlertStatus =
-    result?.status === 'invalid_url' ||
-    result?.status === 'unreachable' ||
-    result?.status === 'psi_error' ||
-    result?.status === 'rate_limited';
+    statusState === 'invalid_url' ||
+    statusState === 'unreachable' ||
+    statusState === 'psi_error' ||
+    statusState === 'rate_limited' ||
+    statusState === 'verification_failed';
+
+  useEffect(() => {
+    if (!isTurnstileEnabled) return undefined;
+
+    let isActive = true;
+
+    loadTurnstileScript()
+      .then(() => {
+        if (!isActive || turnstileWidgetIdRef.current || !turnstileContainerRef.current || !window.turnstile) {
+          return;
+        }
+
+        turnstileWidgetIdRef.current = window.turnstile.render(turnstileContainerRef.current, {
+          sitekey: TURNSTILE_SITE_KEY,
+          callback: (token) => {
+            setTurnstileToken(token);
+            setInlineStatus('idle');
+            setStatusMessage((current) => (current === content.verificationPrompt ? '' : current));
+          },
+          'expired-callback': () => setTurnstileToken(''),
+          'error-callback': () => setTurnstileToken(''),
+        });
+      })
+      .catch(() => {
+        if (isActive) {
+          setTurnstileToken('');
+        }
+      });
+
+    return () => {
+      isActive = false;
+      if (turnstileWidgetIdRef.current && window.turnstile?.remove) {
+        window.turnstile.remove(turnstileWidgetIdRef.current);
+      }
+      turnstileWidgetIdRef.current = null;
+    };
+  }, [content.verificationPrompt, isTurnstileEnabled]);
 
   async function submitMeasurement(event: { preventDefault: () => void }) {
     event.preventDefault();
     if (isSubmitting) return;
 
+    const submittedTurnstileToken = readTurnstileToken(turnstileToken, turnstileContainerRef.current);
+    if (isTurnstileEnabled && !submittedTurnstileToken) {
+      setResult(null);
+      setInlineStatus('verification_failed');
+      setStatusMessage(content.verificationPrompt);
+      return;
+    }
+
     setIsSubmitting(true);
     setResult(null);
+    setInlineStatus('idle');
     setStatusMessage(content.loadingLabel);
 
     try {
@@ -60,6 +145,7 @@ export default function AuditTool({ locale, content, measurePath, contactHref }:
         body: JSON.stringify({
           url,
           locale,
+          ...(isTurnstileEnabled ? { turnstileToken: submittedTurnstileToken } : {}),
         }),
       });
 
@@ -85,6 +171,17 @@ export default function AuditTool({ locale, content, measurePath, contactHref }:
       setStatusMessage(content.statusLabels.psi_error);
     } finally {
       setIsSubmitting(false);
+      resetTurnstileWidget();
+    }
+  }
+
+  function resetTurnstileWidget(): void {
+    if (!isTurnstileEnabled) return;
+
+    setTurnstileToken('');
+
+    if (turnstileWidgetIdRef.current && window.turnstile) {
+      window.turnstile.reset(turnstileWidgetIdRef.current);
     }
   }
 
@@ -109,6 +206,14 @@ export default function AuditTool({ locale, content, measurePath, contactHref }:
         </div>
 
         <p className="audit-tool__consent">{content.consent}</p>
+
+        {isTurnstileEnabled ? (
+          <div
+            className="audit-tool__turnstile"
+            ref={turnstileContainerRef}
+            aria-label={content.verificationLabel}
+          />
+        ) : null}
 
         <div className="audit-tool__actions">
           <button className="rq-btn rq-btn--primary audit-tool__submit" type="submit" disabled={isSubmitting}>
@@ -240,10 +345,53 @@ function isMeasureStatus(value: unknown): value is MeasureStatus {
     value === 'unreachable' ||
     value === 'psi_error' ||
     value === 'rate_limited' ||
-    value === 'invalid_url'
+    value === 'invalid_url' ||
+    value === 'verification_failed'
   );
 }
 
 function isObjectRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readTurnstileToken(stateToken: string, container: HTMLElement | null): string {
+  return (
+    stateToken.trim() ||
+    container?.querySelector<HTMLInputElement>('input[name="cf-turnstile-response"]')?.value.trim() ||
+    ''
+  );
+}
+
+function loadTurnstileScript(): Promise<void> {
+  if (typeof window === 'undefined') return Promise.resolve();
+  if (window.turnstile) return Promise.resolve();
+
+  if (!turnstileScriptPromise) {
+    turnstileScriptPromise = new Promise((resolve, reject) => {
+      const existingScript = document.querySelector<HTMLScriptElement>(`script[src="${TURNSTILE_SCRIPT_SRC}"]`);
+
+      if (existingScript) {
+        existingScript.addEventListener('load', () => resolve(), { once: true });
+        existingScript.addEventListener('error', () => reject(new Error('Turnstile failed to load.')), { once: true });
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = TURNSTILE_SCRIPT_SRC;
+      script.async = true;
+      script.defer = true;
+      script.addEventListener('load', () => resolve(), { once: true });
+      script.addEventListener(
+        'error',
+        () => {
+          turnstileScriptPromise = null;
+          reject(new Error('Turnstile failed to load.'));
+        },
+        { once: true },
+      );
+      document.head.append(script);
+    });
+  }
+
+  return turnstileScriptPromise;
 }

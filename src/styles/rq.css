@@ -428,8 +428,8 @@ p {
 }
 
 .rq-site-footer__inner {
-  width: min(calc(100% - 2rem), 54rem);
-  max-width: 54rem;
+  width: min(calc(100% - 2rem), 44rem);
+  max-width: 44rem;
   margin-inline: auto;
   padding-block: clamp(2rem, 4vw, 3.25rem) 1.2rem;
 }

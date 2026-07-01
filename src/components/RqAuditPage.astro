@@ -210,6 +210,13 @@ const measurePath = resolve('/api/measure');
     line-height: 1.55;
   }
 
+  .audit-tool__turnstile {
+    display: flex;
+    align-items: center;
+    min-height: 65px;
+    overflow: hidden;
+  }
+
   .audit-tool__actions {
     display: flex;
     align-items: center;
@@ -249,7 +256,8 @@ const measurePath = resolve('/api/measure');
   .audit-tool__status[data-status="invalid_url"],
   .audit-tool__status[data-status="unreachable"],
   .audit-tool__status[data-status="psi_error"],
-  .audit-tool__status[data-status="rate_limited"] {
+  .audit-tool__status[data-status="rate_limited"],
+  .audit-tool__status[data-status="verification_failed"] {
     color: #7A1F2B;
   }
 
@@ -337,7 +345,8 @@ const measurePath = resolve('/api/measure');
   .audit-tool__result[data-status="invalid_url"] .audit-tool__card,
   .audit-tool__result[data-status="unreachable"] .audit-tool__card,
   .audit-tool__result[data-status="psi_error"] .audit-tool__card,
-  .audit-tool__result[data-status="rate_limited"] .audit-tool__card {
+  .audit-tool__result[data-status="rate_limited"] .audit-tool__card,
+  .audit-tool__result[data-status="verification_failed"] .audit-tool__card {
     border-color: rgba(122, 31, 43, 0.28);
     background: #FFF9F7;
   }

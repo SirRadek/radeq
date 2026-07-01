@@ -17,6 +17,8 @@ export interface AuditContent {
     inputLabel: string;
     inputPlaceholder: string;
     consent: string;
+    verificationLabel: string;
+    verificationPrompt: string;
     submitLabel: string;
     loadingLabel: string;
     measuredLabel: string;
@@ -59,6 +61,8 @@ export const auditContent = {
       inputLabel: 'Adresa webu',
       inputPlaceholder: 'např. vas-web.cz',
       consent: 'Změřím jen adresu, kterou zadáte, přes oficiální Google API.',
+      verificationLabel: 'Ověření, že nejste robot',
+      verificationPrompt: 'Potvrďte prosím, že nejste robot.',
       submitLabel: 'Změřit web',
       loadingLabel: 'měřím… (Google PSI)',
       measuredLabel: 'Měřená adresa',
@@ -80,6 +84,7 @@ export const auditContent = {
         psi_error: 'Google PSI teď nevrátilo použitelný výsledek.',
         rate_limited: 'Měření je dočasně omezené.',
         invalid_url: 'Zadejte veřejnou http/https adresu webu.',
+        verification_failed: 'Ověření návštěvníka neproběhlo.',
       },
       apiUnavailableFinding: {
         signal: 'Měření teď nejde spustit',
@@ -107,6 +112,8 @@ export const auditContent = {
       inputLabel: 'Website address',
       inputPlaceholder: 'for example, your-site.com',
       consent: 'I measure only the address you enter, through the official Google API.',
+      verificationLabel: 'Verification that you are not a robot',
+      verificationPrompt: 'Please confirm that you are not a robot.',
       submitLabel: 'Measure website',
       loadingLabel: 'measuring… (Google PSI)',
       measuredLabel: 'Measured address',
@@ -128,6 +135,7 @@ export const auditContent = {
         psi_error: 'Google PSI did not return a usable result.',
         rate_limited: 'Measurement is temporarily limited.',
         invalid_url: 'Enter a public http/https website address.',
+        verification_failed: 'Visitor verification did not pass.',
       },
       apiUnavailableFinding: {
         signal: 'Measurement cannot run right now',

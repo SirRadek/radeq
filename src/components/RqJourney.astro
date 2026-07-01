@@ -8,26 +8,8 @@ interface Props {
 }
 
 const { content = homeContent.cs.journey, lang = 'cs' } = Astro.props;
-const localeContent = homeContent[lang];
 const phases = content.phases;
 const trustPoints = content.trustPoints;
-const startPreviewItems = localeContent.problems.items.slice(0, 4);
-const endPreviewItems = localeContent.showcase.items.slice(0, 3);
-const previewLabels = lang === 'en'
-  ? {
-      startCarousel: 'Problem previews',
-      endCarousel: 'Example previews',
-      previous: 'Previous preview item',
-      next: 'Next preview item',
-      indicator: 'Show preview item',
-    }
-  : {
-      startCarousel: 'N\u00e1hledy probl\u00e9m\u016f',
-      endCarousel: 'N\u00e1hledy uk\u00e1zek',
-      previous: 'P\u0159edchoz\u00ed polo\u017eka n\u00e1hledu',
-      next: 'Dal\u0161\u00ed polo\u017eka n\u00e1hledu',
-      indicator: 'Zobrazit polo\u017eku n\u00e1hledu',
-    };
 ---
 
 <div class="rq-journey" data-rq-journey>
@@ -45,16 +27,13 @@ const previewLabels = lang === 'en'
     <div class="rq-journey-line__track">
       <div class="rq-journey-line__flow">
         <div class="rq-journey-line__rail" aria-hidden="true"></div>
-        <button
+        <a
           class="rq-journey-line__cap rq-journey-line__cap--start"
-          type="button"
-          aria-expanded="false"
-          aria-controls="rq-journey-preview"
-          data-rq-journey-preview-trigger="start"
+          href="#co-resim"
         >
           <span>{content.startCap}</span>
           <span class="rq-journey-line__cap-dot"></span>
-        </button>
+        </a>
 
         <div
           class="rq-journey-line__tabs"
@@ -84,135 +63,18 @@ const previewLabels = lang === 'en'
           ))}
         </div>
 
-        <button
+        <a
           class="rq-journey-line__cap rq-journey-line__cap--end"
-          type="button"
-          aria-expanded="false"
-          aria-controls="rq-journey-preview"
-          data-rq-journey-preview-trigger="end"
+          href="#kontakt"
         >
           <span>{content.endCap}</span>
           <span class="rq-journey-line__cap-dot"></span>
-        </button>
+        </a>
       </div>
     </div>
   </div>
 
   <div class="rq-journey__body" data-rq-journey-body>
-    <aside class="rq-journey-preview" id="rq-journey-preview" hidden inert tabindex="-1" data-rq-journey-preview>
-      <div class="rq-journey-preview__mode" data-rq-journey-preview-mode="start">
-        <div class="rq-journey-preview__shell" data-rq-journey-preview-carousel data-rq-preview-carousel-mode="start">
-          <button class="rq-journey-preview__nav rq-journey-preview__nav--prev" type="button" aria-label={previewLabels.previous} data-rq-journey-preview-prev disabled>
-            <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
-              <path d="M15 5 8 12l7 7"></path>
-            </svg>
-          </button>
-
-          <div class="rq-journey-preview__carousel-scene" aria-label={previewLabels.startCarousel}>
-            <ul class="rq-journey-preview__filmstrip">
-              {startPreviewItems.map((item, index) => (
-                <li
-                  class:list={['rq-journey-preview__frame', index === 0 && 'is-active']}
-                  data-rq-journey-preview-frame
-                  data-rq-preview-index={index}
-                  data-rq-preview-side={index === 0 ? 'active' : 'after'}
-                  aria-hidden={index === 0 ? 'false' : 'true'}
-                >
-                  <article class="rq-problem-diagnostic__panel--mini rq-journey-preview__card" tabindex={index === 0 ? '0' : '-1'} data-rq-journey-preview-card>
-                    <p class="rq-journey-preview__eyebrow">{content.preview.start.eyebrow}</p>
-                    <h3>{item.symptom}</h3>
-                    <dl class="rq-journey-preview__facts">
-                      <div>
-                        <dt>{content.preview.start.problemLabel}</dt>
-                        <dd>{item.problem}</dd>
-                      </div>
-                      <div>
-                        <dt>{content.preview.start.stepLabel}</dt>
-                        <dd>{item.step}</dd>
-                      </div>
-                    </dl>
-                    <a class="rq-btn rq-btn--primary" href="#co-resim" data-rq-journey-scroll data-rq-preview-interactive>{content.preview.start.ctaLabel}</a>
-                  </article>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <button class="rq-journey-preview__nav rq-journey-preview__nav--next" type="button" aria-label={previewLabels.next} data-rq-journey-preview-next>
-            <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
-              <path d="m9 5 7 7-7 7"></path>
-            </svg>
-          </button>
-
-          <div class="rq-journey-preview__indicators" role="group" aria-label={previewLabels.startCarousel}>
-            {startPreviewItems.map((_, index) => (
-              <button
-                class="rq-journey-preview__indicator"
-                type="button"
-                aria-label={`${previewLabels.indicator} ${index + 1}`}
-                aria-current={index === 0 ? 'true' : 'false'}
-                data-rq-journey-preview-indicator
-              >
-                {String(index + 1).padStart(2, '0')}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div class="rq-journey-preview__mode" data-rq-journey-preview-mode="end" hidden>
-        <div class="rq-journey-preview__shell" data-rq-journey-preview-carousel data-rq-preview-carousel-mode="end">
-          <button class="rq-journey-preview__nav rq-journey-preview__nav--prev" type="button" aria-label={previewLabels.previous} data-rq-journey-preview-prev disabled>
-            <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
-              <path d="M15 5 8 12l7 7"></path>
-            </svg>
-          </button>
-
-          <div class="rq-journey-preview__carousel-scene" aria-label={previewLabels.endCarousel}>
-            <ul class="rq-journey-preview__filmstrip">
-              {endPreviewItems.map((item, index) => (
-                <li
-                  class:list={['rq-journey-preview__frame', index === 0 && 'is-active']}
-                  data-rq-journey-preview-frame
-                  data-rq-preview-index={index}
-                  data-rq-preview-side={index === 0 ? 'active' : 'after'}
-                  aria-hidden={index === 0 ? 'false' : 'true'}
-                >
-                  <article class="rq-journey-preview__example rq-journey-preview__card" tabindex={index === 0 ? '0' : '-1'} data-rq-journey-preview-card>
-                    <span class="rq-ukazky-bento-card__badge">{item.badge}</span>
-                    <span class="rq-ukazky-bento-card__kicker">{item.kicker}</span>
-                    <strong class="rq-ukazky-bento-card__title">{item.title}</strong>
-                    <span class="rq-ukazky-bento-card__text">{item.text}</span>
-                    <a class="rq-btn rq-btn--ghost" href={item.href} data-rq-preview-interactive>{item.linkLabel}</a>
-                  </article>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <button class="rq-journey-preview__nav rq-journey-preview__nav--next" type="button" aria-label={previewLabels.next} data-rq-journey-preview-next>
-            <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
-              <path d="m9 5 7 7-7 7"></path>
-            </svg>
-          </button>
-
-          <div class="rq-journey-preview__indicators" role="group" aria-label={previewLabels.endCarousel}>
-            {endPreviewItems.map((_, index) => (
-              <button
-                class="rq-journey-preview__indicator"
-                type="button"
-                aria-label={`${previewLabels.indicator} ${index + 1}`}
-                aria-current={index === 0 ? 'true' : 'false'}
-                data-rq-journey-preview-indicator
-              >
-                {String(index + 1).padStart(2, '0')}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-    </aside>
-
     <div class="rq-journey__panels" id="rq-journey-panels" data-rq-journey-panels>
     {phases.map((phase, index) => (
       <section

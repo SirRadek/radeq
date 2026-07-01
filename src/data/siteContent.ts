@@ -280,7 +280,7 @@ export const siteContent = {
           metric: '',
           summary:
             'Údržba webu, menší změny, opravy chyb, kontrola rychlosti, zálohy a bezpečnostní minimum bez složitého procesu.',
-          events: ['Rychlá oprava', 'Aktualizace obsahu', 'Kontrola rychlosti', 'Základ bezpečnosti'],
+          events: ['Cílená úprava', 'Aktualizace obsahu', 'Kontrola rychlosti', 'Základ bezpečnosti'],
         },
         {
           name: 'Lehká AI a chatboti',
@@ -352,8 +352,8 @@ export const siteContent = {
         },
         {
           problem: 'Nevíte, čím začít',
-          system: 'Audit webu s plánem',
-          output: 'Dostanete konkrétní seznam slabých míst, priorit a odhad, jestli stačí oprava nebo nový základ.',
+          system: 'Audit webu nebo procesu',
+          output: 'Dostanete konkrétní seznam slabých míst, priorit a odhad, jestli web nebo proces stačí upravit, nebo potřebuje nový základ.',
         },
         {
           problem: 'Po spuštění nechcete zůstat sami',
@@ -391,10 +391,10 @@ export const siteContent = {
         'Audit lze odečíst z následné realizace, pokud spolu navážeme na nový web, redesign nebo větší opravy.',
       items: [
         {
-          name: 'Audit webu s plánem',
+          name: 'Audit webu nebo procesu',
           price: 'od 4 900 Kč',
-          text: 'Pro firmy, které nevědí, jestli web opravit, předělat, nebo postavit znovu.',
-          includes: ['slabá místa webu', 'prioritní plán', 'odhad další práce'],
+          text: 'Pro firmy, které nevědí, jestli web nebo proces upravit, předělat, nebo nastavit znovu.',
+          includes: ['slabá místa webu nebo procesu', 'prioritní plán', 'odhad další práce'],
           cta: 'Začít auditem',
           featured: true,
         },
@@ -414,7 +414,7 @@ export const siteContent = {
         },
         {
           name: 'Redesign staršího webu',
-          price: '35 000-75 000 Kč',
+          price: 'od 9 900 Kč',
           text: 'Přestavba existujícího webu, který potřebuje lepší obsah, mobil, rychlost a důvěryhodnost.',
           includes: ['audit současného webu', 'nová struktura a texty', 'kontrola před spuštěním'],
           cta: 'Chci zlepšit web',
@@ -528,8 +528,8 @@ export const siteContent = {
       projectOptions: [
         'Nový firemní web',
         'Redesign staršího webu',
-        'Audit webu s plánem',
-        'Rychlá oprava webu',
+        'Audit webu nebo procesu',
+        'Něco jiného',
         'Webová péče a rozvoj',
         'Nejsem si jistý, potřebuji poradit',
       ],
@@ -734,8 +734,8 @@ export const siteContent = {
         },
         {
           problem: 'You are not sure where to start',
-          system: 'Website audit with a plan',
-          output: 'A concrete list of weak spots, priorities, and whether repair or a new base is the better move.',
+          system: 'Website or process audit',
+          output: 'A concrete list of weak spots, priorities, and whether the website or process needs a targeted adjustment or a cleaner base.',
         },
         {
           problem: 'You do not want to be alone after launch',
@@ -773,10 +773,10 @@ export const siteContent = {
         'The audit can be deducted from the follow-up implementation when we continue with a new website, redesign, or larger fixes.',
       items: [
         {
-          name: 'Website audit with a plan',
+          name: 'Website or process audit',
           price: 'from CZK 4,900',
-          text: 'For companies unsure whether to repair, redesign, or rebuild the website from a cleaner base.',
-          includes: ['weak spots', 'priority plan', 'next-work estimate'],
+          text: 'For companies unsure whether to adjust a website or process, redesign it, or rebuild from a cleaner base.',
+          includes: ['website/process weak spots', 'priority plan', 'next-work estimate'],
           cta: 'Start with audit',
           featured: true,
         },
@@ -796,7 +796,7 @@ export const siteContent = {
         },
         {
           name: 'Website redesign',
-          price: 'CZK 35,000-75,000',
+          price: 'from CZK 9,900',
           text: 'Rebuilding an existing website that needs clearer content, mobile behavior, speed, and trust.',
           includes: ['current-site audit', 'new structure and copy', 'pre-launch check'],
           cta: 'Improve my website',
@@ -911,8 +911,8 @@ export const siteContent = {
       projectOptions: [
         'New company website',
         'Website redesign',
-        'Website audit with a plan',
-        'Quick website fix',
+        'Website or process audit',
+        'Something else',
         'Website care and development',
         'Not sure, need advice',
       ],

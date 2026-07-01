@@ -25,11 +25,18 @@ const ctaHref = content.ctaHref ?? "/#kontakt";
       <span role="img" aria-label={brandAriaLabel}></span>
     </a>
 
-    <nav class="rq-site-nav" aria-label={navAriaLabel}>
+    <nav class="rq-site-nav" id="rq-site-nav" aria-label={navAriaLabel}>
       {navItems.map((item) => (
         <a class="rq-site-nav__link" href={resolve(item.href)}>{item.label}</a>
       ))}
+      {content.cta && <a class="rq-site-nav__cta rq-btn rq-btn--primary" href={resolve(ctaHref)}>{content.cta}</a>}
     </nav>
+
+    <button class="rq-nav-toggle" type="button" aria-expanded="false" aria-controls="rq-site-nav" aria-label="Menu">
+      <span class="rq-nav-toggle__bar" aria-hidden="true"></span>
+      <span class="rq-nav-toggle__bar" aria-hidden="true"></span>
+      <span class="rq-nav-toggle__bar" aria-hidden="true"></span>
+    </button>
 
     <div class="rq-site-header__actions">
       {alternateLabel && alternatePath && (
@@ -39,3 +46,44 @@ const ctaHref = content.ctaHref ?? "/#kontakt";
     </div>
   </div>
 </header>
+
+<script is:inline>
+  (() => {
+    document.querySelectorAll('.rq-site-header').forEach((header) => {
+      if (!(header instanceof HTMLElement) || header.dataset.rqNavReady === 'true') return;
+
+      const toggle = header.querySelector('.rq-nav-toggle');
+      const nav = header.querySelector('#rq-site-nav');
+      if (!(toggle instanceof HTMLButtonElement) || !(nav instanceof HTMLElement)) return;
+
+      header.dataset.rqNavReady = 'true';
+
+      const setOpen = (open) => {
+        header.classList.toggle('is-nav-open', open);
+        toggle.setAttribute('aria-expanded', String(open));
+      };
+
+      toggle.addEventListener('click', () => {
+        setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+      });
+
+      nav.addEventListener('click', (event) => {
+        const link = event.target instanceof Element ? event.target.closest('a') : null;
+        if (link && nav.contains(link)) setOpen(false);
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape' || toggle.getAttribute('aria-expanded') !== 'true') return;
+        setOpen(false);
+        toggle.focus({ preventScroll: true });
+      });
+
+      const desktopQuery = window.matchMedia?.('(min-width: 861px)');
+      const closeOnDesktop = (event) => {
+        if (event.matches) setOpen(false);
+      };
+
+      desktopQuery?.addEventListener?.('change', closeOnDesktop);
+    });
+  })();
+</script>

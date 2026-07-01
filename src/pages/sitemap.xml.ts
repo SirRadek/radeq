@@ -3,7 +3,7 @@ import { showcaseExamples } from '../data/showcaseExamples';
 import { getModuleOptions } from '../data/styleMatrix';
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
-const lastmod = '2026-06-12';
+const lastmod = '2026-07-01';
 
 function withBase(path: string) {
   return `${basePath}${path}`;
@@ -24,7 +24,7 @@ export const GET: APIRoute = ({ site }) => {
   const siteUrl = site ?? new URL('https://radeq.cz');
   const moduleIds = getModuleOptions('cs').map((moduleOption) => moduleOption.id);
   const showcasePaths = ['/ukazky/', ...showcaseExamples.map((example) => `/ukazky/${example.slug}/`)];
-  const routePagePaths = ['/kontakt/', '/sluzby/', '/portfolio/', '/soukromi/'];
+  const routePagePaths = ['/kontakt/', '/sluzby/', '/portfolio/', '/soukromi/', '/audit/', '/en/audit/'];
   const rqV1Paths = ['/ukazky/instalater/', '/ukazky/sluzba/', '/ukazky/eshop/', '/zapisky/', '/zapisky/web-pro-zivnostnika-cena/', '/zapisky/vlastni-eshop-nebo-shoptet/', '/zapisky/jak-se-staram-o-web-po-predani/'];
   const paths = [
     '/',

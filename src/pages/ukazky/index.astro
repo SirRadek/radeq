@@ -32,12 +32,26 @@ const ukazky = [
     pro: 'Lokální výrobce nebo prodejce',
     co: 'Čistý katalog s filtrem, varianty, košík — malý vlastněný obchod bez zbytečného balastu.',
   },
+  {
+    href: base + '/ukazky/chatbot/',
+    badge: 'Statická ukázka',
+    name: 'Statický chatbot a průvodce',
+    pro: 'Opakované dotazy a lepší zadání',
+    co: 'Pravidlový průvodce nad připravenými odpověďmi. Není to klientská case study ani LLM.',
+  },
+  {
+    href: base + '/ukazky/automatizace/',
+    badge: 'Statická ukázka',
+    name: 'Automatizace poptávek',
+    pro: 'Poptávky a ruční přepisování',
+    co: 'Archetyp sběru, kontroly a třídění poptávek bez klientských dat a skrytého odesílání.',
+  },
 ];
 ---
 
 <RqLayout
   title="Ukázkové projekty | RadeQ.cz"
-  description="Modelové weby, které ukazují rozsah a styl práce RadeQ.cz — web pro řemeslníka, web s rezervací a malý e-shop."
+  description="Modelové weby a statické ukázky řešení, které ukazují rozsah a styl práce RadeQ.cz bez klientských dat."
   lang="cs"
 >
   <RqHeader content={{ navItems: nav }} alternateLabel="EN" alternatePath="/en/" />
@@ -47,14 +61,14 @@ const ukazky = [
       <p class="rq-eyebrow">Ukázky</p>
       <h1 class="rq-display">Ukázkové projekty</h1>
       <p class="rq-lead">
-        Modelové weby, které ukazují rozsah a styl práce — než přibydou veřejné reference.
-        Každý je živý a rozkliknutelný; jde o vzorové projekty, ne o skutečné provozovatele.
+        Modelové weby a statické scénáře, které ukazují rozsah a styl práce — než přibydou veřejné reference.
+        Každá ukázka je živá a rozkliknutelná; jde o vzorové projekty nebo archetypy, ne o skutečné provozovatele.
       </p>
 
       <div class="rq-ukazky-grid">
         {ukazky.map((u) => (
           <article class="rq-card rq-ukazka">
-            <span class="rq-ukazka__badge">Vzorový projekt</span>
+            <span class="rq-ukazka__badge">{u.badge ?? 'Vzorový projekt'}</span>
             <h2 class="rq-ukazka__name">{u.name}</h2>
             <p class="rq-ukazka__pro">Pro koho: {u.pro}</p>
             <p class="rq-ukazka__co">{u.co}</p>

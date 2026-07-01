@@ -1,5 +1,7 @@
 export type ShowcaseSlug = 'chatbot' | 'automatizace' | 'nabidka-eshop';
 
+// TODO(owner): Add 1-2 real automation case studies before strengthening automation outcome claims.
+
 export interface ShowcaseLink {
   label: string;
   href: string;

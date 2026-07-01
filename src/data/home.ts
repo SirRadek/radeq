@@ -256,6 +256,8 @@ export type HomeContent = {
     legal: string;
     contactEmail: string;
     contactPhone: string;
+    mascotEnableLabel?: string;
+    mascotDisableLabel?: string;
   };
   guide: {
     toggleLabel: string;
@@ -854,7 +856,7 @@ const csServices: HomeContent['services']['items'] = [
     className: 'rq-service-tile--automation',
     price: 'od 12 000 Kč',
     title: 'Automatizace procesů',
-    result: 'Výsledek: konec ručního přepisování — co děláte opakovaně, běží samo.',
+    result: 'První krok: zmapovaný proces a funkční tok na vašich reálných datech.',
     outputs: [
       'analýza jednoho procesu od začátku do konce',
       'jeden funkční automatický tok',
@@ -867,7 +869,7 @@ const csServices: HomeContent['services']['items'] = [
     className: 'rq-service-tile--data',
     price: 'od 15 000 Kč',
     title: 'Data a AI pomocníci',
-    result: 'Výsledek: přehled ve vlastních datech a AI nasazená prakticky a bezpečně.',
+    result: 'První krok: vyčištěná ukázka dat, jednoduchý přehled a návrh bezpečné AI vrstvy.',
     outputs: [
       'sběr a vyčištění dat',
       'jednoduchý přehled / report',
@@ -923,7 +925,7 @@ const enServices: HomeContent['services']['items'] = [
     className: 'rq-service-tile--automation',
     price: 'from CZK 12,000',
     title: 'Process automation',
-    result: 'Result: less manual retyping - repeated work runs by itself.',
+    result: 'First step: a mapped process and a working flow on your real data.',
     outputs: [
       'analysis of one process from start to finish',
       'one working automated flow',
@@ -936,7 +938,7 @@ const enServices: HomeContent['services']['items'] = [
     className: 'rq-service-tile--data',
     price: 'from CZK 15,000',
     title: 'Data and AI assistants',
-    result: 'Result: a clear view of your own data and AI used practically and safely.',
+    result: 'First step: cleaned sample data, a simple overview, and a safe AI layer proposal.',
     outputs: [
       'data collection and cleanup',
       'simple overview / report',
@@ -1149,7 +1151,7 @@ export const homeContent = {
       proofAriaLabel: 'Důkazy a orientační ceny',
       proofItems: [
         { label: 'Jednostránkový web od 9 900 Kč', text: '1 strana + kontaktní formulář, spuštění za pár dní' },
-        { label: 'Audit od 4 900 Kč', text: 'zjistíte, co brzdí; audit odečtu z realizace' },
+        { label: 'Audit webu nebo procesu (od 4 900 Kč)', text: 'zjistíte, co brzdí web nebo proces; audit odečtu z realizace' },
         { label: 'Postavím · změřím · předám', text: 'bez závislosti na dodavateli' },
       ],
       actions: {
@@ -1248,7 +1250,7 @@ export const homeContent = {
     guarantee: {
       eyebrow: 'Servisní protokol & Testerova záruka',
       title: 'Každá zakázka má jasný výstup a ověřený výkon.',
-      text: 'U každé zakázky dostanete servisní protokol — co jsem udělal, co se změnilo a co dál (i co nemá smysl řešit). Před předáním web otestuji: formuláře, mobil, rychlost, základní SEO i měření. Hlídám rychlé načítání (Lighthouse 90+ u prezentačních webů) a konkrétní cíl zapíšu do protokolu předem — když ho při předání nesplním, vrátím 15 % z ceny práce, nebo to bez příplatku doladím.',
+      text: 'U každé zakázky dostanete servisní protokol — co jsem udělal, co se změnilo a co dál (i co nemá smysl řešit). Před předáním web otestuji: formuláře, mobil, rychlost, základní SEO i měření. Hlídám rychlé načítání a domluvené kvalitativní kritérium zapíšu do protokolu předem — když ho při předání nesplním, vrátím 15 % z ceny práce, nebo to bez příplatku doladím.',
     },
     about: {
       eyebrow: 'Kdo jsem',
@@ -1289,7 +1291,7 @@ export const homeContent = {
       items: [
         { title: 'Klid', price: '2 500 Kč', suffix: '/měs.', text: 'provoz, zálohy, drobné úpravy (1 h), máte komu zavolat', ctaLabel: 'Chci Klid' },
         { title: 'Růst', price: '6 000 Kč', suffix: '/měs.', text: 'vše z Klidu + SEO/výkon hlídání, měsíční report, 3 h vývoje', ctaLabel: 'Chci Růst', featured: true, badge: 'Doporučeno' },
-        { title: 'Partner', price: '15 000 Kč', suffix: '/měs.', text: 'vše z Růstu + průběžná automatizace/AI, 10 h, prioritní support', ctaLabel: 'Chci Partner' },
+        { title: 'Partner', price: '15 000 Kč', suffix: '/měs.', text: 'vše z Růstu + mapování procesů, prototypy automatizace/AI, 10 h, prioritní support', ctaLabel: 'Chci Partner' },
       ],
     },
     showcase: {
@@ -1344,7 +1346,7 @@ export const homeContent = {
         { label: 'E-shop', value: 'E-shop' },
         { label: 'Automatizace procesů', value: 'Automatizace procesů' },
         { label: 'Data a AI', value: 'Data a AI' },
-        { label: 'Audit', value: 'Audit' },
+        { label: 'Audit webu nebo procesu (od 4 900 Kč)', value: 'Audit webu nebo procesu (od 4 900 Kč)' },
         { label: 'Jiné', value: 'Jiné' },
       ],
       budgetOptions: [
@@ -1377,6 +1379,8 @@ export const homeContent = {
       legal: '© 2026 Radek Široký — RadeQ.cz · IČO 08748811 · Praha · celá ČR',
       contactEmail: 'info@radeq.cz',
       contactPhone: '+420 730 634 439',
+      mascotEnableLabel: '◍ Zapnout maskota',
+      mascotDisableLabel: '◍ Vypnout maskota',
     },
     guide: {
       toggleLabel: 'Rychlá navigace',
@@ -1392,7 +1396,7 @@ export const homeContent = {
       topics: {
         ceny: {
           chipLabel: 'Kolik to stojí',
-          text: 'Orientačně: web od 9 900 Kč, audit od 4 900 Kč. Kompletní přehled máte v sekci Ceny níž — přesnou cenu doladíme po krátké domluvě.',
+          text: 'Orientačně: web od 9 900 Kč, audit webu nebo procesu od 4 900 Kč. Kompletní přehled máte v sekci Ceny níž — přesnou cenu doladíme po krátké domluvě.',
           href: '#ceny',
           label: 'Přejít na ceny',
           followups: [
@@ -1488,7 +1492,7 @@ export const homeContent = {
       proofAriaLabel: 'Proof points and indicative prices',
       proofItems: [
         { label: 'One-page website from CZK 9,900', text: '1 page + contact form, live in a few days' },
-        { label: 'Audit from CZK 4,900', text: 'find what slows things down; audit deducted from implementation' },
+        { label: 'Website or process audit (from CZK 4,900)', text: 'find what slows the website or process; audit deducted from implementation' },
         { label: 'Build · measure · hand off', text: 'without supplier lock-in' },
       ],
       actions: {
@@ -1587,7 +1591,7 @@ export const homeContent = {
     guarantee: {
       eyebrow: 'Service protocol & Tester guarantee',
       title: 'Every project has a clear output and verified performance.',
-      text: 'For every project, you receive a service protocol - what I did, what changed, and what comes next (including what is not worth solving). Before handoff, I test the website: forms, mobile, speed, SEO basics, and measurement. I watch fast loading (Lighthouse 90+ for presentation websites) and write the concrete target into the protocol upfront - if I do not meet it at handoff, I return 15% of the labour price or fine-tune it without extra charge.',
+      text: 'For every project, you receive a service protocol - what I did, what changed, and what comes next (including what is not worth solving). Before handoff, I test the website: forms, mobile, speed, SEO basics, and measurement. I watch fast loading and write the agreed qualitative criterion into the protocol upfront - if I do not meet it at handoff, I return 15% of the labour price or fine-tune it without extra charge.',
     },
     about: {
       eyebrow: 'About me',
@@ -1628,7 +1632,7 @@ export const homeContent = {
       items: [
         { title: 'Calm', price: 'CZK 2,500', suffix: '/mo.', text: 'operation, backups, small edits (1 h), someone to call', ctaLabel: 'I want Calm' },
         { title: 'Growth', price: 'CZK 6,000', suffix: '/mo.', text: 'everything in Calm + SEO/performance monitoring, monthly report, 3 h of development', ctaLabel: 'I want Growth', featured: true, badge: 'Recommended' },
-        { title: 'Partner', price: 'CZK 15,000', suffix: '/mo.', text: 'everything in Growth + ongoing automation/AI, 10 h, priority support', ctaLabel: 'I want Partner' },
+        { title: 'Partner', price: 'CZK 15,000', suffix: '/mo.', text: 'everything in Growth + process mapping, automation/AI prototypes, 10 h, priority support', ctaLabel: 'I want Partner' },
       ],
     },
     showcase: {
@@ -1683,7 +1687,7 @@ export const homeContent = {
         { label: 'E-shop', value: 'E-shop' },
         { label: 'Process automation', value: 'Process automation' },
         { label: 'Data and AI', value: 'Data and AI' },
-        { label: 'Audit', value: 'Audit' },
+        { label: 'Website or process audit (from CZK 4,900)', value: 'Website or process audit (from CZK 4,900)' },
         { label: 'Other', value: 'Other' },
       ],
       budgetOptions: [
@@ -1716,6 +1720,8 @@ export const homeContent = {
       legal: '© 2026 Radek Široký — RadeQ.cz · ID No. 08748811 · Prague · Czech Republic',
       contactEmail: 'info@radeq.cz',
       contactPhone: '+420 730 634 439',
+      mascotEnableLabel: '◍ Turn on mascot',
+      mascotDisableLabel: '◍ Turn off mascot',
     },
     guide: {
       toggleLabel: 'Quick navigation',
@@ -1731,7 +1737,7 @@ export const homeContent = {
       topics: {
         ceny: {
           chipLabel: 'How much does it cost',
-          text: 'Roughly: website from CZK 9,900, audit from CZK 4,900. The full price list is in the Pricing section below — exact pricing follows a short discussion.',
+          text: 'Roughly: website from CZK 9,900, website or process audit from CZK 4,900. The full price list is in the Pricing section below — exact pricing follows a short discussion.',
           href: '#ceny',
           label: 'Go to pricing',
           followups: [

@@ -19,6 +19,13 @@ const legal = content.legal ?? "© 2026 Radek Široký — RadeQ.cz · IČO 0874
 const legalItems = legal.split(/\s*(?:\u00b7|\u2014)\s*/).filter(Boolean);
 const contactEmail = content.contactEmail ?? "info@radeq.cz";
 const contactPhone = content.contactPhone ?? "+420 730 634 439";
+const isEnglishFooter = homeHref.startsWith("/en") || navItems.some((item) => item.href.includes("/en/"));
+const auditLink = isEnglishFooter
+  ? { href: "/en/audit/", label: "Website audit" }
+  : { href: "/audit/", label: "Audit webu" };
+const footerNavItems = navItems.some((item) => item.href === auditLink.href) ? navItems : [...navItems, auditLink];
+const mascotEnableLabel = content.mascotEnableLabel ?? (isEnglishFooter ? "◍ Turn on mascot" : "◍ Zapnout maskota");
+const mascotDisableLabel = content.mascotDisableLabel ?? (isEnglishFooter ? "◍ Turn off mascot" : "◍ Vypnout maskota");
 ---
 
 <footer class="rq-site-footer">
@@ -39,7 +46,7 @@ const contactPhone = content.contactPhone ?? "+420 730 634 439";
       <div>
         <h2 class="rq-site-footer__title">{navTitle}</h2>
         <nav class="rq-site-footer__links" aria-label={navAriaLabel}>
-          {navItems.map((item) => (
+          {footerNavItems.map((item) => (
             <a class="rq-site-footer__link" href={resolve(item.href)}>{item.label}</a>
           ))}
         </nav>
@@ -59,6 +66,61 @@ const contactPhone = content.contactPhone ?? "+420 730 634 439";
       {legalItems.map((item) => <span>{item}</span>)}
       <span class="rq-site-footer__contact"><a href={`mailto:${contactEmail}`}>{contactEmail}</a></span>
       <span class="rq-site-footer__contact"><a href={`tel:${contactPhone.replace(/\s/g, "")}`}>{contactPhone}</a></span>
+      <span>
+        <button
+          class="rq-site-footer__mascot"
+          type="button"
+          data-rq-mascot-toggle
+          data-label-off={mascotEnableLabel}
+          data-label-on={mascotDisableLabel}
+          aria-pressed="false"
+        >
+          {mascotEnableLabel}
+        </button>
+      </span>
     </div>
   </div>
 </footer>
+
+<script is:inline>
+  (() => {
+    const KEY = 'rq-mascot';
+    const toggles = document.querySelectorAll('[data-rq-mascot-toggle]');
+    if (!toggles.length) return;
+
+    const readPreference = () => {
+      try {
+        return window.localStorage?.getItem(KEY) === 'on';
+      } catch {
+        return false;
+      }
+    };
+
+    const writePreference = (enabled) => {
+      try {
+        window.localStorage?.setItem(KEY, enabled ? 'on' : 'off');
+      } catch {
+        return;
+      }
+    };
+
+    const sync = () => {
+      const enabled = readPreference();
+      toggles.forEach((toggle) => {
+        toggle.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+        const label = toggle.getAttribute(enabled ? 'data-label-on' : 'data-label-off');
+        if (label) toggle.textContent = label;
+      });
+    };
+
+    toggles.forEach((toggle) => {
+      toggle.addEventListener('click', () => {
+        writePreference(!readPreference());
+        sync();
+        window.location.reload();
+      });
+    });
+
+    sync();
+  })();
+</script>

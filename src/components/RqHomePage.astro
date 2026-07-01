@@ -21,6 +21,8 @@ const resolve = (href: string) => {
   if (base && (href === base || href.startsWith(`${base}/`))) return href;
   return `${base}${href}`;
 };
+const heroAuditHref = resolve(lang === 'en' ? '/en/audit/' : '/audit/');
+const heroAuditLabel = lang === 'en' ? 'Measure your website' : 'Změřit svůj web';
 const contactNotePhone = content.contact.notePhone ?? '+420 730 634 439';
 const contactNotePhoneLabel = lang === 'en' ? 'Prefer a call?' : 'Radši telefon?';
 const typewriterWords = content.hero.typewriter.words.join('|');
@@ -76,8 +78,9 @@ const schema = {
       </div>
 
       <div class="rq-hero__actions" data-rq-reveal style="--rq-i:6">
-        <a class="rq-btn rq-btn--primary" href={content.hero.actions.primary.href} data-rq-magnetic>{content.hero.actions.primary.label}</a>
+        <a class="rq-btn rq-btn--primary" href={content.hero.actions.primary.href}>{content.hero.actions.primary.label}</a>
         <a class="rq-btn rq-btn--ghost" href={content.hero.actions.secondary.href}>{content.hero.actions.secondary.label}</a>
+        <a class="rq-hero__audit-link" href={heroAuditHref}>{heroAuditLabel} <span aria-hidden="true">&rarr;</span></a>
         <p class="rq-hero__micro">{content.hero.actions.micro}</p>
       </div>
     </div>
@@ -87,8 +90,18 @@ const schema = {
     import { inViewGate } from '../lib/inViewGate';
 
     (() => {
+      const MASCOT_STORAGE_KEY = 'rq-mascot';
+
+      function mascotOptedIn() {
+        try {
+          return window.localStorage?.getItem(MASCOT_STORAGE_KEY) === 'on';
+        } catch {
+          return false;
+        }
+      }
+
       const mount = document.querySelector('[data-rq-hero-three]');
-      if (!mount || mount.getAttribute('data-rq-hero-three-ready') === 'true') return;
+      if (!mount || mount.getAttribute('data-rq-hero-three-ready') === 'true' || !mascotOptedIn()) return;
       mount.setAttribute('data-rq-hero-three-ready', 'true');
 
       const MOBILE_POINT_WIDTH = 768;
@@ -113,11 +126,16 @@ const schema = {
       }
 
       function canEnhance() {
-        return canUseWebGL();
+        return mascotOptedIn() && !isStaticMode() && !isMobilePointMode() && canUseWebGL();
       }
 
       function isStaticMode() {
         return Boolean(reducedMotionQuery?.matches);
+      }
+
+      function isMobilePointMode() {
+        const mobileViewport = mobilePointQuery ? mobilePointQuery.matches : window.innerWidth < MOBILE_POINT_WIDTH;
+        return mobileViewport || Boolean(coarsePointerQuery?.matches);
       }
 
       function getCatQualityMode() {
@@ -157,6 +175,12 @@ const schema = {
         resizeTimer = window.setTimeout(() => {
           resizeTimer = 0;
 
+          if (!canEnhance()) {
+            ambient?.dispose();
+            ambient = null;
+            return;
+          }
+
           if (
               ambient &&
               (
@@ -178,7 +202,7 @@ const schema = {
       }
 
       async function ensureAmbient() {
-        if (!shouldRun || pageHidden) return;
+        if (!shouldRun || pageHidden || !canEnhance()) return;
         const staticMode = isStaticMode();
         const qualityMode = getCatQualityMode();
         if (ambient) {
@@ -1143,7 +1167,7 @@ const schema = {
     </div>
   </section>
 
-  <section class="rq-section" aria-labelledby="rq-guarantee-title">
+  <section class="rq-section rq-guarantee-section" aria-labelledby="rq-guarantee-title">
     <article class="rq-guarantee">
       <p class="rq-eyebrow">{content.guarantee.eyebrow}</p>
       <h3 id="rq-guarantee-title">{content.guarantee.title}</h3>

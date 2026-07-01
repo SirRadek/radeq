@@ -103,7 +103,7 @@ const moduleCopy: Record<Locale, Record<ModuleId, ModuleCopy>> = {
       proofTag: 'Team overview',
       headline: 'Interní rozhraní, které ukáže stav práce dřív, než se z něj stane problém.',
       lead:
-        'Dashboard nemá být dekorace. Má zkrátit rozhodnutí, odhalit zpoždění a udržet automatizace pod kontrolou.',
+        'Dashboard nemá být dekorace. Má ukázat stav práce, možná zpoždění a kde má smysl proces automatizovat.',
       summary: 'Přehled pro data, automatizace a stav práce bez těžkopádného firemního softwaru.',
       cta: 'Zmapovat proces',
       proofPoints: [
@@ -165,7 +165,7 @@ const moduleCopy: Record<Locale, Record<ModuleId, ModuleCopy>> = {
       proofTag: 'Team overview',
       headline: 'An internal interface that reveals work status before it turns into a problem.',
       lead:
-        'A dashboard should not be decoration. It should shorten decisions, expose delays, and keep automation under control.',
+        'A dashboard should not be decoration. It should show work status, possible delays, and where automation may be useful.',
       summary: 'A work overview for data, automation, and status without heavy company software.',
       cta: 'Map process',
       proofPoints: [

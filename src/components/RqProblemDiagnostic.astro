@@ -195,7 +195,7 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
   .rq-diagnostic-section {
     position: relative;
     width: 100%;
-    max-width: 1280px;
+    max-width: 80rem;
     margin: 0 auto;
     padding: clamp(3rem, 6vw, 6rem) 1.5rem;
     background:
@@ -232,7 +232,7 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
   .section-header {
     position: relative;
     z-index: 2;
-    max-width: 680px;
+    max-width: 42.5rem;
     margin-bottom: 3.5rem;
   }
 
@@ -279,26 +279,9 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
     z-index: 2;
   }
 
-  /* Fade indicator overlays for scrollable tabs */
   .diag-tabs-container::before,
   .diag-tabs-container::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 4rem;
-    z-index: 3;
-    pointer-events: none;
-  }
-
-  .diag-tabs-container::before {
-    left: 0;
-    background: linear-gradient(90deg, #16130e 10%, transparent 100%);
-  }
-
-  .diag-tabs-container::after {
-    right: 0;
-    background: linear-gradient(-90deg, #16130e 10%, transparent 100%);
+    content: none;
   }
 
   .diag-tabs {
@@ -311,6 +294,8 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
     margin: 0 -1.5rem;
     position: relative;
     z-index: 2;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 2.25rem, #000 calc(100% - 2.25rem), transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 2.25rem, #000 calc(100% - 2.25rem), transparent 100%);
   }
 
   .diag-tabs::-webkit-scrollbar {
@@ -321,6 +306,7 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
   .diag-tab {
     flex: 0 0 auto;
     scroll-snap-align: center;
+    min-height: 44px;
     background: rgba(26, 22, 17, 0.4);
     border: 1px solid rgba(230, 224, 212, 0.12);
     border-radius: var(--rq-r-pill);
@@ -358,7 +344,7 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
 
   .diag-tab-num {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     font-weight: 700;
     transition: color 0.25s ease;
   }
@@ -445,10 +431,11 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    min-height: 44px;
     padding: 0.45rem 0.85rem;
     border-radius: var(--rq-r-pill);
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: 0.875rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.02em;
@@ -498,8 +485,10 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
     border: none;
     cursor: pointer;
     color: var(--rq-ink);
-    width: 2.1rem;
-    height: 2.1rem;
+    width: 2.75rem;
+    min-width: 44px;
+    height: 2.75rem;
+    min-height: 44px;
     border-radius: 50%;
     display: inline-flex;
     align-items: center;
@@ -518,7 +507,7 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
 
   .counter-display {
     font-family: var(--font-mono);
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     font-weight: 700;
     color: var(--rq-ink-2);
     min-width: 4rem;
@@ -552,7 +541,7 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
 
   .card-label {
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: 0.875rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -647,11 +636,12 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
   .related-badge {
     display: inline-flex;
     align-items: center;
+    min-height: 44px;
     background: var(--rq-burgundy-tint);
     color: var(--rq-burgundy-strong);
     padding: 0.4rem 0.85rem;
     border-radius: var(--rq-r-pill);
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     font-weight: 600;
     border: 1px solid rgba(122, 31, 43, 0.08);
     transition: all 0.2s var(--rq-ease);
@@ -776,11 +766,13 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
           tab.tabIndex = isActive ? 0 : -1;
 
           if (isActive) {
-            tab.scrollIntoView({
-              behavior: reduceQuery.matches ? 'auto' : 'smooth',
-              block: 'nearest',
-              inline: 'center',
-            });
+            if (options.scroll !== false) {
+              tab.scrollIntoView({
+                behavior: reduceQuery.matches ? 'auto' : 'smooth',
+                block: 'nearest',
+                inline: 'center',
+              });
+            }
 
             if (options.focusTab) {
               tab.focus({ preventScroll: true });
@@ -832,7 +824,7 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
         }
       });
 
-      setActive(currentIndex);
+      setActive(currentIndex, { scroll: false });
     });
   })();
 </script>

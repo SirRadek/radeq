@@ -182,6 +182,17 @@ export type HomeContent = {
     eyebrow: string;
     title: string;
     lead: string;
+    audit: {
+      kicker: string;
+      title: string;
+      price: string;
+      creditedLine: string;
+      coverage: readonly string[];
+      coverageAriaLabel: string;
+      ctaLabel: string;
+      measureHref: string;
+      measureLabel: string;
+    };
     projectTitle: string;
     projectNote: string;
     careTitle: string;
@@ -199,6 +210,7 @@ export type HomeContent = {
       ctaLabel: string;
       featured?: boolean;
       badge?: string;
+      automationBadge?: string;
     }[];
   };
   showcase: {
@@ -1274,24 +1286,34 @@ export const homeContent = {
       eyebrow: 'Ceny',
       title: 'Orientační ceny bez překvapení.',
       lead: 'Realizace a péče jsou dvě různé služby: jednorázové orientační ceny projektů a měsíční paušály péče po spuštění.',
+      audit: {
+        kicker: 'Vstupní krok',
+        title: 'Audit webu nebo procesu',
+        price: 'od 4 900 Kč',
+        creditedLine: 'Zjistíte, co nejvíc brzdí web nebo proces a co řešit první. Cenu auditu odečtu z realizace.',
+        coverage: ['technický stav', 'rychlost', 'SEO základ', 'formuláře', 'ruční kroky v procesu'],
+        coverageAriaLabel: 'Co audit pokrývá',
+        ctaLabel: 'Chci audit od 4 900 Kč',
+        measureHref: '/audit/',
+        measureLabel: 'Nebo si web nejdřív orientačně změřte',
+      },
       projectTitle: 'Projektové realizace',
-      projectNote: 'Ceny realizací jsou orientační (od) — přesný rozsah a cenu řekneme po krátké domluvě. Jediná pevná sazba je práce od 1 100 Kč/h (bloky 5/15/40 h).',
+      projectNote: 'Realizace navazuje na audit — ceny jsou orientační (od).',
       careTitle: 'Péče po spuštění',
       projectItems: [
-        { name: 'Jednostránkový web', price: 'od 9 900 Kč' },
-        { name: 'Firemní web (1–5 stran)', price: 'od 25 000 Kč' },
-        { name: 'Redesign staršího webu', price: 'od 9 900 Kč' },
-        { name: 'E-shop', price: 'od 19 900 Kč' },
         { name: 'Automatizace procesů', price: 'od 12 000 Kč' },
         { name: 'Data a AI pomocníci', price: 'od 15 000 Kč' },
-        { name: 'Audit webu nebo procesu', price: 'od 4 900 Kč' },
+        { name: 'Firemní web (1–5 stran)', price: 'od 25 000 Kč' },
+        { name: 'E-shop', price: 'od 19 900 Kč' },
+        { name: 'Jednostránkový web', price: 'od 9 900 Kč' },
+        { name: 'Redesign staršího webu', price: 'od 9 900 Kč' },
       ],
       ariaLabel: 'Tarify péče po spuštění',
       note: 'Nechcete paušál? Bloky hodin 5/15/40 h (od 1 100 Kč/h). Nejsem plátce DPH — ceny jsou konečné.',
       items: [
-        { title: 'Klid', price: '2 500 Kč', suffix: '/měs.', text: 'provoz, zálohy, drobné úpravy (1 h), máte komu zavolat', ctaLabel: 'Chci Klid' },
+        { title: 'Partner', price: '15 000 Kč', suffix: '/měs.', text: 'mapování procesů + prototypy automatizace/AI, 10 h, prioritní support + vše z Růstu', ctaLabel: 'Chci Partner', automationBadge: 'Automatizace' },
         { title: 'Růst', price: '6 000 Kč', suffix: '/měs.', text: 'vše z Klidu + SEO/výkon hlídání, měsíční report, 3 h vývoje', ctaLabel: 'Chci Růst', featured: true, badge: 'Doporučeno' },
-        { title: 'Partner', price: '15 000 Kč', suffix: '/měs.', text: 'vše z Růstu + mapování procesů, prototypy automatizace/AI, 10 h, prioritní support', ctaLabel: 'Chci Partner' },
+        { title: 'Klid', price: '2 500 Kč', suffix: '/měs.', text: 'provoz, zálohy, drobné úpravy (1 h), máte komu zavolat', ctaLabel: 'Chci Klid' },
       ],
     },
     showcase: {
@@ -1615,24 +1637,34 @@ export const homeContent = {
       eyebrow: 'Pricing',
       title: 'Indicative prices without surprises.',
       lead: 'Project delivery and care are separate services: one-off indicative project prices and monthly post-launch care plans.',
+      audit: {
+        kicker: 'First step',
+        title: 'Website or process audit',
+        price: 'from CZK 4,900',
+        creditedLine: 'You will find what slows the website or process the most and what to solve first. I deduct the audit price from implementation.',
+        coverage: ['technical state', 'speed', 'SEO basics', 'forms', 'manual process steps'],
+        coverageAriaLabel: 'What the audit covers',
+        ctaLabel: 'I want an audit from CZK 4,900',
+        measureHref: '/en/audit/',
+        measureLabel: 'Or measure your website roughly first',
+      },
       projectTitle: 'Project work',
-      projectNote: 'Project prices are indicative (from) — exact scope and price after a short chat. The only fixed rate is work from CZK 1,100/h (blocks of 5/15/40 h).',
+      projectNote: 'Project delivery follows the audit — prices are indicative (from).',
       careTitle: 'Post-launch care',
       projectItems: [
-        { name: 'One-page website', price: 'from CZK 9,900' },
-        { name: 'Company website (1–5 pages)', price: 'from CZK 25,000' },
-        { name: 'Redesign of an older site', price: 'from CZK 9,900' },
-        { name: 'E-shop', price: 'from CZK 19,900' },
         { name: 'Process automation', price: 'from CZK 12,000' },
         { name: 'Data & AI assistants', price: 'from CZK 15,000' },
-        { name: 'Website or process audit', price: 'from CZK 4,900' },
+        { name: 'Company website (1–5 pages)', price: 'from CZK 25,000' },
+        { name: 'E-shop', price: 'from CZK 19,900' },
+        { name: 'One-page website', price: 'from CZK 9,900' },
+        { name: 'Redesign of an older site', price: 'from CZK 9,900' },
       ],
       ariaLabel: 'Post-launch care plans',
       note: 'Do not want a retainer? Hour blocks 5/15/40 h (from CZK 1,100/h). I am not a VAT payer - prices are final.',
       items: [
-        { title: 'Calm', price: 'CZK 2,500', suffix: '/mo.', text: 'operation, backups, small edits (1 h), someone to call', ctaLabel: 'I want Calm' },
+        { title: 'Partner', price: 'CZK 15,000', suffix: '/mo.', text: 'process mapping + automation/AI prototypes, 10 h, priority support + everything in Growth', ctaLabel: 'I want Partner', automationBadge: 'Automation' },
         { title: 'Growth', price: 'CZK 6,000', suffix: '/mo.', text: 'everything in Calm + SEO/performance monitoring, monthly report, 3 h of development', ctaLabel: 'I want Growth', featured: true, badge: 'Recommended' },
-        { title: 'Partner', price: 'CZK 15,000', suffix: '/mo.', text: 'everything in Growth + process mapping, automation/AI prototypes, 10 h, priority support', ctaLabel: 'I want Partner' },
+        { title: 'Calm', price: 'CZK 2,500', suffix: '/mo.', text: 'operation, backups, small edits (1 h), someone to call', ctaLabel: 'I want Calm' },
       ],
     },
     showcase: {

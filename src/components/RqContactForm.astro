@@ -79,7 +79,11 @@ const resolve = (href: string) => {
     const projectSelect = form.elements.namedItem("project_type");
 
     if (projectTypeHint && projectSelect instanceof HTMLSelectElement) {
-      const matchingOption = Array.from(projectSelect.options).find((option) => option.value === projectTypeHint);
+      const normalizedProjectTypeHint = projectTypeHint.trim().toLocaleLowerCase();
+      const matchingOption = Array.from(projectSelect.options).find((option) => {
+        if (option.value === projectTypeHint) return true;
+        return normalizedProjectTypeHint === "audit" && option.value.toLocaleLowerCase().includes("audit");
+      });
       if (matchingOption) projectSelect.value = matchingOption.value;
     }
 

@@ -358,28 +358,27 @@ p {
 .rq-hero__actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-start;
   gap: .8rem;
   padding-top: .35rem;
 }
 
-.rq-hero__audit-link {
-  display: inline-flex;
-  flex-basis: 100%;
-  width: fit-content;
-  align-items: center;
-  gap: .35rem;
-  margin-top: .1rem;
-  color: var(--rq-burgundy-strong);
-  font-size: .95rem;
-  font-weight: 700;
-  line-height: 1.35;
-  text-decoration: none;
-  text-underline-offset: .24em;
+.rq-hero__secondary-action {
+  display: grid;
+  gap: 0.32rem;
+  align-items: start;
 }
 
-.rq-hero__audit-link:hover,
-.rq-hero__audit-link:focus-visible {
-  text-decoration: underline;
+.rq-hero__secondary-action .rq-btn {
+  width: fit-content;
+}
+
+.rq-hero__secondary-micro {
+  max-width: 18rem;
+  margin: 0;
+  color: var(--rq-ink-2);
+  font-size: 0.82rem;
+  line-height: 1.35;
 }
 
 .rq-proof-rail {
@@ -912,6 +911,74 @@ p {
   overflow: clip;
 }
 
+.rq-audit-proof {
+  padding-block: clamp(1.2rem, 3vw, 2rem);
+}
+
+.rq-audit-proof__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.4rem;
+  border-block: 1px solid color-mix(in srgb, var(--rq-line) 86%, transparent);
+  padding-block: clamp(1rem, 2.5vw, 1.45rem);
+}
+
+.rq-audit-proof .rq-eyebrow {
+  color: var(--rq-lime-ink);
+}
+
+.rq-audit-proof .rq-eyebrow::before {
+  color: var(--rq-lime);
+}
+
+.rq-audit-proof__copy {
+  display: grid;
+  min-width: min(100%, 24rem);
+  gap: 0.38rem;
+}
+
+.rq-audit-proof__line {
+  max-width: 62ch;
+  margin: 0;
+  color: var(--rq-ink);
+  font-size: clamp(1rem, 1.5vw, 1.12rem);
+  font-weight: 760;
+  line-height: 1.45;
+}
+
+.rq-audit-proof__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.62rem 0.85rem;
+}
+
+.rq-audit-proof__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid var(--rq-line);
+  border-radius: var(--rq-r-pill);
+  padding: 0.7rem 0.9rem;
+  background: transparent;
+  color: var(--rq-ink);
+  font-weight: 760;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.rq-audit-proof__link--paid {
+  color: var(--rq-burgundy-strong);
+}
+
+.rq-audit-proof__link:hover,
+.rq-audit-proof__link:focus-visible {
+  border-color: var(--rq-burgundy);
+  color: var(--rq-burgundy);
+}
+
 .rq-pricing-grid,
 .rq-ukazky-grid {
   display: grid;
@@ -1095,6 +1162,42 @@ p {
   color: var(--rq-lime);
 }
 
+.rq-pricing-entry__scope {
+  display: grid;
+  gap: 0.72rem;
+  max-width: 78ch;
+  margin: 0;
+  border: 1px solid color-mix(in srgb, var(--rq-lime) 26%, transparent);
+  border-radius: var(--rq-r);
+  padding: clamp(0.9rem, 2vw, 1.15rem);
+  background: color-mix(in srgb, #050505 18%, transparent);
+  color: color-mix(in srgb, var(--rq-on-dark) 90%, var(--rq-lime));
+}
+
+.rq-pricing-entry__scope-row {
+  display: grid;
+  grid-template-columns: minmax(8.5rem, 13rem) minmax(0, 1fr);
+  gap: 0.35rem 0.9rem;
+  align-items: baseline;
+}
+
+.rq-pricing-entry__scope-label {
+  margin: 0;
+  color: var(--rq-lime);
+  font-family: var(--rq-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: clamp(0.68rem, 0.9vw, 0.76rem);
+  font-weight: 760;
+  letter-spacing: 0.08em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.rq-pricing-entry__scope dd {
+  margin: 0;
+  font-size: clamp(0.9rem, 1.05vw, 0.98rem);
+  line-height: 1.5;
+}
+
 .rq-pricing-entry__actions {
   display: flex;
   flex-wrap: wrap;
@@ -1237,9 +1340,22 @@ p {
   .rq-pricing-entry__price {
     justify-self: start;
   }
+
+  .rq-pricing-entry__scope-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 480px) {
+  .rq-audit-proof__links,
+  .rq-audit-proof__link {
+    width: 100%;
+  }
+
+  .rq-audit-proof__link {
+    justify-content: center;
+  }
+
   .rq-pricing-project__list-dots {
     display: none;
   }
@@ -1405,7 +1521,7 @@ p {
 .rq-form-status{margin-top:.6rem;color:var(--rq-ink-2);font-size:.95rem}
 
 
-.rq-hero__micro{margin:.7rem 0 0;color:var(--rq-ink-2);font-size:.9rem}
+.rq-hero__micro{flex-basis:100%;margin:.1rem 0 0;color:var(--rq-ink-2);font-size:.9rem}
 .rq-offer__incl{margin:.4rem 0 0;color:var(--rq-ink-2);font-size:.875rem;line-height:1.45}
 
 

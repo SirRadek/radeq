@@ -195,6 +195,11 @@ export type HomeContent = {
       creditedLine: string;
       coverage: readonly string[];
       coverageAriaLabel: string;
+      scopeAriaLabel: string;
+      scope: readonly {
+        label: string;
+        text: string;
+      }[];
       ctaLabel: string;
       measureHref: string;
       measureLabel: string;
@@ -1311,6 +1316,18 @@ export const homeContent = {
         creditedLine: 'Za ~hodinu projdu web nebo proces a řeknu, co ho nejvíc brzdí a co řešit první. Cenu auditu vám celou odečtu z realizace — když se domluvíme, audit vás nestojí nic navíc.',
         coverage: ['technický stav', 'rychlost', 'SEO základ', 'formuláře', 'ruční kroky v procesu'],
         coverageAriaLabel: 'Co audit pokrývá',
+        scopeAriaLabel: 'Rozsah auditu',
+        scope: [
+          { label: 'Co auditujeme', text: 'web · proces · nebo obojí' },
+          {
+            label: 'Co dostanete (výstup)',
+            text: 'seznam priorit (co řešit první) · odhad rozsahu a ceny realizace · co má a nemá smysl řešit',
+          },
+          {
+            label: 'Proč „od“',
+            text: 'Malý web zvládnu za ~hodinu (2 900 Kč). Větší web nebo proces — víc stránek, víc kroků — upřesníme po krátké nezávazné domluvě. Vždy je to audit a cenu celou odečtu z realizace.',
+          },
+        ],
         ctaLabel: 'Chci audit od 2 900 Kč',
         measureHref: '/audit/',
         measureLabel: 'Nebo si web nejdřív orientačně změřte',
@@ -1405,12 +1422,12 @@ export const homeContent = {
       optionalSummary: 'Doplňující detaily (nepovinné)',
       submitLabel: 'Odeslat poptávku',
       notePrefix: 'Nebo napište přímo na',
-      noteEmail: 'info@radeq.cz',
+      noteEmail: 'siroky@radeq.cz',
       notePhone: '+420 730 634 439',
       status: {
         sending: 'Odesílám…',
         success: 'Děkuji, poptávka odeslána. Ozvu se co nejdřív.',
-        failureHtml: 'Odeslání teď neproběhlo. Napište prosím na <a href="mailto:info@radeq.cz">info@radeq.cz</a>.',
+        failureHtml: 'Odeslání teď neproběhlo. Napište prosím na <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a>.',
       },
     },
     footer: {
@@ -1423,7 +1440,7 @@ export const homeContent = {
         { href: '/#ceny', label: 'Ceny' },
       ],
       legal: '© 2026 Radek Široký — RadeQ.cz · IČO 08748811 · Praha · celá ČR',
-      contactEmail: 'info@radeq.cz',
+      contactEmail: 'siroky@radeq.cz',
       contactPhone: '+420 730 634 439',
       mascotEnableLabel: '◍ Zapnout maskota',
       mascotDisableLabel: '◍ Vypnout maskota',
@@ -1472,7 +1489,7 @@ export const homeContent = {
         },
         kontakt: {
           chipLabel: 'Chci poptávku',
-          text: 'Napište pár vět, co řešíte. Ozvat se můžete i na info@radeq.cz.',
+          text: 'Napište pár vět, co řešíte. Ozvat se můžete i na siroky@radeq.cz.',
           href: '#kontakt',
           label: 'Přejít na kontakt',
           followups: [
@@ -1674,6 +1691,18 @@ export const homeContent = {
         creditedLine: 'In about an hour I go through the website or process and tell you what slows it down most and what to solve first. I deduct the full audit price from implementation — if we agree to continue, the audit costs you nothing extra.',
         coverage: ['technical state', 'speed', 'SEO basics', 'forms', 'manual process steps'],
         coverageAriaLabel: 'What the audit covers',
+        scopeAriaLabel: 'Audit scope',
+        scope: [
+          { label: 'What I audit', text: 'website · process · or both' },
+          {
+            label: 'What you get (output)',
+            text: 'priority list (what to solve first) · implementation scope and price estimate · what is and is not worth solving',
+          },
+          {
+            label: 'Why “from”',
+            text: 'A small website takes about an hour (CZK 2,900). A larger website or process — more pages, more steps — is clarified after a short no-obligation call. It is always an audit and I deduct the full price from implementation.',
+          },
+        ],
         ctaLabel: 'I want an audit from CZK 2,900',
         measureHref: '/en/audit/',
         measureLabel: 'Or measure your website roughly first',
@@ -1768,12 +1797,12 @@ export const homeContent = {
       optionalSummary: 'Additional details (optional)',
       submitLabel: 'Send enquiry',
       notePrefix: 'Or write directly to',
-      noteEmail: 'info@radeq.cz',
+      noteEmail: 'siroky@radeq.cz',
       notePhone: '+420 730 634 439',
       status: {
         sending: 'Sending…',
         success: 'Thank you, the enquiry has been sent. I will reply as soon as possible.',
-        failureHtml: 'Sending did not work right now. Please write to <a href="mailto:info@radeq.cz">info@radeq.cz</a>.',
+        failureHtml: 'Sending did not work right now. Please write to <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a>.',
       },
     },
     footer: {
@@ -1786,7 +1815,7 @@ export const homeContent = {
         { href: '/en/#ceny', label: 'Pricing' },
       ],
       legal: '© 2026 Radek Široký — RadeQ.cz · ID No. 08748811 · Prague · Czech Republic',
-      contactEmail: 'info@radeq.cz',
+      contactEmail: 'siroky@radeq.cz',
       contactPhone: '+420 730 634 439',
       mascotEnableLabel: '◍ Turn on mascot',
       mascotDisableLabel: '◍ Turn off mascot',
@@ -1835,7 +1864,7 @@ export const homeContent = {
         },
         kontakt: {
           chipLabel: 'I want to enquire',
-          text: 'Write a few sentences about what you are solving. You can also email info@radeq.cz.',
+          text: 'Write a few sentences about what you are solving. You can also email siroky@radeq.cz.',
           href: '#kontakt',
           label: 'Go to contact',
           followups: [

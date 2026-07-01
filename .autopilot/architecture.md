@@ -127,7 +127,7 @@ Visitor
   -> minimizeLeadContext()
   -> LEADS_DB.prepare(...).bind(...).run()
   -> D1 table `leads`
-  -> EMAIL.send(...) notification to poptavky@radeq.cz when the GitHub branch is deployed with an EMAIL binding
+  -> EMAIL.send(...) notification to siroky@radeq.cz when deployed with an EMAIL binding (owner unified all site emails to siroky@radeq.cz on 2026-07-01)
   -> manual export or future dashboard review
 ```
 
@@ -136,7 +136,7 @@ Lead notification behavior:
 - Email is sent only after successful D1 storage.
 - The visitor-facing API response remains successful if the email notification fails.
 - Email failures are logged with lead ID, error code, and generic message only; customer details are not printed to runtime logs.
-- The notification uses `poptavky@radeq.cz` as sender and destination, with `replyTo` set to the visitor's submitted email.
+- The notification uses `siroky@radeq.cz` as sender and destination, with `replyTo` set to the visitor's submitted email. (All site-facing emails were unified to `siroky@radeq.cz` on 2026-07-01 — visible copy, form fallback, `send_email` binding, and JSON-LD metadata; `siroky@radeq.cz` must be a verified Cloudflare Email Routing destination for the notification to deliver.)
 - Owner requested GitHub-only staging on 2026-06-12, so the current Cloudflare Worker production deployment was rolled back to version `747d1ab3-ff49-497b-8cb8-917c67d0153d` and does not currently run the notification code.
 
 Required lead fields:

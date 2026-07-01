@@ -18,9 +18,9 @@ export interface LeadNotificationMessage {
   text: string;
 }
 
-const notificationTo = 'poptavky@radeq.cz';
+const notificationTo = 'siroky@radeq.cz';
 const notificationFrom = {
-  email: 'poptavky@radeq.cz',
+  email: 'siroky@radeq.cz',
   name: 'Radeq.cz poptávky',
 };
 

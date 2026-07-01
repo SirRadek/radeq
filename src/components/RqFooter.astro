@@ -17,7 +17,7 @@ const connectionLinks = content.connectionLinks ?? [
 ];
 const legal = content.legal ?? "© 2026 Radek Široký — RadeQ.cz · IČO 08748811 · Praha · celá ČR";
 const legalItems = legal.split(/\s*(?:\u00b7|\u2014)\s*/).filter(Boolean);
-const contactEmail = content.contactEmail ?? "info@radeq.cz";
+const contactEmail = content.contactEmail ?? "siroky@radeq.cz";
 const contactPhone = content.contactPhone ?? "+420 730 634 439";
 const isEnglishFooter = homeHref.startsWith("/en") || navItems.some((item) => item.href.includes("/en/"));
 const auditLink = isEnglishFooter

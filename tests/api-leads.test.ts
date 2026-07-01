@@ -62,8 +62,8 @@ describe('lead Pages Function', () => {
     expect(response.status).toBe(201);
     expect(sent).toHaveLength(1);
     expect(sent[0]).toMatchObject({
-      to: 'poptavky@radeq.cz',
-      from: { email: 'poptavky@radeq.cz', name: 'Radeq.cz poptávky' },
+      to: 'siroky@radeq.cz',
+      from: { email: 'siroky@radeq.cz', name: 'Radeq.cz poptávky' },
       replyTo: { email: 'siroky@radeq.cz', name: 'Jan Siroky' },
     });
     expect(JSON.stringify(sent[0])).toContain('Need fast lead routing.');

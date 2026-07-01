@@ -36,6 +36,15 @@ const schema = {
   image: 'https://radeq.cz/og-default.jpg',
   priceRange: '$$',
   telephone: contactNotePhone,
+  email: 'siroky@radeq.cz',
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: contactNotePhone,
+    email: 'siroky@radeq.cz',
+    contactType: 'customer support',
+    areaServed: content.schema.areaServed,
+    availableLanguage: ['cs', 'en'],
+  },
   areaServed: content.schema.areaServed,
   founder: { '@type': 'Person', name: content.schema.founderName },
   address: {
@@ -1941,6 +1950,15 @@ const schema = {
         <ul class="rq-pricing-entry__coverage" aria-label={content.pricing.audit.coverageAriaLabel}>
           {content.pricing.audit.coverage.map((item) => <li>{item}</li>)}
         </ul>
+
+        <dl class="rq-pricing-entry__scope" aria-label={content.pricing.audit.scopeAriaLabel}>
+          {content.pricing.audit.scope.map((item) => (
+            <div class="rq-pricing-entry__scope-row">
+              <dt class="rq-pricing-entry__scope-label">{item.label}</dt>
+              <dd>{item.text}</dd>
+            </div>
+          ))}
+        </dl>
 
         <div class="rq-pricing-entry__actions">
           <a class="rq-btn rq-btn--primary" href={pricingAuditContactHref}>{content.pricing.audit.ctaLabel}</a>

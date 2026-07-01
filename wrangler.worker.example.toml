@@ -15,5 +15,5 @@ database_id = "replace-with-production-d1-database-id"
 
 [[send_email]]
 name = "EMAIL"
-destination_address = "poptavky@radeq.cz"
-allowed_sender_addresses = ["poptavky@radeq.cz"]
+destination_address = "siroky@radeq.cz"
+allowed_sender_addresses = ["siroky@radeq.cz"]

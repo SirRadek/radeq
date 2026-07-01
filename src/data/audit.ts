@@ -46,7 +46,7 @@ export const auditContent = {
     seo: {
       title: 'Audit webu přes Google PSI | RadeQ.cz',
       description:
-        'Strojový náhled webu přes Google PageSpeed Insights bez číselného hodnocení. Výsledek slouží jako vstup k lidskému auditu od 4 900 Kč.',
+        'Strojový náhled webu přes Google PageSpeed Insights bez číselného hodnocení. Výsledek slouží jako vstup k lidskému auditu od 2 900 Kč.',
       canonicalPath: '/audit/',
       alternatePath: '/en/audit/',
     },
@@ -67,15 +67,15 @@ export const auditContent = {
       loadingLabel: 'měřím… (Google PSI)',
       measuredLabel: 'Měřená adresa',
       resultNote:
-        'Tohle je strojový náhled, ne verdikt. Placený audit projdu ručně a dostanete plán — poplatek se odečte z realizace.',
-      ctaLabel: 'Chci lidský audit od 4 900 Kč',
+        'Tohle je jen strojový náhled, ne verdikt. V placeném auditu (od 2 900 Kč) projdu web nebo proces ručně, dám plán a cenu odečtu z realizace — uvidím i to, co stroj nezměří: cestu k poptávce, texty, follow-up a ruční kroky.',
+      ctaLabel: 'Chci lidský audit od 2 900 Kč',
       signalLabel: 'Signál',
       meaningLabel: 'Co to znamená',
       verifyLabel: 'Co bych prověřil',
       automationQuestion: 'Přepisujete objednávky/poptávky ručně?',
       automationYes: 'ano',
       automationNo: 'ne',
-      auditProjectType: 'Audit webu nebo procesu (od 4 900 Kč)',
+      auditProjectType: 'Audit webu nebo procesu (od 2 900 Kč)',
       automationProjectType: 'Automatizace procesů',
       statusLabels: {
         ok: 'PSI vrátilo kvalitativní náhled.',
@@ -97,7 +97,7 @@ export const auditContent = {
     seo: {
       title: 'Website audit through Google PSI | RadeQ.cz',
       description:
-        'A machine preview through Google PageSpeed Insights without a numeric verdict. The output is a starting point for a human audit from CZK 4,900.',
+        'A machine preview through Google PageSpeed Insights without a numeric verdict. The output is a starting point for a human audit from CZK 2,900.',
       canonicalPath: '/en/audit/',
       alternatePath: '/audit/',
     },
@@ -118,15 +118,15 @@ export const auditContent = {
       loadingLabel: 'measuring… (Google PSI)',
       measuredLabel: 'Measured address',
       resultNote:
-        'This is a machine preview, not a verdict. In the paid audit I go through it manually and you get a plan — the fee is deducted from implementation.',
-      ctaLabel: 'I want a human audit from CZK 4,900',
+        'This is only a machine preview, not a verdict. In the paid audit (from CZK 2,900) I go through the website or process manually, give you a plan, and deduct the price from implementation — I can also see what the machine cannot measure: enquiry path, copy, follow-up, and manual steps.',
+      ctaLabel: 'I want a human audit from CZK 2,900',
       signalLabel: 'Signal',
       meaningLabel: 'What it means',
       verifyLabel: 'What I would verify',
       automationQuestion: 'Do you manually retype orders/enquiries?',
       automationYes: 'yes',
       automationNo: 'no',
-      auditProjectType: 'Website or process audit (from CZK 4,900)',
+      auditProjectType: 'Website or process audit (from CZK 2,900)',
       automationProjectType: 'Process automation',
       statusLabels: {
         ok: 'PSI returned a qualitative preview.',

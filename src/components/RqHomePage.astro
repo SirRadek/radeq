@@ -21,8 +21,7 @@ const resolve = (href: string) => {
   if (base && (href === base || href.startsWith(`${base}/`))) return href;
   return `${base}${href}`;
 };
-const heroAuditHref = resolve(lang === 'en' ? '/en/audit/' : '/audit/');
-const heroAuditLabel = lang === 'en' ? 'Measure your website' : 'Změřit svůj web';
+const heroSecondaryHref = resolve(content.hero.actions.secondary.href);
 const pricingAuditContactHref = '?project_type=Audit#kontakt';
 const pricingAuditMeasureHref = resolve(content.pricing.audit.measureHref);
 const contactNotePhone = content.contact.notePhone ?? '+420 730 634 439';
@@ -81,8 +80,10 @@ const schema = {
 
       <div class="rq-hero__actions" data-rq-reveal style="--rq-i:6">
         <a class="rq-btn rq-btn--primary" href={content.hero.actions.primary.href}>{content.hero.actions.primary.label}</a>
-        <a class="rq-btn rq-btn--ghost" href={content.hero.actions.secondary.href}>{content.hero.actions.secondary.label}</a>
-        <a class="rq-hero__audit-link" href={heroAuditHref}>{heroAuditLabel} <span aria-hidden="true">&rarr;</span></a>
+        <div class="rq-hero__secondary-action">
+          <a class="rq-btn rq-btn--ghost" href={heroSecondaryHref}>{content.hero.actions.secondary.label}</a>
+          <p class="rq-hero__secondary-micro">{content.hero.actions.secondaryMicro}</p>
+        </div>
         <p class="rq-hero__micro">{content.hero.actions.micro}</p>
       </div>
     </div>
@@ -1903,6 +1904,22 @@ const schema = {
 
   <section id="jak-pracuji" class="rq-section rq-process">
     <RqJourney content={content.journey} lang={lang} />
+  </section>
+
+  <section class="rq-section rq-audit-proof" aria-labelledby="rq-audit-proof-title">
+    <div class="rq-audit-proof__inner" data-rq-reveal>
+      <div class="rq-audit-proof__copy">
+        <p class="rq-eyebrow">{content.pricing.proofStrip.eyebrow}</p>
+        <p class="rq-audit-proof__line" id="rq-audit-proof-title">{content.pricing.proofStrip.line}</p>
+      </div>
+      <div class="rq-audit-proof__links" aria-label={lang === 'en' ? 'Audit proof options' : 'Možnosti ověření'}>
+        <a class="rq-audit-proof__link" href={pricingAuditMeasureHref}>{content.pricing.proofStrip.previewLabel}</a>
+        <a class="rq-audit-proof__link rq-audit-proof__link--paid" href={pricingAuditContactHref}>
+          <span aria-hidden="true">→</span>
+          {content.pricing.proofStrip.paidLabel}
+        </a>
+      </div>
+    </div>
   </section>
 
   <section class="rq-section rq-pricing" id="ceny" aria-labelledby="ceny-title">

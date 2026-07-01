@@ -9,6 +9,19 @@ interface Props {
 
 const { content = homeContent.cs.problems, lang = 'cs' } = Astro.props;
 const items = content.items;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const resolve = (href: string) => {
+  if (!href || !href.startsWith('/')) return href;
+  if (base && (href === base || href.startsWith(`${base}/`))) return href;
+  return `${base}${href}`;
+};
+const auditPreviewHref = resolve(content.auditPreview.href);
+const auditPreviewEligibleServices = new Set(['web', 'data']);
+const auditPreviewEligibleIndexes = items
+  .map((item, index) => (auditPreviewEligibleServices.has(item.primaryServiceId) ? index : null))
+  .filter((index): index is number => index !== null);
+const auditPreviewEligibleIndexList = auditPreviewEligibleIndexes.join(',');
+const auditPreviewInitiallyHidden = !auditPreviewEligibleIndexes.includes(0);
 
 const impactLabel: Record<number, string> = {
   1: 'nízký',
@@ -79,6 +92,7 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
         aria-labelledby={`rq-problem-tab-${i}`}
         hidden={i !== 0}
         data-index={i}
+        data-rq-primary-service-id={item.primaryServiceId}
       >
         <header class="panel-header">
           <div class="panel-header-left">
@@ -154,6 +168,21 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
         </footer>
       </section>
     ))}
+  </div>
+
+  <div
+    class="rq-diagnostic-preview"
+    data-rq-audit-preview
+    data-rq-eligible-indexes={auditPreviewEligibleIndexList}
+    hidden={auditPreviewInitiallyHidden}
+    aria-hidden={auditPreviewInitiallyHidden ? 'true' : 'false'}
+    data-rq-reveal
+  >
+    <p>{content.auditPreview.text}</p>
+    <a class="rq-diagnostic-preview__link" href={auditPreviewHref}>
+      <span aria-hidden="true">→</span>
+      {content.auditPreview.label}
+    </a>
   </div>
 </section>
 
@@ -368,6 +397,45 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
     z-index: 2;
     transition: all 0.3s var(--rq-ease);
+  }
+
+  .rq-diagnostic-preview {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem 0.85rem;
+    margin-top: clamp(0.7rem, 1.6dvh, 1.1rem);
+    border-top: 1px solid rgba(241, 237, 228, 0.12);
+    padding-top: clamp(0.7rem, 1.5dvh, 1rem);
+  }
+
+  .rq-diagnostic-preview[hidden] {
+    display: none;
+  }
+
+  .rq-diagnostic-preview p {
+    margin: 0;
+    color: var(--rq-on-dark-2);
+    font-size: clamp(0.9rem, 1.2vw, 0.98rem);
+    line-height: 1.45;
+  }
+
+  .rq-diagnostic-preview__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--rq-lime);
+    font-weight: 800;
+    line-height: 1.35;
+    text-decoration: none;
+    text-underline-offset: 0.22em;
+  }
+
+  .rq-diagnostic-preview__link:hover,
+  .rq-diagnostic-preview__link:focus-visible {
+    text-decoration: underline;
   }
 
   /* Panel Animation */
@@ -738,6 +806,13 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
       const tabs = Array.from(root.querySelectorAll('.diag-tab')).filter((tab) => tab instanceof HTMLButtonElement);
       const panels = Array.from(root.querySelectorAll('.diag-panel')).filter((panel) => panel instanceof HTMLElement);
       const tabsContainer = root.querySelector('.diag-tabs');
+      const auditPreview = root.querySelector('[data-rq-audit-preview]');
+      const auditPreviewEligibleIndexes = new Set(
+        (auditPreview?.getAttribute('data-rq-eligible-indexes') || '')
+          .split(',')
+          .map((value) => Number.parseInt(value, 10))
+          .filter((value) => Number.isFinite(value)),
+      );
       const counterDisplays = Array.from(root.querySelectorAll('.counter-current'));
       const total = Math.min(tabs.length, panels.length);
 
@@ -753,6 +828,13 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
         counterDisplays.forEach((counter) => {
           counter.textContent = String(index + 1);
         });
+      }
+
+      function updateAuditPreview(index) {
+        if (!(auditPreview instanceof HTMLElement)) return;
+        const isEligible = auditPreviewEligibleIndexes.has(index);
+        auditPreview.hidden = !isEligible;
+        auditPreview.setAttribute('aria-hidden', isEligible ? 'false' : 'true');
       }
 
       function setActive(nextIndex, options = {}) {
@@ -787,6 +869,7 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
         });
 
         updateCounters(index);
+        updateAuditPreview(index);
       }
 
       tabs.forEach((tab) => {

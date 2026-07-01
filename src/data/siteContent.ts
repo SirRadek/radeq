@@ -392,7 +392,7 @@ export const siteContent = {
       items: [
         {
           name: 'Audit webu nebo procesu',
-          price: 'od 4 900 Kč',
+          price: 'od 2 900 Kč',
           text: 'Pro firmy, které nevědí, jestli web nebo proces upravit, předělat, nebo nastavit znovu.',
           includes: ['slabá místa webu nebo procesu', 'prioritní plán', 'odhad další práce'],
           cta: 'Začít auditem',
@@ -774,7 +774,7 @@ export const siteContent = {
       items: [
         {
           name: 'Website or process audit',
-          price: 'from CZK 4,900',
+          price: 'from CZK 2,900',
           text: 'For companies unsure whether to adjust a website or process, redesign it, or rebuild from a cleaner base.',
           includes: ['website/process weak spots', 'priority plan', 'next-work estimate'],
           cta: 'Start with audit',

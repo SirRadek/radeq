@@ -237,6 +237,23 @@ describe('lead Pages Function', () => {
     expect(third.headers.get('retry-after')).toBeTruthy();
   });
 
+  it('exempts whitelisted IPs from the rate limit', async () => {
+    const { env } = createLeadEnv({ RATE_LIMIT_WHITELIST: '203.0.113.99' });
+    const submit = () =>
+      onRequestPost({
+        request: new Request('https://radeq.cz/api/leads', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'cf-connecting-ip': '203.0.113.99' },
+          body: JSON.stringify(completeLead),
+        }),
+        env,
+      });
+
+    expect((await submit()).status).toBe(201);
+    expect((await submit()).status).toBe(201);
+    expect((await submit()).status).toBe(201);
+  });
+
   it('suppresses a second visitor confirmation to the same address within a day', async () => {
     const calls: Array<{ init: RequestInit }> = [];
     const fetchMock = vi.fn(async (_url: unknown, init: RequestInit) => {

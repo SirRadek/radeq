@@ -13,6 +13,14 @@ binding = "LEADS_DB"
 database_name = "LEADS_DB"
 database_id = "replace-with-production-d1-database-id"
 
+[[kv_namespaces]]
+binding = "MEASURE_RATE_LIMIT"
+id = "replace-with-production-kv-namespace-id"
+
+# Optional: IPs exempt from the /api/leads rate limit (comma-separated).
+# [vars]
+# RATE_LIMIT_WHITELIST = "203.0.113.10, 203.0.113.11"
+
 # Lead notifications are sent via Resend (fetch to https://api.resend.com/emails)
 # using the RESEND_API_KEY secret. Set it with:
 #   npx wrangler secret put RESEND_API_KEY

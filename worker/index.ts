@@ -8,6 +8,7 @@ interface Env {
   TURNSTILE_SECRET?: string;
   PSI_API_KEY?: string;
   MEASURE_RATE_LIMIT?: KVNamespace;
+  RATE_LIMIT_WHITELIST?: string;
 }
 
 interface AssetsFetcher {

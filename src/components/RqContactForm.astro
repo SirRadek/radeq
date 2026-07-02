@@ -192,7 +192,11 @@ const doneTitle = lang === 'en' ? 'Enquiry sent ✓' : 'Poptávka odeslána ✓'
         const ct = r.headers.get("content-type") || "";
         if (!ct.includes("application/json")) throw new Error("nojson");
         const res = await r.json();
-        if (!r.ok || !res.ok) throw new Error((res.details && res.details.join(" ")) || res.error || "fail");
+        if (!r.ok || !res.ok) {
+          const serverMsg = res && typeof res.error === "string" ? res.error : "";
+          if (serverMsg) { statusEl.textContent = serverMsg; return; }
+          throw new Error("fail");
+        }
         form.reset();
         const done = document.getElementById("rq-lead-done");
         if (done) {

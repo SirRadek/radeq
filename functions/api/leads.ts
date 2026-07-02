@@ -20,6 +20,7 @@ interface Env {
   RESEND_API_KEY?: string;
   TURNSTILE_SECRET?: string;
   MEASURE_RATE_LIMIT?: KVNamespaceLike;
+  RATE_LIMIT_WHITELIST?: string;
 }
 
 interface PagesContext {
@@ -68,6 +69,12 @@ export async function onRequestPost(context: PagesContext) {
   const lead = result.data;
   const clientIp = getCfConnectingIp(request);
   const isEnglish = lead.locale.toLowerCase().startsWith('en');
+  const rateLimitExempt =
+    clientIp !== '' &&
+    (env.RATE_LIMIT_WHITELIST ?? '')
+      .split(',')
+      .map((entry) => entry.trim())
+      .includes(clientIp);
 
   // Bot gate: require a valid Turnstile token whenever the secret is configured
   // (production). Skipped in dev/tests where no secret is bound.
@@ -87,11 +94,13 @@ export async function onRequestPost(context: PagesContext) {
     }
   }
 
-  // Volume cap: max LEAD_RATE_LIMIT_MAX submissions per client IP per day.
-  const rateLimit = await checkRateLimit(env.MEASURE_RATE_LIMIT, `lead:${clientIp || 'unknown'}`, {
-    max: LEAD_RATE_LIMIT_MAX,
-    windowSeconds: LEAD_RATE_LIMIT_WINDOW_SECONDS,
-  });
+  // Volume cap: max LEAD_RATE_LIMIT_MAX submissions per client IP per day (whitelisted IPs exempt).
+  const rateLimit = rateLimitExempt
+    ? { allowed: true }
+    : await checkRateLimit(env.MEASURE_RATE_LIMIT, `lead:${clientIp || 'unknown'}`, {
+        max: LEAD_RATE_LIMIT_MAX,
+        windowSeconds: LEAD_RATE_LIMIT_WINDOW_SECONDS,
+      });
   if (!rateLimit.allowed) {
     return jsonResponse(
       {

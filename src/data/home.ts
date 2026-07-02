@@ -1396,7 +1396,7 @@ export const homeContent = {
       eyebrow: 'Kontakt',
       title: 'Napište mi, s čím můžu pomoct',
       lead: 'Stačí stručně popsat, co chcete zjednodušit — ozvu se a doptám se. Odpovídám do 1 pracovního dne.',
-      doneLeadHtml: 'Zapomněli jste na něco nebo chcete změnit zadání? Napište mi na <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a>.',
+      doneLeadHtml: 'Zapomněli jste na něco nebo chcete změnit zadání? Napište mi na <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a> nebo zavolejte na <a href="tel:+420730634439">+420 730 634 439</a>.',
       fields: {
         name: 'Jméno',
         email: 'E-mail',
@@ -1773,7 +1773,7 @@ export const homeContent = {
       eyebrow: 'Contact',
       title: 'Tell me what I can help with',
       lead: 'Briefly describe what you want to simplify - I will reply and ask follow-up questions. I answer within 1 business day.',
-      doneLeadHtml: 'Did you forget something or want to change the brief? Write to me at <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a>.',
+      doneLeadHtml: 'Did you forget something or want to change the brief? Write to me at <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a> or call <a href="tel:+420730634439">+420 730 634 439</a>.',
       fields: {
         name: 'Name',
         email: 'Email',

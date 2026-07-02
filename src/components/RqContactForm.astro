@@ -206,6 +206,10 @@ const doneTitle = lang === 'en' ? 'Enquiry sent ✓' : 'Poptávka odeslána ✓'
           done.focus();
           const leadEl = document.getElementById("rq-contact-lead");
           if (leadEl && doneLeadHtml) leadEl.innerHTML = doneLeadHtml;
+          const noteEmail = document.getElementById("rq-contact-note-email");
+          if (noteEmail) noteEmail.hidden = true;
+          const notePhone = document.getElementById("rq-contact-note-phone");
+          if (notePhone) notePhone.hidden = true;
         } else {
           statusEl.textContent = statusSuccess;
         }

@@ -16,6 +16,7 @@ const resolve = (href: string) => {
 };
 const turnstileSiteKey = (import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '').toString().trim();
 const verifyLabel = lang === 'en' ? 'Verify you are not a robot' : 'Ověření, že nejste robot';
+const doneTitle = lang === 'en' ? 'Enquiry sent ✓' : 'Poptávka odeslána ✓';
 ---
 
 <form class="rq-contact-form" method="post" action={resolve('/api/leads')} id="rq-lead-form">
@@ -66,6 +67,11 @@ const verifyLabel = lang === 'en' ? 'Verify you are not a robot' : 'Ověření, 
   <button class="rq-btn rq-btn--primary" type="submit">{content.submitLabel}</button>
   <p class="rq-form-status" id="rq-lead-status" role="status" aria-live="polite"></p>
 </form>
+
+<div class="rq-contact-done" id="rq-lead-done" role="status" tabindex="-1" hidden>
+  <p class="rq-contact-done__title">{doneTitle}</p>
+  <p class="rq-contact-done__text">{content.status.success}</p>
+</div>
 
 <script is:inline define:vars={{
   leadsUrl: resolve('/api/leads'),
@@ -188,7 +194,14 @@ const verifyLabel = lang === 'en' ? 'Verify you are not a robot' : 'Ověření, 
         const res = await r.json();
         if (!r.ok || !res.ok) throw new Error((res.details && res.details.join(" ")) || res.error || "fail");
         form.reset();
-        statusEl.textContent = statusSuccess;
+        const done = document.getElementById("rq-lead-done");
+        if (done) {
+          form.hidden = true;
+          done.hidden = false;
+          done.focus();
+        } else {
+          statusEl.textContent = statusSuccess;
+        }
       } catch (err) {
         statusEl.innerHTML = statusFailureHtml;
       } finally {

@@ -1418,6 +1418,29 @@ p {
   gap: 1rem;
 }
 
+.rq-contact-done {
+  display: grid;
+  gap: 0.4rem;
+  padding: clamp(1.25rem, 3vh, 1.75rem) 1.35rem;
+  border: 1px solid var(--rq-line);
+  border-left: 3px solid var(--rq-burgundy);
+  border-radius: var(--rq-r);
+  background: var(--rq-surface);
+  outline: none;
+}
+
+.rq-contact-done__title {
+  margin: 0;
+  color: var(--rq-ink);
+  font: 800 1.15rem/1.3 Inter, system-ui, sans-serif;
+}
+
+.rq-contact-done__text {
+  margin: 0;
+  color: var(--rq-ink);
+  font: 400 1rem/1.5 Inter, system-ui, sans-serif;
+}
+
 .rq-form-field {
   display: grid;
   gap: 0.45rem;

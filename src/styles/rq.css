@@ -1418,6 +1418,13 @@ p {
   gap: 1rem;
 }
 
+/* The class-level `display` above outranks the UA `[hidden]{display:none}` rule
+   (equal specificity, later wins), so hide these explicitly when [hidden] is set. */
+.rq-contact-form[hidden],
+.rq-contact-done[hidden] {
+  display: none;
+}
+
 .rq-contact-done {
   display: grid;
   gap: 0.4rem;

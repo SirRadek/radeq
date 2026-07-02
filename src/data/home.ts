@@ -276,6 +276,7 @@ export type HomeContent = {
       failureHtml: string;
       verifyPrompt: string;
     };
+    doneLeadHtml: string;
   };
   footer: {
     tagline: string;
@@ -1395,6 +1396,7 @@ export const homeContent = {
       eyebrow: 'Kontakt',
       title: 'Napište mi, s čím můžu pomoct',
       lead: 'Stačí stručně popsat, co chcete zjednodušit — ozvu se a doptám se. Odpovídám do 1 pracovního dne.',
+      doneLeadHtml: 'Zapomněli jste na něco nebo chcete změnit zadání? Napište mi na <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a>.',
       fields: {
         name: 'Jméno',
         email: 'E-mail',
@@ -1427,7 +1429,7 @@ export const homeContent = {
       notePhone: '+420 730 634 439',
       status: {
         sending: 'Odesílám…',
-        success: 'Děkuji, poptávka odeslána. Ozvu se co nejdřív.',
+        success: 'Děkuji za poptávku. Ozvu se co nejdřív — a moc se těším na spolupráci.',
         failureHtml: 'Odeslání teď neproběhlo. Napište prosím na <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a>.',
         verifyPrompt: 'Potvrďte prosím, že nejste robot, a odešlete znovu.',
       },
@@ -1771,6 +1773,7 @@ export const homeContent = {
       eyebrow: 'Contact',
       title: 'Tell me what I can help with',
       lead: 'Briefly describe what you want to simplify - I will reply and ask follow-up questions. I answer within 1 business day.',
+      doneLeadHtml: 'Did you forget something or want to change the brief? Write to me at <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a>.',
       fields: {
         name: 'Name',
         email: 'Email',
@@ -1803,7 +1806,7 @@ export const homeContent = {
       notePhone: '+420 730 634 439',
       status: {
         sending: 'Sending…',
-        success: 'Thank you, the enquiry has been sent. I will reply as soon as possible.',
+        success: 'Thank you for the enquiry. I will reply as soon as possible — and I look forward to working together.',
         failureHtml: 'Sending did not work right now. Please write to <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a>.',
         verifyPrompt: 'Please confirm you are not a robot and submit again.',
       },

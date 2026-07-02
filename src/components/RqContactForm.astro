@@ -80,6 +80,7 @@ const doneTitle = lang === 'en' ? 'Enquiry sent ✓' : 'Poptávka odeslána ✓'
   statusSuccess: content.status.success,
   statusFailureHtml: content.status.failureHtml,
   verifyPrompt: content.status.verifyPrompt,
+  doneLeadHtml: content.doneLeadHtml,
   turnstileSiteKey,
 }}>
   (() => {
@@ -203,6 +204,8 @@ const doneTitle = lang === 'en' ? 'Enquiry sent ✓' : 'Poptávka odeslána ✓'
           form.hidden = true;
           done.hidden = false;
           done.focus();
+          const leadEl = document.getElementById("rq-contact-lead");
+          if (leadEl && doneLeadHtml) leadEl.innerHTML = doneLeadHtml;
         } else {
           statusEl.textContent = statusSuccess;
         }

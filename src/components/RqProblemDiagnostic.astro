@@ -824,9 +824,46 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
       if (!(tabsContainer instanceof HTMLElement) || total === 0) return;
 
       let currentIndex = Math.max(0, tabs.findIndex((tab) => tab.classList.contains('active')));
+      let setWidth = 0;
 
       function normalizeIndex(index) {
         return (index + total) % total;
+      }
+
+      // Vycentruj NEJBLIŽŠÍ instanci daného indexu (klon i skutečný tab) —
+      // takže z 1. na 21. je to jeden krok doleva, žádné přetáčení přes celý pás.
+      function centerTab(index, smooth) {
+        const instances = Array.from(tabsContainer.querySelectorAll('.diag-tab')).filter(
+          (el) => el instanceof HTMLElement && Number.parseInt(el.dataset.index ?? '-1', 10) === index,
+        );
+        if (instances.length === 0) return;
+
+        const viewportCenter = tabsContainer.scrollLeft + tabsContainer.clientWidth / 2;
+        let best = instances[0];
+        let bestDistance = Infinity;
+        instances.forEach((el) => {
+          const distance = Math.abs(el.offsetLeft + el.offsetWidth / 2 - viewportCenter);
+          if (distance < bestDistance) {
+            bestDistance = distance;
+            best = el;
+          }
+        });
+
+        let target = best.offsetLeft + best.offsetWidth / 2 - tabsContainer.clientWidth / 2;
+
+        // Drž cíl v prostředním pásmu: případný posun o šířku sady je neviditelný
+        // (obsah je identický), takže smooth animace nikdy nekříží teleport.
+        if (setWidth > 0) {
+          if (target < setWidth * 0.25) {
+            tabsContainer.scrollLeft += setWidth;
+            target += setWidth;
+          } else if (target > setWidth * 1.75) {
+            tabsContainer.scrollLeft -= setWidth;
+            target -= setWidth;
+          }
+        }
+
+        tabsContainer.scrollTo({ left: target, behavior: smooth ? 'smooth' : 'auto' });
       }
 
       function updateCounters(index) {
@@ -854,11 +891,7 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
 
           if (isActive) {
             if (options.scroll !== false) {
-              tab.scrollIntoView({
-                behavior: reduceQuery.matches ? 'auto' : 'smooth',
-                block: 'nearest',
-                inline: 'center',
-              });
+              centerTab(index, !reduceQuery.matches);
             }
 
             if (options.focusTab) {
@@ -944,19 +977,13 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
         before.forEach((clone) => tabsContainer.insertBefore(clone, tabs[0]));
         after.forEach((clone) => tabsContainer.appendChild(clone));
 
-        let setWidth = 0;
-        const measure = () => {
+        const recenter = () => {
           setWidth = tabs[0].offsetLeft - before[0].offsetLeft;
+          centerTab(currentIndex, false);
         };
 
-        const centerOnRealSet = () => {
-          measure();
-          const paddingLeft = Number.parseFloat(getComputedStyle(tabsContainer).paddingLeft) || 0;
-          tabsContainer.scrollLeft = tabs[0].offsetLeft - paddingLeft;
-        };
-
-        centerOnRealSet();
-        window.addEventListener('resize', centerOnRealSet);
+        recenter();
+        window.addEventListener('resize', recenter);
 
         tabsContainer.addEventListener(
           'scroll',

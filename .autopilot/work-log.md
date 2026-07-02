@@ -1,5 +1,9 @@
 # Radeq.cz Website Work Log
 
+## 2026-07-02 Resend lead notifications verified LIVE end-to-end
+
+Owner completed the Resend setup: domain `radeq.cz` verified in Resend (region **eu-west-1 / Ireland** for EU/GDPR data residency; default return-path subdomain, open/click tracking OFF — correct for transactional mail), and `RESEND_API_KEY` set as a Worker secret via CLI (`npx.cmd wrangler secret put` — `.cmd` needed because PowerShell blocks `.ps1`; confirmed via `wrangler secret list`). Live end-to-end test via `wrangler tail radeq`: two `POST /api/leads - Ok`, ZERO `Lead notification/confirmation email failed`; both the owner notification (→ siroky@) and the localized visitor confirmation (→ the submitted address) arrived. **Lead notifications + visitor confirmations are now fully operational.** Remaining open item: the optional Turnstile + per-IP rate-limit hardening on `/api/leads` (flagged 2026-07-01; owner not yet decided).
+
 ## 2026-07-01 Lead notifications migrated to Resend (send path was silently broken)
 
 Date: 2026-07-01

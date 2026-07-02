@@ -144,6 +144,9 @@ export interface SiteContent {
     readyStatus: string;
     sendingStatus: string;
     apiUnavailable: string;
+    verificationLabel: string;
+    verificationPrompt: string;
+    verificationUnavailable: string;
     storedPrefix: string;
     missingRequiredPrefix: string;
     requiredNote: string;
@@ -491,6 +494,9 @@ export const siteContent = {
       readyStatus: 'Vyplňte povinná pole. Volitelné údaje pomůžou lépe odhadnout rozsah.',
       sendingStatus: 'Odesílám poptávku…',
       apiUnavailable: 'Formulář se nepodařilo odeslat. Zkuste to prosím později nebo napište e-mailem.',
+      verificationLabel: 'Ověření, že nejste robot',
+      verificationPrompt: 'Potvrďte prosím, že nejste robot, a odešlete znovu.',
+      verificationUnavailable: 'Ověření se nepodařilo načíst (může ho blokovat rozšíření v prohlížeči). Napište mi prosím přímo na siroky@radeq.cz.',
       storedPrefix: 'Poptávka uložena',
       missingRequiredPrefix: 'Doplňte prosím',
       requiredNote: 'Pole označená jako povinná je potřeba vyplnit. Ostatní údaje můžete doplnit později.',
@@ -874,6 +880,9 @@ export const siteContent = {
       readyStatus: 'Fill in the required fields. Optional details help estimate scope.',
       sendingStatus: 'Sending request…',
       apiUnavailable: 'The form could not be submitted. Please try again later or write by email.',
+      verificationLabel: 'Verify you are not a robot',
+      verificationPrompt: 'Please confirm you are not a robot and submit again.',
+      verificationUnavailable: 'Verification could not load (a browser extension may be blocking it). Please email me directly at siroky@radeq.cz.',
       storedPrefix: 'Request stored',
       missingRequiredPrefix: 'Please add',
       requiredNote: 'Fields marked as required must be completed. The remaining details can be added later.',

@@ -1,5 +1,18 @@
 # Radeq.cz Website Work Log
 
+## 2026-07-02 Contact form hardened — Turnstile + per-IP rate limit + confirmation caps
+
+Owner asked to gate `/api/leads` (previously unprotected) with Turnstile + a 2/day-per-IP cap, to close the visitor-confirmation backscatter surface.
+
+Implemented:
+- New shared `src/lib/requestGuards.ts` (`verifyTurnstile`, `checkRateLimit` KV fixed-window + isolate-memory fallback, `getCfConnectingIp`, `readTurnstileToken`) with its own `tests/request-guards.test.ts`. `measure.ts` (untested) left untouched to avoid regressions.
+- Server (`functions/api/leads.ts`): after validation, before store — Turnstile verify (403 when the secret is set and the token is missing/invalid) then a **2/day per client-IP** rate limit (429 + retry-after). Rate-limit key uses **`cf-connecting-ip` only** (never the spoofable `x-forwarded-for`). Localized (CS/EN) error bodies.
+- Confirmation abuse caps: the visitor confirmation now sends only if a per-recipient (**1/day/address**) and a **global 50/day** ceiling both allow it (lead is still stored + owner still notified when suppressed).
+- Client (`ContactTerminal.tsx`): renders the Turnstile widget (mirrors `AuditTool.tsx`, same `PUBLIC_TURNSTILE_SITE_KEY`), sends the token, blocks submit without it. **Graceful degradation** — if the widget fails to load (ad-blocker/CDN blip) it surfaces an email fallback instead of hard-blocking the form. Copy added to `siteContent.ts` (`verificationLabel`/`verificationPrompt`/`verificationUnavailable`).
+- Verified: 0 typecheck errors in touched `.ts`, 77 tests (added Turnstile 403/201, rate-limit 429, per-recipient confirmation suppression, `getCfConnectingIp`), build 30 pages, and the prod `dist/` bundle confirmed to inline the site key into `ContactTerminal`.
+
+Adversarial 2-lens review (Opus workflow) before deploy — breakage lens: "safe to deploy"; bypass lens: "ship with reservations". Fixed the flagged Turnstile-load-failure hard-block, the `x-forwarded-for` spoof, and the confirmation-recipient trust (per-recipient + global caps). KNOWN, ACCEPTED LIMITS (proportionate for a 2/day contact form; documented, not fixed): (1) the KV counter is a non-atomic fixed window, so a concurrency race can let a few extra through — never wrongly blocks a legit lead (the breakage lens rated this a "nit"); Turnstile is the real bot gate. (2) the per-IP lead limiter fails **open** on a KV outage (deliberate — do not drop real leads); the confirmation caps bound the actual email/backscatter harm. (3) a botnet rotating IPs each solving Turnstile is still theoretically possible, but the per-recipient + global confirmation caps limit the blast radius. Upgrade path if ever needed: move the limiter to a Durable Object / CF Rate Limiting binding.
+
 ## 2026-07-02 Resend lead notifications verified LIVE end-to-end
 
 Owner completed the Resend setup: domain `radeq.cz` verified in Resend (region **eu-west-1 / Ireland** for EU/GDPR data residency; default return-path subdomain, open/click tracking OFF — correct for transactional mail), and `RESEND_API_KEY` set as a Worker secret via CLI (`npx.cmd wrangler secret put` — `.cmd` needed because PowerShell blocks `.ps1`; confirmed via `wrangler secret list`). Live end-to-end test via `wrangler tail radeq`: two `POST /api/leads - Ok`, ZERO `Lead notification/confirmation email failed`; both the owner notification (→ siroky@) and the localized visitor confirmation (→ the submitted address) arrived. **Lead notifications + visitor confirmations are now fully operational.** Remaining open item: the optional Turnstile + per-IP rate-limit hardening on `/api/leads` (flagged 2026-07-01; owner not yet decided).

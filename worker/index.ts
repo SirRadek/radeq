@@ -5,6 +5,7 @@ interface Env {
   ASSETS: AssetsFetcher;
   LEADS_DB?: D1Database;
   RESEND_API_KEY?: string;
+  TURNSTILE_SECRET?: string;
   PSI_API_KEY?: string;
   MEASURE_RATE_LIMIT?: KVNamespace;
 }

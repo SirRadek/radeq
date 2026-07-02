@@ -3,10 +3,23 @@ import {
   sendLeadConfirmationEmail,
   sendLeadNotificationEmail,
 } from '../../src/lib/leadNotificationEmail';
+import {
+  checkRateLimit,
+  getCfConnectingIp,
+  readTurnstileToken,
+  verifyTurnstile,
+  type KVNamespaceLike,
+} from '../../src/lib/requestGuards';
+
+const LEAD_RATE_LIMIT_MAX = 2;
+const LEAD_RATE_LIMIT_WINDOW_SECONDS = 24 * 60 * 60;
+const CONFIRMATION_GLOBAL_DAILY_MAX = 50;
 
 interface Env {
   LEADS_DB?: D1Database;
   RESEND_API_KEY?: string;
+  TURNSTILE_SECRET?: string;
+  MEASURE_RATE_LIMIT?: KVNamespaceLike;
 }
 
 interface PagesContext {
@@ -53,6 +66,45 @@ export async function onRequestPost(context: PagesContext) {
   }
 
   const lead = result.data;
+  const clientIp = getCfConnectingIp(request);
+  const isEnglish = lead.locale.toLowerCase().startsWith('en');
+
+  // Bot gate: require a valid Turnstile token whenever the secret is configured
+  // (production). Skipped in dev/tests where no secret is bound.
+  const turnstileSecret = env.TURNSTILE_SECRET?.trim();
+  if (turnstileSecret) {
+    const verified = await verifyTurnstile(turnstileSecret, readTurnstileToken(body), clientIp);
+    if (!verified) {
+      return jsonResponse(
+        {
+          ok: false,
+          error: isEnglish
+            ? 'Verification did not pass. Please confirm you are not a robot and submit again.'
+            : 'Ověření neproběhlo. Potvrďte prosím, že nejste robot, a odešlete znovu.',
+        },
+        403,
+      );
+    }
+  }
+
+  // Volume cap: max LEAD_RATE_LIMIT_MAX submissions per client IP per day.
+  const rateLimit = await checkRateLimit(env.MEASURE_RATE_LIMIT, `lead:${clientIp || 'unknown'}`, {
+    max: LEAD_RATE_LIMIT_MAX,
+    windowSeconds: LEAD_RATE_LIMIT_WINDOW_SECONDS,
+  });
+  if (!rateLimit.allowed) {
+    return jsonResponse(
+      {
+        ok: false,
+        error: isEnglish
+          ? 'Too many requests from this connection. Please try again later or write by email.'
+          : 'Z tohoto připojení přišlo příliš mnoho poptávek. Zkuste to prosím později nebo napište e-mailem.',
+      },
+      429,
+      rateLimit.retryAfterSeconds,
+    );
+  }
+
   const id = createLeadId();
   const createdAt = new Date().toISOString();
 
@@ -101,9 +153,15 @@ export async function onRequestPost(context: PagesContext) {
     return jsonResponse({ ok: false, error: 'Lead could not be stored.' }, 500);
   }
 
+  // The confirmation goes to a visitor-supplied address, so bound the abuse surface:
+  // at most one confirmation per recipient per day, under a global daily ceiling.
+  const confirmationAllowed = await allowConfirmationEmail(env.MEASURE_RATE_LIMIT, lead.email);
+
   const [notifyResult, confirmResult] = await Promise.allSettled([
     sendLeadNotificationEmail(env.RESEND_API_KEY, lead, id, createdAt),
-    sendLeadConfirmationEmail(env.RESEND_API_KEY, lead),
+    confirmationAllowed
+      ? sendLeadConfirmationEmail(env.RESEND_API_KEY, lead)
+      : Promise.resolve('skipped' as const),
   ]);
 
   if (notifyResult.status === 'rejected') {
@@ -136,10 +194,15 @@ function isJsonRequest(request: Request): boolean {
   return request.headers.get('content-type')?.toLowerCase().includes('application/json') ?? false;
 }
 
-function jsonResponse(body: unknown, status = 200): Response {
+function jsonResponse(body: unknown, status = 200, retryAfterSeconds?: number): Response {
+  const headers = new Headers(responseHeaders());
+  if (retryAfterSeconds) {
+    headers.set('retry-after', String(retryAfterSeconds));
+  }
+
   return new Response(JSON.stringify(body), {
     status,
-    headers: responseHeaders(),
+    headers,
   });
 }
 
@@ -150,6 +213,25 @@ function responseHeaders(): HeadersInit {
     'access-control-allow-methods': 'POST, OPTIONS',
     'access-control-allow-headers': 'content-type',
   };
+}
+
+async function allowConfirmationEmail(kv: KVNamespaceLike | undefined, recipient: string): Promise<boolean> {
+  const email = recipient.trim().toLowerCase();
+  if (!email) return false;
+
+  // Global ceiling first — protects the sending quota/reputation from a broad spray.
+  const global = await checkRateLimit(kv, 'confirm:global', {
+    max: CONFIRMATION_GLOBAL_DAILY_MAX,
+    windowSeconds: LEAD_RATE_LIMIT_WINDOW_SECONDS,
+  });
+  if (!global.allowed) return false;
+
+  // Per-recipient — never send more than one confirmation to the same address per day.
+  const perRecipient = await checkRateLimit(kv, `confirm:${email}`, {
+    max: 1,
+    windowSeconds: LEAD_RATE_LIMIT_WINDOW_SECONDS,
+  });
+  return perRecipient.allowed;
 }
 
 function getEmailErrorCode(error: unknown): string {

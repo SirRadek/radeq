@@ -166,6 +166,110 @@ describe('lead Pages Function', () => {
     expect(body.ok).toBe(false);
     expect(body.error).toContain('LEADS_DB');
   });
+
+  it('rejects a submission without a valid Turnstile token when the secret is set', async () => {
+    const { env } = createLeadEnv({ TURNSTILE_SECRET: 'test-secret' });
+
+    const response = await onRequestPost({
+      request: new Request('https://radeq.cz/api/leads', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(completeLead),
+      }),
+      env,
+    });
+
+    const body = (await response.json()) as { ok: boolean };
+
+    expect(response.status).toBe(403);
+    expect(body.ok).toBe(false);
+  });
+
+  it('accepts a submission with a valid Turnstile token', async () => {
+    const fetchMock = vi.fn(
+      async (_url: unknown) =>
+        new Response(JSON.stringify({ success: true }), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        }),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+    const { env } = createLeadEnv({ TURNSTILE_SECRET: 'test-secret' });
+
+    const response = await onRequestPost({
+      request: new Request('https://radeq.cz/api/leads', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ ...completeLead, turnstileToken: 'valid-token' }),
+      }),
+      env,
+    });
+
+    const body = (await response.json()) as { ok: boolean };
+
+    expect(response.status).toBe(201);
+    expect(body.ok).toBe(true);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0]?.[0]).toBe('https://challenges.cloudflare.com/turnstile/v0/siteverify');
+
+    vi.unstubAllGlobals();
+  });
+
+  it('rate-limits after 2 submissions from the same IP', async () => {
+    const { env } = createLeadEnv();
+    const submit = () =>
+      onRequestPost({
+        request: new Request('https://radeq.cz/api/leads', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'cf-connecting-ip': '203.0.113.7' },
+          body: JSON.stringify(completeLead),
+        }),
+        env,
+      });
+
+    expect((await submit()).status).toBe(201);
+    expect((await submit()).status).toBe(201);
+
+    const third = await submit();
+    const body = (await third.json()) as { ok: boolean };
+    expect(third.status).toBe(429);
+    expect(body.ok).toBe(false);
+    expect(third.headers.get('retry-after')).toBeTruthy();
+  });
+
+  it('suppresses a second visitor confirmation to the same address within a day', async () => {
+    const calls: Array<{ init: RequestInit }> = [];
+    const fetchMock = vi.fn(async (_url: unknown, init: RequestInit) => {
+      calls.push({ init });
+      return new Response(JSON.stringify({ id: 'email_123' }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      });
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    const { env } = createLeadEnv({ RESEND_API_KEY: 'test_key' });
+
+    const submit = () =>
+      onRequestPost({
+        request: new Request('https://radeq.cz/api/leads', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(completeLead),
+        }),
+        env,
+      });
+
+    expect((await submit()).status).toBe(201);
+    expect((await submit()).status).toBe(201);
+
+    const subjects = calls.map((call) =>
+      String((JSON.parse(call.init.body as string) as Record<string, unknown>).subject),
+    );
+    expect(subjects.filter((s) => s.includes('Nová poptávka'))).toHaveLength(2);
+    expect(subjects.filter((s) => s.includes('Děkujeme'))).toHaveLength(1);
+
+    vi.unstubAllGlobals();
+  });
 });
 
 function createLeadEnv(extra: Record<string, unknown> = {}) {
@@ -177,11 +281,18 @@ function createLeadEnv(extra: Record<string, unknown> = {}) {
     },
     run: async () => ({ success: true }),
   };
+  const kvStore = new Map<string, string>();
   const env = {
     LEADS_DB: {
       prepare: (query: string) => {
         calls.push({ query, values: [] });
         return statement;
+      },
+    },
+    MEASURE_RATE_LIMIT: {
+      get: async (key: string) => kvStore.get(key) ?? null,
+      put: async (key: string, value: string) => {
+        kvStore.set(key, value);
       },
     },
     ...extra,

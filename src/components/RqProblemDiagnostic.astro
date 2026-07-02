@@ -223,15 +223,14 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
   /* Section Wrapper */
   .rq-diagnostic-section {
     position: relative;
-    width: 100%;
-    max-width: 80rem;
-    margin: 0 auto;
-    padding: clamp(1.1rem, 2.8dvh, 2rem) clamp(1rem, 2vw, 1.4rem);
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+    padding-block: clamp(1.6rem, 4vh, 3.25rem);
+    padding-inline: max(clamp(1rem, 2vw, 1.4rem), calc((100% - 80rem) / 2));
     background:
       radial-gradient(70% 80% at 92% 4%, rgba(212, 255, 61, 0.06), transparent 60%),
       linear-gradient(225deg, var(--rq-burgundy-strong), #231018 72%);
-    border-radius: 20px;
-    border: 1px solid rgba(230, 224, 212, 0.08);
+    border-radius: 0;
     color: var(--rq-on-dark);
     font-family: var(--font-body);
     font-size: 1rem;

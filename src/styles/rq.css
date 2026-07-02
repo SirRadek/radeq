@@ -37,6 +37,7 @@ html,
    / over-scroll nesvítí bíle (canvas pozadí) */
 html {
   background: var(--rq-carbon);
+  scroll-padding-top: calc(var(--rq-header-height) + 0.5rem);
 }
 
 body {

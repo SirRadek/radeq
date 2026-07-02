@@ -67,7 +67,7 @@ export const auditContent = {
       loadingLabel: 'měřím… (Google PSI)',
       measuredLabel: 'Měřená adresa',
       resultNote:
-        'Tohle je jen strojový náhled, ne verdikt. V placeném auditu (od 3 000 Kč) projdu web nebo proces ručně, dám plán a cenu odečtu z realizace — uvidím i to, co stroj nezměří: cestu k poptávce, texty, follow-up a ruční kroky.',
+        'Tohle je jen strojový náhled, ne verdikt. V placeném auditu (od 3 000 Kč) projdu web nebo proces ručně, dám plán a cenu odečtu z realizace — uvidím i to, co stroj nezměří: cestu k poptávce, texty, navazující komunikaci a ruční kroky.',
       ctaLabel: 'Chci lidský audit od 3 000 Kč',
       signalLabel: 'Signál',
       meaningLabel: 'Co to znamená',

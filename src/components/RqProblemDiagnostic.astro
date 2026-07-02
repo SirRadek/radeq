@@ -76,7 +76,6 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
           data-index={i}
           tabindex={i === 0 ? 0 : -1}
         >
-          <span class="diag-tab-num">{String(i + 1).padStart(2, '0')}.</span>
           <span>{item.symptom}</span>
         </button>
       ))}
@@ -390,21 +389,6 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
     color: var(--rq-ink);
     border-color: var(--rq-bg);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  }
-
-  .diag-tab-num {
-    font-family: var(--font-mono);
-    font-size: 0.875rem;
-    font-weight: 700;
-    transition: color 0.25s ease;
-  }
-
-  .diag-tab:not(.active) .diag-tab-num {
-    color: var(--rq-lime);
-  }
-
-  .diag-tab.active .diag-tab-num {
-    color: var(--rq-burgundy);
   }
 
   /* Active Panel Container */
@@ -891,6 +875,11 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
 
         updateCounters(index);
         updateAuditPreview(index);
+
+        root.querySelectorAll('.diag-tab--clone').forEach((clone) => {
+          if (!(clone instanceof HTMLElement)) return;
+          clone.classList.toggle('active', Number.parseInt(clone.dataset.index ?? '-1', 10) === index);
+        });
       }
 
       tabs.forEach((tab) => {
@@ -927,6 +916,61 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
           setActive(total - 1, { focusTab: true });
         }
       });
+
+      // Nekonečný pás: naklonuj celý set tabů před i za skutečné taby a drž
+      // scroll v prostředním setu (teleport o šířku setu je díky identickému
+      // layoutu neviditelný). Klony jsou jen vizuální/klikací — mimo tablist.
+      if (total > 1) {
+        const makeClones = () =>
+          tabs.map((tab) => {
+            const clone = tab.cloneNode(true);
+            clone.classList.remove('active');
+            clone.classList.add('diag-tab--clone');
+            clone.setAttribute('role', 'presentation');
+            clone.setAttribute('aria-hidden', 'true');
+            clone.removeAttribute('id');
+            clone.removeAttribute('aria-controls');
+            clone.removeAttribute('aria-selected');
+            clone.tabIndex = -1;
+            clone.addEventListener('click', () => {
+              const nextIndex = Number.parseInt(clone.dataset.index ?? '0', 10);
+              setActive(Number.isNaN(nextIndex) ? 0 : nextIndex);
+            });
+            return clone;
+          });
+
+        const before = makeClones();
+        const after = makeClones();
+        before.forEach((clone) => tabsContainer.insertBefore(clone, tabs[0]));
+        after.forEach((clone) => tabsContainer.appendChild(clone));
+
+        let setWidth = 0;
+        const measure = () => {
+          setWidth = tabs[0].offsetLeft - before[0].offsetLeft;
+        };
+
+        const centerOnRealSet = () => {
+          measure();
+          const paddingLeft = Number.parseFloat(getComputedStyle(tabsContainer).paddingLeft) || 0;
+          tabsContainer.scrollLeft = tabs[0].offsetLeft - paddingLeft;
+        };
+
+        centerOnRealSet();
+        window.addEventListener('resize', centerOnRealSet);
+
+        tabsContainer.addEventListener(
+          'scroll',
+          () => {
+            if (!setWidth) return;
+            if (tabsContainer.scrollLeft < setWidth * 0.25) {
+              tabsContainer.scrollLeft += setWidth;
+            } else if (tabsContainer.scrollLeft > setWidth * 1.75) {
+              tabsContainer.scrollLeft -= setWidth;
+            }
+          },
+          { passive: true },
+        );
+      }
 
       setActive(currentIndex, { scroll: false });
     });

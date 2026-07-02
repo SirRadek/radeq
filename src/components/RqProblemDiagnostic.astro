@@ -226,7 +226,7 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
     width: 100vw;
     margin-inline: calc(50% - 50vw);
     padding-block: clamp(1.6rem, 4vh, 3.25rem);
-    padding-inline: clamp(1rem, 3vw, 2.5rem);
+    padding-inline: max(clamp(1rem, 2vw, 1.4rem), calc((100% - var(--rq-page-w)) / 2));
     background:
       radial-gradient(70% 80% at 92% 4%, rgba(212, 255, 61, 0.06), transparent 60%),
       linear-gradient(225deg, var(--rq-burgundy-strong), #231018 72%);
@@ -303,7 +303,8 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
   .diag-tabs-container {
     position: relative;
     margin-bottom: clamp(0.5rem, 1.2dvh, 0.85rem);
-    width: 100%;
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
     z-index: 2;
   }
 

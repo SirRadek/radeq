@@ -395,7 +395,7 @@ export const siteContent = {
       items: [
         {
           name: 'Audit webu nebo procesu',
-          price: 'od 2 900 Kč',
+          price: 'od 3 000 Kč',
           text: 'Pro firmy, které nevědí, jestli web nebo proces upravit, předělat, nebo nastavit znovu.',
           includes: ['slabá místa webu nebo procesu', 'prioritní plán', 'odhad další práce'],
           cta: 'Začít auditem',
@@ -403,7 +403,7 @@ export const siteContent = {
         },
         {
           name: 'Jednostránkový web',
-          price: 'od 9 900 Kč',
+          price: 'od 10 000 Kč',
           text: 'Jedna stránka s jasnou nabídkou a poptávkovým formulářem pro rychlý start.',
           includes: ['1 strana', 'poptávkový formulář', 'základní SEO'],
           cta: 'Probrat jednostránkový web',
@@ -417,7 +417,7 @@ export const siteContent = {
         },
         {
           name: 'Redesign staršího webu',
-          price: 'od 9 900 Kč',
+          price: 'od 10 000 Kč',
           text: 'Přestavba existujícího webu, který potřebuje lepší obsah, mobil, rychlost a důvěryhodnost.',
           includes: ['audit současného webu', 'nová struktura a texty', 'kontrola před spuštěním'],
           cta: 'Chci zlepšit web',
@@ -780,7 +780,7 @@ export const siteContent = {
       items: [
         {
           name: 'Website or process audit',
-          price: 'from CZK 2,900',
+          price: 'from CZK 3,000',
           text: 'For companies unsure whether to adjust a website or process, redesign it, or rebuild from a cleaner base.',
           includes: ['website/process weak spots', 'priority plan', 'next-work estimate'],
           cta: 'Start with audit',
@@ -788,7 +788,7 @@ export const siteContent = {
         },
         {
           name: 'One-page website',
-          price: 'from CZK 9,900',
+          price: 'from CZK 10,000',
           text: 'One page with a clear offer and enquiry form for a quick start.',
           includes: ['1 page', 'enquiry form', 'SEO basics'],
           cta: 'Discuss a one-page website',
@@ -802,7 +802,7 @@ export const siteContent = {
         },
         {
           name: 'Website redesign',
-          price: 'from CZK 9,900',
+          price: 'from CZK 10,000',
           text: 'Rebuilding an existing website that needs clearer content, mobile behavior, speed, and trust.',
           includes: ['current-site audit', 'new structure and copy', 'pre-launch check'],
           cta: 'Improve my website',

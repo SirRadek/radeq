@@ -1,5 +1,9 @@
 # Radeq.cz Website Work Log
 
+## 2026-07-02 Prices rounded to whole numbers (drop the psychological 900-ending)
+
+Owner: "každý má 999 všude" — align all prices to whole numbers. Runtime rounded across `home.ts`, `audit.ts`, `siteContent.ts`, `sluzby` (CS+EN): **9 900 → 10 000**, **19 900 → 20 000**, **audit 2 900 → 3 000** (CS space + EN comma formats). Already-round prices (6 000 / 12 000 / 15 000 / 25 000 care & realizace, care 2 500) unchanged. Audit governance: the lock (`offer_positioning_conversion.yaml`) active offer-name price updated to "od 3 000 Kč" (framing unchanged — still an AUDIT, not a fix); the historical "lowered 4 900 → 2 900 on 2026-07-01" record kept. Other descriptive docs (architecture/master-plan/output) may still cite 2 900 — historical, low-priority sweep. 78/78 tests.
+
 ## 2026-07-02 Contact form hardened — Turnstile + per-IP rate limit + confirmation caps
 
 Owner asked to gate `/api/leads` (previously unprotected) with Turnstile + a 2/day-per-IP cap, to close the visitor-confirmation backscatter surface.

@@ -859,7 +859,7 @@ const csServices: HomeContent['services']['items'] = [
     id: 'web',
     slot: 'web',
     featured: true,
-    price: 'od 9 900 Kč',
+    price: 'od 10 000 Kč',
     title: 'Jednostránkový web',
     result: 'Výsledek: jednostránkový web, který návštěvníkovi rychle vysvětlí nabídku a přivádí poptávky.',
     outputs: [
@@ -872,7 +872,7 @@ const csServices: HomeContent['services']['items'] = [
     id: 'shop',
     slot: 'shop',
     className: 'rq-service-tile--shop',
-    price: 'od 19 900 Kč',
+    price: 'od 20 000 Kč',
     title: 'E-shop',
     result: 'Výsledek: malý vlastněný obchod bez zbytečností, který sami utáhnete.',
     outputs: [
@@ -912,7 +912,7 @@ const csServices: HomeContent['services']['items'] = [
     slot: 'audit',
     className: 'rq-service-tile--audit',
     flag: 'Doporučený start',
-    price: 'od 2 900 Kč',
+    price: 'od 3 000 Kč',
     title: 'Audit webu nebo procesu',
     result: 'Výsledek: víte, co nejvíc brzdí a co řešit první — cenu odečtu z realizace.',
     outputs: [
@@ -928,7 +928,7 @@ const enServices: HomeContent['services']['items'] = [
     id: 'web',
     slot: 'web',
     featured: true,
-    price: 'from CZK 9,900',
+    price: 'from CZK 10,000',
     title: 'One-page website',
     result: 'Result: a one-page website that explains the offer quickly and brings in measurable enquiries.',
     outputs: [
@@ -941,7 +941,7 @@ const enServices: HomeContent['services']['items'] = [
     id: 'shop',
     slot: 'shop',
     className: 'rq-service-tile--shop',
-    price: 'from CZK 19,900',
+    price: 'from CZK 20,000',
     title: 'E-shop',
     result: 'Result: a small owned store without unnecessary complexity, manageable by your team.',
     outputs: [
@@ -981,7 +981,7 @@ const enServices: HomeContent['services']['items'] = [
     slot: 'audit',
     className: 'rq-service-tile--audit',
     flag: 'Recommended start',
-    price: 'from CZK 2,900',
+    price: 'from CZK 3,000',
     title: 'Website or process audit',
     result: 'Result: you know what slows things down most and what to fix first - the audit is deducted from implementation.',
     outputs: [
@@ -1181,7 +1181,7 @@ export const homeContent = {
       journeyNote: 'Postup od problému k ověřenému výsledku.',
       proofAriaLabel: 'Důkazy a orientační ceny',
       proofItems: [
-        { label: 'Jednostránkový web od 9 900 Kč', text: '1 strana + kontaktní formulář, spuštění za pár dní' },
+        { label: 'Jednostránkový web od 10 000 Kč', text: '1 strana + kontaktní formulář, spuštění za pár dní' },
         { label: 'Audit webu nebo procesu', text: 'zjistíte, co brzdí web nebo proces; audit odečtu z realizace' },
         { label: 'Postavím · změřím · předám', text: 'bez závislosti na dodavateli' },
       ],
@@ -1314,7 +1314,7 @@ export const homeContent = {
       audit: {
         kicker: 'Vstupní krok',
         title: 'Audit webu nebo procesu',
-        price: 'od 2 900 Kč',
+        price: 'od 3 000 Kč',
         creditedLine: 'Za ~hodinu projdu web nebo proces a řeknu, co ho nejvíc brzdí a co řešit první. Cenu auditu vám celou odečtu z realizace — když se domluvíme, audit vás nestojí nic navíc.',
         coverage: ['technický stav', 'rychlost', 'SEO základ', 'formuláře', 'ruční kroky v procesu'],
         coverageAriaLabel: 'Co audit pokrývá',
@@ -1327,10 +1327,10 @@ export const homeContent = {
           },
           {
             label: 'Proč „od“',
-            text: 'Malý web zvládnu za ~hodinu (2 900 Kč). Větší web nebo proces — víc stránek, víc kroků — upřesníme po krátké nezávazné domluvě. Vždy je to audit a cenu celou odečtu z realizace.',
+            text: 'Malý web zvládnu za ~hodinu (3 000 Kč). Větší web nebo proces — víc stránek, víc kroků — upřesníme po krátké nezávazné domluvě. Vždy je to audit a cenu celou odečtu z realizace.',
           },
         ],
-        ctaLabel: 'Chci audit od 2 900 Kč',
+        ctaLabel: 'Chci audit od 3 000 Kč',
         measureHref: '/audit/',
         measureLabel: 'Nebo si web nejdřív orientačně změřte',
       },
@@ -1338,7 +1338,7 @@ export const homeContent = {
         eyebrow: 'DŮKAZ',
         line: 'Strojový náhled webu zdarma — ukáže signály k prověření, ne verdikt.',
         previewLabel: 'Strojový náhled zdarma',
-        paidLabel: 'Nebo rovnou lidský audit od 2 900 Kč (odečtu z realizace)',
+        paidLabel: 'Nebo rovnou lidský audit od 3 000 Kč (odečtu z realizace)',
       },
       projectTitle: 'Projektové realizace',
       projectNote: 'Realizace navazuje na audit — ceny jsou orientační (od).',
@@ -1347,9 +1347,9 @@ export const homeContent = {
         { name: 'Automatizace procesů', price: 'od 12 000 Kč' },
         { name: 'Data a AI pomocníci', price: 'od 15 000 Kč' },
         { name: 'Firemní web (1–5 stran)', price: 'od 25 000 Kč' },
-        { name: 'E-shop', price: 'od 19 900 Kč' },
-        { name: 'Jednostránkový web', price: 'od 9 900 Kč' },
-        { name: 'Redesign staršího webu', price: 'od 9 900 Kč' },
+        { name: 'E-shop', price: 'od 20 000 Kč' },
+        { name: 'Jednostránkový web', price: 'od 10 000 Kč' },
+        { name: 'Redesign staršího webu', price: 'od 10 000 Kč' },
       ],
       ariaLabel: 'Tarify péče po spuštění',
       note: 'Nechcete paušál? Bloky hodin 5/15/40 h (od 1 100 Kč/h). Nejsem plátce DPH — ceny jsou konečné.',
@@ -1412,7 +1412,7 @@ export const homeContent = {
         { label: 'E-shop', value: 'E-shop' },
         { label: 'Automatizace procesů', value: 'Automatizace procesů' },
         { label: 'Data a AI', value: 'Data a AI' },
-        { label: 'Audit webu nebo procesu (od 2 900 Kč)', value: 'Audit webu nebo procesu (od 2 900 Kč)' },
+        { label: 'Audit webu nebo procesu (od 3 000 Kč)', value: 'Audit webu nebo procesu (od 3 000 Kč)' },
         { label: 'Jiné', value: 'Jiné' },
       ],
       budgetOptions: [
@@ -1463,7 +1463,7 @@ export const homeContent = {
       topics: {
         ceny: {
           chipLabel: 'Kolik to stojí',
-          text: 'Orientačně: web od 9 900 Kč, audit webu nebo procesu od 2 900 Kč. Kompletní přehled máte v sekci Ceny níž — přesnou cenu doladíme po krátké domluvě.',
+          text: 'Orientačně: web od 10 000 Kč, audit webu nebo procesu od 3 000 Kč. Kompletní přehled máte v sekci Ceny níž — přesnou cenu doladíme po krátké domluvě.',
           href: '#ceny',
           label: 'Přejít na ceny',
           followups: [
@@ -1558,7 +1558,7 @@ export const homeContent = {
       journeyNote: 'A path from problem to verified result.',
       proofAriaLabel: 'Proof points and indicative prices',
       proofItems: [
-        { label: 'One-page website from CZK 9,900', text: '1 page + contact form, live in a few days' },
+        { label: 'One-page website from CZK 10,000', text: '1 page + contact form, live in a few days' },
         { label: 'Website or process audit', text: 'find what slows the website or process; audit deducted from implementation' },
         { label: 'Build · measure · hand off', text: 'without supplier lock-in' },
       ],
@@ -1691,7 +1691,7 @@ export const homeContent = {
       audit: {
         kicker: 'First step',
         title: 'Website or process audit',
-        price: 'from CZK 2,900',
+        price: 'from CZK 3,000',
         creditedLine: 'In about an hour I go through the website or process and tell you what slows it down most and what to solve first. I deduct the full audit price from implementation — if we agree to continue, the audit costs you nothing extra.',
         coverage: ['technical state', 'speed', 'SEO basics', 'forms', 'manual process steps'],
         coverageAriaLabel: 'What the audit covers',
@@ -1704,10 +1704,10 @@ export const homeContent = {
           },
           {
             label: 'Why “from”',
-            text: 'A small website takes about an hour (CZK 2,900). A larger website or process — more pages, more steps — is clarified after a short no-obligation call. It is always an audit and I deduct the full price from implementation.',
+            text: 'A small website takes about an hour (CZK 3,000). A larger website or process — more pages, more steps — is clarified after a short no-obligation call. It is always an audit and I deduct the full price from implementation.',
           },
         ],
-        ctaLabel: 'I want an audit from CZK 2,900',
+        ctaLabel: 'I want an audit from CZK 3,000',
         measureHref: '/en/audit/',
         measureLabel: 'Or measure your website roughly first',
       },
@@ -1715,7 +1715,7 @@ export const homeContent = {
         eyebrow: 'PROOF',
         line: 'Free machine website preview — it shows signals to check, not a verdict.',
         previewLabel: 'Free machine preview',
-        paidLabel: 'Or go straight to a human audit from CZK 2,900 (deducted from implementation)',
+        paidLabel: 'Or go straight to a human audit from CZK 3,000 (deducted from implementation)',
       },
       projectTitle: 'Project work',
       projectNote: 'Project delivery follows the audit — prices are indicative (from).',
@@ -1724,9 +1724,9 @@ export const homeContent = {
         { name: 'Process automation', price: 'from CZK 12,000' },
         { name: 'Data & AI assistants', price: 'from CZK 15,000' },
         { name: 'Company website (1–5 pages)', price: 'from CZK 25,000' },
-        { name: 'E-shop', price: 'from CZK 19,900' },
-        { name: 'One-page website', price: 'from CZK 9,900' },
-        { name: 'Redesign of an older site', price: 'from CZK 9,900' },
+        { name: 'E-shop', price: 'from CZK 20,000' },
+        { name: 'One-page website', price: 'from CZK 10,000' },
+        { name: 'Redesign of an older site', price: 'from CZK 10,000' },
       ],
       ariaLabel: 'Post-launch care plans',
       note: 'Do not want a retainer? Hour blocks 5/15/40 h (from CZK 1,100/h). I am not a VAT payer - prices are final.',
@@ -1789,7 +1789,7 @@ export const homeContent = {
         { label: 'E-shop', value: 'E-shop' },
         { label: 'Process automation', value: 'Process automation' },
         { label: 'Data and AI', value: 'Data and AI' },
-        { label: 'Website or process audit (from CZK 2,900)', value: 'Website or process audit (from CZK 2,900)' },
+        { label: 'Website or process audit (from CZK 3,000)', value: 'Website or process audit (from CZK 3,000)' },
         { label: 'Other', value: 'Other' },
       ],
       budgetOptions: [
@@ -1840,7 +1840,7 @@ export const homeContent = {
       topics: {
         ceny: {
           chipLabel: 'How much does it cost',
-          text: 'Roughly: website from CZK 9,900, website or process audit from CZK 2,900. The full price list is in the Pricing section below — exact pricing follows a short discussion.',
+          text: 'Roughly: website from CZK 10,000, website or process audit from CZK 3,000. The full price list is in the Pricing section below — exact pricing follows a short discussion.',
           href: '#ceny',
           label: 'Go to pricing',
           followups: [

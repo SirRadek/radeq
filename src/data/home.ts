@@ -274,6 +274,7 @@ export type HomeContent = {
       sending: string;
       success: string;
       failureHtml: string;
+      verifyPrompt: string;
     };
   };
   footer: {
@@ -1428,6 +1429,7 @@ export const homeContent = {
         sending: 'Odesílám…',
         success: 'Děkuji, poptávka odeslána. Ozvu se co nejdřív.',
         failureHtml: 'Odeslání teď neproběhlo. Napište prosím na <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a>.',
+        verifyPrompt: 'Potvrďte prosím, že nejste robot, a odešlete znovu.',
       },
     },
     footer: {
@@ -1803,6 +1805,7 @@ export const homeContent = {
         sending: 'Sending…',
         success: 'Thank you, the enquiry has been sent. I will reply as soon as possible.',
         failureHtml: 'Sending did not work right now. Please write to <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a>.',
+        verifyPrompt: 'Please confirm you are not a robot and submit again.',
       },
     },
     footer: {

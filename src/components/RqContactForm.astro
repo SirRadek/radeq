@@ -14,6 +14,8 @@ const resolve = (href: string) => {
   if (base && (href === base || href.startsWith(`${base}/`))) return href;
   return `${base}${href}`;
 };
+const turnstileSiteKey = (import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '').toString().trim();
+const verifyLabel = lang === 'en' ? 'Verify you are not a robot' : 'Ověření, že nejste robot';
 ---
 
 <form class="rq-contact-form" method="post" action={resolve('/api/leads')} id="rq-lead-form">
@@ -58,6 +60,9 @@ const resolve = (href: string) => {
   <div class="rq-hp" aria-hidden="true">
     <label>{content.fields.honeypot}<input type="text" name="honeypot" tabindex="-1" autocomplete="off" /></label>
   </div>
+  {turnstileSiteKey ? (
+    <div class="rq-form-field rq-turnstile" id="rq-lead-turnstile" aria-label={verifyLabel}></div>
+  ) : null}
   <button class="rq-btn rq-btn--primary" type="submit">{content.submitLabel}</button>
   <p class="rq-form-status" id="rq-lead-status" role="status" aria-live="polite"></p>
 </form>
@@ -68,6 +73,8 @@ const resolve = (href: string) => {
   statusSending: content.status.sending,
   statusSuccess: content.status.success,
   statusFailureHtml: content.status.failureHtml,
+  verifyPrompt: content.status.verifyPrompt,
+  turnstileSiteKey,
 }}>
   (() => {
     const form = document.getElementById("rq-lead-form");
@@ -87,10 +94,83 @@ const resolve = (href: string) => {
       if (matchingOption) projectSelect.value = matchingOption.value;
     }
 
+    const turnstileEnabled = Boolean(turnstileSiteKey);
+    const turnstileContainer = document.getElementById("rq-lead-turnstile");
+    let turnstileToken = "";
+    let turnstileWidgetId = null;
+    let turnstileUnavailable = false;
+
+    function loadTurnstile() {
+      return new Promise((resolve, reject) => {
+        if (window.turnstile) return resolve();
+        const src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+        const existing = document.querySelector('script[src="' + src + '"]');
+        if (existing) {
+          existing.addEventListener("load", () => resolve(), { once: true });
+          existing.addEventListener("error", () => reject(new Error("turnstile")), { once: true });
+          return;
+        }
+        const s = document.createElement("script");
+        s.src = src;
+        s.async = true;
+        s.defer = true;
+        s.addEventListener("load", () => resolve(), { once: true });
+        s.addEventListener("error", () => reject(new Error("turnstile")), { once: true });
+        document.head.appendChild(s);
+      });
+    }
+
+    if (turnstileEnabled && turnstileContainer) {
+      loadTurnstile()
+        .then(() => {
+          if (!window.turnstile) {
+            turnstileUnavailable = true;
+            return;
+          }
+          turnstileWidgetId = window.turnstile.render(turnstileContainer, {
+            sitekey: turnstileSiteKey,
+            callback: (t) => {
+              turnstileToken = t;
+              turnstileUnavailable = false;
+            },
+            "expired-callback": () => {
+              turnstileToken = "";
+            },
+            "error-callback": () => {
+              turnstileToken = "";
+              turnstileUnavailable = true;
+            },
+          });
+        })
+        .catch(() => {
+          turnstileUnavailable = true;
+        });
+    }
+
+    function readToken() {
+      if (turnstileToken) return turnstileToken;
+      const input = turnstileContainer && turnstileContainer.querySelector('input[name="cf-turnstile-response"]');
+      return input && input.value ? input.value : "";
+    }
+
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const fd = new FormData(form);
       if (fd.get("honeypot")) return;
+
+      let submittedToken = "";
+      if (turnstileEnabled) {
+        submittedToken = readToken();
+        if (!submittedToken) {
+          if (turnstileUnavailable) {
+            statusEl.innerHTML = statusFailureHtml;
+          } else {
+            statusEl.textContent = verifyPrompt;
+          }
+          return;
+        }
+      }
+
       const payload = {
         name: fd.get("name") || "", email: fd.get("email") || "",
         project_type: fd.get("project_type") || "", message: fd.get("message") || "",
@@ -98,6 +178,8 @@ const resolve = (href: string) => {
         honeypot: "", source_path: location.pathname + location.search,
         referrer: document.referrer || "", locale: leadLocale
       };
+      if (turnstileEnabled) payload.turnstileToken = submittedToken;
+
       statusEl.textContent = statusSending;
       try {
         const r = await fetch(leadsUrl, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
@@ -109,6 +191,11 @@ const resolve = (href: string) => {
         statusEl.textContent = statusSuccess;
       } catch (err) {
         statusEl.innerHTML = statusFailureHtml;
+      } finally {
+        if (turnstileEnabled && turnstileWidgetId && window.turnstile) {
+          window.turnstile.reset(turnstileWidgetId);
+          turnstileToken = "";
+        }
       }
     });
   })();

@@ -911,7 +911,7 @@ const csServices: HomeContent['services']['items'] = [
     id: 'audit',
     slot: 'audit',
     className: 'rq-service-tile--audit',
-    flag: 'Nízkorizikový start',
+    flag: 'Doporučený start',
     price: 'od 2 900 Kč',
     title: 'Audit webu nebo procesu',
     result: 'Výsledek: víte, co nejvíc brzdí a co řešit první — cenu odečtu z realizace.',
@@ -980,7 +980,7 @@ const enServices: HomeContent['services']['items'] = [
     id: 'audit',
     slot: 'audit',
     className: 'rq-service-tile--audit',
-    flag: 'Low-risk start',
+    flag: 'Recommended start',
     price: 'from CZK 2,900',
     title: 'Website or process audit',
     result: 'Result: you know what slows things down most and what to fix first - the audit is deducted from implementation.',
@@ -1354,9 +1354,9 @@ export const homeContent = {
       ariaLabel: 'Tarify péče po spuštění',
       note: 'Nechcete paušál? Bloky hodin 5/15/40 h (od 1 100 Kč/h). Nejsem plátce DPH — ceny jsou konečné.',
       items: [
-        { title: 'Partner', price: '15 000 Kč', suffix: '/měs.', text: 'mapování procesů + prototypy automatizace/AI, 10 h, prioritní support + vše z Růstu', ctaLabel: 'Chci Partner', automationBadge: 'Automatizace' },
-        { title: 'Růst', price: '6 000 Kč', suffix: '/měs.', text: 'vše z Klidu + SEO/výkon hlídání, měsíční report, 3 h vývoje', ctaLabel: 'Chci Růst', featured: true, badge: 'Doporučeno' },
-        { title: 'Klid', price: '2 500 Kč', suffix: '/měs.', text: 'provoz, zálohy, drobné úpravy (1 h), máte komu zavolat', ctaLabel: 'Chci Klid' },
+        { title: 'Partner', price: '15 000 Kč', suffix: '/měs.', text: 'mapování procesů + prototypy automatizace/AI, 10 h, prioritní support + vše z Růstu', ctaLabel: 'Chci být partner', automationBadge: 'Automatizace' },
+        { title: 'Růst', price: '6 000 Kč', suffix: '/měs.', text: 'vše z Klidu + SEO/výkon hlídání, měsíční report, 3 h vývoje', ctaLabel: 'Chci společně růst', featured: true, badge: 'Doporučeno' },
+        { title: 'Klid', price: '2 500 Kč', suffix: '/měs.', text: 'provoz, zálohy, drobné úpravy (1 h), máte komu zavolat', ctaLabel: 'Chci mít klid' },
       ],
     },
     showcase: {
@@ -1731,9 +1731,9 @@ export const homeContent = {
       ariaLabel: 'Post-launch care plans',
       note: 'Do not want a retainer? Hour blocks 5/15/40 h (from CZK 1,100/h). I am not a VAT payer - prices are final.',
       items: [
-        { title: 'Partner', price: 'CZK 15,000', suffix: '/mo.', text: 'process mapping + automation/AI prototypes, 10 h, priority support + everything in Growth', ctaLabel: 'I want Partner', automationBadge: 'Automation' },
-        { title: 'Growth', price: 'CZK 6,000', suffix: '/mo.', text: 'everything in Calm + SEO/performance monitoring, monthly report, 3 h of development', ctaLabel: 'I want Growth', featured: true, badge: 'Recommended' },
-        { title: 'Calm', price: 'CZK 2,500', suffix: '/mo.', text: 'operation, backups, small edits (1 h), someone to call', ctaLabel: 'I want Calm' },
+        { title: 'Partner', price: 'CZK 15,000', suffix: '/mo.', text: 'process mapping + automation/AI prototypes, 10 h, priority support + everything in Growth', ctaLabel: 'I want to be a partner', automationBadge: 'Automation' },
+        { title: 'Growth', price: 'CZK 6,000', suffix: '/mo.', text: 'everything in Calm + SEO/performance monitoring, monthly report, 3 h of development', ctaLabel: 'I want to grow together', featured: true, badge: 'Recommended' },
+        { title: 'Calm', price: 'CZK 2,500', suffix: '/mo.', text: 'operation, backups, small edits (1 h), someone to call', ctaLabel: 'I want peace of mind' },
       ],
     },
     showcase: {

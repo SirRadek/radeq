@@ -2341,7 +2341,7 @@ p {
   inset: 11% 10%;
   background:
     repeating-linear-gradient(0deg, rgba(247, 244, 238, 0.48) 0 2px, transparent 2px 13px),
-    linear-gradient(90deg, rgba(199, 224, 74, 0.72) 0 16%, transparent 16% 100%);
+    linear-gradient(90deg, rgba(212, 255, 61, 0.72) 0 16%, transparent 16% 100%);
   opacity: 0.72;
 }
 

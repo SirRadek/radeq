@@ -228,8 +228,8 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
     margin: 0 auto;
     padding: clamp(1.1rem, 2.8dvh, 2rem) clamp(1rem, 2vw, 1.4rem);
     background:
-      radial-gradient(70% 80% at 8% 4%, rgba(199, 224, 74, 0.06), transparent 60%),
-      linear-gradient(135deg, #17140f 0%, #11100c 100%);
+      radial-gradient(70% 80% at 92% 4%, rgba(212, 255, 61, 0.06), transparent 60%),
+      linear-gradient(225deg, var(--rq-burgundy-strong), #231018 72%);
     border-radius: 20px;
     border: 1px solid rgba(230, 224, 212, 0.08);
     color: var(--rq-on-dark);
@@ -354,9 +354,9 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
   }
 
   .diag-tab:hover {
-    border-color: rgba(199, 224, 74, 0.4);
+    border-color: rgba(212, 255, 61, 0.4);
     color: var(--rq-on-dark);
-    background: rgba(199, 224, 74, 0.04);
+    background: rgba(212, 255, 61, 0.04);
   }
 
   .diag-tab:focus-visible {

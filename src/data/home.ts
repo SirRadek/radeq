@@ -1429,7 +1429,7 @@ export const homeContent = {
       notePhone: '+420 730 634 439',
       status: {
         sending: 'Odesílám…',
-        success: 'Děkuji za poptávku. Ozvu se co nejdřív — a moc se těším na spolupráci.',
+        success: 'Ozvu se co nejdřív. Těším se na naší spolupráci.',
         failureHtml: 'Odeslání teď neproběhlo. Napište prosím na <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a>.',
         verifyPrompt: 'Potvrďte prosím, že nejste robot, a odešlete znovu.',
       },
@@ -1806,7 +1806,7 @@ export const homeContent = {
       notePhone: '+420 730 634 439',
       status: {
         sending: 'Sending…',
-        success: 'Thank you for the enquiry. I will reply as soon as possible — and I look forward to working together.',
+        success: 'I will get back to you as soon as possible. I look forward to working with you.',
         failureHtml: 'Sending did not work right now. Please write to <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a>.',
         verifyPrompt: 'Please confirm you are not a robot and submit again.',
       },

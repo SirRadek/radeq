@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import type { Locale } from '../data/locales';
 import type { SiteContent } from '../data/siteContent';
 import { createLeadPayload, getMissingLeadFields, leadFieldLimits, validateLeadSubmission } from '../lib/leads';
@@ -10,33 +10,9 @@ import {
   type BriefSummaryLabels,
   type TerminalBrief,
 } from '../lib/terminal';
-
-type TurnstileWidgetId = string;
-
-interface TurnstileApi {
-  render(container: HTMLElement, options: TurnstileRenderOptions): TurnstileWidgetId;
-  reset(widgetId?: TurnstileWidgetId): void;
-  remove?(widgetId: TurnstileWidgetId): void;
-}
-
-interface TurnstileRenderOptions {
-  sitekey: string;
-  appearance?: 'always' | 'execute' | 'interaction-only';
-  callback(token: string): void;
-  'expired-callback'(): void;
-  'error-callback'(): void;
-}
-
-declare global {
-  interface Window {
-    turnstile?: TurnstileApi;
-  }
-}
+import { readSubmittedTurnstileToken, useTurnstileWidget } from '../lib/useTurnstileWidget';
 
 const TURNSTILE_SITE_KEY = String(import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '').trim();
-const TURNSTILE_SCRIPT_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
-
-let turnstileScriptPromise: Promise<void> | null = null;
 
 interface Props {
   locale: Locale;
@@ -55,9 +31,13 @@ export default function ContactTerminal({ locale, content }: Props) {
   const hasStarted = useRef(false);
   const [turnstileToken, setTurnstileToken] = useState('');
   const [turnstileUnavailable, setTurnstileUnavailable] = useState(false);
-  const turnstileContainerRef = useRef<HTMLDivElement | null>(null);
-  const turnstileWidgetIdRef = useRef<TurnstileWidgetId | null>(null);
   const isTurnstileEnabled = TURNSTILE_SITE_KEY.length > 0;
+  const { containerRef: turnstileContainerRef, resetWidget: resetTurnstileWidget } = useTurnstileWidget({
+    enabled: isTurnstileEnabled,
+    siteKey: TURNSTILE_SITE_KEY,
+    onToken: setTurnstileToken,
+    onUnavailable: setTurnstileUnavailable,
+  });
 
   const summaryLabels = content.fieldLabels as BriefSummaryLabels;
   const emptySummaryValue = locale === 'cs' ? 'nenastaveno' : 'not set';
@@ -65,47 +45,6 @@ export default function ContactTerminal({ locale, content }: Props) {
     () => generateBriefSummary(brief, summaryLabels, emptySummaryValue),
     [brief, emptySummaryValue, summaryLabels],
   );
-
-  useEffect(() => {
-    if (!isTurnstileEnabled) return undefined;
-
-    let isActive = true;
-
-    loadTurnstileScript()
-      .then(() => {
-        if (!isActive || turnstileWidgetIdRef.current || !turnstileContainerRef.current || !window.turnstile) {
-          return;
-        }
-
-        turnstileWidgetIdRef.current = window.turnstile.render(turnstileContainerRef.current, {
-          sitekey: TURNSTILE_SITE_KEY,
-          appearance: 'interaction-only',
-          callback: (token) => {
-            setTurnstileToken(token);
-            setTurnstileUnavailable(false);
-          },
-          'expired-callback': () => setTurnstileToken(''),
-          'error-callback': () => {
-            setTurnstileToken('');
-            setTurnstileUnavailable(true);
-          },
-        });
-      })
-      .catch(() => {
-        if (isActive) {
-          setTurnstileToken('');
-          setTurnstileUnavailable(true);
-        }
-      });
-
-    return () => {
-      isActive = false;
-      if (turnstileWidgetIdRef.current && window.turnstile?.remove) {
-        window.turnstile.remove(turnstileWidgetIdRef.current);
-      }
-      turnstileWidgetIdRef.current = null;
-    };
-  }, [isTurnstileEnabled]);
 
   function updateField(field: BriefField, value: string) {
     markStarted();
@@ -226,14 +165,6 @@ export default function ContactTerminal({ locale, content }: Props) {
     } finally {
       setIsSubmitting(false);
       resetTurnstileWidget();
-    }
-  }
-
-  function resetTurnstileWidget(): void {
-    if (!isTurnstileEnabled) return;
-    setTurnstileToken('');
-    if (turnstileWidgetIdRef.current && window.turnstile) {
-      window.turnstile.reset(turnstileWidgetIdRef.current);
     }
   }
 
@@ -475,46 +406,4 @@ function TextField({
 
 function fieldLabel(field: BriefField, content: SiteContent['terminal']): string {
   return content.fieldLabels[field] ?? field;
-}
-
-function readSubmittedTurnstileToken(stateToken: string, container: HTMLElement | null): string {
-  return (
-    stateToken.trim() ||
-    container?.querySelector<HTMLInputElement>('input[name="cf-turnstile-response"]')?.value.trim() ||
-    ''
-  );
-}
-
-function loadTurnstileScript(): Promise<void> {
-  if (typeof window === 'undefined') return Promise.resolve();
-  if (window.turnstile) return Promise.resolve();
-
-  if (!turnstileScriptPromise) {
-    turnstileScriptPromise = new Promise((resolve, reject) => {
-      const existingScript = document.querySelector<HTMLScriptElement>(`script[src="${TURNSTILE_SCRIPT_SRC}"]`);
-
-      if (existingScript) {
-        existingScript.addEventListener('load', () => resolve(), { once: true });
-        existingScript.addEventListener('error', () => reject(new Error('Turnstile failed to load.')), { once: true });
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.src = TURNSTILE_SCRIPT_SRC;
-      script.async = true;
-      script.defer = true;
-      script.addEventListener('load', () => resolve(), { once: true });
-      script.addEventListener(
-        'error',
-        () => {
-          turnstileScriptPromise = null;
-          reject(new Error('Turnstile failed to load.'));
-        },
-        { once: true },
-      );
-      document.head.append(script);
-    });
-  }
-
-  return turnstileScriptPromise;
 }

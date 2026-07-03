@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { AuditContent } from '../data/audit';
 import type { Locale } from '../data/locales';
+import { readSubmittedTurnstileToken, useTurnstileWidget } from '../lib/useTurnstileWidget';
 
 type MeasureStatus =
   | 'ok'
@@ -12,27 +13,6 @@ type MeasureStatus =
   | 'verification_failed';
 type StatusState = MeasureStatus | 'idle' | 'loading';
 type AutomationAnswer = 'yes' | 'no';
-type TurnstileWidgetId = string;
-
-interface TurnstileApi {
-  render(container: HTMLElement, options: TurnstileRenderOptions): TurnstileWidgetId;
-  reset(widgetId?: TurnstileWidgetId): void;
-  remove?(widgetId: TurnstileWidgetId): void;
-}
-
-interface TurnstileRenderOptions {
-  sitekey: string;
-  appearance?: 'always' | 'execute' | 'interaction-only';
-  callback(token: string): void;
-  'expired-callback'(): void;
-  'error-callback'(): void;
-}
-
-declare global {
-  interface Window {
-    turnstile?: TurnstileApi;
-  }
-}
 
 interface MeasureFinding {
   signal: string;
@@ -54,9 +34,6 @@ interface Props {
 }
 
 const TURNSTILE_SITE_KEY = String(import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '').trim();
-const TURNSTILE_SCRIPT_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
-
-let turnstileScriptPromise: Promise<void> | null = null;
 
 export default function AuditTool({ locale, content, measurePath, contactHref }: Props) {
   const [url, setUrl] = useState('');
@@ -66,9 +43,18 @@ export default function AuditTool({ locale, content, measurePath, contactHref }:
   const [inlineStatus, setInlineStatus] = useState<StatusState>('idle');
   const [turnstileToken, setTurnstileToken] = useState('');
   const [automationAnswer, setAutomationAnswer] = useState<AutomationAnswer>('no');
-  const turnstileContainerRef = useRef<HTMLDivElement | null>(null);
-  const turnstileWidgetIdRef = useRef<TurnstileWidgetId | null>(null);
   const isTurnstileEnabled = TURNSTILE_SITE_KEY.length > 0;
+  const { containerRef: turnstileContainerRef, resetWidget: resetTurnstileWidget } = useTurnstileWidget({
+    enabled: isTurnstileEnabled,
+    siteKey: TURNSTILE_SITE_KEY,
+    onToken: (token) => {
+      setTurnstileToken(token);
+      if (!token) return;
+
+      setInlineStatus('idle');
+      setStatusMessage((current) => (current === content.verificationPrompt ? '' : current));
+    },
+  });
 
   const ctaHref = useMemo(() => {
     const measuredUrl = result && result.status !== 'invalid_url' ? result.measuredUrl : '';
@@ -83,49 +69,11 @@ export default function AuditTool({ locale, content, measurePath, contactHref }:
     statusState === 'rate_limited' ||
     statusState === 'verification_failed';
 
-  useEffect(() => {
-    if (!isTurnstileEnabled) return undefined;
-
-    let isActive = true;
-
-    loadTurnstileScript()
-      .then(() => {
-        if (!isActive || turnstileWidgetIdRef.current || !turnstileContainerRef.current || !window.turnstile) {
-          return;
-        }
-
-        turnstileWidgetIdRef.current = window.turnstile.render(turnstileContainerRef.current, {
-          sitekey: TURNSTILE_SITE_KEY,
-          appearance: 'interaction-only',
-          callback: (token) => {
-            setTurnstileToken(token);
-            setInlineStatus('idle');
-            setStatusMessage((current) => (current === content.verificationPrompt ? '' : current));
-          },
-          'expired-callback': () => setTurnstileToken(''),
-          'error-callback': () => setTurnstileToken(''),
-        });
-      })
-      .catch(() => {
-        if (isActive) {
-          setTurnstileToken('');
-        }
-      });
-
-    return () => {
-      isActive = false;
-      if (turnstileWidgetIdRef.current && window.turnstile?.remove) {
-        window.turnstile.remove(turnstileWidgetIdRef.current);
-      }
-      turnstileWidgetIdRef.current = null;
-    };
-  }, [content.verificationPrompt, isTurnstileEnabled]);
-
   async function submitMeasurement(event: { preventDefault: () => void }) {
     event.preventDefault();
     if (isSubmitting) return;
 
-    const submittedTurnstileToken = readTurnstileToken(turnstileToken, turnstileContainerRef.current);
+    const submittedTurnstileToken = readSubmittedTurnstileToken(turnstileToken, turnstileContainerRef.current);
     if (isTurnstileEnabled && !submittedTurnstileToken) {
       setResult(null);
       setInlineStatus('verification_failed');
@@ -174,16 +122,6 @@ export default function AuditTool({ locale, content, measurePath, contactHref }:
     } finally {
       setIsSubmitting(false);
       resetTurnstileWidget();
-    }
-  }
-
-  function resetTurnstileWidget(): void {
-    if (!isTurnstileEnabled) return;
-
-    setTurnstileToken('');
-
-    if (turnstileWidgetIdRef.current && window.turnstile) {
-      window.turnstile.reset(turnstileWidgetIdRef.current);
     }
   }
 
@@ -357,46 +295,4 @@ function isMeasureStatus(value: unknown): value is MeasureStatus {
 
 function isObjectRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function readTurnstileToken(stateToken: string, container: HTMLElement | null): string {
-  return (
-    stateToken.trim() ||
-    container?.querySelector<HTMLInputElement>('input[name="cf-turnstile-response"]')?.value.trim() ||
-    ''
-  );
-}
-
-function loadTurnstileScript(): Promise<void> {
-  if (typeof window === 'undefined') return Promise.resolve();
-  if (window.turnstile) return Promise.resolve();
-
-  if (!turnstileScriptPromise) {
-    turnstileScriptPromise = new Promise((resolve, reject) => {
-      const existingScript = document.querySelector<HTMLScriptElement>(`script[src="${TURNSTILE_SCRIPT_SRC}"]`);
-
-      if (existingScript) {
-        existingScript.addEventListener('load', () => resolve(), { once: true });
-        existingScript.addEventListener('error', () => reject(new Error('Turnstile failed to load.')), { once: true });
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.src = TURNSTILE_SCRIPT_SRC;
-      script.async = true;
-      script.defer = true;
-      script.addEventListener('load', () => resolve(), { once: true });
-      script.addEventListener(
-        'error',
-        () => {
-          turnstileScriptPromise = null;
-          reject(new Error('Turnstile failed to load.'));
-        },
-        { once: true },
-      );
-      document.head.append(script);
-    });
-  }
-
-  return turnstileScriptPromise;
 }

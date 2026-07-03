@@ -147,6 +147,7 @@ export interface SiteContent {
     verificationLabel: string;
     verificationPrompt: string;
     verificationUnavailable: string;
+    turnstileNote: string;
     storedPrefix: string;
     missingRequiredPrefix: string;
     requiredNote: string;
@@ -497,6 +498,7 @@ export const siteContent = {
       verificationLabel: 'Ověření, že nejste robot',
       verificationPrompt: 'Potvrďte prosím, že nejste robot, a odešlete znovu.',
       verificationUnavailable: 'Ověření se nepodařilo načíst (může ho blokovat rozšíření v prohlížeči). Napište mi prosím přímo na siroky@radeq.cz.',
+      turnstileNote: 'Formulář chrání Cloudflare Turnstile — většinou bez klikání, jen tiše na pozadí.',
       storedPrefix: 'Poptávka uložena',
       missingRequiredPrefix: 'Doplňte prosím',
       requiredNote: 'Pole označená jako povinná je potřeba vyplnit. Ostatní údaje můžete doplnit později.',
@@ -883,6 +885,7 @@ export const siteContent = {
       verificationLabel: 'Verify you are not a robot',
       verificationPrompt: 'Please confirm you are not a robot and submit again.',
       verificationUnavailable: 'Verification could not load (a browser extension may be blocking it). Please email me directly at siroky@radeq.cz.',
+      turnstileNote: 'The form is protected by Cloudflare Turnstile — usually silent, no clicking needed.',
       storedPrefix: 'Request stored',
       missingRequiredPrefix: 'Please add',
       requiredNote: 'Fields marked as required must be completed. The remaining details can be added later.',

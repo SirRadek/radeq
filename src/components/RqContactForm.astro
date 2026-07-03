@@ -17,6 +17,9 @@ const resolve = (href: string) => {
 const turnstileSiteKey = (import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '').toString().trim();
 const verifyLabel = lang === 'en' ? 'Verify you are not a robot' : 'Ověření, že nejste robot';
 const doneTitle = lang === 'en' ? 'Enquiry sent ✓' : 'Poptávka odeslána ✓';
+const turnstileNote = lang === 'en'
+  ? 'The form is protected by Cloudflare Turnstile — usually silent, no clicking needed.'
+  : 'Formulář chrání Cloudflare Turnstile — většinou bez klikání, jen tiše na pozadí.';
 ---
 
 <form class="rq-contact-form" method="post" action={resolve('/api/leads')} id="rq-lead-form">
@@ -62,7 +65,10 @@ const doneTitle = lang === 'en' ? 'Enquiry sent ✓' : 'Poptávka odeslána ✓'
     <label>{content.fields.honeypot}<input type="text" name="honeypot" tabindex="-1" autocomplete="off" /></label>
   </div>
   {turnstileSiteKey ? (
-    <div class="rq-form-field rq-turnstile" id="rq-lead-turnstile" aria-label={verifyLabel}></div>
+    <div class="rq-form-field rq-turnstile-group">
+      <div class="rq-turnstile" id="rq-lead-turnstile" aria-label={verifyLabel}></div>
+      <p class="rq-turnstile-note">{turnstileNote}</p>
+    </div>
   ) : null}
   <button class="rq-btn rq-btn--primary" type="submit">{content.submitLabel}</button>
   <p class="rq-form-status" id="rq-lead-status" role="status" aria-live="polite"></p>
@@ -136,6 +142,7 @@ const doneTitle = lang === 'en' ? 'Enquiry sent ✓' : 'Poptávka odeslána ✓'
           }
           turnstileWidgetId = window.turnstile.render(turnstileContainer, {
             sitekey: turnstileSiteKey,
+            appearance: "interaction-only",
             callback: (t) => {
               turnstileToken = t;
               turnstileUnavailable = false;

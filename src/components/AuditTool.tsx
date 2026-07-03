@@ -22,6 +22,7 @@ interface TurnstileApi {
 
 interface TurnstileRenderOptions {
   sitekey: string;
+  appearance?: 'always' | 'execute' | 'interaction-only';
   callback(token: string): void;
   'expired-callback'(): void;
   'error-callback'(): void;
@@ -95,6 +96,7 @@ export default function AuditTool({ locale, content, measurePath, contactHref }:
 
         turnstileWidgetIdRef.current = window.turnstile.render(turnstileContainerRef.current, {
           sitekey: TURNSTILE_SITE_KEY,
+          appearance: 'interaction-only',
           callback: (token) => {
             setTurnstileToken(token);
             setInlineStatus('idle');
@@ -208,11 +210,14 @@ export default function AuditTool({ locale, content, measurePath, contactHref }:
         <p className="audit-tool__consent">{content.consent}</p>
 
         {isTurnstileEnabled ? (
-          <div
-            className="audit-tool__turnstile"
-            ref={turnstileContainerRef}
-            aria-label={content.verificationLabel}
-          />
+          <div className="audit-tool__turnstile-group">
+            <div
+              className="audit-tool__turnstile"
+              ref={turnstileContainerRef}
+              aria-label={content.verificationLabel}
+            />
+            <p className="audit-tool__turnstile-note">{content.turnstileNote}</p>
+          </div>
         ) : null}
 
         <div className="audit-tool__actions">

@@ -19,6 +19,7 @@ export interface AuditContent {
     consent: string;
     verificationLabel: string;
     verificationPrompt: string;
+    turnstileNote: string;
     submitLabel: string;
     loadingLabel: string;
     measuredLabel: string;
@@ -63,6 +64,7 @@ export const auditContent = {
       consent: 'Změřím jen adresu, kterou zadáte, přes oficiální Google API.',
       verificationLabel: 'Ověření, že nejste robot',
       verificationPrompt: 'Potvrďte prosím, že nejste robot.',
+      turnstileNote: 'Formulář chrání Cloudflare Turnstile — většinou bez klikání, jen tiše na pozadí.',
       submitLabel: 'Změřit web',
       loadingLabel: 'měřím… (Google PSI)',
       measuredLabel: 'Měřená adresa',
@@ -114,6 +116,7 @@ export const auditContent = {
       consent: 'I measure only the address you enter, through the official Google API.',
       verificationLabel: 'Verification that you are not a robot',
       verificationPrompt: 'Please confirm that you are not a robot.',
+      turnstileNote: 'The form is protected by Cloudflare Turnstile — usually silent, no clicking needed.',
       submitLabel: 'Measure website',
       loadingLabel: 'measuring… (Google PSI)',
       measuredLabel: 'Measured address',

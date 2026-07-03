@@ -210,11 +210,23 @@ const measurePath = resolve('/api/measure');
     line-height: 1.55;
   }
 
+  .audit-tool__turnstile-group {
+    display: grid;
+    gap: 0.4rem;
+  }
+
   .audit-tool__turnstile {
     display: flex;
     align-items: center;
-    min-height: 65px;
     overflow: hidden;
+  }
+
+  .audit-tool__turnstile-note {
+    margin: 0;
+    color: #4F4942;
+    font-family: var(--rq-mono), ui-monospace, monospace;
+    font-size: 0.72rem;
+    line-height: 1.5;
   }
 
   .audit-tool__actions {

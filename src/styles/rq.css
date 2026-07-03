@@ -1455,6 +1455,14 @@ p {
   min-width: 0;
 }
 
+.rq-turnstile-note {
+  margin: 0;
+  color: var(--rq-ink-2);
+  font-family: var(--rq-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
 .rq-form-field label {
   color: var(--rq-ink);
   font-family: Inter, system-ui, sans-serif;

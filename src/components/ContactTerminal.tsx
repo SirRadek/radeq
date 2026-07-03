@@ -21,6 +21,7 @@ interface TurnstileApi {
 
 interface TurnstileRenderOptions {
   sitekey: string;
+  appearance?: 'always' | 'execute' | 'interaction-only';
   callback(token: string): void;
   'expired-callback'(): void;
   'error-callback'(): void;
@@ -78,6 +79,7 @@ export default function ContactTerminal({ locale, content }: Props) {
 
         turnstileWidgetIdRef.current = window.turnstile.render(turnstileContainerRef.current, {
           sitekey: TURNSTILE_SITE_KEY,
+          appearance: 'interaction-only',
           callback: (token) => {
             setTurnstileToken(token);
             setTurnstileUnavailable(false);
@@ -372,11 +374,14 @@ export default function ContactTerminal({ locale, content }: Props) {
           </details>
 
           {isTurnstileEnabled ? (
-            <div
-              className="brief-form__turnstile"
-              ref={turnstileContainerRef}
-              aria-label={content.verificationLabel}
-            />
+            <div className="brief-form__turnstile-group">
+              <div
+                className="brief-form__turnstile"
+                ref={turnstileContainerRef}
+                aria-label={content.verificationLabel}
+              />
+              <p className="brief-form__turnstile-note">{content.turnstileNote}</p>
+            </div>
           ) : null}
 
           <div className="brief-actions">

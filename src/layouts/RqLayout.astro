@@ -1,7 +1,101 @@
 ---
 import type { Locale } from '../data/locales';
 import MeasurementTracker from '../components/MeasurementTracker';
-import '../styles/rq.css';
+import rqCssHref from '../styles/rq.css?url';
+
+// Above-the-fold critical CSS (verbatim copy of rq.css:1-134 — tokens, reset,
+// base typography, .rq-section/.rq-bleed). Inlined so first paint never waits
+// on the full stylesheet; the deferred load below re-applies it identically.
+const criticalCss = `:root {
+  font-size: clamp(1rem, min(calc(1rem + (100vw - 1920px) / 120), calc(1rem + (100vh - 1080px) / 67.5)), 2rem);
+  --rq-bg: #F7F4EE;
+  --rq-bg-sunken: #EFEAE0;
+  --rq-surface: #FFFFFF;
+  --rq-ink: #1C1A17;
+  --rq-ink-2: #4F4942;
+  --rq-line: #E6E0D4;
+  --rq-burgundy: #7A1F2B;
+  --rq-burgundy-strong: #5E1622;
+  --rq-burgundy-tint: #F3E7E9;
+  --rq-carbon: #1A1611;
+  --rq-carbon-2: #242018;
+  --rq-on-dark: #F1EDE4;
+  --rq-on-dark-2: #C9BFB1;
+  --rq-maxw: 80rem;
+  --rq-maxw-wide: 90rem;
+  --rq-gutter: clamp(1rem, 3vw, 4rem);
+  --rq-page-w: min(calc(100% - 2 * var(--rq-gutter)), clamp(var(--rq-maxw), 72vw, 86.4rem));
+  --rq-page-w-wide: min(calc(100% - 2 * var(--rq-gutter)), var(--rq-maxw-wide));
+  --rq-pad: clamp(1.5rem, 4.5vh, 4.25rem);
+  --rq-r: 14px;
+  --rq-r-pill: 999px;
+  --rq-ease: cubic-bezier(.16, 1, .3, 1);
+  --rq-display: "Plus Jakarta Sans";
+  --rq-body: "Inter";
+  --rq-mono: "JetBrains Mono";
+  --rq-header-height: 4.6rem;
+}
+* { box-sizing: border-box; }
+html {
+  background: var(--rq-carbon);
+  scroll-padding-top: calc(var(--rq-header-height) + 0.5rem);
+}
+body {
+  background: var(--rq-bg) !important;
+  overflow-x: clip;
+}
+body::before, body::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  z-index: 15;
+  width: 100%;
+  height: clamp(2rem, 4vw, 2.625rem);
+  pointer-events: none;
+}
+body::before {
+  top: var(--rq-header-height, 4.6rem);
+  background: linear-gradient(180deg, var(--rq-bg) 0%, rgba(247, 244, 238, 0) 100%);
+}
+body::after {
+  bottom: 0;
+  background: linear-gradient(0deg, var(--rq-bg) 0%, rgba(247, 244, 238, 0) 100%);
+  transition: opacity 520ms var(--rq-ease);
+}
+@media (max-width: 860px) {
+  body::after { display: none; }
+}
+body {
+  margin: 0;
+  color: var(--rq-ink);
+  font-family: var(--rq-body), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button, input, textarea, select { font: inherit; }
+main { isolation: isolate; }
+h1, h2, h3 {
+  margin: 0;
+  color: var(--rq-ink);
+  font-family: var(--rq-display), var(--rq-body), system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+}
+p { margin: 0; }
+.rq-section {
+  width: var(--rq-page-w);
+  margin-inline: auto;
+  padding-block: var(--rq-pad);
+}
+.rq-bleed {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+}`;
 
 interface Props {
   title: string;
@@ -27,6 +121,10 @@ const defaultUrl = lang === 'cs' ? canonicalUrl : alternateUrl;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <style is:global set:html={criticalCss}></style>
+    <link rel="preload" href={rqCssHref} as="style" />
+    <link rel="stylesheet" href={rqCssHref} media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href={rqCssHref} /></noscript>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">

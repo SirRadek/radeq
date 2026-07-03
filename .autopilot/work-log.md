@@ -1,5 +1,18 @@
 # Radeq.cz Website Work Log
 
+## 2026-07-02 Mobile performance follow-up: the CSS diet (render-blocking CSS 77KB → 3.9KB)
+
+Owner asked to also do the CSS diet deferred from the earlier mobile-perf pass (score was already ~95-97 at that point, so this was framed as optional polish). Implemented the SAFE variant recommended by the brainstorm's skeptic lens — not a manual per-page CSS split (the agents' own risk note: "high maintenance burden... must test all page types"), but inline-critical + defer-the-rest, which changes ZERO selectors/rules (no risk of breaking any of the ~30 pages sharing rq.css):
+
+- `RqLayout.astro`: `import '../styles/rq.css'` (which Astro auto-injects as a blocking `<link>`) replaced with `import rqCssHref from '../styles/rq.css?url'` (Vite's `?url` suffix returns the built, hashed URL as a string instead of auto-injecting it).
+- Added a `criticalCss` template-literal constant — a verbatim copy of `rq.css` lines 1-134 (`:root` tokens, `*`/`html`/`body` reset, base typography, `.rq-section`/`.rq-bleed`) — inlined via `<style is:global set:html={criticalCss}>` in `<head>`, so first paint never waits on the network for the base styles every page needs.
+- The full `rq.css` (79KB) now loads via the standard preload+swap trick: `<link rel="preload" as="style">` + `<link rel="stylesheet" media="print" onload="this.media='all'">` + `<noscript>` fallback for JS-disabled visitors.
+- Applies to every page using `RqLayout` (home, /sluzby, /audit, /kontakt, /ukazky/*, EN mirrors — verified the pattern present on `/sluzby` and `/en/` too). `LegacyLayout`/`DemoLayout` use a separate `global.css`, untouched.
+
+Verified: build clean (30 pages), 78/78 tests, deployed, then 3 clean PSI mobile re-runs (no cache-buster, CF edge already serving new deploy): **95, 95, 95** (FCP/LCP/SI all 2.4s, CLS 0.001 — negligible, no `layout-shift-elements` reported, TBT still 0ms). `render-blocking-resources` audit confirms the win: dropped from the previous 77KB (RqLayout.css 17.6KB + RqHomePage.css 59.6KB) to just 3.9KB (an Astro-auto-generated component CSS chunk from RqHomePage/RqProblemDiagnostic's own `<style>` blocks — not manually imported, harder to defer the same way, low remaining reward).
+
+HONEST RESULT: the score itself did NOT move further (stayed ~95, same ballpark as the previous batch's 95/97/95) — Lighthouse scores compress near the ceiling, and the earlier H1-reveal + font-split + idle-hydration fixes had already resolved the actual first-paint bottleneck. The CSS diet is a real, verified technical improvement (77KB removed from the critical rendering path) that just wasn't the thing still holding the score down. Worth having done for correctness/robustness (a heavier page could regress into that blocking CSS mattering again), but don't expect it alone to move a score number further once TBT/CLS/FCP/LCP are already this good.
+
 ## 2026-07-02 Mobile performance: PSI score 81 → ~96 (median of 3 clean runs)
 
 Real Google PSI mobile measurement showed score 81 — TBT 0ms/CLS 0/TTFB 5ms already perfect, the problem was pure first-paint delay (FCP 3.1s, LCP 4.1s). Root causes (confirmed from the actual PSI JSON, not guessed): (1) the hero H1 (the LCP element) carried `data-rq-reveal` — a JS/IntersectionObserver-driven fade-in that hid it with a 1234ms "element render delay" before it became visible; (2) all three Google fonts (Inter, Plus Jakarta Sans, JetBrains Mono) loaded as one render-blocking `<link rel=stylesheet>`, even though JetBrains Mono is only used for small mono labels, not the hero.

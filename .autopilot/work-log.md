@@ -1,5 +1,18 @@
 # Radeq.cz Website Work Log
 
+## 2026-07-02 Mobile performance: PSI score 81 → ~96 (median of 3 clean runs)
+
+Real Google PSI mobile measurement showed score 81 — TBT 0ms/CLS 0/TTFB 5ms already perfect, the problem was pure first-paint delay (FCP 3.1s, LCP 4.1s). Root causes (confirmed from the actual PSI JSON, not guessed): (1) the hero H1 (the LCP element) carried `data-rq-reveal` — a JS/IntersectionObserver-driven fade-in that hid it with a 1234ms "element render delay" before it became visible; (2) all three Google fonts (Inter, Plus Jakarta Sans, JetBrains Mono) loaded as one render-blocking `<link rel=stylesheet>`, even though JetBrains Mono is only used for small mono labels, not the hero.
+
+3-lens haiku brainstorm (LCP specialist / asset-diet specialist / skeptic to rule out cargo-cult fixes) converged on a small, safe fix set:
+- `RqHomePage.astro`: removed `data-rq-reveal`/`style="--rq-i:1"` from the hero `<h1>` — it now renders immediately, no fade-in, no hidden-then-observed delay. Other hero elements (eyebrow, subtext, CTAs) keep their staggered reveal.
+- `RqLayout.astro` + `LegacyLayout.astro` + `DemoLayout.astro`: split the single Google Fonts link into a synchronous Inter+Plus Jakarta Sans link (needed above the fold) and a deferred JetBrains Mono link (`media="print" onload="this.media='all'"` + `<noscript>` fallback) — mono is no longer render-blocking.
+- Same three layouts: `<MeasurementTracker client:load>` → `client:idle` — the 35KB React runtime hydrates after the page is idle instead of blocking on load.
+
+Verified: 78/78 tests, build 30 pages, all three fixes confirmed present in `dist/`. Deployed, then re-measured PSI mobile 3x clean (no cache-buster, after the CF edge had time to serve the new deploy): **95, 97, 95** — FCP/LCP/SI all landed at 2.1-2.4s (down from 3.1s/4.1s/3.5s). (One earlier cache-busted run showed a misleading 69/6.0s LCP with a missing `largest-contentful-paint-element` audit detail — a flaky/noisy single trace, not a regression; median-of-3 is the trustworthy read, matching the skeptic lens's own advice to not trust a single PSI run.)
+
+NOT DONE (deferred, higher-risk): the CSS diet (splitting the 59.6KB homepage CSS bundle that still includes unused demo/ukazky/audit styles) — the brainstorm's medium/high-effort fix. Current score is already ~95-97 so this is now optional polish, not urgent; revisit only if score regresses or the owner wants to push further. PSI measurement recipe: `.dev.vars` has `PSI_API_KEY`; `curl "https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=<url>&strategy=mobile&category=performance&key=$KEY"` — always run 3x and use the median, and be aware CF edge-cache can serve a stale pre-deploy HTML for a few minutes (avoid `?cb=` cache-busters for perf measurement — they add real network variance of their own; wait a few minutes after deploy instead).
+
 ## 2026-07-02 Prices rounded to whole numbers (drop the psychological 900-ending)
 
 Owner: "každý má 999 všude" — align all prices to whole numbers. Runtime rounded across `home.ts`, `audit.ts`, `siteContent.ts`, `sluzby` (CS+EN): **9 900 → 10 000**, **19 900 → 20 000**, **audit 2 900 → 3 000** (CS space + EN comma formats). Already-round prices (6 000 / 12 000 / 15 000 / 25 000 care & realizace, care 2 500) unchanged. Audit governance: the lock (`offer_positioning_conversion.yaml`) active offer-name price updated to "od 3 000 Kč" (framing unchanged — still an AUDIT, not a fix); the historical "lowered 4 900 → 2 900 on 2026-07-01" record kept. Other descriptive docs (architecture/master-plan/output) may still cite 2 900 — historical, low-priority sweep. 78/78 tests.

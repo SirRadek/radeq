@@ -198,8 +198,8 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
     --rq-burgundy: #7A1F2B;
     --rq-burgundy-strong: #5E1622;
     --rq-burgundy-tint: #F3E7E9;
-    --rq-lime: #D4FF3D;
-    --rq-lime-ink: #2A3508;
+    --rq-lime: #1AD9C0;
+    --rq-lime-ink: #125C52;
     --rq-carbon: #1A1611;
     --rq-carbon-2: #242018;
     --rq-on-dark: #F1EDE4;
@@ -224,10 +224,10 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
     position: relative;
     width: 100vw;
     margin-inline: calc(50% - 50vw);
-    padding-block: clamp(1.6rem, 4vh, 3.25rem);
+    padding-block: var(--rq-pad);
     padding-inline: max(clamp(1rem, 2vw, 1.4rem), calc((100% - var(--rq-page-w)) / 2));
     background:
-      radial-gradient(70% 80% at 92% 4%, rgba(212, 255, 61, 0.06), transparent 60%),
+      radial-gradient(70% 80% at 92% 4%, rgba(26, 217, 192, 0.06), transparent 60%),
       linear-gradient(225deg, var(--rq-burgundy-strong), #231018 72%);
     border-radius: 0;
     color: var(--rq-on-dark);
@@ -283,7 +283,7 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
 
   .section-title {
     font-family: var(--font-display);
-    font-size: clamp(1.8rem, 5.2dvh, 2.65rem);
+    font-size: clamp(1.8rem, 4.5vw, 2.65rem);
     font-weight: 800;
     line-height: 1.03;
     color: var(--rq-on-dark);
@@ -374,9 +374,9 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
   }
 
   .diag-tab:hover {
-    border-color: rgba(212, 255, 61, 0.4);
+    border-color: rgba(26, 217, 192, 0.4);
     color: var(--rq-on-dark);
-    background: rgba(212, 255, 61, 0.04);
+    background: rgba(26, 217, 192, 0.04);
   }
 
   .diag-tab:focus-visible {
@@ -484,7 +484,7 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
 
   .panel-title {
     font-family: var(--font-display);
-    font-size: clamp(1.45rem, 4dvh, 2rem);
+    font-size: clamp(1.3rem, 3.5vw, 1.85rem);
     font-weight: 800;
     line-height: 1.05;
     color: var(--rq-ink);
@@ -522,9 +522,9 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
   }
 
   .severity-tag.medium {
-    background: #F0F5D4;
+    background: color-mix(in srgb, var(--rq-lime) 12%, white);
     color: var(--rq-lime-ink);
-    border: 1px solid rgba(42, 53, 8, 0.16);
+    border: 1px solid color-mix(in srgb, var(--rq-lime) 28%, transparent);
   }
 
   .severity-dot {
@@ -730,7 +730,8 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
   /* Responsiveness */
   @media (max-width: 960px) {
     .rq-diagnostic-section {
-      padding: clamp(1rem, 2.8dvh, 1.7rem) 1rem;
+      padding-block: var(--rq-pad);
+      padding-inline: 1rem;
     }
 
     .panel-header {
@@ -808,9 +809,14 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
       if (!(root instanceof HTMLElement) || root.dataset.rqDiagnosticTabs === 'true') return;
       root.dataset.rqDiagnosticTabs = 'true';
 
-      const tabs = Array.from(root.querySelectorAll('.diag-tab')).filter((tab) => tab instanceof HTMLButtonElement);
-      const panels = Array.from(root.querySelectorAll('.diag-panel')).filter((panel) => panel instanceof HTMLElement);
+      const tabs = Array.from(root.querySelectorAll('.diag-tab')).filter(
+        (tab): tab is HTMLButtonElement => tab instanceof HTMLButtonElement,
+      );
+      const panels = Array.from(root.querySelectorAll('.diag-panel')).filter(
+        (panel): panel is HTMLElement => panel instanceof HTMLElement,
+      );
       const tabsContainer = root.querySelector('.diag-tabs');
+      const panelWrapper = root.querySelector('.diag-panel-wrapper');
       const auditPreview = root.querySelector('[data-rq-audit-preview]');
       const auditPreviewEligibleIndexes = new Set(
         (auditPreview?.getAttribute('data-rq-eligible-indexes') || '')
@@ -822,23 +828,25 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
       const total = Math.min(tabs.length, panels.length);
 
       if (!(tabsContainer instanceof HTMLElement) || total === 0) return;
+      const tabsScroller = tabsContainer;
 
       let currentIndex = Math.max(0, tabs.findIndex((tab) => tab.classList.contains('active')));
       let setWidth = 0;
 
-      function normalizeIndex(index) {
+      function normalizeIndex(index: number) {
         return (index + total) % total;
       }
 
       // Vycentruj NEJBLIŽŠÍ instanci daného indexu (klon i skutečný tab) —
       // takže z 1. na 21. je to jeden krok doleva, žádné přetáčení přes celý pás.
-      function centerTab(index, smooth) {
-        const instances = Array.from(tabsContainer.querySelectorAll('.diag-tab')).filter(
-          (el) => el instanceof HTMLElement && Number.parseInt(el.dataset.index ?? '-1', 10) === index,
+      function centerTab(index: number, smooth: boolean) {
+        const instances = Array.from(tabsScroller.querySelectorAll('.diag-tab')).filter(
+          (el): el is HTMLElement =>
+            el instanceof HTMLElement && Number.parseInt(el.dataset.index ?? '-1', 10) === index,
         );
         if (instances.length === 0) return;
 
-        const viewportCenter = tabsContainer.scrollLeft + tabsContainer.clientWidth / 2;
+        const viewportCenter = tabsScroller.scrollLeft + tabsScroller.clientWidth / 2;
         let best = instances[0];
         let bestDistance = Infinity;
         instances.forEach((el) => {
@@ -849,37 +857,37 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
           }
         });
 
-        let target = best.offsetLeft + best.offsetWidth / 2 - tabsContainer.clientWidth / 2;
+        let target = best.offsetLeft + best.offsetWidth / 2 - tabsScroller.clientWidth / 2;
 
         // Drž cíl v prostředním pásmu: případný posun o šířku sady je neviditelný
         // (obsah je identický), takže smooth animace nikdy nekříží teleport.
         if (setWidth > 0) {
           if (target < setWidth * 0.25) {
-            tabsContainer.scrollLeft += setWidth;
+            tabsScroller.scrollLeft += setWidth;
             target += setWidth;
           } else if (target > setWidth * 1.75) {
-            tabsContainer.scrollLeft -= setWidth;
+            tabsScroller.scrollLeft -= setWidth;
             target -= setWidth;
           }
         }
 
-        tabsContainer.scrollTo({ left: target, behavior: smooth ? 'smooth' : 'auto' });
+        tabsScroller.scrollTo({ left: target, behavior: smooth ? 'smooth' : 'auto' });
       }
 
-      function updateCounters(index) {
+      function updateCounters(index: number) {
         counterDisplays.forEach((counter) => {
           counter.textContent = String(index + 1);
         });
       }
 
-      function updateAuditPreview(index) {
+      function updateAuditPreview(index: number) {
         if (!(auditPreview instanceof HTMLElement)) return;
         const isEligible = auditPreviewEligibleIndexes.has(index);
         auditPreview.hidden = !isEligible;
         auditPreview.setAttribute('aria-hidden', isEligible ? 'false' : 'true');
       }
 
-      function setActive(nextIndex, options = {}) {
+      function setActive(nextIndex: number, options: { scroll?: boolean; focusTab?: boolean } = {}) {
         const index = normalizeIndex(nextIndex);
         currentIndex = index;
 
@@ -934,7 +942,43 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
         });
       });
 
-      tabsContainer.addEventListener('keydown', (event) => {
+      if (panelWrapper instanceof HTMLElement) {
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchStartTime = 0;
+
+        panelWrapper.addEventListener(
+          'touchstart',
+          (event) => {
+            const touch = event.changedTouches[0];
+            if (!touch) return;
+
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            touchStartTime = Date.now();
+          },
+          { passive: true },
+        );
+
+        panelWrapper.addEventListener(
+          'touchend',
+          (event) => {
+            const touch = event.changedTouches[0];
+            if (!touch) return;
+
+            const diffX = touch.clientX - touchStartX;
+            const diffY = touch.clientY - touchStartY;
+            const duration = Date.now() - touchStartTime;
+
+            if (Math.abs(diffX) > 50 && Math.abs(diffY) < 60 && duration < 400) {
+              setActive(currentIndex + (diffX < 0 ? 1 : -1));
+            }
+          },
+          { passive: true },
+        );
+      }
+
+      tabsScroller.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowRight') {
           event.preventDefault();
           setActive(currentIndex + 1, { focusTab: true });
@@ -954,9 +998,9 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
       // scroll v prostředním setu (teleport o šířku setu je díky identickému
       // layoutu neviditelný). Klony jsou jen vizuální/klikací — mimo tablist.
       if (total > 1) {
-        const makeClones = () =>
+        const makeClones = (): HTMLButtonElement[] =>
           tabs.map((tab) => {
-            const clone = tab.cloneNode(true);
+            const clone = tab.cloneNode(true) as HTMLButtonElement;
             clone.classList.remove('active');
             clone.classList.add('diag-tab--clone');
             clone.setAttribute('role', 'presentation');
@@ -974,8 +1018,8 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
 
         const before = makeClones();
         const after = makeClones();
-        before.forEach((clone) => tabsContainer.insertBefore(clone, tabs[0]));
-        after.forEach((clone) => tabsContainer.appendChild(clone));
+        before.forEach((clone) => tabsScroller.insertBefore(clone, tabs[0]));
+        after.forEach((clone) => tabsScroller.appendChild(clone));
 
         const recenter = () => {
           setWidth = tabs[0].offsetLeft - before[0].offsetLeft;
@@ -985,14 +1029,14 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
         recenter();
         window.addEventListener('resize', recenter);
 
-        tabsContainer.addEventListener(
+        tabsScroller.addEventListener(
           'scroll',
           () => {
             if (!setWidth) return;
-            if (tabsContainer.scrollLeft < setWidth * 0.25) {
-              tabsContainer.scrollLeft += setWidth;
-            } else if (tabsContainer.scrollLeft > setWidth * 1.75) {
-              tabsContainer.scrollLeft -= setWidth;
+            if (tabsScroller.scrollLeft < setWidth * 0.25) {
+              tabsScroller.scrollLeft += setWidth;
+            } else if (tabsScroller.scrollLeft > setWidth * 1.75) {
+              tabsScroller.scrollLeft -= setWidth;
             }
           },
           { passive: true },

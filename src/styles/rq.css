@@ -18,7 +18,7 @@
   --rq-gutter: clamp(1rem, 3vw, 4rem);
   --rq-page-w: min(calc(100% - 2 * var(--rq-gutter)), clamp(var(--rq-maxw), 72vw, 86.4rem));
   --rq-page-w-wide: min(calc(100% - 2 * var(--rq-gutter)), var(--rq-maxw-wide));
-  --rq-pad: clamp(1.5rem, 4.5vh, 4.25rem);
+  --rq-pad: clamp(2rem, 4vw, 5.5rem);
   --rq-r: 14px;
   --rq-r-pill: 999px;
   --rq-ease: cubic-bezier(.16, 1, .3, 1);
@@ -1214,8 +1214,8 @@ p {
 
 .rq-pricing-entry .rq-btn--primary:hover,
 .rq-pricing-entry .rq-btn--primary:focus-visible {
-  border-color: #D4FF3D;
-  background: #D4FF3D;
+  border-color: #1AD9C0;
+  background: #1AD9C0;
   color: var(--rq-lime-ink);
 }
 
@@ -1571,8 +1571,8 @@ p {
 
 /* ===== V2 Vlna 1a: barevný + typo + motion-CSS systém ===== */
 :root {
-  --rq-lime: #D4FF3D;
-  --rq-lime-ink: #2A3508;
+  --rq-lime: #1AD9C0;
+  --rq-lime-ink: #125C52;
   --rq-shadow-deep: 0 24px 70px rgba(28, 26, 23, .16);
   --rq-shadow-burgundy: 0 22px 60px rgba(122, 31, 43, .16);
 }
@@ -1899,18 +1899,18 @@ p {
 .rq-service-tile[data-rq-slot="audit"] { grid-area: audit; }
 
 .rq-service-tile.is-cross-highlight {
-  border-color: color-mix(in srgb, var(--rq-burgundy, #7A1F2B) 78%, var(--rq-journey-lime, #D4FF3D));
+  border-color: color-mix(in srgb, var(--rq-burgundy, #7A1F2B) 78%, var(--rq-journey-lime, #1AD9C0));
   box-shadow:
     0 24px 70px rgba(123, 35, 50, 0.18),
-    0 0 0 4px color-mix(in srgb, var(--rq-journey-lime, #D4FF3D) 26%, transparent);
+    0 0 0 4px color-mix(in srgb, var(--rq-journey-lime, #1AD9C0) 26%, transparent);
   animation: rq-service-cross-highlight 980ms var(--rq-ease) 3;
 }
 
 .rq-service-tile.is-related-highlight {
-  border-color: color-mix(in srgb, var(--rq-journey-lime, #D4FF3D) 64%, var(--rq-burgundy, #7A1F2B));
+  border-color: color-mix(in srgb, var(--rq-journey-lime, #1AD9C0) 64%, var(--rq-burgundy, #7A1F2B));
   box-shadow:
     0 18px 54px rgba(49, 67, 0, 0.12),
-    0 0 0 3px color-mix(in srgb, var(--rq-journey-lime, #D4FF3D) 22%, transparent);
+    0 0 0 3px color-mix(in srgb, var(--rq-journey-lime, #1AD9C0) 22%, transparent);
   animation: rq-service-related-highlight 980ms var(--rq-ease) 3;
 }
 
@@ -2066,8 +2066,8 @@ p {
   max-width: 100%;
   padding: 0.32rem 0.55rem;
   border-radius: 999px;
-  background: color-mix(in srgb, #D4FF3D 76%, white);
-  color: #223300;
+  background: color-mix(in srgb, #1AD9C0 76%, white);
+  color: #125C52;
   font-size: 0.75rem;
   line-height: 1;
   font-weight: 800;
@@ -2139,13 +2139,13 @@ p {
   100% {
     box-shadow:
       0 24px 70px rgba(123, 35, 50, 0.18),
-      0 0 0 4px color-mix(in srgb, var(--rq-journey-lime, #D4FF3D) 24%, transparent);
+      0 0 0 4px color-mix(in srgb, var(--rq-journey-lime, #1AD9C0) 24%, transparent);
   }
 
   50% {
     box-shadow:
       0 28px 82px rgba(123, 35, 50, 0.22),
-      0 0 0 8px color-mix(in srgb, var(--rq-journey-lime, #D4FF3D) 34%, transparent);
+      0 0 0 8px color-mix(in srgb, var(--rq-journey-lime, #1AD9C0) 34%, transparent);
   }
 }
 
@@ -2154,13 +2154,13 @@ p {
   100% {
     box-shadow:
       0 18px 54px rgba(49, 67, 0, 0.12),
-      0 0 0 3px color-mix(in srgb, var(--rq-journey-lime, #D4FF3D) 22%, transparent);
+      0 0 0 3px color-mix(in srgb, var(--rq-journey-lime, #1AD9C0) 22%, transparent);
   }
 
   50% {
     box-shadow:
       0 24px 66px rgba(49, 67, 0, 0.16),
-      0 0 0 7px color-mix(in srgb, var(--rq-journey-lime, #D4FF3D) 32%, transparent);
+      0 0 0 7px color-mix(in srgb, var(--rq-journey-lime, #1AD9C0) 32%, transparent);
   }
 }
 
@@ -2201,7 +2201,7 @@ p {
 .rq-ukazky-teaser {
   --rq-showcase-paper: #F7F4EE;
   --rq-showcase-burgundy: #5E1622;
-  --rq-showcase-lime: #D4FF3D;
+  --rq-showcase-lime: #1AD9C0;
   background: var(--rq-showcase-paper);
   overflow: clip;
 }
@@ -2350,7 +2350,7 @@ p {
   inset: 11% 10%;
   background:
     repeating-linear-gradient(0deg, rgba(247, 244, 238, 0.48) 0 2px, transparent 2px 13px),
-    linear-gradient(90deg, rgba(212, 255, 61, 0.72) 0 16%, transparent 16% 100%);
+    linear-gradient(90deg, rgba(26, 217, 192, 0.72) 0 16%, transparent 16% 100%);
   opacity: 0.72;
 }
 
@@ -2709,8 +2709,8 @@ p {
 }
 
 .rq-journey {
-  --rq-journey-lime: #D4FF3D;
-  --rq-journey-lime-ink: #314300;
+  --rq-journey-lime: #1AD9C0;
+  --rq-journey-lime-ink: #125C52;
   display: grid;
   gap: clamp(1.25rem, 2.6vw, 2.25rem);
   min-width: 0;
@@ -3407,8 +3407,8 @@ html[data-rq-motion="on"] .rq-marquee__track {
 }
 
 .rq-flag {
-  background: var(--rq-lime, #D4FF3D);
-  color: var(--rq-lime-ink, #2A3508);
+  background: var(--rq-lime, #1AD9C0);
+  color: var(--rq-lime-ink, #125C52);
 }
 
 .rq-h2::after {
@@ -3428,7 +3428,7 @@ html[data-rq-motion="on"] .rq-marquee__track {
 
 /* RadeQ.cz V3 - Vlna 7: typografie, zalamovani, spacing */
 :root {
-  --rq-pad: clamp(1.5rem, 4.5vh, 4.25rem);
+  --rq-pad: clamp(2rem, 4vw, 5.5rem);
 }
 
 body {

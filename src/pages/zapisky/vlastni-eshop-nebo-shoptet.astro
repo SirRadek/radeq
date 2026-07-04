@@ -4,10 +4,27 @@ import RqHeader from '../../components/RqHeader.astro';
 import RqFooter from '../../components/RqFooter.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',label:'Služby'},{href:base+'/#jak-pracuji',label:'Jak pracuji'},{href:base+'/#ceny',label:'Ceny'},{href:base+'/ukazky/',label:'Ukázky'},{href:base+'/#kontakt',label:'Kontakt'}];
+const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',label:'Služby'},{href:base+'/#jak-pracuji',label:'Jak pracuji'},{href:base+'/#ceny',label:'Ceny'},{href:base+'/ukazky/',label:'Ukázky'},{href:base+'/zapisky/',label:'Zápisky'},{href:base+'/#kontakt',label:'Kontakt'}];
+const title = 'Vlastní e-shop, nebo Shoptet? Kdy se co vyplatí';
+const description = 'Poctivé srovnání vlastního e-shopu a platformy Shoptet pro menší firmy. Kdy dává smysl hotové řešení a kdy vlastní vývoj.';
+const siteUrl = Astro.site ?? new URL('https://radeq.cz');
+const homeUrl = new URL(`${base}/`, siteUrl).toString();
+const articleUrl = new URL(`${base}/zapisky/vlastni-eshop-nebo-shoptet/`, siteUrl).toString();
+const blogPostingSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  inLanguage: 'cs',
+  datePublished: '2026-06-19',
+  dateModified: '2026-07-04',
+  author: { '@type': 'Person', name: 'Radek Široký', url: homeUrl },
+  publisher: { '@type': 'Organization', name: 'RadeQ.cz', url: homeUrl },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': articleUrl },
+};
 ---
 
-<RqLayout title="Vlastní e-shop, nebo Shoptet? Kdy se co vyplatí" description="Poctivé srovnání vlastního e-shopu a platformy Shoptet pro menší firmy. Kdy dává smysl hotové řešení a kdy vlastní vývoj." lang="cs">
+<RqLayout title={title} description={description} lang="cs">
   <RqHeader content={{ navItems: nav, cta: 'Chci zmapovat problém' }} alternateLabel="EN" alternatePath="/en/" />
 
   <main class="rq-section">
@@ -22,7 +39,10 @@ const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',
         opravdu vrátí v provozu.
       </p>
 
-      <h2>Kdy doporučím Shoptet</h2>
+      <h2>Kdy doporučím Shoptet?</h2>
+      <p class="rq-article-lede">
+        <strong>Shoptet nebo podobná platforma dává smysl, když prodáváte běžné produkty, nepotřebujete složitou provozní logiku a chcete rychle začít prodávat. U menšího sortimentu nebo ověřování trhu může být rozumnější dát peníze do obsahu, fotek, kategorií a provozu než do vývoje na míru.</strong>
+      </p>
       <p>
         Shoptet nebo podobná zavedená platforma dává smysl, když prodáváte běžné produkty,
         nepotřebujete složitou logiku cen, skladů nebo konfigurace a chcete se rychle dostat do
@@ -36,7 +56,10 @@ const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',
         produktových fotek, kategorií, důvěryhodnosti a obchodního provozu.
       </p>
 
-      <h2>Kdy začíná dávat smysl vlastní řešení</h2>
+      <h2>Kdy začíná dávat smysl vlastní řešení?</h2>
+      <p class="rq-article-lede">
+        <strong>Vlastní řešení se začne obhajovat, když hotová platforma omezuje samotné podnikání. Typicky jde o specifickou konfiguraci, napojení na systémy, B2B ceny, dostupnost, více skladů, zákaznickou zónu nebo obsahový model. Takový projekt ale potřebuje zadání, rozpočet, plán údržby a rozhodování o prioritách.</strong>
+      </p>
       <p>
         Vlastní e-shop se obhajuje lépe ve chvíli, kdy vás hotová platforma omezuje v samotném
         podnikání. Typicky jde o specifickou konfiguraci produktů, napojení na interní systém, zvláštní
@@ -50,7 +73,10 @@ const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',
         a člověka, který bude rozhodovat o prioritách.
       </p>
 
-      <h2>Skryté náklady vlastního e-shopu</h2>
+      <h2>Jaké jsou skryté náklady vlastního e-shopu?</h2>
+      <p class="rq-article-lede">
+        <strong>Skryté náklady jsou hlavně v provozu, který není vidět na první obrazovce. Administrace, importy, e-maily, zabezpečení, aktualizace, zálohy, monitoring, platby, dopravci a legislativní změny se musí navrhnout, otestovat a spravovat. Bez rozpočtu se z vlastního e-shopu může stát drahý závazek.</strong>
+      </p>
       <p>
         U vlastního řešení se často podcení věci, které nejsou vidět na první obrazovce: administrace,
         importy, e-maily, zabezpečení, aktualizace, zálohy, monitoring, chybové stavy plateb, změny
@@ -63,7 +89,10 @@ const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',
         nápady, které by stály hodně peněz a nepřinesly odpovídající výsledek.
       </p>
 
-      <h2>Praktický checklist pro rozhodnutí</h2>
+      <h2>Co si projít před rozhodnutím o e-shopu?</h2>
+      <p class="rq-article-lede">
+        <strong>Před rozhodnutím je potřeba porovnat produkty, konfiguraci, rychlost startu, provozní odpovědnost a skutečnou obchodní logiku. Důležité je také vědět, kdo bude řešit obsah, produkty, napojení na systémy a údržbu po spuštění.</strong>
+      </p>
       <ul>
         <li>Máte běžné produkty, nebo složitou konfiguraci a cenotvorbu?</li>
         <li>Potřebujete rychle začít prodávat, nebo budujete dlouhodobý systém?</li>
@@ -73,7 +102,10 @@ const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',
         <li>Počítáte s rozpočtem na údržbu, nejen na první spuštění?</li>
       </ul>
 
-      <h2>Moje praktické pravidlo</h2>
+      <h2>Jaké je moje praktické pravidlo?</h2>
+      <p class="rq-article-lede">
+        <strong>Pokud se dá obchod rozumně provozovat na Shoptetu, často doporučím začít tam. Menší firma většinou potřebuje nejdřív prodávat, učit se z objednávek a zlepšovat nabídku. Vlastní vývoj má přijít až ve chvíli, kdy víte, proč ho potřebujete, a umíte obhájit jeho přínos proti provozním nákladům.</strong>
+      </p>
       <p>
         Pokud se dá obchod rozumně provozovat na Shoptetu, často doporučím začít tam. Ne proto,
         že by vlastní řešení nebylo zajímavé, ale protože menší firma obvykle potřebuje nejdřív
@@ -85,9 +117,51 @@ const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',
         fázi firmy, schopnostem týmu a skutečnému způsobu prodeje.
       </p>
 
+      <h2>Jak náročný je přechod ze Shoptetu na vlastní řešení?</h2>
+      <p class="rq-article-lede">
+        <strong>Přechod není jen překlopení vzhledu. Je potřeba vyexportovat data (produkty, kategorie, zákazníky, objednávky), namapovat staré URL adresy na nové a nastavit 301 přesměrování pro každou z nich, jinak hrozí dočasný výkyv pozic ve vyhledávání. Počítejte i s tím, že hesla zákazníků jsou na Shoptetu zahashovaná a nelze je přenést — po migraci si je budou muset obnovit.</strong>
+      </p>
+      <p>
+        Začal bych mapováním toho, co v e-shopu opravdu musí zůstat: produkty, kategorie, zákaznická
+        data, objednávky, obsah a napojení na provoz. Teprve potom dává smysl rozhodovat, jestli je
+        vlastní řešení skutečně lepší než úprava stávající platformy.
+      </p>
+      <p>
+        U přechodu je důležité neřešit jen nový systém, ale i staré adresy a důvody, proč současný
+        obchod funguje nebo nefunguje. Bez toho se může technická změna tvářit jako posun, ale obchodně
+        nepřinese odpovídající výsledek.
+      </p>
+
+      <h2>Co je levnější první rok a co po třech letech provozu?</h2>
+      <p class="rq-article-lede">
+        <strong>První rok obvykle vychází levněji hotová platforma — nízké startovací náklady, žádný vývoj na míru. Po třech letech se rozdíl stírá: u platformy se sčítají poplatky za doplňky a narážíte na její limity, u vlastního řešení se počáteční investice rozpustí a platíte hlavně technickou údržbu.</strong>
+      </p>
+      <p>
+        U hotové platformy platíte měsíční poplatky a žijete s jejími mantinely. U vlastního řešení zase
+        nesete víc odpovědnosti za provoz, údržbu, změny a technické chyby.
+      </p>
+      <p>
+        Férové srovnání proto nemá začít otázkou, co je levnější na papíře. Má začít otázkou, jaký provoz
+        firma opravdu zvládne a jestli se výhody vlastního řešení vrátí v každodenní práci.
+      </p>
+
+      <h2>Kdy už problém není platforma, ale provoz e-shopu?</h2>
+      <p class="rq-article-lede">
+        <strong>Shoptet, vlastní řešení ani jiná platforma samy o sobě neopraví pomalý e-shop,
+        slabé produktové stránky, chybějící SEO, drahé pluginy nebo nejasné měření objednávek.
+        Nejdřív je potřeba pojmenovat, co obchod skutečně brzdí.</strong>
+      </p>
+      <p>
+        Někdy stačí zrychlit načítání, upravit produktové stránky, zjednodušit správu produktů
+        nebo nastavit měření zdrojů objednávek. Jindy už platforma naráží na limity a vlastní
+        řešení začne dávat smysl. Typické signály najdete v přehledu
+        <a href={base + '/#co-resim'}>Co řeším</a>, hlavně u problémů kolem e-shopu a měření.
+      </p>
+
       <p class="rq-cta-line"><a class="rq-button" href={base + '/#kontakt'}>Chcete to probrat? Napište mi.</a></p>
     </article>
   </main>
 
   <RqFooter navItems={nav} />
+  <script type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
 </RqLayout>

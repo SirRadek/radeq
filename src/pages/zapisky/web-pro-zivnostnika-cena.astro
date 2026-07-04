@@ -4,10 +4,27 @@ import RqHeader from '../../components/RqHeader.astro';
 import RqFooter from '../../components/RqFooter.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',label:'Služby'},{href:base+'/#jak-pracuji',label:'Jak pracuji'},{href:base+'/#ceny',label:'Ceny'},{href:base+'/ukazky/',label:'Ukázky'},{href:base+'/#kontakt',label:'Kontakt'}];
+const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',label:'Služby'},{href:base+'/#jak-pracuji',label:'Jak pracuji'},{href:base+'/#ceny',label:'Ceny'},{href:base+'/ukazky/',label:'Ukázky'},{href:base+'/zapisky/',label:'Zápisky'},{href:base+'/#kontakt',label:'Kontakt'}];
+const title = 'Kolik stojí web pro živnostníka a co v ceně má být';
+const description = 'Praktický článek o ceně webu pro živnostníka, rozdílu mezi startovní cenou a celkovým rozsahem práce a o tom, co si připravit před poptávkou.';
+const siteUrl = Astro.site ?? new URL('https://radeq.cz');
+const homeUrl = new URL(`${base}/`, siteUrl).toString();
+const articleUrl = new URL(`${base}/zapisky/web-pro-zivnostnika-cena/`, siteUrl).toString();
+const blogPostingSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  inLanguage: 'cs',
+  datePublished: '2026-06-19',
+  dateModified: '2026-07-04',
+  author: { '@type': 'Person', name: 'Radek Široký', url: homeUrl },
+  publisher: { '@type': 'Organization', name: 'RadeQ.cz', url: homeUrl },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': articleUrl },
+};
 ---
 
-<RqLayout title="Kolik stojí web pro živnostníka a co v ceně má být" description="Praktický článek o ceně webu pro živnostníka, rozdílu mezi startovní cenou a celkovým rozsahem práce a o tom, co si připravit před poptávkou." lang="cs">
+<RqLayout title={title} description={description} lang="cs">
   <RqHeader content={{ navItems: nav, cta: 'Chci zmapovat problém' }} alternateLabel="EN" alternatePath="/en/" />
 
   <main class="rq-section">
@@ -23,7 +40,10 @@ const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',
         jmenovat stejně, ale práce za nimi je jiná.
       </p>
 
-      <h2>Proč se často uvádí cena „od“</h2>
+      <h2>Proč se u webu často uvádí cena „od“?</h2>
+      <p class="rq-article-lede">
+        <strong>Cena „od“ dává smysl jen u jasně omezeného rozsahu. Jakmile chybí podklady nebo přibývají funkce, jazyky, katalog či migrace, už nejde o stejnou práci. Proto je důležité ptát se, co přesně je v ceně a co v ní není.</strong>
+      </p>
       <p>
         Cena „od“ není automaticky trik. U poctivé nabídky znamená spodní hranici pro jasně
         omezený rozsah: několik stránek, běžný design bez složitých funkcí, připravené podklady a
@@ -38,7 +58,10 @@ const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',
         web později rozumně spravovat.
       </p>
 
-      <h2>Co by mělo být v rozumné ceně</h2>
+      <h2>Co by mělo být v rozumné ceně webu?</h2>
+      <p class="rq-article-lede">
+        <strong>V rozumné ceně nemá být jen vzhled. U menšího webu má dávat smysl cíl, struktura, texty, mobil, základní SEO, kontakt, výkon a předání přístupů. Hodnota často vzniká v rozhodnutích, co na web patří a jak má vést návštěvníka ke kontaktu.</strong>
+      </p>
       <p>
         U menšího firemního webu bych očekával alespoň krátké zmapování cíle, návrh struktury,
         úpravu nebo vedení textů, responzivní zpracování, základní SEO nastavení, kontaktní prvky,
@@ -52,7 +75,10 @@ const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',
         popisují jednou položkou, ale v provozu jsou znát.
       </p>
 
-      <h2>Kdy je dražší web zbytečný</h2>
+      <h2>Kdy je dražší web zbytečný?</h2>
+      <p class="rq-article-lede">
+        <strong>Dražší web je zbytečný, když potřebujete hlavně ověřit jasnou službu a nepotřebujete pravidelně publikovat. V takové chvíli stačí menší web s dobrou strukturou, jasnou nabídkou, důvěrou a rychlým kontaktem.</strong>
+      </p>
       <p>
         Ne každý živnostník potřebuje robustní řešení. Pokud ověřujete novou službu, máte jeden
         jasný obor a nepotřebujete pravidelně publikovat, může stačit menší web s dobrou strukturou.
@@ -61,7 +87,10 @@ const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',
         zákazníka.
       </p>
 
-      <h2>Praktický checklist před poptávkou</h2>
+      <h2>Co si připravit před poptávkou webu?</h2>
+      <p class="rq-article-lede">
+        <strong>Před poptávkou pomůže ujasnit služby, hlavní akci návštěvníka a dostupné podklady. Dodavatel pak může oddělit cenu za vytvoření, texty, provoz a následnou správu, takže se lépe porovnává skutečný rozsah práce.</strong>
+      </p>
       <ul>
         <li>Sepište, jaké služby opravdu chcete na webu nabízet.</li>
         <li>Vyberte hlavní akci návštěvníka: zavolat, napsat, objednat konzultaci nebo poslat poptávku.</li>
@@ -71,7 +100,10 @@ const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',
         <li>Požádejte dodavatele, aby oddělil cenu za vytvoření, texty, provoz a následnou správu.</li>
       </ul>
 
-      <h2>Jak poznat férovou nabídku</h2>
+      <h2>Jak poznat férovou nabídku na web?</h2>
+      <p class="rq-article-lede">
+        <strong>Férová nabídka nemusí být dlouhá, ale má popsat rozsah, výstupy, předpoklady a výluky. Dobrým znamením je, když dodavatel umí vysvětlit doporučení i věci, které nedává smysl dělat.</strong>
+      </p>
       <p>
         Férová nabídka nemusí být nejdelší. Měla by ale popsat rozsah, výstupy, předpoklady a to,
         co v ceně není. Pokud dodavatel umí vysvětlit, proč něco doporučuje a proč něco naopak
@@ -79,9 +111,67 @@ const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',
         použitelný základ, který pomůže získat důvěru a dá se rozvíjet bez zbytečných nákladů.
       </p>
 
+      <h2>Kolik stojí roční provoz webu po spuštění?</h2>
+      <p class="rq-article-lede">
+        <strong>U běžného prezentačního webu bez e-shopu se roční technický provoz obvykle vejde do
+        500 až 3 500 Kč — doména, hosting a volitelný firemní e-mail. E-shop nebo prémiová doména
+        jsou jiná kategorie nákladů a řeším je zvlášť podle konkrétního řešení.</strong>
+      </p>
+      <p>
+        U nacenění bych oddělil jednorázovou práci od toho, co se platí po spuštění. Klient pak vidí,
+        jestli jde jen o technický provoz, nebo i o pravidelnou správu, drobné úpravy a kontrolu webu.
+      </p>
+      <p>
+        Pokud jsou ve webu placené služby nebo licence, mají být pojmenované předem. U jednoduchého
+        webu může být provoz lehčí; u řešení s administrací, formuláři nebo dalšími službami je potřeba
+        počítat s tím, že někdo musí hlídat i běžný stav.
+      </p>
+      <p>
+        Do těchto částek nepočítám náklady na reklamu, propagaci nebo zviditelnění — to je samostatná
+        kapitola s vlastním rozpočtem podle toho, co a jak moc chcete řešit. Co ale doporučuju u
+        každého webu: jednou za rok až dva roky udělat audit (od 3 000 Kč) a podle výsledku pár
+        drobných úprav. Web se nemusí předělávat pokaždé, ale musí jít s dobou — mění se SEO,
+        technologie i chování uživatelů.
+      </p>
+
+      <h2>Jak se ptát dodavatele před naceněním, abych porovnal stejnou práci?</h2>
+      <p class="rq-article-lede">
+        <strong>Ptejte se hlavně na rozsah, výstupy, předpoklady a to, co v ceně není. Bez toho se snadno srovnávají dvě nabídky, které mají stejný název, ale jinou práci.</strong>
+      </p>
+      <ul>
+        <li>Je v ceně návrh struktury a texty, nebo mám dodat všechno hotové?</li>
+        <li>Budou doména, hosting a analytické účty (GA/Search Console) vedené přímo na mě, s plným přístupem?</li>
+        <li>Je web postavený na standardním kódu, který dokáže převzít jiný vývojář, nebo mě to zamkne u jednoho dodavatele?</li>
+        <li>Zahrnuje cena mobilní zobrazení, základní SEO a měření?</li>
+        <li>Kolik stojí hodina drobných úprav po spuštění?</li>
+      </ul>
+      <p>
+        V praxi bych chtěl vidět, jestli cena zahrnuje texty, strukturu, mobilní zobrazení, měření,
+        technické nastavení, předání přístupů a následnou správu. Když dodavatel některou část neřeší,
+        není to nutně špatně; musí to ale být jasně napsané.
+      </p>
+      <p>
+        Stejně důležité je říct, co už máte připravené. Jinak se může stát, že jedna nabídka počítá s
+        hotovými podklady a druhá s tím, že je dodavatel teprve pomůže dát dohromady.
+      </p>
+
+      <h2>Cena webu není jediná otázka — co ještě musí web umět?</h2>
+      <p class="rq-article-lede">
+        <strong>Dobrý web nemá jen stát rozumné peníze. Má návštěvníka dovést k tomu, aby
+        pochopil nabídku, věděl, co má udělat dál, a aby bylo měřitelné, jestli web opravdu
+        přináší poptávky.</strong>
+      </p>
+      <p>
+        Při nacenění neřeším jen počet stránek nebo vzhled. Důležité je i to, jestli je jasná
+        hlavní nabídka, výzva k akci, kontaktní cesta a základní měření poptávek nebo telefonů.
+        Pokud si nejste jistí, kde přesně web ztrácí lidi, projděte si přehled typických
+        problémů v části <a href={base + '/#co-resim'}>Co řeším</a> na hlavní stránce.
+      </p>
+
       <p class="rq-cta-line"><a class="rq-button" href={base + '/#kontakt'}>Chcete to probrat? Napište mi.</a></p>
     </article>
   </main>
 
   <RqFooter navItems={nav} />
+  <script type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
 </RqLayout>

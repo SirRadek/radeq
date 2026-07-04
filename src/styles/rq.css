@@ -3462,6 +3462,15 @@ p {
   max-width: 62ch;
 }
 
+.rq-article-lede {
+  max-width: 62ch;
+  margin: 0.75rem 0 1.25rem;
+  padding: 0.85rem 1.1rem;
+  border-left: 3px solid var(--rq-burgundy);
+  border-radius: 0 var(--rq-r) var(--rq-r) 0;
+  background: var(--rq-burgundy-tint);
+}
+
 .rq-section {
   padding-block: var(--rq-pad);
 }

@@ -4,10 +4,27 @@ import RqHeader from '../../components/RqHeader.astro';
 import RqFooter from '../../components/RqFooter.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',label:'Služby'},{href:base+'/#jak-pracuji',label:'Jak pracuji'},{href:base+'/#ceny',label:'Ceny'},{href:base+'/ukazky/',label:'Ukázky'},{href:base+'/#kontakt',label:'Kontakt'}];
+const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',label:'Služby'},{href:base+'/#jak-pracuji',label:'Jak pracuji'},{href:base+'/#ceny',label:'Ceny'},{href:base+'/ukazky/',label:'Ukázky'},{href:base+'/zapisky/',label:'Zápisky'},{href:base+'/#kontakt',label:'Kontakt'}];
+const title = 'Jak se starám o web, když je hotovo';
+const description = 'Jak má vypadat péče o web po předání: servisní protokol, aktualizace, zálohy, drobné úpravy a správa bez závislosti na dodavateli.';
+const siteUrl = Astro.site ?? new URL('https://radeq.cz');
+const homeUrl = new URL(`${base}/`, siteUrl).toString();
+const articleUrl = new URL(`${base}/zapisky/jak-se-staram-o-web-po-predani/`, siteUrl).toString();
+const blogPostingSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  inLanguage: 'cs',
+  datePublished: '2026-06-19',
+  dateModified: '2026-07-04',
+  author: { '@type': 'Person', name: 'Radek Široký', url: homeUrl },
+  publisher: { '@type': 'Organization', name: 'RadeQ.cz', url: homeUrl },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': articleUrl },
+};
 ---
 
-<RqLayout title="Jak se starám o web, když je hotovo" description="Jak má vypadat péče o web po předání: servisní protokol, aktualizace, zálohy, drobné úpravy a správa bez závislosti na dodavateli." lang="cs">
+<RqLayout title={title} description={description} lang="cs">
   <RqHeader content={{ navItems: nav, cta: 'Chci zmapovat problém' }} alternateLabel="EN" alternatePath="/en/" />
 
   <main class="rq-section">
@@ -22,7 +39,10 @@ const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',
         předání nebyla složitá, ale aby existovala.
       </p>
 
-      <h2>Co znamená hotový web</h2>
+      <h2>Co znamená hotový web?</h2>
+      <p class="rq-article-lede">
+        <strong>Hotový web není jen stránka, která se zobrazí v prohlížeči. Má mít předané přístupy, jasně popsaný provoz, měření, funkční kontaktní cesty a dohodu, kdo řeší úpravy. Dobře předaný web má jít spravovat a případně převzít i někým jiným.</strong>
+      </p>
       <p>
         Hotový web pro mě není jen stav, kdy se stránka zobrazí v prohlížeči. Má mít předané
         přístupy, jasně popsaný provoz, základní měření, funkční kontaktní cesty a dohodu, kdo řeší
@@ -35,7 +55,10 @@ const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',
         Je to projev férového vztahu.
       </p>
 
-      <h2>Servisní protokol v praxi</h2>
+      <h2>Jak vypadá servisní protokol v praxi?</h2>
+      <p class="rq-article-lede">
+        <strong>Servisní protokol má být jednoduchý přehled toho, co se kontroluje, jak často, kdo má přístupy, kde jsou zálohy a jak se hlásí požadavky. Díky tomu se drobné změny a kontroly neřeší pokaždé od nuly. Rozsah péče se liší podle toho, jestli jde o statický web, redakční systém nebo e-shop.</strong>
+      </p>
       <p>
         U webů, o které se starám dlouhodobě, dávám přednost jednoduchému servisnímu protokolu.
         Nemusí to být složitý dokument. Stačí jasný přehled: co se kontroluje, jak často, kdo má
@@ -50,7 +73,10 @@ const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',
         lehčí. U redakčních systémů a e-shopů je potřeba být důslednější.
       </p>
 
-      <h2>Předplatné není pojistka na všechno</h2>
+      <h2>Proč předplatné není pojistka na všechno?</h2>
+      <p class="rq-article-lede">
+        <strong>Měsíční správa dává smysl pro pravidelně používaný web a menší zásahy. Nemá ale slibovat neomezený vývoj, redesign, nové funkce nebo okamžitou dostupnost v malé paušální částce. Větší rozvoj má mít vlastní zadání, odhad a prioritu.</strong>
+      </p>
       <p>
         Měsíční správa dává smysl, když web pravidelně používáte a nechcete řešit každý drobný
         zásah jako novou zakázku. Zároveň by ale mělo být jasné, co předplatné obsahuje. Není fér
@@ -63,7 +89,10 @@ const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',
         rozsah práce do nejasných slibů.
       </p>
 
-      <h2>Bez závislosti na jednom dodavateli</h2>
+      <h2>Jak se vyhnout závislosti na jednom dodavateli?</h2>
+      <p class="rq-article-lede">
+        <strong>Web nemá být postavený tak, aby klient nemohl odejít. Přístupy, důležité služby a vlastnictví domény, hostingu a účtů mají být oddělené od osoby dodavatele. Když spolupráce funguje, klient zůstává kvůli kvalitě práce, ne kvůli chybějící alternativě.</strong>
+      </p>
       <p>
         Nechci stavět weby tak, aby klient nemohl odejít. Přístupy mají být předané, důležité služby
         mají být vedené na klienta a technické řešení má být srozumitelné. Když spolupráce funguje,
@@ -75,7 +104,10 @@ const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',
         má být aktivum firmy, ne rukojmí konkrétního člověka.
       </p>
 
-      <h2>Praktický checklist po předání</h2>
+      <h2>Co zkontrolovat po předání webu?</h2>
+      <p class="rq-article-lede">
+        <strong>Po předání má být jasné, kdo vlastní a spravuje doménu, hosting, administraci, měření a zálohy. Stejně důležité je ověřit kontaktní cesty, domluvit drobné změny a mít stručný přehled technologií a účtů.</strong>
+      </p>
       <ul>
         <li>Máte přístup k doméně, hostingu, administraci a měření?</li>
         <li>Víte, kde jsou zálohy a jak často vznikají?</li>
@@ -85,7 +117,10 @@ const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',
         <li>Existuje stručný přehled technologií a důležitých účtů?</li>
       </ul>
 
-      <h2>Provozní klid je součást kvality</h2>
+      <h2>Proč je provozní klid součástí kvality?</h2>
+      <p class="rq-article-lede">
+        <strong>Kvalitní web nemusí být po spuštění neustále předělávaný. Potřebuje ale základní péči a jasného vlastníka provozu, aby se malé problémy neřešily až ve chvíli, kdy přestanou chodit poptávky nebo se web rozbije před důležitou kampaní.</strong>
+      </p>
       <p>
         Web nemusí být po spuštění neustále předělávaný. Měl by ale mít základní péči a jasného
         vlastníka provozu. Díky tomu se malé problémy neřeší až ve chvíli, kdy přestanou chodit
@@ -93,9 +128,49 @@ const nav = [{href:base+'/#co-resim',label:'Co řeším'},{href:base+'/#sluzby',
         dlouhodobém provozu má velkou hodnotu.
       </p>
 
+      <h2>Co když chci spolupráci ukončit a přejít jinam?</h2>
+      <p class="rq-article-lede">
+        <strong>Při ukončení spolupráce má klient dostat: vlastnictví domény a hostingu, administrátorský přístup do CMS, zdrojový kód (přístup k repozitáři), vlastnictví Google Analytics a Search Console a přehledný seznam napojených služeb, licencí a toho, kdo má k čemu přístup.</strong>
+      </p>
+      <p>
+        V praxi bych předával hlavně přístup k tomu, co klient potřebuje pro běžný provoz a budoucí
+        převzetí. Nemá jít o překvapení na konci spolupráce, ale o přirozenou součást férového předání.
+      </p>
+      <p>
+        Když je technické řešení srozumitelné a služby nejsou navázané na osobu dodavatele, zůstává
+        spolupráce dobrovolná. To je zdravější než držet klienta tím, že neví, kde co je.
+      </p>
+
+      <h2>Kolik péče web reálně potřebuje měsíčně?</h2>
+      <p class="rq-article-lede">
+        <strong>Záleží na typu webu. Jednoduchý statický web obvykle vystačí s balíčkem Klid (1 hodina měsíčně — dohled, zálohy, drobné úpravy). Web, který se má průběžně rozvíjet, měřit a posouvat v SEO, patří spíš do balíčku Růst (3 hodiny). Pokud řešíte procesy, automatizaci a napojení na provoz firmy, dává smysl Partner (10 hodin, prioritní podpora).</strong>
+      </p>
+      <p>
+        Důležité je rozlišit provozní klid a nový rozvoj. Provozní péče pokrývá kontroly, zálohy, drobné
+        změny a chyby; větší funkce patří do samostatného zadání.
+      </p>
+      <p>
+        U menších firem mi dává smysl držet péči jednoduchou. Musí být ale jasné, co je běžná správa,
+        co je nový požadavek a kdo za provoz webu skutečně odpovídá.
+      </p>
+
+      <h2>Kdy péče o web přeroste do péče o provoz firmy?</h2>
+      <p class="rq-article-lede">
+        <strong>Jakmile web začne spolehlivě sbírat poptávky, často se ukáže další slabé
+        místo: co se s nimi děje potom. Péče o web pak přirozeně navazuje na formuláře,
+        e-maily, follow-upy, fakturaci a přehled zakázek.</strong>
+      </p>
+      <p>
+        Neznamená to hned velký systém nebo složitou automatizaci. Často stačí jeden jasný
+        tok: poptávka přijde, potvrdí se, doplní se podklady, někdo má další krok a nic
+        nezůstane jen v hlavě nebo e-mailu. Pokud chcete rychle poznat, kde proces zbytečně
+        bere čas, projděte si diagnostiku <a href={base + '/#co-resim'}>Co řeším</a>.
+      </p>
+
       <p class="rq-cta-line"><a class="rq-button" href={base + '/#kontakt'}>Chcete to probrat? Napište mi.</a></p>
     </article>
   </main>
 
   <RqFooter navItems={nav} />
+  <script type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
 </RqLayout>

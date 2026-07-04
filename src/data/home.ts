@@ -1368,7 +1368,9 @@ export const homeContent = {
         { href: '#co-resim', label: 'Co řeším' },
         { href: '#sluzby', label: 'Služby' },
         { href: '#jak-pracuji', label: 'Jak pracuji' },
-        { href: '#ceny', label: 'Ceny' },        { href: '#kontakt', label: 'Kontakt' },
+        { href: '#ceny', label: 'Ceny' },
+        { href: '/zapisky/', label: 'Zápisky' },
+        { href: '#kontakt', label: 'Kontakt' },
       ],
     },
     hero: {
@@ -1745,7 +1747,9 @@ export const homeContent = {
         { href: '#co-resim', label: 'What I solve' },
         { href: '#sluzby', label: 'Services' },
         { href: '#jak-pracuji', label: 'How I work' },
-        { href: '#ceny', label: 'Pricing' },        { href: '#kontakt', label: 'Contact' },
+        { href: '#ceny', label: 'Pricing' },
+        { href: '/zapisky/', label: 'Notes' },
+        { href: '#kontakt', label: 'Contact' },
       ],
     },
     hero: {

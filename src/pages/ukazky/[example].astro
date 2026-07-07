@@ -1,8 +1,6 @@
 ---
 import CommandHeader from '../../components/CommandHeader.astro';
 import ContactTerminal from '../../components/ContactTerminal';
-import RuleChatbotGuide from '../../components/RuleChatbotGuide';
-import { chatbotGuide } from '../../data/chatbotGuide';
 import { siteContent } from '../../data/siteContent';
 import { getShowcaseExample, showcaseExamples, type ShowcaseSlug } from '../../data/showcaseExamples';
 import { withBaseHref } from '../../lib/links';
@@ -48,8 +46,6 @@ if (!example) {
         {example.safetyNotes.map((note) => <li>{note}</li>)}
       </ul>
     </section>
-
-    {slug === 'chatbot' ? <RuleChatbotGuide guide={chatbotGuide} client:load /> : null}
 
     <section class="showcase-sections" aria-label="Popis ukázky">
       {

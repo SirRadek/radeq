@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { getShowcaseExample, showcaseExamples, showcaseHub } from '../src/data/showcaseExamples';
 
-const expectedSlugs = ['chatbot', 'automatizace', 'nabidka-eshop'];
+const expectedSlugs = ['automatizace', 'nabidka-eshop'];
 const forbiddenClaimFragments = [
   'llm',
   'rag',
@@ -21,7 +21,7 @@ describe('showcase examples', () => {
   it('defines the first Czech showcase wave', () => {
     expect(showcaseHub.slug).toBe('ukazky');
     expect(showcaseExamples.map((example) => example.slug)).toEqual(expectedSlugs);
-    expect(getShowcaseExample('chatbot')?.slug).toBe('chatbot');
+    expect(getShowcaseExample('automatizace')?.slug).toBe('automatizace');
   });
 
   it('keeps each example SEO-readable and action-oriented', () => {
@@ -46,7 +46,6 @@ describe('showcase examples', () => {
 
     expect(publicText).toContain('statick');
     expect(publicText).toContain('bez klientských dat');
-    expect(publicText).toContain('schválen');
     expect(publicText).toContain('úspora času');
     expect(publicText).toContain('ochrana dat');
   });

@@ -1,4 +1,4 @@
-export type ShowcaseSlug = 'chatbot' | 'automatizace' | 'nabidka-eshop';
+export type ShowcaseSlug = 'automatizace' | 'nabidka-eshop';
 
 // TODO(owner): Add 1-2 real automation case studies before strengthening automation outcome claims.
 
@@ -40,53 +40,6 @@ export const showcaseHub = {
 } as const;
 
 export const showcaseExamples = [
-  {
-    slug: 'chatbot',
-    title: 'Statický chatbot a průvodce | Radeq.cz',
-    description:
-      'Ukázka statického chatbotu a rozhodovacího průvodce nad připravenými odpověďmi bez modelu, soukromých dat a automatického odesílání.',
-    h1: 'Chatbot, který odpovídá jen z připravených pravidel',
-    eyebrow: 'Statický průvodce',
-    summary:
-      'Ukázka předvádí, jak může návštěvník rychle zjistit, jestli potřebuje nový web, audit, automatizaci nebo úpravu nabídky. Odpovědi jsou připravené dopředu a výsledek se nikam neposílá bez vědomé akce.',
-    promise:
-      'Rychlejší orientace návštěvníků, méně opakovaných dotazů a menší riziko práce s citlivými údaji.',
-    primaryCta: { label: 'Probrat jednoduchý chatbot', href: '#terminal' },
-    secondaryCta: { label: 'Zpět na ukázky', href: '/ukazky/' },
-    sections: [
-      {
-        title: 'Co ukázka řeší',
-        body: 'Návštěvník často neví, jestli potřebuje web, audit, opravu nebo automatizaci. Průvodce mu dá bezpečnou první orientaci.',
-        points: ['předem schválené odpovědi', 'volby místo volného promptu', 'jasné hranice a předání člověku'],
-      },
-      {
-        title: 'Jak funguje',
-        body: 'Pravidla běží v prohlížeči jako rozhodovací strom. Nevyhledávají v soukromých datech a nevytvářejí nové odpovědi mimo připravený obsah.',
-        points: ['statická databáze odpovědí', 'lokální stav v prohlížeči', 'reset bez ukládání osobních údajů'],
-      },
-      {
-        title: 'Kde šetří čas a peníze',
-        body: 'Opakované otázky se dají zjednodušit do několika bezpečných větví. Člověk pak řeší až dotazy, které opravdu potřebují posouzení.',
-        points: ['méně ručního vysvětlování', 'rychlejší první odpověď', 'lepší zadání pro následný kontakt'],
-      },
-      {
-        title: 'Kdy dává smysl opatrná AI vrstva',
-        body: 'Pokročilejší asistent může dávat smysl později, až jsou zdroje, hranice, citlivá data a ruční kontrola jasně popsané.',
-        points: ['nejdřív pravidla', 'potom schválené zdroje', 'nakonec měřitelné rozšíření'],
-      },
-    ],
-    safetyNotes: [
-      'Ukázka je statický průvodce bez generování nových odpovědí.',
-      'Do průvodce nepatří přístupy, interní dokumenty ani osobní údaje zákazníků.',
-      'Kontakt se předává jen po vědomém kliknutí na poptávkový krok.',
-    ],
-    outOfScope: [
-      'automatické posuzování citlivých případů',
-      'zpracování soukromých dokumentů',
-      'slib obchodního výsledku',
-    ],
-    proofTags: ['bez klientských dat', 'schválené odpovědi', 'úspora času', 'ochrana dat'],
-  },
   {
     slug: 'automatizace',
     title: 'Automatizace poptávek a ruční práce | Radeq.cz',

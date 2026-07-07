@@ -2,7 +2,6 @@ import { expect, test } from '@playwright/test';
 
 const showcaseRoutes = [
   { path: '/ukazky/', heading: 'Ukázky praktických řešení pro web, poptávky a ruční práci' },
-  { path: '/ukazky/chatbot/', heading: 'Chatbot, který odpovídá jen z připravených pravidel' },
   { path: '/ukazky/automatizace/', heading: 'Automatizace, která ubere ruční přepisování' },
   { path: '/ukazky/nabidka-eshop/', heading: 'Nabídka, která zkracuje rozhodování' },
 ];
@@ -25,7 +24,7 @@ test('stored demo style does not affect showcase pages', async ({ page }) => {
     localStorage.setItem('radeq-style-variant', 'variant-d');
   });
 
-  await page.goto('/ukazky/chatbot/');
+  await page.goto('/ukazky/automatizace/');
   await expect(page.locator('html')).toHaveAttribute('data-style', 'variant-a');
   await expect(page.locator('html')).toHaveAttribute('data-style-source', 'fixed');
   await expect(page.locator('.style-toggle')).toHaveCount(0);
@@ -40,17 +39,17 @@ test('chatbot guide is rule-based and does not submit data before handoff', asyn
   });
 
   await page.goto('/ukazky/chatbot/');
-  await expect(page.getByRole('heading', { name: 'Statický průvodce bez klientských dat' })).toBeVisible();
-  await expect(page.locator('.rule-chatbot textarea')).toHaveCount(0);
-  await expect(page.locator('.rule-chatbot input')).toHaveCount(0);
-  await expect(page.getByRole('button', { name: 'Opakují se stejné dotazy nebo poptávky' })).toBeVisible();
-  await page.getByRole('button', { name: 'Opakují se stejné dotazy nebo poptávky' }).click();
-  await page.getByRole('button', { name: 'Třídění poptávek a odpovědi' }).click();
-  await expect(page.getByRole('heading', { name: 'Pomůže statický chatbot nebo FAQ průvodce' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Co potřebuje vaše auto?' })).toBeVisible();
+  // Rule-based decision tree rendered in-browser: options, not a free-text field.
+  await expect(page.locator('.guide textarea')).toHaveCount(0);
+  await expect(page.locator('.guide input')).toHaveCount(0);
+  await page.getByRole('button', { name: 'STK a emise' }).click();
+  await page.getByRole('button', { name: 'Jen se chci připravit' }).click();
+  // A prepared answer + explicit-action CTA appears; nothing is submitted automatically.
+  await expect(page.getByRole('link', { name: 'Objednat termín' })).toBeVisible();
   expect(apiRequests).toHaveLength(0);
-  await page.getByRole('button', { name: 'Ukázat bezpečné předání' }).click();
-  await expect(page.locator('.rule-chatbot__handoff').getByText('Shrnutí se nikam neposílá automaticky.')).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Přejít na poptávku' })).toHaveAttribute('href', '#terminal');
+  await page.getByRole('button', { name: 'Začít znovu' }).click();
+  await expect(page.getByRole('button', { name: 'STK a emise' })).toBeVisible();
   expect(apiRequests).toHaveLength(0);
 });
 

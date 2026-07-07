@@ -123,8 +123,7 @@ const defaultUrl = lang === 'cs' ? canonicalUrl : alternateUrl;
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <style is:global set:html={criticalCss}></style>
     <link rel="preload" href={rqCssHref} as="style" />
-    <link rel="stylesheet" href={rqCssHref} media="print" onload="this.media='all'" />
-    <noscript><link rel="stylesheet" href={rqCssHref} /></noscript>
+    <link rel="stylesheet" href={rqCssHref} />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">

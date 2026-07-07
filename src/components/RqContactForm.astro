@@ -66,7 +66,7 @@ const turnstileNote = lang === 'en'
   </div>
   {turnstileSiteKey ? (
     <div class="rq-form-field rq-turnstile-group">
-      <div class="rq-turnstile" id="rq-lead-turnstile" aria-label={verifyLabel}></div>
+      <div class="rq-turnstile" id="rq-lead-turnstile" role="group" aria-label={verifyLabel}></div>
       <p class="rq-turnstile-note">{turnstileNote}</p>
     </div>
   ) : null}

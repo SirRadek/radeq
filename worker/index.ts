@@ -57,6 +57,26 @@ export default {
       return methodNotAllowed();
     }
 
+    // RFC 9116 vulnerability-disclosure contact. Served from the Worker (not an
+    // Astro/public route) because Vite can drop `.well-known` dot-folders at build.
+    if (url.pathname === '/.well-known/security.txt') {
+      return new Response(
+        [
+          'Contact: mailto:siroky@radeq.cz',
+          'Expires: 2027-07-01T00:00:00Z',
+          'Preferred-Languages: cs, en',
+          'Canonical: https://radeq.cz/.well-known/security.txt',
+          '',
+        ].join('\n'),
+        {
+          headers: {
+            'content-type': 'text/plain; charset=utf-8',
+            'cache-control': 'public, max-age=86400',
+          },
+        },
+      );
+    }
+
     return env.ASSETS.fetch(request);
   },
 };

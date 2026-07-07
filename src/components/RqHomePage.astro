@@ -34,6 +34,7 @@ const schema = {
   description: content.schema.description,
   url: content.schema.url,
   image: 'https://radeq.cz/og-default.jpg',
+  logo: 'https://radeq.cz/favicon.png',
   priceRange: '$$',
   telephone: contactNotePhone,
   email: 'siroky@radeq.cz',
@@ -78,7 +79,7 @@ const schema = {
         <p class="rq-hero__journey-note" data-rq-reveal style="--rq-i:4">{content.hero.journeyNote}</p>
       </div>
 
-      <div class="rq-proof-rail" data-rq-reveal style="--rq-i:5" aria-label={content.hero.proofAriaLabel}>
+      <div class="rq-proof-rail" role="group" data-rq-reveal style="--rq-i:5" aria-label={content.hero.proofAriaLabel}>
         {content.hero.proofItems.map((item) => (
           <div class="rq-proof-rail__item">
             <p class="rq-proof-rail__label">{item.label}</p>
@@ -1147,7 +1148,7 @@ const schema = {
     <div class="rq-bleed__inner">
       <p class="rq-eyebrow">{content.services.eyebrow}</p>
       <h2 id="rq-sluzby-title" class="rq-h2">{content.services.title}</h2>
-      <div class="rq-services-bento__grid" data-rq-service-rotator data-rq-reveal aria-label={content.services.ariaLabel}>
+      <div class="rq-services-bento__grid" role="group" data-rq-service-rotator data-rq-reveal aria-label={content.services.ariaLabel}>
         {content.services.items.map((service, index) => (
           <article
             id={`service-${service.id}`}

@@ -123,7 +123,14 @@ const defaultUrl = lang === 'cs' ? canonicalUrl : alternateUrl;
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <style is:global set:html={criticalCss}></style>
     <link rel="preload" href={rqCssHref} as="style" />
-    <link rel="stylesheet" href={rqCssHref} />
+    {/* Desktop (>=861px): render-blocking so multi-column layout is stable at first paint (kills the
+        desktop CLS); desktop LCP has ample headroom. On mobile the media query does not match, so this
+        link is non-render-blocking. */}
+    <link rel="stylesheet" href={rqCssHref} media="screen and (min-width: 861px)" />
+    {/* Mobile (and desktop, redundantly after load): async apply so small screens never block first
+        paint on the full sheet. Mobile is single-column so late-applied CSS causes no meaningful shift. */}
+    <link rel="stylesheet" href={rqCssHref} media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href={rqCssHref} /></noscript>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">

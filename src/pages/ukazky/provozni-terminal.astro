@@ -1,0 +1,382 @@
+---
+import LegacyLayout from '../../layouts/LegacyLayout.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const pageTitle = 'Dílenský terminál — evidence výroby, skladu a docházky | Demo RadeQ';
+const pageDescription =
+  'Funkční technické demo: jednoúčelový provozní terminál pro malou dílnu — rychlé zadání hotové operace, odpis materiálu a docházka, s online přehledem pro vedení. Nad demo daty, nic se neodesílá.';
+
+// Demo data (ilustrační obsah). Renderuje se staticky do HTML; JS jen přidá živé interakce.
+const operace = [
+  { id: 'op1', zakazka: 'Z-2041', popis: 'Pálení plechu — držáky', stroj: 'CNC pila', hotovo: false },
+  { id: 'op2', zakazka: 'Z-2041', popis: 'Frézování drážek', stroj: 'CNC frézka', hotovo: false },
+  { id: 'op3', zakazka: 'Z-2038', popis: 'Svařování rámu', stroj: 'Ruční pracoviště', hotovo: true },
+  { id: 'op4', zakazka: 'Z-2044', popis: 'Odjehlení + kontrola', stroj: 'Ruční pracoviště', hotovo: false },
+];
+const material = [
+  { id: 'm1', nazev: 'Plech 2 mm (tab.)', ks: 6, limit: 4 },
+  { id: 'm2', nazev: 'Jekl 30×30', ks: 3, limit: 4 },
+  { id: 'm3', nazev: 'Svař. drát 1,0', ks: 9, limit: 3 },
+];
+const lide = [
+  { id: 'p1', jmeno: 'Operátor A', vPraci: true },
+  { id: 'p2', jmeno: 'Operátor B', vPraci: false },
+];
+const hotovoDnes = operace.filter((o) => o.hotovo).length;
+const podLimitem = material.filter((m) => m.ks <= m.limit).length;
+const vPraci = lide.filter((p) => p.vPraci).length;
+---
+
+<LegacyLayout title={pageTitle} description={pageDescription}>
+  <div class="demo-banner" role="note">
+    <p><strong>Demo scénář studia RadeQ</strong> — funkční technické demo, ne klientská reference.</p>
+    <a href={base + '/ukazky/'} aria-label="Zpět na ukázky">← Zpět na ukázky</a>
+  </div>
+
+  <main class="shop-site">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Demo scénář · Výroba a sklad</p>
+        <h1 id="hero-title">Dílenský terminál místo těžkého ERP.</h1>
+        <p class="lead">Malá dílna nepotřebuje robustní podnikový systém. Potřebuje jednoúčelový, bleskový terminál: na dílně mobilně zadáš hotovou operaci, odpis materiálu a docházku — a vedení to vidí online. Níže si to <strong>proklikáš nad demo daty</strong>; nic se neodesílá.</p>
+        <div class="hero-actions" aria-label="Možnosti">
+          <a class="button primary" href="#terminal">Vyzkoušet terminál</a>
+          <a class="button secondary" href="#poptavka">Zmapovat můj provoz</a>
+        </div>
+      </div>
+      <div class="hero-panel" aria-label="O čem to je">
+        <div><strong>Pro koho</strong><span>malovýroba, dílna, zámečnictví, truhlářství</span></div>
+        <div><strong>Cíl</strong><span>konec papíru, Excelu a přepisování; přehled v reálném čase</span></div>
+        <div><strong>Provoz</strong><span>~0 Kč/měsíc na Cloudflare Free tieru</span></div>
+      </div>
+    </section>
+
+    <!-- ŽIVÝ TERMINÁL (mini-admin) -->
+    <section class="section" id="terminal" aria-labelledby="terminal-title" data-terminal>
+      <div class="section-head">
+        <p class="eyebrow">Živá ukázka · mini-admin</p>
+        <h2 id="terminal-title">Provozní terminál</h2>
+        <p class="section-lead">Klikni na „Hotovo", „Odpis" nebo docházku — přehled nahoře se přepočítá. Běží jen ve tvém prohlížeči nad demo daty.</p>
+      </div>
+
+      <div class="tstat" role="status" aria-live="polite">
+        <div class="tstat__item"><span class="tstat__k">Hotovo dnes</span><strong data-stat="hotovo">{hotovoDnes}</strong></div>
+        <div class="tstat__item"><span class="tstat__k">Materiál pod limitem</span><strong data-stat="limit" class:list={[podLimitem > 0 && 'is-warn']}>{podLimitem}</strong></div>
+        <div class="tstat__item"><span class="tstat__k">V práci</span><strong data-stat="vpraci">{vPraci}</strong></div>
+        <button type="button" class="tstat__reset" data-reset hidden>Reset dema</button>
+      </div>
+
+      <div class="tgrid">
+        <div class="tcard">
+          <h3>Dnešní fronta práce</h3>
+          <ul class="tlist" data-list="operace">
+            {operace.map((o) => (
+              <li class:list={['trow', o.hotovo && 'is-done']} data-op={o.id}>
+                <div class="trow__main">
+                  <span class="trow__tag">{o.zakazka}</span>
+                  <span class="trow__text">{o.popis}</span>
+                  <span class="trow__sub">{o.stroj}</span>
+                </div>
+                <button type="button" class="tbtn tbtn--ok" data-op-done={o.id} disabled={o.hotovo}>
+                  {o.hotovo ? '✓ Hotovo' : 'Hotovo'}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="tcard">
+          <h3>Sklad materiálu</h3>
+          <ul class="tlist" data-list="material">
+            {material.map((m) => (
+              <li class:list={['trow', m.ks <= m.limit && 'is-low']} data-mat={m.id}>
+                <div class="trow__main">
+                  <span class="trow__text">{m.nazev}</span>
+                  <span class="trow__sub">skladem <b data-mat-ks={m.id}>{m.ks}</b> · limit {m.limit}</span>
+                </div>
+                <button type="button" class="tbtn" data-mat-odpis={m.id}>Odpis −1</button>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="tcard">
+          <h3>Docházka</h3>
+          <ul class="tlist" data-list="lide">
+            {lide.map((p) => (
+              <li class:list={['trow', p.vPraci && 'is-in']} data-person={p.id}>
+                <div class="trow__main">
+                  <span class="trow__text">{p.jmeno}</span>
+                  <span class="trow__sub" data-person-state={p.id}>{p.vPraci ? 'v práci' : 'mimo'}</span>
+                </div>
+                <button type="button" class="tbtn" data-person-toggle={p.id}>{p.vPraci ? 'Odpíchnout' : 'Napíchnout'}</button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- POD KAPOTOU / X-RAY -->
+    <section class="section xray" aria-labelledby="xray-title">
+      <div class="section-head">
+        <p class="eyebrow">Pod kapotou</p>
+        <h2 id="xray-title">Jak to funguje a co to stojí</h2>
+      </div>
+      <div class="xgrid">
+        <div class="xcard">
+          <h3>Tok dat</h3>
+          <ol class="flow" aria-label="Tok dat od operátora k vedení">
+            <li>Operátor na dílně (mobil/tablet)</li>
+            <li>Bezpečné API (validace, přístupy)</li>
+            <li>Sdílená evidence (Cloudflare D1 / Google Sheets)</li>
+            <li>Online přehled pro vedení</li>
+          </ol>
+        </div>
+        <div class="xcard">
+          <h3>Kus kódu (validace zápisu)</h3>
+          <pre class="code" aria-label="Ukázka kódu"><code>{`// zápis hotové operace — server-side validace
+export async function zapisOperaci(vstup: unknown) {
+  const op = schemaOperace.parse(vstup);   // tvar dat
+  if (!maPravo(op.uzivatel, op.zakazka))    // přístupy
+    throw new Chyba('bez oprávnění');
+  await db.insert('operace', {
+    ...op, cas: Date.now(), zdroj: 'terminal'
+  });
+  return { ok: true };
+}`}</code></pre>
+        </div>
+        <div class="xcard">
+          <h3>Fakta</h3>
+          <ul class="facts">
+            <li><strong>Provoz:</strong> ~0 Kč/měs (Cloudflare Free).</li>
+            <li><strong>Co je živé:</strong> fronta, odpis, docházka a přepočet přehledu — nad demo daty v prohlížeči.</li>
+            <li><strong>Co je ilustrační:</strong> čísla zakázek, názvy materiálu, jména.</li>
+            <li><strong>Ostrá verze:</strong> sdílená evidence + přístupy + export; data zůstávají tvoje.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- DEMO SCÉNÁŘ (rozpad) -->
+    <section class="section" aria-labelledby="scenar-title">
+      <div class="section-head">
+        <p class="eyebrow">Rozpad scénáře</p>
+        <h2 id="scenar-title">Co bych řešil a co je v ceně</h2>
+      </div>
+      <div class="sgrid">
+        <div class="scard"><h3>Zadání</h3><p>Malá výroba/dílna chce evidovat zakázky, materiál a docházku bez těžkého ERP a bez měsíčních licencí.</p></div>
+        <div class="scard"><h3>Problém</h3><p>Papír + Excel + hlava. Informace se ztrácejí, ručně se přepisuje a vedení nemá přehled v reálném čase.</p></div>
+        <div class="scard"><h3>Řešení</h3><p>Jednoúčelový terminál: na dílně mobilně zadáš, vedení vidí online. Rychlé, bez balastu, na míru procesu.</p></div>
+        <div class="scard"><h3>Stack</h3><p>Astro + čistý TypeScript + Cloudflare Worker + D1 (nebo napojení na Google Sheets). Bez pluginů, nulový paušál.</p></div>
+        <div class="scard"><h3>Co je v ceně</h3><p>Nasazení, napojení, zaškolení, stručný manuál a předání do <strong>tvého plného vlastnictví</strong> (žádný lock-in).</p></div>
+        <div class="scard"><h3>Co doplníš ty</h3><p>Seznam operací a materiálu, kdo co dělá a jednoduchá pravidla provozu.</p></div>
+      </div>
+      <p class="limit-note"><strong>Limity:</strong> tohle není plné ERP, mzdy ani účetnictví — je to jednoúčelová evidence + přehled. Na složité integrace na rovinu řeknu, kdy to dává smysl řešit jinak.</p>
+    </section>
+
+    <section class="contact-section" id="poptavka" aria-labelledby="poptavka-title">
+      <div class="contact-copy">
+        <p class="eyebrow">Poptávka</p>
+        <h2 id="poptavka-title">Máš podobný provoz? Zmapujeme ho</h2>
+        <p>Napiš pár vět o tom, co dnes evidujete a kde to nejvíc drhne. Ozvu se s návrhem rozsahu a orientační cenou. Vstupní <strong>audit procesu od 3 000 Kč</strong> se při realizaci odečte.</p>
+      </div>
+      <a class="button primary big" href={base + '/?project_type=Audit#kontakt'}>Chci audit procesu</a>
+    </section>
+  </main>
+
+  <footer class="shop-footer">
+    <strong>RadeQ.cz</strong>
+    <span>Demo scénář — bez reálného provozovatele</span>
+    <a href={base + '/ukazky/'}>Další ukázky</a>
+  </footer>
+
+  <script is:inline>
+    (() => {
+      const root = document.querySelector('[data-terminal]');
+      if (!root) return;
+      const $ = (s, r = root) => r.querySelector(s);
+      const setStat = (k, v, warn) => {
+        const el = $(`[data-stat="${k}"]`);
+        if (!el) return;
+        el.textContent = String(v);
+        if (warn !== undefined) el.classList.toggle('is-warn', !!warn);
+      };
+      const recalc = () => {
+        const done = root.querySelectorAll('[data-op].is-done').length;
+        const low = root.querySelectorAll('[data-mat].is-low').length;
+        const inw = root.querySelectorAll('[data-person].is-in').length;
+        setStat('hotovo', done);
+        setStat('limit', low, low > 0);
+        setStat('vpraci', inw);
+        const reset = $('[data-reset]');
+        if (reset) reset.hidden = false;
+      };
+
+      root.addEventListener('click', (e) => {
+        const t = e.target;
+        if (!(t instanceof HTMLElement)) return;
+
+        const opId = t.getAttribute('data-op-done');
+        if (opId) {
+          const li = $(`[data-op="${opId}"]`);
+          li && li.classList.add('is-done');
+          t.setAttribute('disabled', '');
+          t.textContent = '✓ Hotovo';
+          recalc();
+          return;
+        }
+
+        const matId = t.getAttribute('data-mat-odpis');
+        if (matId) {
+          const ksEl = $(`[data-mat-ks="${matId}"]`);
+          const li = $(`[data-mat="${matId}"]`);
+          if (ksEl && li) {
+            let ks = Math.max(0, (parseInt(ksEl.textContent || '0', 10) || 0) - 1);
+            ksEl.textContent = String(ks);
+            const limit = parseInt((li.querySelector('.trow__sub')?.textContent?.match(/limit (\d+)/) || [])[1] || '0', 10);
+            li.classList.toggle('is-low', ks <= limit);
+            if (ks === 0) t.setAttribute('disabled', '');
+            recalc();
+          }
+          return;
+        }
+
+        const perId = t.getAttribute('data-person-toggle');
+        if (perId) {
+          const li = $(`[data-person="${perId}"]`);
+          const state = $(`[data-person-state="${perId}"]`);
+          if (li && state) {
+            const inw = li.classList.toggle('is-in');
+            state.textContent = inw ? 'v práci' : 'mimo';
+            t.textContent = inw ? 'Odpíchnout' : 'Napíchnout';
+            recalc();
+          }
+          return;
+        }
+
+        if (t.hasAttribute('data-reset')) {
+          window.location.reload();
+        }
+      });
+    })();
+  </script>
+</LegacyLayout>
+
+<style>
+  .demo-banner {
+    position: sticky; top: 0; z-index: 20;
+    display: flex; align-items: center; justify-content: center; gap: 1rem;
+    min-height: 42px; padding: 0.55rem 1rem;
+    color: #0f1720; background: #eef2f6; border-bottom: 1px solid #d3dbe4;
+    font: 600 0.9rem/1.35 system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  .demo-banner p { margin: 0; }
+  .demo-banner a { color: #256; text-decoration: underline; text-underline-offset: 0.2em; }
+
+  .shop-site, .shop-footer {
+    color: #16202b; background: #ffffff;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  .shop-site { overflow-x: clip; }
+
+  .hero, .section, .contact-section, .shop-footer {
+    width: min(1120px, calc(100% - 2rem)); margin-inline: auto;
+  }
+  .hero {
+    display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+    gap: clamp(1.5rem, 4vw, 4rem); align-items: center;
+    padding: clamp(2.5rem, 7vw, 5.5rem) 0 clamp(2rem, 5vw, 4rem);
+  }
+  .eyebrow { margin: 0 0 0.75rem; color: #1f6a8c; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; }
+  h1, h2, h3, p { overflow-wrap: anywhere; }
+  h1 { max-width: 780px; margin: 0; color: #0c141d; font-size: clamp(2.2rem, 5.5vw, 4.2rem); line-height: 1.0; }
+  h2 { margin: 0; color: #0c141d; font-size: clamp(1.7rem, 3vw, 2.5rem); line-height: 1.1; }
+  h3 { margin: 0 0 0.5rem; color: #0c141d; font-size: 1.05rem; }
+  .lead { max-width: 700px; margin: 1.2rem 0 0; color: #3d4a58; font-size: clamp(1.02rem, 2vw, 1.2rem); line-height: 1.65; }
+
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.75rem; }
+  .button {
+    display: inline-flex; align-items: center; justify-content: center; min-height: 48px;
+    padding: 0.85rem 1.15rem; border: 1px solid transparent; border-radius: 6px; font-weight: 800; text-decoration: none;
+  }
+  .button.big { min-height: 54px; padding: 0.9rem 1.6rem; font-size: 1.05rem; }
+  .primary { color: #fff; background: #1f6a8c; box-shadow: 0 12px 26px rgba(31,106,140,0.22); }
+  .secondary { color: #16202b; background: #fff; border-color: #c2ccd6; }
+
+  .hero-panel { display: grid; gap: 1rem; padding: 1.25rem; background: #14212e; border: 1px solid #26384a; border-radius: 10px; }
+  .hero-panel div { padding-bottom: 1rem; border-bottom: 1px solid #26384a; }
+  .hero-panel div:last-child { padding-bottom: 0; border-bottom: 0; }
+  .hero-panel strong, .hero-panel span { display: block; }
+  .hero-panel strong { margin-bottom: 0.25rem; color: #8fd0ea; }
+  .hero-panel span { color: #c3cdd8; line-height: 1.5; }
+
+  .section, .contact-section { padding: clamp(2.2rem, 5vw, 4rem) 0; border-top: 1px solid #e6eaef; }
+  .section-head { max-width: 780px; margin-bottom: 1.4rem; }
+  .section-lead { margin: 0.55rem 0 0; color: #3d4a58; line-height: 1.6; }
+
+  /* Terminál */
+  .tstat { display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: center; margin-bottom: 1.2rem; }
+  .tstat__item { display: grid; gap: 0.15rem; padding: 0.7rem 1rem; min-width: 130px; background: #14212e; border-radius: 8px; }
+  .tstat__k { color: #9fb1c2; font-size: 0.78rem; }
+  .tstat__item strong { color: #fff; font-size: 1.5rem; line-height: 1; }
+  .tstat__item strong.is-warn { color: #ffb454; }
+  .tstat__reset { margin-left: auto; cursor: pointer; padding: 0.5rem 0.9rem; color: #3d4a58; background: #fff; border: 1px solid #c2ccd6; border-radius: 6px; font: inherit; font-weight: 700; }
+
+  .tgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.9rem; }
+  .tcard { padding: 1rem; background: #f6f8fa; border: 1px solid #dde3ea; border-radius: 10px; }
+  .tlist { display: grid; gap: 0.55rem; margin: 0.4rem 0 0; padding: 0; list-style: none; }
+  .trow { display: flex; align-items: center; gap: 0.6rem; padding: 0.65rem 0.7rem; background: #fff; border: 1px solid #e0e6ec; border-radius: 8px; }
+  .trow__main { flex: 1; min-width: 0; display: grid; gap: 0.1rem; }
+  .trow__tag { display: inline-block; width: fit-content; padding: 0.05rem 0.4rem; background: #e6eef3; color: #1f6a8c; border-radius: 4px; font-size: 0.7rem; font-weight: 800; }
+  .trow__text { color: #16202b; font-weight: 650; line-height: 1.3; }
+  .trow__sub { color: #64717f; font-size: 0.8rem; }
+  .tbtn { cursor: pointer; padding: 0.5rem 0.75rem; color: #16202b; background: #fff; border: 1px solid #b9c4cf; border-radius: 6px; font: inherit; font-weight: 700; white-space: nowrap; }
+  .tbtn:hover { border-color: #1f6a8c; }
+  .tbtn--ok { color: #1c7d52; border-color: #9dd3b7; background: #f0faf5; }
+  .tbtn[disabled] { opacity: 0.55; cursor: default; }
+  .trow.is-done { background: #f0faf5; border-color: #b9e2cd; }
+  .trow.is-done .trow__text { text-decoration: line-through; color: #64717f; }
+  .trow.is-low { background: #fff6ec; border-color: #f4cf9a; }
+  .trow.is-low .trow__sub b { color: #b4560c; }
+  .trow.is-in { background: #eef6fb; border-color: #b6d8ea; }
+
+  /* Pod kapotou */
+  .xgrid, .sgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.9rem; }
+  .xcard, .scard { padding: 1.1rem; background: #f6f8fa; border: 1px solid #dde3ea; border-radius: 10px; }
+  .flow { margin: 0.4rem 0 0; padding-left: 1.1rem; display: grid; gap: 0.5rem; color: #3d4a58; line-height: 1.4; }
+  .flow li { padding-left: 0.2rem; }
+  .code { margin: 0.4rem 0 0; padding: 0.85rem; overflow-x: auto; background: #0f1a24; border-radius: 8px; }
+  .code code { color: #d6e6f2; font: 500 0.8rem/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre; }
+  .facts { margin: 0.4rem 0 0; padding-left: 1.1rem; display: grid; gap: 0.4rem; color: #3d4a58; line-height: 1.5; }
+  .scard p { margin: 0; color: #3d4a58; line-height: 1.55; }
+  .limit-note { margin-top: 1.1rem; padding: 0.9rem 1rem; background: #fff6ec; border-left: 4px solid #e08a2b; border-radius: 6px; color: #16202b; }
+
+  .contact-section {
+    display: grid; grid-template-columns: minmax(0, 1.2fr) auto; gap: clamp(1.2rem, 4vw, 3rem);
+    align-items: center; margin-bottom: 2.2rem; padding: clamp(1.5rem, 4vw, 2rem);
+    background: #eef2f6; border: 1px solid #d3dbe4; border-radius: 10px;
+  }
+  .contact-copy p { margin: 0.6rem 0 0; color: #3d4a58; line-height: 1.6; }
+
+  .shop-footer {
+    display: flex; flex-wrap: wrap; gap: 0.6rem 1.2rem; align-items: center; justify-content: space-between;
+    padding: 1.5rem 0 2.2rem; color: #3d4a58; border-top: 1px solid #e6eaef;
+  }
+  .shop-footer strong { color: #0c141d; }
+  .shop-footer a { color: #1f6a8c; font-weight: 800; text-decoration: none; }
+
+  input:focus, .button:focus-visible, .tbtn:focus-visible, .tstat__reset:focus-visible, .demo-banner a:focus-visible {
+    outline: 3px solid #ffbf47; outline-offset: 3px;
+  }
+
+  @media (max-width: 980px) {
+    .hero, .contact-section { grid-template-columns: 1fr; }
+    .tgrid, .xgrid, .sgrid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 680px) {
+    .demo-banner { flex-direction: column; align-items: flex-start; gap: 0.2rem; }
+    .hero, .section, .contact-section, .shop-footer { width: min(100% - 1rem, 1120px); }
+    .hero-actions .button, .button.big { width: 100%; }
+  }
+</style>

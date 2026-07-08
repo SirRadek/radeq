@@ -1837,12 +1837,18 @@ p {
 
 /* ===== V2 Vlna 2b: Služby bento ===== */
 .rq-section.rq-services-bento {
-  overflow: hidden;
+  overflow: visible;
   padding-block: clamp(0.65rem, 1.6dvh, 1.6rem);
 }
 
+.rq-services-bento.rq-bleed {
+  background: var(--rq-bg);
+  box-shadow: none;
+  clip-path: none;
+}
+
 .rq-services-bento .rq-bleed__inner {
-  overflow: hidden;
+  overflow: visible;
 }
 
 .rq-services-bento .rq-eyebrow + .rq-h2 {
@@ -1867,7 +1873,7 @@ p {
     "data audit audit";
   gap: clamp(0.3rem, 0.7dvh, 0.55rem);
   align-items: stretch;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .rq-services-bento__cta {

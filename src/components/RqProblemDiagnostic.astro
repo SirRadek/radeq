@@ -198,8 +198,8 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
     --rq-burgundy: #7A1F2B;
     --rq-burgundy-strong: #5E1622;
     --rq-burgundy-tint: #F3E7E9;
-    --rq-lime: #1AD9C0;
-    --rq-lime-ink: #125C52;
+    --rq-lime: #D97335;
+    --rq-lime-ink: #6E3712;
     --rq-carbon: #1A1611;
     --rq-carbon-2: #242018;
     --rq-on-dark: #F1EDE4;
@@ -227,7 +227,7 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
     padding-block: var(--rq-pad);
     padding-inline: max(clamp(1rem, 2vw, 1.4rem), calc((100% - var(--rq-page-w)) / 2));
     background:
-      radial-gradient(70% 80% at 92% 4%, rgba(26, 217, 192, 0.06), transparent 60%),
+      radial-gradient(70% 80% at 92% 4%, rgba(217, 115, 53, 0.06), transparent 60%),
       linear-gradient(225deg, var(--rq-burgundy-strong), #231018 72%);
     border-radius: 0;
     color: var(--rq-on-dark);
@@ -374,9 +374,9 @@ const severityTone = (severity: number) => (severity >= 4 ? 'critical' : 'medium
   }
 
   .diag-tab:hover {
-    border-color: rgba(26, 217, 192, 0.4);
+    border-color: rgba(217, 115, 53, 0.4);
     color: var(--rq-on-dark);
-    background: rgba(26, 217, 192, 0.04);
+    background: rgba(217, 115, 53, 0.04);
   }
 
   .diag-tab:focus-visible {

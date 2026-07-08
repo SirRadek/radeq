@@ -1,0 +1,379 @@
+---
+import LegacyLayout from '../../layouts/LegacyLayout.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const pageTitle = 'E-shop se správou objednávek a exportem do účetnictví | Demo RadeQ';
+const pageDescription =
+  'Funkční technické demo: e-shop, kde objednávka doteče do jednoduché administrace a odtud čistá data exportem do účetnictví — bez ručního přepisování. Test-mode, nic se neplatí, žádné osobní údaje.';
+
+// Demo data (ilustrační). Renderuje se staticky; JS přidá živý košík, objednávky a export.
+const produkty = [
+  { id: 'p1', nazev: 'Dřevěné prkénko — dub', cena: 690 },
+  { id: 'p2', nazev: 'Sada podtácků (4 ks)', cena: 320 },
+  { id: 'p3', nazev: 'Miska ruční práce', cena: 540 },
+];
+const czk = (n) => new Intl.NumberFormat('cs-CZ').format(n) + ' Kč';
+---
+
+<LegacyLayout title={pageTitle} description={pageDescription}>
+  <div class="demo-banner" role="note">
+    <p><strong>Demo scénář studia RadeQ</strong> — funkční technické demo, ne klientská reference.</p>
+    <a href={base + '/ukazky/'} aria-label="Zpět na ukázky">← Zpět na ukázky</a>
+  </div>
+
+  <main class="shop-site" data-shop>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Demo scénář · E-shop a data</p>
+        <h1 id="hero-title">E-shop, který předá čistá data účetní.</h1>
+        <p class="lead">Ne o tom, jak vypadá výklad — o tom, co se stane po objednávce. Objednávka doteče do jednoduché administrace a odtud jde <strong>exportem do účetnictví</strong>, bez ručního přepisování. Níže si to proklikáš: přidej do košíku, vytvoř demo objednávku, spravuj ji a exportuj.</p>
+        <div class="hero-actions" aria-label="Možnosti">
+          <a class="button primary" href="#katalog">Vyzkoušet</a>
+          <a class="button secondary" href="#poptavka">Zpřehlednit můj e-shop</a>
+        </div>
+      </div>
+      <div class="hero-panel" aria-label="O čem to je">
+        <div><strong>Pro koho</strong><span>lokální výrobce, malý e-shop, prodejce na Shoptetu/vlastním</span></div>
+        <div><strong>Cíl</strong><span>konec ručního přepisování objednávek do účetnictví a tabulek</span></div>
+        <div><strong>Test-mode</strong><span>nic se neplatí, nezadávají se platební ani osobní údaje</span></div>
+      </div>
+    </section>
+
+    <!-- KATALOG + KOŠÍK -->
+    <section class="section" id="katalog" aria-labelledby="katalog-title">
+      <div class="section-head">
+        <p class="eyebrow">Živá ukázka · katalog</p>
+        <h2 id="katalog-title">Katalog a košík</h2>
+        <p class="section-lead">Přidej pár položek do košíku a vytvoř <strong>demo objednávku</strong>. Běží jen ve tvém prohlížeči nad demo daty.</p>
+      </div>
+
+      <div class="catalog">
+        {produkty.map((p) => (
+          <article class="pcard" data-prod={p.id}>
+            <div class="pcard__thumb" aria-hidden="true">{p.nazev.charAt(0)}</div>
+            <h3>{p.nazev}</h3>
+            <p class="pcard__price">{czk(p.cena)}</p>
+            <button type="button" class="button pbtn" data-add={p.id} data-cena={p.cena} data-nazev={p.nazev}>Do košíku</button>
+          </article>
+        ))}
+      </div>
+
+      <div class="cart" data-cart hidden>
+        <div class="cart__head">
+          <strong>Košík</strong>
+          <span data-cart-count>0 položek</span>
+        </div>
+        <ul class="cart__list" data-cart-list></ul>
+        <div class="cart__foot">
+          <span>Celkem: <strong data-cart-total>0 Kč</strong></span>
+          <button type="button" class="button primary" data-checkout>K objednávce →</button>
+        </div>
+      </div>
+
+      <!-- Test-mode checkout -->
+      <div class="checkout" data-checkout-panel hidden aria-live="polite">
+        <p class="checkout__note">🔒 <strong>Demo objednávka (test-mode)</strong> — nic se neplatí a nezadávají se žádné platební ani osobní údaje. Slouží jen k ukázce toku dat.</p>
+        <div class="checkout__row">
+          <span>Vytvořit objednávku z košíku (<b data-checkout-count>0</b> pol. · <b data-checkout-total>0 Kč</b>)</span>
+          <button type="button" class="button primary" data-place>Vytvořit demo objednávku</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADMIN -->
+    <section class="section admin" aria-labelledby="admin-title">
+      <div class="section-head">
+        <p class="eyebrow">Živá ukázka · administrace</p>
+        <h2 id="admin-title">Přijaté objednávky</h2>
+        <p class="section-lead">Tady majitel vidí objednávky, mění jejich stav a jedním klikem exportuje čistá data do účetnictví.</p>
+      </div>
+      <div class="admin__bar">
+        <button type="button" class="button" data-export>Export do účetnictví (XML)</button>
+        <button type="button" class="button ghost" data-reset hidden>Reset dema</button>
+      </div>
+      <div class="admin__empty" data-orders-empty>Zatím žádná objednávka — vytvoř ji nahoře v katalogu.</div>
+      <ul class="orders" data-orders></ul>
+      <pre class="export" data-export-out hidden aria-label="Náhled XML exportu"></pre>
+    </section>
+
+    <!-- POD KAPOTOU / X-RAY -->
+    <section class="section xray" aria-labelledby="xray-title">
+      <div class="section-head">
+        <p class="eyebrow">Pod kapotou</p>
+        <h2 id="xray-title">Jak tečou data a co to stojí</h2>
+      </div>
+      <div class="xgrid">
+        <div class="xcard">
+          <h3>Tok dat</h3>
+          <ol class="flow" aria-label="Tok dat od objednávky do účetnictví">
+            <li>Katalog → košík</li>
+            <li>Objednávka (validace, žádné platební údaje v ukázce)</li>
+            <li>Administrace (stav, přehled)</li>
+            <li>Export do účetnictví (XML / Fakturoid, Pohoda)</li>
+          </ol>
+        </div>
+        <div class="xcard">
+          <h3>Kus kódu (export objednávky)</h3>
+          <pre class="code" aria-label="Ukázka kódu"><code>{`// jedna objednávka -> řádek pro účetnictví
+function naFakturu(o: Objednavka) {
+  return {
+    cislo: o.cislo,
+    polozky: o.polozky.map(p => ({
+      nazev: p.nazev, ks: p.ks, cena: p.cena
+    })),
+    celkem: soucet(o.polozky),   // spočítá server
+  };
+}`}</code></pre>
+        </div>
+        <div class="xcard">
+          <h3>Fakta</h3>
+          <ul class="facts">
+            <li><strong>Provoz:</strong> ~0 Kč/měs (Cloudflare Free) pro tuto ukázku.</li>
+            <li><strong>Co je živé:</strong> košík, demo objednávka, změna stavu a XML export — nad demo daty v prohlížeči.</li>
+            <li><strong>Co je ilustrační:</strong> produkty, ceny, čísla objednávek.</li>
+            <li><strong>Ostrá verze:</strong> reálné produkty, napojení na dopravce a účetnictví; platby přes ověřenou bránu (mimo tuto ukázku).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- DEMO SCÉNÁŘ -->
+    <section class="section" aria-labelledby="scenar-title">
+      <div class="section-head">
+        <p class="eyebrow">Rozpad scénáře</p>
+        <h2 id="scenar-title">Co bych řešil a co je v ceně</h2>
+      </div>
+      <div class="sgrid">
+        <div class="scard"><h3>Zadání</h3><p>Malý e-shop chce, aby objednávky netekly do e-mailu a tabulky současně, ale měly jedno místo a čistě se předávaly účetní.</p></div>
+        <div class="scard"><h3>Problém</h3><p>Ruční přepisování objednávek, chyby, ztracené položky a účetní, která dostává data „jak to přišlo".</p></div>
+        <div class="scard"><h3>Řešení</h3><p>Katalog + objednávka + jednoduchá administrace se stavy a exportem do účetnictví. Na Shoptetu/Shopify vyladím, nebo postavím na míru kódem.</p></div>
+        <div class="scard"><h3>Stack</h3><p>Astro + TypeScript + Cloudflare (D1/Worker), nebo napojení na stávající platformu. Export ve formátu, který bere tvoje účetní.</p></div>
+        <div class="scard"><h3>Co je v ceně</h3><p>Katalog, objednávkový tok, administrace, export, zaškolení, manuál a předání do <strong>tvého vlastnictví</strong>.</p></div>
+        <div class="scard"><h3>Co doplníš ty</h3><p>Produkty, fotky, ceny, pravidla dopravy a formát, který chce tvoje účetní.</p></div>
+      </div>
+      <p class="limit-note"><strong>Limity:</strong> tato ukázka <strong>nepřijímá platby</strong> ani osobní/doručovací údaje — to v ostré verzi řeší ověřená platební brána a dopravci, mimo demo. Není to náhrada účetnictví, ale čistý most k němu.</p>
+    </section>
+
+    <section class="contact-section" id="poptavka" aria-labelledby="poptavka-title">
+      <div class="contact-copy">
+        <p class="eyebrow">Poptávka</p>
+        <h2 id="poptavka-title">Máš e-shop, kde se přepisuje ručně?</h2>
+        <p>Napiš, na čem prodáváš a kam data putují dnes. Ozvu se s návrhem, jak to zpřehlednit. Vstupní <strong>audit procesu od 3 000 Kč</strong> se při realizaci odečte.</p>
+      </div>
+      <a class="button primary big" href={base + '/?project_type=Audit#kontakt'}>Chci audit procesu</a>
+    </section>
+  </main>
+
+  <footer class="shop-footer">
+    <strong>RadeQ.cz</strong>
+    <span>Demo scénář — bez reálného provozovatele, bez plateb</span>
+    <a href={base + '/ukazky/'}>Další ukázky</a>
+  </footer>
+
+  <script is:inline>
+    (() => {
+      const root = document.querySelector('[data-shop]');
+      if (!root) return;
+      const $ = (s) => root.querySelector(s);
+      const czk = (n) => new Intl.NumberFormat('cs-CZ').format(n) + ' Kč';
+      const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+      const cart = new Map(); // id -> {nazev, cena, ks}
+      const orders = [];
+      let orderSeq = 1041;
+      const STAVY = ['Nová', 'Vyřizuje se', 'Odesláno'];
+
+      const cartBox = $('[data-cart]');
+      const coPanel = $('[data-checkout-panel]');
+      const ordersEl = $('[data-orders]');
+      const ordersEmpty = $('[data-orders-empty]');
+      const resetBtn = $('[data-reset]');
+      const exportOut = $('[data-export-out]');
+
+      const cartTotal = () => [...cart.values()].reduce((s, i) => s + i.cena * i.ks, 0);
+      const cartCount = () => [...cart.values()].reduce((s, i) => s + i.ks, 0);
+
+      function renderCart() {
+        const list = $('[data-cart-list]');
+        list.innerHTML = [...cart.entries()].map(([id, i]) =>
+          `<li><span>${esc(i.nazev)} × ${i.ks}</span><span>${czk(i.cena * i.ks)} <button type="button" class="linklike" data-del="${id}">odebrat</button></span></li>`
+        ).join('');
+        $('[data-cart-count]').textContent = cartCount() + ' pol.';
+        $('[data-cart-total]').textContent = czk(cartTotal());
+        cartBox.hidden = cart.size === 0;
+        if (cart.size === 0) coPanel.hidden = true;
+      }
+
+      function renderOrders() {
+        ordersEmpty.hidden = orders.length > 0;
+        ordersEl.innerHTML = orders.map((o) => {
+          const items = o.polozky.map((p) => `${esc(p.nazev)} ×${p.ks}`).join(', ');
+          return `<li class="order" data-order="${o.cislo}"><div class="order__main"><span class="order__no">#${o.cislo}</span><span class="order__items">${items}</span><span class="order__sum">${czk(o.celkem)}</span></div><button type="button" class="tag stav-${o.stavIdx}" data-status="${o.cislo}">${esc(STAVY[o.stavIdx])}</button></li>`;
+        }).join('');
+        resetBtn.hidden = orders.length === 0;
+      }
+
+      root.addEventListener('click', (e) => {
+        const t = e.target;
+        if (!(t instanceof HTMLElement)) return;
+
+        const addId = t.getAttribute('data-add');
+        if (addId) {
+          const cena = parseInt(t.getAttribute('data-cena') || '0', 10);
+          const nazev = t.getAttribute('data-nazev') || '';
+          const cur = cart.get(addId) || { nazev, cena, ks: 0 };
+          cur.ks += 1; cart.set(addId, cur);
+          renderCart();
+          return;
+        }
+        const delId = t.getAttribute('data-del');
+        if (delId) { cart.delete(delId); renderCart(); return; }
+
+        if (t.hasAttribute('data-checkout')) {
+          coPanel.hidden = false;
+          $('[data-checkout-count]').textContent = String(cartCount());
+          $('[data-checkout-total]').textContent = czk(cartTotal());
+          coPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          return;
+        }
+
+        if (t.hasAttribute('data-place')) {
+          if (cart.size === 0) return;
+          orders.unshift({
+            cislo: orderSeq++,
+            polozky: [...cart.values()].map((i) => ({ nazev: i.nazev, cena: i.cena, ks: i.ks })),
+            celkem: cartTotal(),
+            stavIdx: 0,
+          });
+          cart.clear();
+          renderCart();
+          coPanel.hidden = true;
+          exportOut.hidden = true;
+          renderOrders();
+          ordersEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          return;
+        }
+
+        const stId = t.getAttribute('data-status');
+        if (stId) {
+          const o = orders.find((x) => String(x.cislo) === stId);
+          if (o) { o.stavIdx = (o.stavIdx + 1) % STAVY.length; renderOrders(); }
+          return;
+        }
+
+        if (t.hasAttribute('data-export')) {
+          if (orders.length === 0) { exportOut.hidden = false; exportOut.textContent = '<!-- žádné objednávky k exportu -->'; return; }
+          const xml = ['<objednavky>']
+            .concat(orders.map((o) =>
+              `  <objednavka cislo="${o.cislo}" stav="${esc(STAVY[o.stavIdx])}" celkem="${o.celkem}">\n` +
+              o.polozky.map((p) => `    <polozka nazev="${esc(p.nazev)}" ks="${p.ks}" cena="${p.cena}"/>`).join('\n') +
+              `\n  </objednavka>`
+            ))
+            .concat(['</objednavky>']).join('\n');
+          exportOut.hidden = false;
+          exportOut.textContent = xml;
+          exportOut.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          return;
+        }
+
+        if (t.hasAttribute('data-reset')) window.location.reload();
+      });
+    })();
+  </script>
+</LegacyLayout>
+
+<style>
+  .demo-banner {
+    position: sticky; top: 0; z-index: 20;
+    display: flex; align-items: center; justify-content: center; gap: 1rem;
+    min-height: 42px; padding: 0.55rem 1rem;
+    color: #12211a; background: #eef6f1; border-bottom: 1px solid #cfe6da;
+    font: 600 0.9rem/1.35 system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  .demo-banner p { margin: 0; }
+  .demo-banner a { color: #1c7d52; text-decoration: underline; text-underline-offset: 0.2em; }
+
+  .shop-site, .shop-footer { color: #14211b; background: #fff; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  .shop-site { overflow-x: clip; }
+
+  .hero, .section, .contact-section, .shop-footer { width: min(1120px, calc(100% - 2rem)); margin-inline: auto; }
+  .hero { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(280px,0.8fr); gap: clamp(1.5rem,4vw,4rem); align-items: center; padding: clamp(2.5rem,7vw,5.5rem) 0 clamp(2rem,5vw,4rem); }
+  .eyebrow { margin: 0 0 0.75rem; color: #1c7d52; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; }
+  h1,h2,h3,p { overflow-wrap: anywhere; }
+  h1 { max-width: 760px; margin: 0; color: #0d1b14; font-size: clamp(2.2rem,5.5vw,4.2rem); line-height: 1.0; }
+  h2 { margin: 0; color: #0d1b14; font-size: clamp(1.7rem,3vw,2.5rem); line-height: 1.1; }
+  h3 { margin: 0 0 0.5rem; color: #0d1b14; font-size: 1.05rem; }
+  .lead { max-width: 700px; margin: 1.2rem 0 0; color: #3c4a43; font-size: clamp(1.02rem,2vw,1.2rem); line-height: 1.65; }
+
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.75rem; }
+  .button { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0.75rem 1.1rem; border: 1px solid #c2d2c9; border-radius: 6px; background: #fff; color: #14211b; font: inherit; font-weight: 800; text-decoration: none; cursor: pointer; }
+  .button.big { min-height: 54px; padding: 0.9rem 1.6rem; font-size: 1.05rem; }
+  .button.ghost { color: #3c4a43; }
+  .primary { color: #fff; background: #1c7d52; border-color: #1c7d52; box-shadow: 0 12px 26px rgba(28,125,82,0.22); }
+  .secondary { color: #14211b; background: #fff; }
+  .linklike { border: 0; background: none; color: #b4560c; font: inherit; cursor: pointer; text-decoration: underline; padding: 0 0 0 0.4rem; }
+
+  .hero-panel { display: grid; gap: 1rem; padding: 1.25rem; background: #12291f; border: 1px solid #204534; border-radius: 10px; }
+  .hero-panel div { padding-bottom: 1rem; border-bottom: 1px solid #244c39; }
+  .hero-panel div:last-child { padding-bottom: 0; border-bottom: 0; }
+  .hero-panel strong, .hero-panel span { display: block; }
+  .hero-panel strong { margin-bottom: 0.25rem; color: #8fe0b6; }
+  .hero-panel span { color: #c3d6cc; line-height: 1.5; }
+
+  .section, .contact-section { padding: clamp(2.2rem,5vw,4rem) 0; border-top: 1px solid #e6efe9; }
+  .section-head { max-width: 780px; margin-bottom: 1.4rem; }
+  .section-lead { margin: 0.55rem 0 0; color: #3c4a43; line-height: 1.6; }
+
+  .catalog { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 0.9rem; }
+  .pcard { display: grid; gap: 0.5rem; padding: 1rem; background: #f5f9f7; border: 1px solid #dbe8e1; border-radius: 10px; }
+  .pcard__thumb { display: grid; place-items: center; height: 96px; background: #e3efe8; border-radius: 8px; color: #1c7d52; font-size: 2rem; font-weight: 900; }
+  .pcard__price { margin: 0; color: #14211b; font-weight: 800; }
+  .pbtn { width: 100%; }
+
+  .cart, .checkout { margin-top: 1rem; padding: 1rem; background: #f5f9f7; border: 1px solid #dbe8e1; border-radius: 10px; }
+  .cart__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+  .cart__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; }
+  .cart__list li { display: flex; justify-content: space-between; gap: 1rem; color: #3c4a43; }
+  .cart__foot { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid #dbe8e1; }
+  .checkout__note { margin: 0 0 0.8rem; padding: 0.7rem 0.9rem; background: #fff6ec; border: 1px solid #f4cf9a; border-radius: 8px; color: #5a3a12; line-height: 1.5; }
+  .checkout__row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+
+  .admin__bar { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1rem; }
+  .admin__empty { padding: 1rem; color: #64756c; background: #f5f9f7; border: 1px dashed #cfe0d6; border-radius: 8px; }
+  .orders { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+  .order { display: flex; align-items: center; gap: 0.7rem; padding: 0.65rem 0.75rem; background: #fff; border: 1px solid #e0ece5; border-radius: 8px; }
+  .order__main { flex: 1; min-width: 0; display: flex; flex-wrap: wrap; gap: 0.3rem 0.8rem; align-items: baseline; }
+  .order__no { font-weight: 800; color: #1c7d52; }
+  .order__items { color: #3c4a43; }
+  .order__sum { margin-left: auto; font-weight: 800; }
+  .tag { border: 1px solid #c2d2c9; border-radius: 999px; padding: 0.3rem 0.7rem; font: inherit; font-weight: 700; cursor: pointer; white-space: nowrap; }
+  .stav-0 { background: #eef2f6; color: #345; border-color: #c9d6e2; }
+  .stav-1 { background: #fff6ec; color: #8a4d0f; border-color: #f0cfa0; }
+  .stav-2 { background: #eef8f1; color: #1c7d52; border-color: #b7e0c7; }
+  .export { margin-top: 1rem; padding: 0.85rem; overflow-x: auto; background: #0f1d16; border-radius: 8px; color: #cfe9d9; font: 500 0.78rem/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre; }
+
+  .xgrid, .sgrid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 0.9rem; }
+  .xcard, .scard { padding: 1.1rem; background: #f5f9f7; border: 1px solid #dbe8e1; border-radius: 10px; }
+  .flow { margin: 0.4rem 0 0; padding-left: 1.1rem; display: grid; gap: 0.5rem; color: #3c4a43; line-height: 1.4; }
+  .code { margin: 0.4rem 0 0; padding: 0.85rem; overflow-x: auto; background: #0f1d16; border-radius: 8px; }
+  .code code { color: #cfe9d9; font: 500 0.8rem/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre; }
+  .facts { margin: 0.4rem 0 0; padding-left: 1.1rem; display: grid; gap: 0.4rem; color: #3c4a43; line-height: 1.5; }
+  .scard p { margin: 0; color: #3c4a43; line-height: 1.55; }
+  .limit-note { margin-top: 1.1rem; padding: 0.9rem 1rem; background: #fff6ec; border-left: 4px solid #e08a2b; border-radius: 6px; color: #14211b; }
+
+  .contact-section { display: grid; grid-template-columns: minmax(0,1.2fr) auto; gap: clamp(1.2rem,4vw,3rem); align-items: center; margin-bottom: 2.2rem; padding: clamp(1.5rem,4vw,2rem); background: #eef6f1; border: 1px solid #cfe6da; border-radius: 10px; }
+  .contact-copy p { margin: 0.6rem 0 0; color: #3c4a43; line-height: 1.6; }
+
+  .shop-footer { display: flex; flex-wrap: wrap; gap: 0.6rem 1.2rem; align-items: center; justify-content: space-between; padding: 1.5rem 0 2.2rem; color: #3c4a43; border-top: 1px solid #e6efe9; }
+  .shop-footer strong { color: #0d1b14; }
+  .shop-footer a { color: #1c7d52; font-weight: 800; text-decoration: none; }
+
+  .button:focus-visible, .tag:focus-visible, .linklike:focus-visible, .demo-banner a:focus-visible { outline: 3px solid #ffbf47; outline-offset: 3px; }
+
+  @media (max-width: 980px) { .hero, .contact-section { grid-template-columns: 1fr; } .catalog, .xgrid, .sgrid { grid-template-columns: 1fr; } }
+  @media (max-width: 680px) {
+    .demo-banner { flex-direction: column; align-items: flex-start; gap: 0.2rem; }
+    .hero, .section, .contact-section, .shop-footer { width: min(100% - 1rem, 1120px); }
+    .hero-actions .button, .button.big { width: 100%; }
+  }
+</style>

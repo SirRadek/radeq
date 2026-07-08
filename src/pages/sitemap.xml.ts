@@ -28,7 +28,7 @@ export const GET: APIRoute = ({ site }) => {
     '/kontakt/', '/sluzby/', '/portfolio/', '/soukromi/', '/audit/',
     '/en/audit/', '/en/kontakt/', '/en/sluzby/', '/en/soukromi/',
   ];
-  const rqV1Paths = ['/ukazky/instalater/', '/ukazky/sluzba/', '/ukazky/eshop/', '/ukazky/chatbot/', '/ukazky/provozni-terminal/', '/zapisky/', '/zapisky/web-pro-zivnostnika-cena/', '/zapisky/vlastni-eshop-nebo-shoptet/', '/zapisky/jak-se-staram-o-web-po-predani/'];
+  const rqV1Paths = ['/ukazky/instalater/', '/ukazky/sluzba/', '/ukazky/eshop/', '/ukazky/chatbot/', '/ukazky/provozni-terminal/', '/ukazky/eshop-system/', '/zapisky/', '/zapisky/web-pro-zivnostnika-cena/', '/zapisky/vlastni-eshop-nebo-shoptet/', '/zapisky/jak-se-staram-o-web-po-predani/'];
   const paths = [
     '/',
     '/en/',

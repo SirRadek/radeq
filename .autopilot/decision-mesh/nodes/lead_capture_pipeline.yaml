@@ -18,8 +18,8 @@ related_agents:
   - qa
 related_files:
   - docs/projects/radeq/architecture.md
-  - C:/Users/sirok/Documents/Projects/radeq/functions/api/leads.ts
-  - C:/Users/sirok/Documents/Projects/radeq/src/lib/leadNotificationEmail.ts
+  - functions/api/leads.ts
+  - src/lib/leadNotificationEmail.ts
 required_checks:
   - client_validation
   - server_validation

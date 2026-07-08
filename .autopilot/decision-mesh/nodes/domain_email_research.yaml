@@ -20,7 +20,7 @@ related_agents:
   - qa
 related_files:
   - docs/projects/radeq/work-log.md
-  - C:/Users/sirok/Documents/Projects/radeq/src/lib/leadNotificationEmail.ts
+  - src/lib/leadNotificationEmail.ts
 required_checks:
   - official_provider_source_check
   - dns_read_only_check
@@ -35,6 +35,6 @@ stop_conditions:
   - form_backend_sends_from_client_side
 objective:
   - "Track Fastmail as the selected human mailbox provider for radeq.cz while Cloudflare remains the DNS/control surface."
-  - "Keep DMARC at p=none during initial monitoring, then consider quarantine/reject only after observed legitimate mail alignment."
+  - "Move DMARC through staged hardening (p=none -> quarantine -> reject) as Fastmail + Resend alignment is confirmed via aggregate (rua) reports; prefer SPF softfail (~all) over neutral (?all). Do not stay pinned at p=none."
   - "Keep forwarding, transactional mail, and form backend decisions separate from human mailbox hosting."
-  - "For lead notifications, allow Cloudflare Email Sending only as a server-side transactional notification layer into the owner-confirmed Fastmail mailbox."
+  - "For lead notifications, use Resend as the server-side transactional layer (sent after successful D1 storage, fail-soft), while the owner-confirmed Fastmail stays the human mailbox. The old Cloudflare Email Sending binding is retired."

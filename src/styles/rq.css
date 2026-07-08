@@ -1868,7 +1868,7 @@ p {
   display: flex;
   flex-direction: column;
   gap: clamp(0.32rem, 0.75dvh, 0.55rem);
-  min-height: 100%;
+  min-height: max-content;
   padding: clamp(0.7rem, 1.3dvh, 1rem) clamp(0.8rem, 1.2vw, 1.1rem);
   border: 1px solid color-mix(in srgb, var(--rq-ink, #201615) 14%, transparent);
   border-radius: 18px;

@@ -1180,13 +1180,34 @@ const schema = {
     </div>
   </section>
 
-  <section class="rq-section rq-guarantee-section" aria-labelledby="rq-guarantee-title">
+  <section id="zaruka" class="rq-section rq-guarantee-section" aria-labelledby="rq-guarantee-title">
     <article class="rq-guarantee">
       <p class="rq-eyebrow">{content.guarantee.eyebrow}</p>
       <h3 id="rq-guarantee-title">{content.guarantee.title}</h3>
       <p>{content.guarantee.text}</p>
+      <ul class="rq-guarantee__trust" role="list">
+        {content.guarantee.trust.map((t) => (
+          <li>
+            <strong>{t.heading}</strong>
+            <span>{t.text}</span>
+          </li>
+        ))}
+      </ul>
     </article>
   </section>
+
+  <style>
+    .rq-guarantee__trust {
+      display: grid; gap: 1rem; margin: 1.5rem 0 0; padding: 1.5rem 0 0;
+      list-style: none; border-top: 1px solid rgba(255, 255, 255, 0.18);
+    }
+    .rq-guarantee__trust li { display: grid; gap: 0.25rem; }
+    .rq-guarantee__trust strong { color: #fff; font-size: 1.02rem; line-height: 1.3; }
+    .rq-guarantee__trust span { color: rgba(255, 255, 255, 0.82); line-height: 1.58; }
+    @media (min-width: 720px) {
+      .rq-guarantee__trust { grid-template-columns: 1fr 1fr; gap: 1.2rem 2.2rem; }
+    }
+  </style>
 
   <script is:inline define:vars={{ serviceLiveFallback: content.services.liveFallback, serviceLivePrefix: content.services.livePrefix }}>
     (() => {

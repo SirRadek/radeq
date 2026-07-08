@@ -170,6 +170,7 @@ export type HomeContent = {
     eyebrow: string;
     title: string;
     text: string;
+    trust: readonly { heading: string; text: string }[];
   };
   about: {
     eyebrow: string;
@@ -1495,6 +1496,12 @@ export const homeContent = {
       eyebrow: 'Servisní protokol & záruka',
       title: 'Každá zakázka má jasný výstup a ověřený výkon.',
       text: 'U každé zakázky dostanete servisní protokol — co jsem udělal, co se změnilo a co dál (i co nemá smysl řešit). Před předáním web otestuji: formuláře, mobil, rychlost, základní SEO i měření. Hlídám rychlé načítání. Domluvené kritérium kvality zapíšu do protokolu předem — když ho při předání nesplním, vrátím 15 % z ceny práce, nebo to bez příplatku doladím.',
+      trust: [
+        { heading: 'Od prvního dne to patří tobě', text: 'Stavím na otevřených technologiích a předám kód i web do tvého vlastního repozitáře a hostingu — pod tvým účtem. Když se rozhodneš pokračovat s někým jiným, převezme to kterýkoli vývojář. Nedržím tvá data ani přístupy jako rukojmí.' },
+        { heading: 'Bezpečnost, ne strašení', text: 'Neslíbím, že tě nikdy nikdo nenapadne — to nejde. Ale postavím běžnou obranu: ochranu formulářů (Turnstile + rate-limit), zálohy, aktualizace a GDPR u dat. Jasně se domluvíme, kdo řeší výpadky a za kolik.' },
+        { heading: 'Co vědomě nedělám', text: 'Neslibuji první místo na Googlu ani konkrétní číslo v PageSpeedu — spolehlivý recept na to neexistuje. Nedělám weby „ze šablony za tři dny", velké enterprise systémy ani reklamní texty od stolu. Když projekt přeroste jednoho člověka, řeknu to hned a napojím parťáky.' },
+        { heading: 'Uvidíš přesně, co dostaneš', text: 'Řeknu, v čem to stavím a proč zrovna tak. V ceně je hotový web, zdrojový kód, stručný manuál, zaškolení a předání přístupů — a smlouva bez právnického balastu: jasně, co je hotové a co dodáš ty.' },
+      ],
     },
     about: {
       eyebrow: 'Kdo jsem',
@@ -1875,6 +1882,12 @@ export const homeContent = {
       eyebrow: 'Service protocol & guarantee',
       title: 'Every project has a clear output and verified performance.',
       text: 'For every project, you receive a service protocol - what I did, what changed, and what comes next (including what is not worth solving). Before handoff, I test the website: forms, mobile, speed, SEO basics, and measurement. I watch fast loading and write the agreed qualitative criterion into the protocol upfront - if I do not meet it at handoff, I return 15% of the labour price or fine-tune it without extra charge.',
+      trust: [
+        { heading: 'Yours from day one', text: 'I build on open technologies and hand over the code and site into your own repository and hosting - under your account. If you decide to continue with someone else, any developer can take over. I do not hold your data or access hostage.' },
+        { heading: 'Security, not scare tactics', text: 'I will not promise you will never be attacked - that would be a lie. But I set up the usual defence: form protection (Turnstile + rate limit), backups, updates and GDPR for data. We agree clearly who handles outages and for how much.' },
+        { heading: 'What I deliberately do not do', text: 'I do not promise first place on Google or a specific PageSpeed number - there is no reliable recipe for that. I do not build "template sites in three days", large enterprise systems, or ad copy from my desk. When a project outgrows one person, I say so up front and bring in partners.' },
+        { heading: 'You see exactly what you get', text: 'I tell you what I build it in and why. The price includes a finished site, source code, a short manual, training and handover of access - and a contract without legal jargon: clearly what is done and what you supply.' },
+      ],
     },
     about: {
       eyebrow: 'About me',

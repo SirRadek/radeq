@@ -1201,7 +1201,7 @@ const csJourney: HomeContent['journey']['phases'] = [
   {
     id: 'rozbor',
     number: '01',
-    title: 'Rozbor',
+    title: 'Audit',
     duration: '1–3 dny',
     solve: 'co nefunguje, kdo to používá, kde se ztrácí čas a důvěra.',
     process: 'krátký hovor, projdu web/proces, doptám se na cíl.',
@@ -1278,7 +1278,7 @@ const enJourney: HomeContent['journey']['phases'] = [
   {
     id: 'rozbor',
     number: '01',
-    title: 'Diagnosis',
+    title: 'Audit',
     duration: '1-3 days',
     solve: 'what is not working, who uses it, and where time and trust are lost.',
     process: 'a short call, I review the website/process, and clarify the goal.',
@@ -1444,7 +1444,7 @@ export const homeContent = {
     },
     services: {
       eyebrow: 'Služby',
-      title: 'Co vám zjednoduším',
+      title: 'Co Vám zjednoduším',
       ariaLabel: 'Služby a orientační ceny',
       ctaLabel: 'Domluvit nezávazný rozbor',
       liveFallback: 'služba',

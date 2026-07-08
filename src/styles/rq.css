@@ -1588,6 +1588,14 @@ p {
   background: linear-gradient(90deg, var(--rq-burgundy), color-mix(in srgb, var(--rq-burgundy) 72%, var(--rq-lime)));
 }
 
+.rq-services-bento .rq-h2 {
+  position: relative;
+  z-index: 3;
+}
+.rq-services-bento .rq-h2::after {
+  display: none;
+}
+
 .rq-offer__price,
 .rq-price-card__price {
   font-family: var(--rq-display), var(--rq-body), sans-serif;

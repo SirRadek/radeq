@@ -1070,15 +1070,15 @@ p {
 
 @media (min-width: 900px) {
   .rq-pricing__board {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
   }
 
   .rq-pricing-entry {
-    order: 2;
+    order: 1;
   }
 
   .rq-pricing-project--list {
-    order: 1;
+    order: 2;
   }
 
   .rq-pricing-project--care {
@@ -1607,10 +1607,6 @@ p {
   background: linear-gradient(90deg, var(--rq-burgundy), color-mix(in srgb, var(--rq-burgundy) 72%, var(--rq-lime)));
 }
 
-.rq-services-bento .rq-h2 {
-  position: relative;
-  z-index: 3;
-}
 .rq-services-bento .rq-h2::after {
   display: none;
 }
@@ -1863,7 +1859,7 @@ p {
   --rq-service-rotation-ms: 20000ms;
   --rq-service-progress-intro-ms: 520ms;
   display: grid;
-  margin-top: clamp(0.4rem, 0.9dvh, 0.75rem);
+  margin-top: clamp(1.25rem, 3dvh, 2.25rem);
   grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr) minmax(0, 1fr);
   grid-template-areas:
     "web web shop"
@@ -1906,6 +1902,7 @@ p {
     linear-gradient(135deg, color-mix(in srgb, var(--rq-wine, #7A1F2B) 10%, transparent), transparent 52%),
     color-mix(in srgb, var(--rq-paper, #F7F4EE) 94%, white);
   box-shadow: 0 24px 70px rgba(123, 35, 50, 0.16);
+  transform-origin: center top;
 }
 
 .rq-service-tile.is-featured::before {
@@ -2106,6 +2103,11 @@ p {
   transform: translateY(-4px);
   border-color: color-mix(in srgb, var(--rq-wine, #7A1F2B) 36%, transparent);
   box-shadow: 0 26px 76px rgba(32, 22, 21, 0.13);
+}
+
+.rq-services-bento__grid .is-featured:hover,
+.rq-services-bento__grid .is-featured:focus-within {
+  transform: scale(1.01);
 }
 
 .rq-services-bento__grid.is-flipping .rq-hoverable:hover,

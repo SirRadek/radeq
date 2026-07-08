@@ -1068,6 +1068,25 @@ p {
   margin-top: clamp(1.75rem, 4vw, 3rem);
 }
 
+@media (min-width: 900px) {
+  .rq-pricing__board {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .rq-pricing-entry {
+    order: 2;
+  }
+
+  .rq-pricing-project--list {
+    order: 1;
+  }
+
+  .rq-pricing-project--care {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+}
+
 .rq-pricing-band,
 .rq-pricing-entry,
 .rq-pricing-project {

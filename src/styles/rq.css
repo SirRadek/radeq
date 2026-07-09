@@ -2227,11 +2227,11 @@ p {
   .rq-services-bento__grid {
     grid-template-columns: 1fr;
     grid-template-areas:
-      "audit"
       "web"
       "shop"
       "automation"
-      "data";
+      "data"
+      "audit";
   }
 
   .rq-service-tile,

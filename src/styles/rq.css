@@ -4321,7 +4321,7 @@ body .rq-hero .rq-lead {
   }
 
   .rq-about__media {
-    width: min(78%, 20rem);
+    width: min(62%, 15rem);
   }
 
   .rq-about__body {
@@ -4334,17 +4334,28 @@ body .rq-hero .rq-lead {
    Cíl: srazit délku (sekční padding 64→~36px), škálovat nadpisy, touch ≥44px. */
 @media (max-width: 480px) {
   :root {
-    --rq-pad: clamp(1.4rem, 4.5vh, 2.75rem);
+    --rq-pad: clamp(1.15rem, 4vh, 2.3rem);
+    /* Overall phone scale-down: shrink the whole rem-based type/spacing a notch
+       (px tap-targets below are unaffected). */
+    font-size: 94%;
   }
 
   .rq-h2 {
-    font-size: clamp(1.55rem, 8vw, 2.1rem);
+    font-size: clamp(1.3rem, 6.4vw, 1.7rem);
     max-width: 18ch;
   }
 
   .rq-h2--feature {
-    font-size: clamp(1.7rem, 8.5vw, 2.4rem);
+    font-size: clamp(1.4rem, 6.8vw, 1.85rem);
     max-width: 20ch;
+  }
+
+  .rq-display {
+    font-size: clamp(1.9rem, 8vw, 2.5rem);
+  }
+
+  .rq-services-bento .rq-h2 {
+    font-size: clamp(1.35rem, 6.4vw, 1.8rem);
   }
 
   /* touch-targety ≥44px */

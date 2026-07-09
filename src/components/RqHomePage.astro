@@ -1235,6 +1235,7 @@ const schema = {
       const REST_EASING = 'cubic-bezier(.25,1,.5,1)';
       const initialFeatured = tiles.find((tile) => tile.classList.contains('is-featured')) || tiles[0];
       const initialSlots = new Map(tiles.map((tile) => [tile, tile.dataset.rqSlot || '']));
+      const auditTile = tiles.find((tile) => initialSlots.get(tile) === 'audit') || tiles[tiles.length - 1];
       const reduceQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
       const mobileQuery = window.matchMedia?.('(max-width: 860px)');
       const supportsAnimations = typeof tiles[0].animate === 'function';
@@ -1268,6 +1269,8 @@ const schema = {
       let highlightTimer = 0;
       let liveTimer = 0;
       let retryFocusTimer = 0;
+      let mobileMode = false;
+      let mobileScrollRaf = 0;
 
       function permute(items) {
         if (items.length <= 1) return [items.slice()];
@@ -1805,6 +1808,13 @@ const schema = {
 
         if (!enhancementAvailable) {
           grid.classList.remove('is-rotation-ready', 'is-paused', 'has-rq-progress-ring');
+          if (mobileQuery?.matches) {
+            grid.classList.remove('is-user-locked', 'is-flipping');
+            grid.style.minHeight = '';
+            enableMobileHighlight();
+            return;
+          }
+          disableMobileHighlight();
           grid.classList.toggle('is-user-locked', userLocked);
           setInteractive(false);
           if (!userLocked) resetToInitialState();
@@ -1816,6 +1826,7 @@ const schema = {
           return;
         }
 
+        disableMobileHighlight();
         setInteractive(true);
         reserveGridHeight();
         grid.classList.add('is-rotation-ready', 'is-paused');
@@ -1833,6 +1844,60 @@ const schema = {
         if (!eventTarget) return null;
         const tile = eventTarget.closest('.rq-service-tile');
         return tile && grid.contains(tile) ? tile : null;
+      }
+
+      // Mobile (<=860px): the desktop rotator is off, so drive the highlight from
+      // scroll position + tap. Reuses setFeatured (class only, no slot swap) so the
+      // stacked order stays fixed. Default highlight = the audit tile.
+      function mobileCenteredTile() {
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+        const mid = viewportHeight / 2;
+        let best = null;
+        let bestDist = Infinity;
+        tiles.forEach((tile) => {
+          const rect = tile.getBoundingClientRect();
+          if (rect.bottom <= 0 || rect.top >= viewportHeight) return;
+          const dist = Math.abs((rect.top + rect.bottom) / 2 - mid);
+          if (dist < bestDist) {
+            bestDist = dist;
+            best = tile;
+          }
+        });
+        return best;
+      }
+
+      function onMobileScroll() {
+        if (mobileScrollRaf) return;
+        mobileScrollRaf = window.requestAnimationFrame(() => {
+          mobileScrollRaf = 0;
+          if (!mobileMode) return;
+          const tile = mobileCenteredTile();
+          if (tile && tile !== currentFeatured()) setFeatured(tile);
+        });
+      }
+
+      function enableMobileHighlight() {
+        tiles.forEach((tile) => {
+          const slot = initialSlots.get(tile);
+          if (slot) tile.dataset.rqSlot = slot;
+        });
+        setInteractive(true);
+        if (auditTile) setFeatured(auditTile);
+        if (!mobileMode) {
+          mobileMode = true;
+          window.addEventListener('scroll', onMobileScroll, { passive: true });
+        }
+        onMobileScroll();
+      }
+
+      function disableMobileHighlight() {
+        if (!mobileMode) return;
+        mobileMode = false;
+        window.removeEventListener('scroll', onMobileScroll);
+        if (mobileScrollRaf) {
+          window.cancelAnimationFrame(mobileScrollRaf);
+          mobileScrollRaf = 0;
+        }
       }
 
       function watchQuery(query) {
@@ -1875,6 +1940,11 @@ const schema = {
       grid.addEventListener('click', (event) => {
         const target = closestTile(event);
         if (!target) return;
+        if (mobileMode) {
+          setFeatured(target);
+          scrollTileToCenter(target);
+          return;
+        }
         lockToTile(target);
       });
 
@@ -1883,6 +1953,11 @@ const schema = {
         const target = closestTile(event);
         if (!target) return;
         event.preventDefault();
+        if (mobileMode) {
+          setFeatured(target);
+          scrollTileToCenter(target);
+          return;
+        }
         lockToTile(target);
       });
 

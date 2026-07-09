@@ -2227,11 +2227,17 @@ p {
   .rq-services-bento__grid {
     grid-template-columns: 1fr;
     grid-template-areas:
+      "audit"
       "web"
       "shop"
       "automation"
-      "data"
-      "audit";
+      "data";
+  }
+
+  /* Highlighted tile: keep its drop-shadow inside the viewport on phones (full-width
+     tile sits near the screen edges); the burgundy border stays as the "red" mark. */
+  .rq-service-tile.is-featured {
+    box-shadow: 0 10px 24px -14px rgba(123, 35, 50, 0.32);
   }
 
   .rq-service-tile,

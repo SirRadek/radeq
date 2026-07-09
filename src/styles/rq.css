@@ -487,6 +487,8 @@ p {
 @media (pointer: coarse) {
   .rq-site-footer__link {
     min-block-size: 44px;
+    min-inline-size: 44px;
+    justify-content: center;
   }
 }
 
@@ -559,6 +561,9 @@ p {
     padding: .7rem;
     background: color-mix(in srgb, var(--rq-bg) 98%, white);
     box-shadow: 0 22px 60px rgba(28, 26, 23, 0.16);
+    max-block-size: calc(100dvh - 5.5rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   .rq-site-header.is-nav-open .rq-site-nav {
@@ -1363,6 +1368,25 @@ p {
 
   .rq-pricing-entry__scope-row {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .rq-pricing-entry__measure-link,
+  .rq-price-card__link,
+  .rq-grid--cards .rq-link,
+  .rq-cta-line .rq-button {
+    display: inline-flex;
+    min-block-size: 44px;
+    min-inline-size: 44px;
+    align-items: center;
+    justify-content: center;
+    padding-inline: 0.75rem;
+  }
+
+  .rq-pricing-entry__scope-label,
+  .rq-pricing__kicker {
+    font-size: 0.75rem;
   }
 }
 

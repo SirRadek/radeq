@@ -132,4 +132,15 @@ const ukazky = [
   .rq-ukazka .rq-btn { margin-top: auto; align-self: flex-start; }
   .rq-ukazky-note { margin-top: clamp(1.6rem, 3vw, 2.4rem); color: var(--rq-ink-2); }
   .rq-ukazky-note a { color: var(--rq-burgundy); }
+
+  @media (max-width: 640px) {
+    .rq-ukazka__badge { font-size: 0.75rem; }
+    .rq-ukazka__pro { font-size: 0.875rem; }
+    .rq-ukazky-note a {
+      display: inline-flex;
+      align-items: center;
+      padding-block: 0.25rem;
+      margin-block: -0.25rem;
+    }
+  }
 </style>

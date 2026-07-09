@@ -311,7 +311,7 @@ function naFakturu(o: Objednavka) {
   .button.ghost { color: #3c4a43; }
   .primary { color: #fff; background: #1c7d52; border-color: #1c7d52; box-shadow: 0 12px 26px rgba(28,125,82,0.22); }
   .secondary { color: #14211b; background: #fff; }
-  .linklike { border: 0; background: none; color: #b4560c; font: inherit; cursor: pointer; text-decoration: underline; padding: 0 0 0 0.4rem; }
+  .linklike, :global(.linklike) { border: 0; background: none; color: #b4560c; font: inherit; cursor: pointer; text-decoration: underline; padding: 0 0 0 0.4rem; }
 
   .hero-panel { display: grid; gap: 1rem; padding: 1.25rem; background: #12291f; border: 1px solid #204534; border-radius: 10px; }
   .hero-panel div { padding-bottom: 1rem; border-bottom: 1px solid #244c39; }
@@ -368,12 +368,24 @@ function naFakturu(o: Objednavka) {
   .shop-footer strong { color: #0d1b14; }
   .shop-footer a { color: #1c7d52; font-weight: 800; text-decoration: none; }
 
-  .button:focus-visible, .tag:focus-visible, .linklike:focus-visible, .demo-banner a:focus-visible { outline: 3px solid #ffbf47; outline-offset: 3px; }
+  .button:focus-visible, .tag:focus-visible, .linklike:focus-visible, :global(.linklike:focus-visible), .demo-banner a:focus-visible { outline: 3px solid #ffbf47; outline-offset: 3px; }
 
   @media (max-width: 980px) { .hero, .contact-section { grid-template-columns: 1fr; } .catalog, .xgrid, .sgrid { grid-template-columns: 1fr; } }
   @media (max-width: 680px) {
     .demo-banner { flex-direction: column; align-items: flex-start; gap: 0.2rem; }
     .hero, .section, .contact-section, .shop-footer { width: min(100% - 1rem, 1120px); }
     .hero-actions .button, .button.big { width: 100%; }
+    .demo-banner a,
+    .shop-footer a,
+    .linklike,
+    :global(.linklike) {
+      display: inline-flex;
+      min-height: 44px;
+      min-width: 44px;
+      align-items: center;
+      justify-content: center;
+      padding-inline: 0.75rem;
+    }
+    .linklike, :global(.linklike) { margin-left: 0.25rem; }
   }
 </style>

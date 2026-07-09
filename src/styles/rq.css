@@ -3368,6 +3368,30 @@ p {
     justify-self: center;
   }
 
+  /* Selected/active/hover dot shadows must stay in-frame on phones (dot sits near the
+     left edge in the vertical stack): drop the wide blur glows + active scale so nothing
+     bleeds off-screen. */
+  .rq-journey-line__cap--end .rq-journey-line__cap-dot {
+    box-shadow:
+      0 0 0 3px var(--rq-bg),
+      0 0 0 4px color-mix(in srgb, var(--rq-journey-lime, #D97335) 58%, var(--rq-line));
+  }
+
+  .rq-journey-node.is-active .rq-journey-node__dot {
+    transform: none;
+    box-shadow:
+      0 0 0 3px var(--rq-bg),
+      0 0 0 5px color-mix(in srgb, var(--rq-burgundy) 45%, var(--rq-line));
+  }
+
+  .rq-journey-line__cap:hover .rq-journey-line__cap-dot,
+  .rq-journey-line__cap:focus-visible .rq-journey-line__cap-dot,
+  .rq-journey-line__cap[aria-expanded="true"] .rq-journey-line__cap-dot {
+    box-shadow:
+      0 0 0 3px var(--rq-bg),
+      0 0 0 5px color-mix(in srgb, var(--rq-journey-lime, #D97335) 50%, var(--rq-line));
+  }
+
   .rq-journey-node__label {
     justify-items: start;
     padding: 0.55rem 0.65rem;

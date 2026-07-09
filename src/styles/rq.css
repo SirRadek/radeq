@@ -4548,7 +4548,7 @@ body .rq-hero .rq-lead {
 
   .rq-site-footer__link {
     width: 100%;
-    min-height: 44px;
+    min-height: 34px;
     justify-content: flex-start;
     font-size: 0.82rem;
     line-height: 1.15;

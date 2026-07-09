@@ -3086,12 +3086,19 @@ p {
   box-shadow: 0 0 0 3px var(--rq-bg), 0 0 0 4px color-mix(in srgb, var(--rq-burgundy) 28%, var(--rq-line));
 }
 
-.rq-journey-line__cap--end .rq-journey-line__cap-dot {
-  background: var(--rq-burgundy-tint);
+.rq-journey-line__cap-dot {
+  background: var(--rq-journey-lime, #D97335);
   box-shadow:
     0 0 0 3px var(--rq-bg),
-    0 0 0 4px color-mix(in srgb, var(--rq-burgundy) 38%, var(--rq-line)),
-    0 0 18px color-mix(in srgb, var(--rq-burgundy) 34%, transparent);
+    0 0 0 4px color-mix(in srgb, var(--rq-journey-lime, #D97335) 52%, var(--rq-line));
+}
+
+.rq-journey-line__cap--end .rq-journey-line__cap-dot {
+  background: var(--rq-journey-lime, #D97335);
+  box-shadow:
+    0 0 0 3px var(--rq-bg),
+    0 0 0 4px color-mix(in srgb, var(--rq-journey-lime, #D97335) 60%, var(--rq-line)),
+    0 0 16px color-mix(in srgb, var(--rq-journey-lime, #D97335) 38%, transparent);
 }
 
 .rq-journey-line__cap:hover,
@@ -3309,7 +3316,7 @@ p {
   }
 
   .rq-journey-line__rail {
-    inset: 0.85rem auto 0.85rem calc(0.625rem - 1.5px);
+    inset: 0.85rem auto 0.85rem calc(0.8rem - 1.5px);
     width: 3px;
     height: auto;
   }
@@ -3331,7 +3338,7 @@ p {
   .rq-journey-node {
     width: 100%;
     min-height: 0;
-    grid-template-columns: 1.25rem minmax(0, 1fr);
+    grid-template-columns: 1.6rem minmax(0, 1fr);
     grid-template-rows: auto;
     align-items: center;
     justify-items: stretch;

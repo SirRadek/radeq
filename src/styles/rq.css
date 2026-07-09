@@ -1591,6 +1591,11 @@ p {
   .rq-contact-note {
     grid-column: auto;
   }
+
+  /* tighter vertical rhythm between contact items on phones (was ~34px) */
+  .rq-contact {
+    gap: 1rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -4557,9 +4562,13 @@ body .rq-hero .rq-lead {
   .rq-site-footer__bottom {
     margin-top: 0.5rem;
     padding-top: 0.5rem;
-    gap: 0.15rem 0.4rem;
+    gap: 0.1rem 0.28rem;
     font-size: 0.78rem;
     line-height: 1.2;
+  }
+
+  .rq-site-footer__bottom > span + span::before {
+    margin-right: 0.28rem;
   }
 
   /* bug: focus outline could protrude in the 2-col footer grid */

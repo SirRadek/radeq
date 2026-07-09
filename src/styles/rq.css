@@ -3254,6 +3254,100 @@ p {
   }
 }
 
+@media (max-width: 640px) {
+  .rq-journey-line {
+    min-height: 0;
+  }
+
+  .rq-journey-line__track {
+    overflow-x: visible;
+    overscroll-behavior-x: auto;
+    scroll-padding-inline: 0;
+    scroll-snap-type: none;
+    scrollbar-width: auto;
+  }
+
+  .rq-journey-line__flow {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    gap: 0.45rem;
+    padding: 0.15rem 0;
+  }
+
+  .rq-journey-line__tabs {
+    grid-column: 1;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    gap: 0.45rem;
+  }
+
+  .rq-journey-line__rail {
+    inset: 0.85rem auto 0.85rem calc(0.625rem - 1.5px);
+    width: 3px;
+    height: auto;
+  }
+
+  .rq-journey-line__rail::before {
+    inset: 0 0 auto;
+    width: 100%;
+    height: var(--rq-journey-progress);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--rq-burgundy) 58%, var(--rq-line)),
+      var(--rq-burgundy),
+      color-mix(in srgb, var(--rq-burgundy-strong) 88%, var(--rq-burgundy))
+    );
+    transition: height 180ms var(--rq-ease);
+  }
+
+  .rq-journey-line__cap,
+  .rq-journey-node {
+    width: 100%;
+    min-height: 0;
+    grid-template-columns: 1.25rem minmax(0, 1fr);
+    grid-template-rows: auto;
+    align-items: center;
+    justify-items: stretch;
+    column-gap: 0.7rem;
+    padding: 0.35rem 0.1rem;
+    text-align: left;
+    scroll-snap-align: none;
+  }
+
+  .rq-journey-line__cap--start,
+  .rq-journey-line__cap--end {
+    grid-column: 1;
+  }
+
+  .rq-journey-line__cap span:first-child,
+  .rq-journey-node__label {
+    grid-column: 2;
+    grid-row: 1;
+    width: 100%;
+    max-width: none;
+  }
+
+  .rq-journey-line__cap-dot,
+  .rq-journey-node__dot {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: center;
+  }
+
+  .rq-journey-node__label {
+    justify-items: start;
+    padding: 0.55rem 0.65rem;
+  }
+
+  .rq-journey-node__title {
+    display: block;
+    text-align: left;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .rq-journey-step__panel,
   .rq-journey-line__rail::before,

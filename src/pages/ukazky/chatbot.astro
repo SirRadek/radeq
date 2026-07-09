@@ -272,13 +272,13 @@ if (zachyceno) return odmitni(); // + log`}</code></pre>
   .panel__hit span { color: #6b4d55; font-size: 0.8rem; }
   .panel__stat { margin: 0.7rem 0 0; color: #40435a; font-size: 0.9rem; }
 
-  .xgrid, .sgrid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 0.9rem; }
-  .xcard, .scard { padding: 1.1rem; background: #f6f7fb; border: 1px solid #dcdfee; border-radius: 10px; }
-  .flow { margin: 0.4rem 0 0; padding-left: 1.1rem; display: grid; gap: 0.5rem; color: #40435a; line-height: 1.4; }
-  .code { margin: 0.4rem 0 0; padding: 0.85rem; overflow-x: auto; background: #0f1120; border-radius: 8px; }
-  .code code { color: #d7d8f0; font: 500 0.78rem/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre; }
-  .facts { margin: 0.4rem 0 0; padding-left: 1.1rem; display: grid; gap: 0.4rem; color: #40435a; line-height: 1.5; }
-  .scard p { margin: 0; color: #40435a; line-height: 1.55; }
+  .xgrid, .sgrid { display: grid; min-width: 0; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 0.9rem; }
+  .xcard, .scard { min-width: 0; padding: 1.1rem; background: #f6f7fb; border: 1px solid #dcdfee; border-radius: 10px; overflow-wrap: anywhere; }
+  .flow { min-width: 0; margin: 0.4rem 0 0; padding-left: 1.1rem; display: grid; gap: 0.5rem; color: #40435a; line-height: 1.4; }
+  .code { max-width: 100%; min-width: 0; margin: 0.4rem 0 0; padding: 0.85rem; overflow-x: auto; background: #0f1120; border-radius: 8px; }
+  .code code { display: block; max-width: 100%; min-width: 0; color: #d7d8f0; font: 500 0.78rem/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre; }
+  .facts { min-width: 0; margin: 0.4rem 0 0; padding-left: 1.1rem; display: grid; gap: 0.4rem; color: #40435a; line-height: 1.5; }
+  .scard p { margin: 0; color: #40435a; line-height: 1.55; overflow-wrap: anywhere; }
   .limit-note { margin-top: 1.1rem; padding: 0.9rem 1rem; background: #f1f0fb; border-left: 4px solid #4b46c4; border-radius: 6px; color: #161826; }
 
   .contact-section { display: grid; grid-template-columns: minmax(0,1.2fr) auto; gap: clamp(1.2rem,4vw,3rem); align-items: center; margin-bottom: 2.2rem; padding: clamp(1.5rem,4vw,2rem); background: #eef0f8; border: 1px solid #d6daec; border-radius: 10px; }

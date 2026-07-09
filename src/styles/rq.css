@@ -3968,7 +3968,7 @@ h2 + p {
   --rq-footer-muted: #D9D1C4;       /* ~11.9:1 na #1A1611 */
   --rq-footer-link: #E0D8CC;        /* ~12.7:1 */
   --rq-footer-link-hover: #F1EDE4;  /* ~15.4:1 */
-  --rq-footer-accent: #D98C95;      /* burgundy tint, ~6.97:1 — bezpečný underline */
+  --rq-footer-accent: #D97335;      /* terracotta accent — orange signal ink on links */
   --rq-footer-focus: #E6B3B8;       /* ~9.86:1 */
 }
 
@@ -4410,16 +4410,16 @@ body .rq-hero .rq-lead {
   }
 
   .rq-hero__actions {
-    order: 2;
+    order: 4;
     padding-top: 0;
   }
 
   .rq-hero__typewriter {
-    order: 3;
+    order: 2;
   }
 
   .rq-hero .rq-lead {
-    order: 4;
+    order: 3;
   }
 
   .rq-proof-rail {
@@ -4511,8 +4511,7 @@ body .rq-hero .rq-lead {
 
   /* footer zhustit: logo full, nav+spojení vedle sebe, tagline pryč, menší vše + safe-area */
   .rq-site-footer__inner {
-    padding-block: 1.25rem 0.85rem;
-    padding-bottom: max(0.85rem, env(safe-area-inset-bottom));
+    padding-block: 0.9rem max(0.7rem, env(safe-area-inset-bottom));
   }
 
   .rq-site-footer__tagline {
@@ -4520,29 +4519,56 @@ body .rq-hero .rq-lead {
   }
 
   .rq-site-footer__logo {
-    width: clamp(7rem, 26vw, 8.5rem);
+    width: clamp(6.5rem, 24vw, 8rem);
   }
 
   .rq-site-footer__grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 0.85rem 1.25rem;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    gap: 0.55rem 0.85rem;
   }
 
   .rq-site-footer__grid > div:first-child {
     grid-column: 1 / -1;
-    margin-bottom: 0.1rem;
+    margin-bottom: 0.05rem;
   }
 
   .rq-site-footer__title {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
   }
 
   .rq-site-footer__links {
-    gap: 0.1rem;
+    gap: 0;
+  }
+
+  /* Navigace links flow in 2 columns on phones -> footer height ~halved */
+  nav.rq-site-footer__links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 0.5rem;
+  }
+
+  .rq-site-footer__link {
+    width: 100%;
+    min-height: 44px;
+    justify-content: flex-start;
+    font-size: 0.82rem;
+    line-height: 1.15;
   }
 
   .rq-site-footer__bottom {
-    margin-top: 0.85rem;
-    padding-top: 0.85rem;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    gap: 0.15rem 0.4rem;
+    font-size: 0.78rem;
+    line-height: 1.2;
+  }
+
+  /* bug: focus outline could protrude in the 2-col footer grid */
+  .rq-site-footer a:focus-visible {
+    outline-offset: 2px;
+  }
+
+  /* selected/active service tile = orange accent (signal ink) */
+  .rq-service-tile.is-featured {
+    border-color: color-mix(in srgb, #D97335 60%, transparent);
   }
 }

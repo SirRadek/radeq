@@ -12,6 +12,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   deploy:
+    if: github.ref == 'refs/heads/codex/radeq-clean-pages-20261013'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

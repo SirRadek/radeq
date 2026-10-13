@@ -1,0 +1,133 @@
+{
+  "family": "IBM Plex Sans",
+  "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/ibmplexsans/IBMPlexSans%5Bwdth%2Cwght%5D.ttf",
+  "sha256": "3b031aa4216174205bd8471f88a49b91f093169e9e87bd5262242bc5967fe2e3",
+  "axes": {
+    "wght": [
+      100.0,
+      700.0
+    ],
+    "wdth": [
+      75.0,
+      100.0
+    ]
+  },
+  "czech_glyphs": "\u011b\u0161\u010d\u0159\u017e\u00fd\u00e1\u00ed\u00e9\u016f\u00fa\u010f\u0165\u0148\u011a\u0160\u010c\u0158\u017d\u00dd\u00c1\u00cd\u00c9\u016e\u00da\u010e\u0164\u0147",
+  "license": "ibm-plex-sans/OFL.txt",
+  "format": "unmodified upstream TTF",
+  "theme_fonts": [
+    {
+      "theme": "physio",
+      "family": "Fraunces",
+      "path": "fraunces/Fraunces[SOFT,WONK,opsz,wght].ttf",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/fraunces/Fraunces%5BSOFT%2CWONK%2Copsz%2Cwght%5D.ttf",
+      "sha256": "177ff6c0f14e5550a3c624247cd1189611d4eb65d000b14944c63d967958abbb",
+      "weights": [
+        600
+      ],
+      "axes": {
+        "opsz": [
+          9.0,
+          144.0
+        ],
+        "wght": [
+          100.0,
+          900.0
+        ],
+        "SOFT": [
+          0.0,
+          100.0
+        ],
+        "WONK": [
+          0.0,
+          1.0
+        ]
+      },
+      "static_weight": 900,
+      "czech_glyphs": "\u011b\u0161\u010d\u0159\u017e\u00fd\u00e1\u00ed\u00e9\u016f\u00fa\u010f\u0165\u0148\u011a\u0160\u010c\u0158\u017d\u00dd\u00c1\u00cd\u00c9\u016e\u00da\u010e\u0164\u0147",
+      "license": "fraunces/OFL.txt",
+      "license_source": "https://raw.githubusercontent.com/google/fonts/main/ofl/fraunces/OFL.txt",
+      "license_sha256": "bdf4c22802eaf804f998195871c6b8938aac2ac14b2d78a8bd66a6f1eced833b",
+      "format": "unmodified upstream TTF",
+      "verification": "stdlib cmap format4/12 and fvar/OS2 parser"
+    },
+    {
+      "theme": "physio",
+      "family": "Source Sans 3",
+      "path": "sourcesans3/SourceSans3[wght].ttf",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/sourcesans3/SourceSans3%5Bwght%5D.ttf",
+      "sha256": "042fe2cc0b933e328410d7acbd0aa6a1873dca5aef81875f4bc214b08825c7b9",
+      "weights": [
+        400,
+        600
+      ],
+      "axes": {
+        "wght": [
+          200.0,
+          900.0
+        ]
+      },
+      "static_weight": 200,
+      "czech_glyphs": "\u011b\u0161\u010d\u0159\u017e\u00fd\u00e1\u00ed\u00e9\u016f\u00fa\u010f\u0165\u0148\u011a\u0160\u010c\u0158\u017d\u00dd\u00c1\u00cd\u00c9\u016e\u00da\u010e\u0164\u0147",
+      "license": "sourcesans3/OFL.txt",
+      "license_source": "https://raw.githubusercontent.com/google/fonts/main/ofl/sourcesans3/OFL.txt",
+      "license_sha256": "09746787287a289323b0ec3cff4d1a4a801331b82b7207c1e186f5d26619a392",
+      "format": "unmodified upstream TTF",
+      "verification": "stdlib cmap format4/12 and fvar/OS2 parser"
+    },
+    {
+      "theme": "workshop",
+      "family": "Barlow Condensed",
+      "path": "barlowcondensed/BarlowCondensed-SemiBold.ttf",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/barlowcondensed/BarlowCondensed-SemiBold.ttf",
+      "sha256": "7b619d14bc2327509a9ef32b0890f709626f7ecc9ff61191c2a4314c5499d2d9",
+      "weights": [
+        600
+      ],
+      "axes": {},
+      "static_weight": 600,
+      "czech_glyphs": "\u011b\u0161\u010d\u0159\u017e\u00fd\u00e1\u00ed\u00e9\u016f\u00fa\u010f\u0165\u0148\u011a\u0160\u010c\u0158\u017d\u00dd\u00c1\u00cd\u00c9\u016e\u00da\u010e\u0164\u0147",
+      "license": "barlowcondensed/OFL.txt",
+      "license_source": "https://raw.githubusercontent.com/google/fonts/main/ofl/barlowcondensed/OFL.txt",
+      "license_sha256": "186d750eb496a4c17a76385f82be6aea2ac1cf2de074a811d63786cf374ea73f",
+      "format": "unmodified upstream TTF",
+      "verification": "stdlib cmap format4/12 and fvar/OS2 parser"
+    },
+    {
+      "theme": "workshop",
+      "family": "IBM Plex Mono",
+      "path": "ibmplexmono/IBMPlexMono-Regular.ttf",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/ibmplexmono/IBMPlexMono-Regular.ttf",
+      "sha256": "6a3412f058c7d8dfd9170c41e85ade48e5156ecb89356110ca57a0a27734af46",
+      "weights": [
+        400
+      ],
+      "axes": {},
+      "static_weight": 400,
+      "czech_glyphs": "\u011b\u0161\u010d\u0159\u017e\u00fd\u00e1\u00ed\u00e9\u016f\u00fa\u010f\u0165\u0148\u011a\u0160\u010c\u0158\u017d\u00dd\u00c1\u00cd\u00c9\u016e\u00da\u010e\u0164\u0147",
+      "license": "ibmplexmono/OFL.txt",
+      "license_source": "https://raw.githubusercontent.com/google/fonts/main/ofl/ibmplexmono/OFL.txt",
+      "license_sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da",
+      "format": "unmodified upstream TTF",
+      "verification": "stdlib cmap format4/12 and fvar/OS2 parser"
+    },
+    {
+      "theme": "workshop",
+      "family": "IBM Plex Mono",
+      "path": "ibmplexmono/IBMPlexMono-Medium.ttf",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/ibmplexmono/IBMPlexMono-Medium.ttf",
+      "sha256": "a9b4c49bb299e05b5f6c481e7fb5e78943d2793249a0c8874ab574a2d1ea6755",
+      "weights": [
+        500
+      ],
+      "axes": {},
+      "static_weight": 500,
+      "czech_glyphs": "\u011b\u0161\u010d\u0159\u017e\u00fd\u00e1\u00ed\u00e9\u016f\u00fa\u010f\u0165\u0148\u011a\u0160\u010c\u0158\u017d\u00dd\u00c1\u00cd\u00c9\u016e\u00da\u010e\u0164\u0147",
+      "license": "ibmplexmono/OFL.txt",
+      "license_source": "https://raw.githubusercontent.com/google/fonts/main/ofl/ibmplexmono/OFL.txt",
+      "license_sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da",
+      "format": "unmodified upstream TTF",
+      "verification": "stdlib cmap format4/12 and fvar/OS2 parser"
+    }
+  ]
+}

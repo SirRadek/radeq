@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sirradek.github.io/radeq/sitemap.xml

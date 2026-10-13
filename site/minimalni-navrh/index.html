@@ -1,0 +1,151 @@
+<!DOCTYPE html><html lang="cs"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="color-scheme" content="light dark"><meta name="description" content="Weby, data a automatizace pro živnostníky, malé firmy a spolky."><meta name="generator" content="Astro v6.3.1"><link rel="canonical" href="https://sirradek.github.io/radeq/"><link rel="alternate" hreflang="cs" href="https://sirradek.github.io/radeq/"><link rel="alternate" hreflang="en" href="https://sirradek.github.io/radeq/en/"><link rel="alternate" hreflang="x-default" href="https://sirradek.github.io/radeq/"><link rel="icon" href="/radeq/favicon.png" type="image/png"><link rel="icon" href="/radeq/favicon-dark.png" type="image/png" media="(prefers-color-scheme: dark)"><link rel="apple-touch-icon" href="/radeq/apple-touch-icon.png"><meta property="og:type" content="website"><meta property="og:site_name" content="RadeQ.cz"><meta property="og:locale" content="cs_CZ"><meta property="og:title" content="RadeQ.cz - Racionální digitalizace"><meta property="og:description" content="Weby, data a automatizace pro živnostníky, malé firmy a spolky."><meta property="og:url" content="https://sirradek.github.io/radeq/"><meta property="og:image" content="https://sirradek.github.io/radeq/og-default.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="RadeQ.cz - Racionální digitalizace"><meta name="twitter:description" content="Weby, data a automatizace pro živnostníky, malé firmy a spolky."><meta name="twitter:image" content="https://sirradek.github.io/radeq/og-default.jpg"><title>RadeQ.cz - Racionální digitalizace</title><style is:global>@font-face{font-family:Chillax;src:url('/radeq/fonts/radeq/chillax.woff2') format('woff2');font-weight:200 700;font-display:swap}@font-face{font-family:'Cabinet Grotesk';src:url('/radeq/fonts/radeq/cabinet-grotesk.woff2') format('woff2');font-weight:100 900;font-display:swap}</style><meta name="robots" content="noindex,nofollow"><link rel="stylesheet" href="/radeq/_astro/RqLayout.DemnQ2Iw.css"></head> <body class="rq-minimal-preview rq-minimal-site"> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var l=(n,t)=>{let i=async()=>{await(await n())()},e=typeof t.value=="object"?t.value:void 0,s={timeout:e==null?void 0:e.timeout};"requestIdleCallback"in window?window.requestIdleCallback(i,s):setTimeout(i,s.timeout||200)};(self.Astro||(self.Astro={})).idle=l;window.dispatchEvent(new Event("astro:idle"));})();</script><script>(()=>{var g=Object.defineProperty;var w=(c,s,d)=>s in c?g(c,s,{enumerable:!0,configurable:!0,writable:!0,value:d}):c[s]=d;var l=(c,s,d)=>w(c,typeof s!="symbol"?s+"":s,d);var E=new Set(["__proto__","constructor","prototype"]);{let c={0:t=>y(t),1:t=>d(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(d(t)),5:t=>new Set(d(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>Number.POSITIVE_INFINITY*t},s=t=>{let[p,e]=t;return p in c?c[p](e):void 0},d=t=>t.map(s),y=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([p,e])=>[p,s(e)]));class f extends HTMLElement{constructor(){super(...arguments);l(this,"Component");l(this,"hydrator");l(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let n=this.querySelectorAll("astro-slot"),r={},i=this.querySelectorAll("template[data-astro-template]");for(let o of i){let a=o.closest(this.tagName);a!=null&&a.isSameNode(this)&&(r[o.getAttribute("data-astro-template")||"default"]=o.innerHTML,o.remove())}for(let o of n){let a=o.closest(this.tagName);a!=null&&a.isSameNode(this)&&(r[o.getAttribute("name")||"default"]=o.innerHTML)}let u;try{u=this.hasAttribute("props")?y(JSON.parse(this.getAttribute("props"))):{}}catch(o){let a=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(a+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${a}`,this.getAttribute("props"),o),o}let h;await this.hydrator(this)(this.Component,u,r,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});l(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),n.disconnect(),this.childrenConnectedCallback()},n=new MutationObserver(()=>{var r;((r=this.lastChild)==null?void 0:r.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});n.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}getRetryImportUrl(e){let n=new URL(e,document.baseURI),r=`astro-retry=${Date.now()}`,i=n.hash.replace(/^#/,"");return n.hash=i?`${i}&${r}`:r,n.toString()}async importWithRetry(e){try{return await import(e)}catch(n){return await new Promise(r=>setTimeout(r,1e3)),import(this.getRetryImportUrl(e))}}handleHydrationError(e){let n=this.getAttribute("component-url"),r=new CustomEvent("astro:hydration-error",{cancelable:!0,bubbles:!0,composed:!0,detail:{error:e,componentUrl:n}});this.dispatchEvent(r)&&console.error(`[astro-island] Error hydrating ${n}`,e)}async start(){let e=JSON.parse(this.getAttribute("opts")),n=this.getAttribute("client");if(Astro[n]===void 0){window.addEventListener(`astro:${n}`,()=>this.start(),{once:!0});return}try{await Astro[n](async()=>{let r=this.getAttribute("renderer-url");try{let[i,{default:u}]=await Promise.all([this.importWithRetry(this.getAttribute("component-url")),r?this.importWithRetry(r):Promise.resolve({default:()=>()=>{}})]),h=this.getAttribute("component-export")||"default";if(h.includes(".")){this.Component=i;for(let m of h.split(".")){if(E.has(m)||!this.Component||typeof this.Component!="object"&&typeof this.Component!="function"||!Object.hasOwn(this.Component,m))throw new Error(`Invalid component export path: ${h}`);this.Component=this.Component[m]}}else{if(E.has(h))throw new Error(`Invalid component export path: ${h}`);this.Component=i[h]}return this.hydrator=u,this.hydrate}catch(i){return this.handleHydrationError(i),()=>{}}},e,this)}catch(r){this.handleHydrationError(r)}}attributeChangedCallback(){this.hydrate()}}l(f,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",f)}})();</script><astro-island uid="qdvnT" prefix="r1" component-url="/radeq/_astro/MeasurementTracker.wFageAGs.js" component-export="default" renderer-url="/radeq/_astro/client.DTojXMD-.js" props="{}" ssr client="idle" opts="{&quot;name&quot;:&quot;MeasurementTracker&quot;,&quot;value&quot;:true}"></astro-island> <div class="rq-minimal-preview__wrap"> <header class="rq-minimal-header"><a class="rq-minimal-preview__logo" href="/radeq/" aria-label="RadeQ.cz" style="--logo-mask:url(&#34;/radeq/brand/radeq-logo-b-mask.png&#34;)"><span aria-hidden="true"></span></a><nav aria-label="Hlavní navigace"><a href="/radeq/#sluzby">Služby</a><a href="/radeq/#pristup">Přístup</a><a href="/radeq/ukazky/">Ukázky</a><a href="/radeq/#kontakt">Kontakt</a><a href="/radeq/en/" lang="en">EN</a></nav></header> <main> <section class="rq-minimal-preview__intro" aria-labelledby="uvod"> <h1 id="uvod">Weby a automatizace, které usnadňují podnikání.</h1> <p class="rq-minimal-preview__audience" data-minimal-audience data-words="živnostníky|salony|malé firmy|lokální služby" data-state="static"> <button type="button" class="rq-minimal-preview__audience-visual" data-audience-toggle aria-label="Pozastavit střídání cílových skupin" aria-pressed="false" disabled><span aria-hidden="true" class="rq-minimal-preview__audience-visual-inner"> <span>Pro </span> <span class="rq-minimal-preview__audience-slot"> <span class="rq-minimal-preview__audience-sizer">živnostníky</span><span class="rq-minimal-preview__audience-sizer">salony</span><span class="rq-minimal-preview__audience-sizer">malé firmy</span><span class="rq-minimal-preview__audience-sizer">lokální služby</span> <span class="rq-minimal-preview__audience-word" data-audience-word>živnostníky</span> </span> </span></button> <span class="rq-minimal-preview__sr-only">Pro živnostníky, salony, malé firmy a lokální služby.</span> </p> <script type="module">const i=document.querySelector("[data-minimal-audience]"),w=i?.querySelector("[data-audience-word]"),d=i?.querySelector("[data-audience-toggle]");if(i&&w&&d){const c=window.matchMedia("(prefers-reduced-motion: reduce)"),e=(i.dataset.words??"").split("|").filter(Boolean);let s=0,t=0,n=e[0]?.length??0,l=!0,a=!1,m=!0,g=!0;const h=()=>!c.matches&&!document.hidden&&m&&g&&!a,u=()=>{window.clearTimeout(s),s=0,w.textContent=e[t]??"",n=(e[t]??"").length,l=!0,i.dataset.state="static"},r=f=>{window.clearTimeout(s),h()&&(s=window.setTimeout(v,f))},v=()=>{if(s=0,!h()){u();return}l?(n=Math.max(0,n-1),w.textContent=e[t].slice(0,n),n===0?(t=(t+1)%e.length,l=!1,r(250)):r(45)):(n+=1,w.textContent=e[t].slice(0,n),n>=e[t].length?(l=!0,r(1600)):r(90))},o=()=>{if(d.disabled=c.matches||e.length<2,e.length<2||!h()){u();return}s||(i.dataset.state="playing",r(1600))};d.addEventListener("click",()=>{a=!a,d.setAttribute("aria-pressed",String(a)),d.setAttribute("aria-label",a?"Zapnout střídání cílových skupin":"Pozastavit střídání cílových skupin"),o()}),c.addEventListener("change",()=>{c.matches&&(t=0,u()),o()}),document.addEventListener("visibilitychange",o),window.addEventListener("pagehide",()=>{g=!1,u()}),window.addEventListener("pageshow",()=>{g=!0,o()}),"IntersectionObserver"in window&&new IntersectionObserver(b=>{m=b.some(p=>p.isIntersecting),o()}).observe(i),o()}</script> <p class="rq-minimal-preview__lead">Weby, data a automatizace pro živnostníky a malé firmy.</p> <p class="rq-minimal-preview__intro-detail">Když se práce zbytečně opakuje nebo web nevysvětluje vaši nabídku, začneme právě tam. Od prvního nápadu k řešení, které dokážete používat.</p> <a class="rq-minimal-preview__cta" href="#kontakt">Probrat projekt</a> </section> <span id="co-resim"></span><span id="services"></span><span id="situace"></span><span id="how"></span><span id="co-delam"></span><section id="sluzby" aria-labelledby="sluzby-nadpis"> <div class="rq-minimal-preview__section-head"><h2 id="sluzby-nadpis">Služby</h2><p>Méně nástrojů pro nástroje.<br>Více prostoru pro vaši práci.</p></div> <article class="rq-minimal-preview__service"> <span class="rq-minimal-preview__number" aria-hidden="true">01</span> <div><h3>Web a viditelnost</h3><p>Web, ze kterého je jasné, co nabízíte, pro koho to je a jak se ozvat. Přehledná struktura, čitelný obsah a použití na mobilu — od prezentace služby po malý e-shop.</p></div> <p class="rq-minimal-preview__annotation">Jasná nabídka<br>Cesta ke kontaktu</p> </article> <article class="rq-minimal-preview__service"> <span class="rq-minimal-preview__number" aria-hidden="true">02</span> <div><h3>Termíny a rezervace</h3><p>Přehled služeb a cesta k objednání termínu. Společně projdeme, co zákazník potřebuje vědět a co potřebujete mít pod kontrolou vy.</p></div> <p class="rq-minimal-preview__annotation">Přehled služeb<br>Objednání termínu</p> </article> <article class="rq-minimal-preview__service"> <span class="rq-minimal-preview__number" aria-hidden="true">03</span> <div><h3>Data a návaznost práce</h3><p>Evidence, předávání informací a exporty bez zbytečného přepisování. Začneme jedním procesem a hledáme, kde propojení dat usnadní každodenní práci.</p></div> <p class="rq-minimal-preview__annotation">Evidence<br>Návaznost dat</p> </article> </section> <span id="jak-pracuji"></span><span id="process"></span><section id="pristup" aria-labelledby="pristup-nadpis"> <div class="rq-minimal-preview__section-head"><h2 id="pristup-nadpis">Přístup</h2><p>Nejdřív porozumět.<br>Potom stavět.</p></div> <ol class="rq-minimal-preview__steps"> <li><strong>Ujasnit zadání</strong><p>Co vám komplikuje práci? Co už funguje? Pojmenujeme cíl i hranice řešení.</p></li> <li><strong>Navrhnout malé řešení</strong><p>Projdeme rozsah, priority a podobu prvního použitelného výsledku. Cenu domluvíme podle zadání.</p></li> <li><strong>Postavit a ověřit</strong><p>Návrh převedeme do funkční podoby a společně projdeme, jak se používá v praxi.</p></li> <li><strong>Předat a vysvětlit</strong><p>Dostanete přehled toho, co vzniklo, jak s tím pracovat a co případně řešit dál.</p></li> </ol> </section> <section id="ukazky" aria-labelledby="ukazky-nadpis"> <div class="rq-minimal-preview__section-head"><h2 id="ukazky-nadpis">Ukázky</h2><p>Vyzkoušejte si princip.<br>Bez domýšlení z obrázku.</p></div> <p>Vyberte si situaci, která je vám blízká. Jde o modelové ukázky, které můžete prozkoumat, nikoli o klientské reference.</p> <div class="rq-minimal-preview__portals"> <a class="rq-minimal-preview__portal" href="/radeq/ukazky/instalater/"><span class="rq-minimal-preview__portal-index" aria-hidden="true">01 /</span><span><span class="rq-minimal-preview__portal-question">Jak vypadá web, ze kterého se dá <em>hned zavolat?</em></span><span class="rq-minimal-preview__portal-caption">Modelový web pro instalatéra</span></span><span class="rq-minimal-preview__portal-arrow" aria-hidden="true">↗</span></a> <a class="rq-minimal-preview__portal" href="/radeq/ukazky/sluzba/"><span class="rq-minimal-preview__portal-index" aria-hidden="true">02 /</span><span><span class="rq-minimal-preview__portal-question">Jak se vybírá termín <em>bez telefonování?</em></span><span class="rq-minimal-preview__portal-caption">Modelová služba s rezervací</span></span><span class="rq-minimal-preview__portal-arrow" aria-hidden="true">↗</span></a> <a class="rq-minimal-preview__portal" href="/radeq/ukazky/provozni-terminal/"><span class="rq-minimal-preview__portal-index" aria-hidden="true">03 /</span><span><span class="rq-minimal-preview__portal-question">Jak má dílna přehled <em>o hotové práci?</em></span><span class="rq-minimal-preview__portal-caption">Modelový dílenský terminál</span></span><span class="rq-minimal-preview__portal-arrow" aria-hidden="true">↗</span></a> </div> <a href="/radeq/ukazky/">Všechny ukázky</a> </section> <span id="about"></span><section id="autor" aria-labelledby="autor-nadpis" class="rq-minimal-preview__about"> <h2 id="autor-nadpis">Kdo za tím stojí</h2> <div><p class="rq-minimal-preview__author">Radek Široký</p><p>RadeQ vedu osobně. Návrh, realizaci i předání řešíte se mnou — víte, s kým mluvíte a koho se zeptat.</p><p>Pomáhám převést každodenní problém do srozumitelného zadání a použitelného řešení. Technologie vybíráme podle práce, kterou mají usnadnit.</p></div> </section> <span id="terminal"></span><span id="contact"></span><section id="kontakt" aria-labelledby="kontakt-nadpis" class="rq-minimal-preview__contact"> <h2 id="kontakt-nadpis">Pojďme probrat váš záměr</h2> <div class="rq-minimal-preview__contact-grid"> <div><p>Stačí napsat, čemu se věnujete, co vám teď komplikuje práci a jaký výsledek by vám pomohl. Podíváme se, kde dává smysl začít.</p><a class="rq-minimal-preview__email" href="mailto:siroky@radeq.cz">siroky@radeq.cz</a><div class="rq-minimal-preview__contact-links"><a href="tel:+420730634439">+420 730 634 439</a></div></div> <div class="rq-minimal-preview__form-surface"><form class="rq-contact-form" method="post" action="/radeq/api/leads" id="rq-lead-form"> <div class="rq-form-field"> <label for="rq-lead-name">Jméno</label> <input id="rq-lead-name" name="name" type="text" autocomplete="name" required> </div> <div class="rq-form-field"> <label for="rq-lead-email">E-mail</label> <input id="rq-lead-email" name="email" type="email" autocomplete="email" required> </div> <div class="rq-form-field"> <label for="rq-lead-current">O jaký projekt jde? (nepovinné)</label> <select id="rq-lead-current" name="project_type"> <option value>Bez výběru</option><option value="Web">Web</option><option value="E-shop">E-shop</option><option value="Automatizace procesů">Automatizace procesů</option><option value="Data a AI">Data a AI</option><option value="Audit webu nebo procesu (od 3 000 Kč)">Audit webu nebo procesu (od 3 000 Kč)</option><option value="Jiné">Jiné</option> </select> </div> <div class="rq-form-field"> <label for="rq-lead-need">Co potřebujete zjednodušit?</label> <textarea id="rq-lead-need" name="message" rows="6" required></textarea> </div> <details class="rq-form-optional"> <summary>Doplňující detaily (nepovinné)</summary> <div class="rq-form-optional__grid"> <div class="rq-form-field"> <label for="rq-lead-budget">Orientační rozpočet</label> <select id="rq-lead-budget" name="budget_range"> <option value>Nechám otevřené</option><option value="Do 10 000 Kč">Do 10 000 Kč</option><option value="10 000-30 000 Kč">10 000-30 000 Kč</option><option value="30 000-60 000 Kč">30 000-60 000 Kč</option><option value="60 000 Kč+">60 000 Kč+</option> </select> </div> <div class="rq-form-field"> <label for="rq-lead-deadline">Termín</label> <input id="rq-lead-deadline" name="deadline" type="text" autocomplete="off" placeholder="Např. do 2 měsíců"> </div> </div> </details> <div class="rq-hp" aria-hidden="true"> <label>Toto pole nevyplňujte<input type="text" name="honeypot" tabindex="-1" autocomplete="off"></label> </div>  <button class="rq-btn rq-btn--primary" type="submit">Odeslat poptávku</button> <p class="rq-form-status" id="rq-lead-status" role="status" aria-live="polite"></p> </form> <div class="rq-contact-done" id="rq-lead-done" role="status" tabindex="-1" hidden> <p class="rq-contact-done__title">Poptávka odeslána ✓</p> <p class="rq-contact-done__text">Ozvu se co nejdřív. Těším se na naši spolupráci.</p> </div> <script>(function(){const leadsUrl = "/radeq/api/leads";
+const leadLocale = "cs";
+const statusSending = "Odesílám…";
+const statusSuccess = "Ozvu se co nejdřív. Těším se na naši spolupráci.";
+const statusFailureHtml = "Odeslání teď neproběhlo. Napište prosím na \u003ca href=\"mailto:siroky@radeq.cz\">siroky@radeq.cz\u003c/a>.";
+const verifyPrompt = "Potvrďte prosím, že nejste robot, a odešlete znovu.";
+const doneLeadHtml = "Zapomněli jste na něco nebo chcete změnit zadání? Napište mi na \u003ca href=\"mailto:siroky@radeq.cz\">siroky@radeq.cz\u003c/a> nebo zavolejte na \u003ca href=\"tel:+420730634439\">+420 730 634 439\u003c/a>.";
+const turnstileSiteKey = "";
+
+  (() => {
+    const form = document.getElementById("rq-lead-form");
+    const statusEl = document.getElementById("rq-lead-status");
+    if (!form) return;
+    const params = new URLSearchParams(location.search);
+    const currentUrlHint = (params.get("current_url") || "").slice(0, 240);
+    const projectTypeHint = params.get("project_type") || "";
+    const projectSelect = form.elements.namedItem("project_type");
+
+    if (projectTypeHint && projectSelect instanceof HTMLSelectElement) {
+      const normalizedProjectTypeHint = projectTypeHint.trim().toLocaleLowerCase();
+      const matchingOption = Array.from(projectSelect.options).find((option) => {
+        if (option.value === projectTypeHint) return true;
+        return normalizedProjectTypeHint === "audit" && option.value.toLocaleLowerCase().includes("audit");
+      });
+      if (matchingOption) projectSelect.value = matchingOption.value;
+    }
+
+    const turnstileEnabled = Boolean(turnstileSiteKey);
+    const turnstileContainer = document.getElementById("rq-lead-turnstile");
+    let turnstileToken = "";
+    let turnstileWidgetId = null;
+    let turnstileUnavailable = false;
+
+    function loadTurnstile() {
+      return new Promise((resolve, reject) => {
+        if (window.turnstile) return resolve();
+        const src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+        const existing = document.querySelector('script[src="' + src + '"]');
+        if (existing) {
+          existing.addEventListener("load", () => resolve(), { once: true });
+          existing.addEventListener("error", () => reject(new Error("turnstile")), { once: true });
+          return;
+        }
+        const s = document.createElement("script");
+        s.src = src;
+        s.async = true;
+        s.defer = true;
+        s.addEventListener("load", () => resolve(), { once: true });
+        s.addEventListener("error", () => reject(new Error("turnstile")), { once: true });
+        document.head.appendChild(s);
+      });
+    }
+
+    if (turnstileEnabled && turnstileContainer) {
+      loadTurnstile()
+        .then(() => {
+          if (!window.turnstile) {
+            turnstileUnavailable = true;
+            return;
+          }
+          turnstileWidgetId = window.turnstile.render(turnstileContainer, {
+            sitekey: turnstileSiteKey,
+            appearance: "interaction-only",
+            callback: (t) => {
+              turnstileToken = t;
+              turnstileUnavailable = false;
+            },
+            "expired-callback": () => {
+              turnstileToken = "";
+            },
+            "error-callback": () => {
+              turnstileToken = "";
+              turnstileUnavailable = true;
+            },
+          });
+        })
+        .catch(() => {
+          turnstileUnavailable = true;
+        });
+    }
+
+    function readToken() {
+      if (turnstileToken) return turnstileToken;
+      const input = turnstileContainer && turnstileContainer.querySelector('input[name="cf-turnstile-response"]');
+      return input && input.value ? input.value : "";
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      if (fd.get("honeypot")) return;
+
+      let submittedToken = "";
+      if (turnstileEnabled) {
+        submittedToken = readToken();
+        if (!submittedToken) {
+          if (turnstileUnavailable) {
+            statusEl.innerHTML = statusFailureHtml;
+          } else {
+            statusEl.textContent = verifyPrompt;
+          }
+          return;
+        }
+      }
+
+      const payload = {
+        name: fd.get("name") || "", email: fd.get("email") || "",
+        project_type: fd.get("project_type") || "", message: fd.get("message") || "",
+        company: "", audience: "", deadline: fd.get("deadline") || "", current_url: currentUrlHint, budget_range: fd.get("budget_range") || "",
+        honeypot: "", source_path: location.pathname + location.search,
+        referrer: document.referrer || "", locale: leadLocale
+      };
+      if (turnstileEnabled) payload.turnstileToken = submittedToken;
+
+      statusEl.textContent = statusSending;
+      try {
+        const r = await fetch(leadsUrl, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
+        const ct = r.headers.get("content-type") || "";
+        if (!ct.includes("application/json")) throw new Error("nojson");
+        const res = await r.json();
+        if (!r.ok || !res.ok) {
+          const serverMsg = res && typeof res.error === "string" ? res.error : "";
+          if (serverMsg) { statusEl.textContent = serverMsg; return; }
+          throw new Error("fail");
+        }
+        form.reset();
+        const done = document.getElementById("rq-lead-done");
+        if (done) {
+          form.hidden = true;
+          done.hidden = false;
+          done.focus();
+          const leadEl = document.getElementById("rq-contact-lead");
+          if (leadEl && doneLeadHtml) leadEl.innerHTML = doneLeadHtml;
+          const noteEmail = document.getElementById("rq-contact-note-email");
+          if (noteEmail) noteEmail.hidden = true;
+          const notePhone = document.getElementById("rq-contact-note-phone");
+          if (notePhone) notePhone.hidden = true;
+        } else {
+          statusEl.textContent = statusSuccess;
+        }
+      } catch (err) {
+        statusEl.innerHTML = statusFailureHtml;
+      } finally {
+        if (turnstileEnabled && turnstileWidgetId && window.turnstile) {
+          window.turnstile.reset(turnstileWidgetId);
+          turnstileToken = "";
+        }
+      }
+    });
+  })();
+})();</script></div> </div> </section> <p><a id="ceny" href="/radeq/sluzby/#sluzby">Rozsah služeb a ceny</a><span id="pricing"></span></p> </main> <footer class="rq-minimal-footer"><a class="rq-minimal-preview__logo" href="/radeq/" aria-label="RadeQ — home" style="--logo-mask:url(&#34;/radeq/brand/radeq-logo-b-mask.png&#34;)"><span aria-hidden="true"></span></a><p>© 2026 Radek Široký — RadeQ.cz · IČO 08748811 · Praha, celá ČR</p><nav aria-label="Navigace v patičce"><a href="/radeq/soukromi/">Soukromí</a><a href="/radeq/audit/">Audit webu</a><a href="/radeq/zapisky/">Zápisky</a></nav></footer> </div> </body></html>

@@ -1,0 +1,14 @@
+import { chromium } from "playwright";
+const url = process.argv[2];
+const out = process.argv[3];
+const w = Number(process.argv[4] ?? 1440);
+const h = Number(process.argv[5] ?? 1024);
+const full = process.argv[6] === "full";
+const b = await chromium.launch();
+const p = await b.newPage({ viewport: { width: w, height: h }, deviceScaleFactor: 1 });
+await p.goto(url, { waitUntil: "networkidle", timeout: 60000 });
+await p.waitForTimeout(1200);
+const overflow = await p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+await p.screenshot({ path: out, fullPage: full });
+console.log(`shot=${out} horizontalOverflowPx=${overflow}`);
+await b.close();

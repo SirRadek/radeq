@@ -1,0 +1,9 @@
+---
+import { isPreviewChannel } from '../lib/preview-channel.mjs';
+import RqMetadata from '../components/RqMetadata.astro';
+import MeasurementTracker from '../components/MeasurementTracker';
+const {title,description,lang='cs'}=Astro.props;
+const base=import.meta.env.BASE_URL.replace(/\/$/,'');
+const canonicalUrl=new URL(Astro.url.pathname,Astro.site??Astro.url.origin).toString();
+---
+<!doctype html><html lang={lang}><head>{isPreviewChannel && <meta name="robots" content="noindex,nofollow" />}<RqMetadata title={title} description={description} lang={lang} canonicalUrl={canonicalUrl} ogUrl={canonicalUrl} icons={[{rel:"icon", type:"image/svg+xml", url:base+"/favicon.svg"}]} /><style is:global set:html={`@font-face{font-family:Inter;src:url('${base}/paper-stack/assets/brand-fonts/Inter-latin-ext.woff2') format('woff2');font-weight:400 700;font-display:swap}@font-face{font-family:'Plus Jakarta Sans';src:url('${base}/paper-stack/assets/brand-fonts/PlusJakartaSans-latin-ext.woff2') format('woff2');font-weight:700 800;font-display:swap}*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif}button,input,select,textarea{font:inherit}[hidden]{display:none!important}`} /></head><body><MeasurementTracker client:idle /><slot /></body></html>

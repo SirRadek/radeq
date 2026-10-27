@@ -1,0 +1,93 @@
+---
+import { homeContent } from '../data/home';
+const audience = homeContent.cs.hero.typewriter;
+---
+<p class="rq-minimal-preview__audience" data-minimal-audience data-words={audience.words.join('|')} data-state="static">
+  <button type="button" class="rq-minimal-preview__audience-visual" data-audience-toggle aria-label="Pozastavit střídání cílových skupin" aria-pressed="false" disabled><span aria-hidden="true" class="rq-minimal-preview__audience-visual-inner">
+    <span>{audience.prefix}</span>
+    <span class="rq-minimal-preview__audience-slot">
+      {audience.words.map(word => <span class="rq-minimal-preview__audience-sizer">{word}</span>)}
+      <span class="rq-minimal-preview__audience-word" data-audience-word>{audience.initialWord}</span>
+    </span>
+  </span></button>
+  <span class="rq-minimal-preview__sr-only">{audience.liveText}</span>
+</p>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-minimal-audience]');
+  const word = root?.querySelector<HTMLElement>('[data-audience-word]');
+  const toggle = root?.querySelector<HTMLButtonElement>('[data-audience-toggle]');
+  if (root && word && toggle) {
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const words = (root.dataset.words ?? '').split('|').filter(Boolean);
+    let timer = 0;
+    let index = 0;
+    let length = words[0]?.length ?? 0;
+    let deleting = true;
+    let userPaused = false;
+    let inView = true;
+    let pageActive = true;
+    const active = () => !motion.matches && !document.hidden && inView && pageActive && !userPaused;
+    const freeze = () => {
+      window.clearTimeout(timer);
+      timer = 0;
+      word.textContent = words[index] ?? '';
+      length = (words[index] ?? '').length;
+      deleting = true;
+      root.dataset.state = 'static';
+    };
+    const schedule = (delay: number) => {
+      window.clearTimeout(timer);
+      if (active()) timer = window.setTimeout(tick, delay);
+    };
+    const tick = () => {
+      timer = 0;
+      if (!active()) { freeze(); return; }
+      if (deleting) {
+        length = Math.max(0, length - 1);
+        word.textContent = words[index].slice(0, length);
+        if (length === 0) {
+          index = (index + 1) % words.length;
+          deleting = false;
+          schedule(250);
+        } else schedule(45);
+      } else {
+        length += 1;
+        word.textContent = words[index].slice(0, length);
+        if (length >= words[index].length) {
+          deleting = true;
+          schedule(1600);
+        } else schedule(90);
+      }
+    };
+    const sync = () => {
+      toggle.disabled = motion.matches || words.length < 2;
+      if (words.length < 2 || !active()) { freeze(); return; }
+      if (!timer) {
+        root.dataset.state = 'playing';
+        schedule(1600);
+      }
+    };
+    toggle.addEventListener('click', () => {
+      userPaused = !userPaused;
+      toggle.setAttribute('aria-pressed', String(userPaused));
+      toggle.setAttribute('aria-label', userPaused ? 'Zapnout střídání cílových skupin' : 'Pozastavit střídání cílových skupin');
+      sync();
+    });
+    motion.addEventListener('change', () => {
+      if (motion.matches) { index = 0; freeze(); }
+      sync();
+    });
+    document.addEventListener('visibilitychange', sync);
+    window.addEventListener('pagehide', () => { pageActive = false; freeze(); });
+    window.addEventListener('pageshow', () => { pageActive = true; sync(); });
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(entries => {
+        inView = entries.some(entry => entry.isIntersecting);
+        sync();
+      });
+      observer.observe(root);
+    }
+    sync();
+  }
+</script>

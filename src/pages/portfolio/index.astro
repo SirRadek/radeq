@@ -1,0 +1,6 @@
+---
+// /portfolio bylo redundantní s /ukazky (obojí „ukázky práce").
+// 301 přesměrování na kanonickou showcase stránku — zachová staré odkazy/SEO.
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+return Astro.redirect(`${base}/ukazky/`, 301);
+---

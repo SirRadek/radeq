@@ -1,0 +1,13 @@
+---
+interface Props { lang?: 'cs' | 'en'; }
+const { lang = 'cs' } = Astro.props;
+const en = lang === 'en';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const examples = [
+ ['/ukazky/instalater/', en ? 'What needs fixing at home?' : 'Co doma zlobí?', en ? 'From the problem to an agreement with a plumber' : 'Od problému k domluvě s instalatérem'],
+ ['/ukazky/sluzba/', en ? 'When does it suit you?' : 'Kdy se vám to hodí?', en ? 'Physiotherapy: the service, an appointment and your choice' : 'Fyzioterapie: služba, termín a váš výběr'],
+ ['/ukazky/provozni-terminal/', en ? 'What happened in the workshop today?' : 'Co přinesl list dne?', en ? 'Workshop: jobs, completed work and materials' : 'Dílna: zakázka, hotová práce a materiál'],
+ ['/ukazky/eshop/', en ? 'Which coffee suits you?' : 'Jaká káva vám sedne?', en ? 'Roastery: choosing coffee, a basket and the order journey' : 'Pražírna: výběr, košík a cesta objednávky'],
+];
+---
+<main><section><h1>{en ? 'Four situations.' : 'Čtyři situace.'}<br/>{en ? 'Four thoughtful solutions.' : 'Čtyři promyšlená řešení.'}</h1><p>{en ? 'Choose a story and try how the steps connect. The fictional data stays within the demo; these are not client references.' : 'Vyberte si příběh a vyzkoušejte, jak na sebe jednotlivé kroky navazují. Modelové údaje zůstávají v ukázce; nejde o klientské reference.'}</p>{en && <p lang="en">All four demos are in Czech. Each demo includes a link back to this English gallery.</p>}<div class="rq-minimal-preview__portals">{examples.map(([href,question,name],i)=><a class="rq-minimal-preview__portal" href={`${base}${href}`}><span class="rq-minimal-preview__portal-index">{String(i+1).padStart(2,'0')} /</span><span><span class="rq-minimal-preview__portal-question">{question}</span><span class="rq-minimal-preview__portal-caption">{name}</span></span><span aria-hidden="true">↗</span></a>)}</div><p><a href={`${base}${en ? '/en/' : '/'}#kontakt`}>{en ? 'Discuss a similar solution' : 'Probrat podobné řešení'}</a></p></section></main>

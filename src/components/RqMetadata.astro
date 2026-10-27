@@ -1,0 +1,34 @@
+---
+/** Values are resolved by the caller. This component owns no URL/base policy. */
+export interface Props {
+  title: string;
+  description: string;
+  lang: 'cs' | 'en';
+  canonicalUrl?: string;
+  ogUrl?: string;
+  alternates?: { lang: string; url: string }[];
+  imageUrl?: string;
+  icons?: { rel: 'icon' | 'apple-touch-icon'; url: string; type?: string; media?: string }[];
+}
+const { title, description, lang, canonicalUrl, ogUrl, alternates = [], imageUrl, icons = [] } = Astro.props;
+---
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<meta name="description" content={description} />
+<meta name="generator" content={Astro.generator} />
+{canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+{alternates.map(({lang, url}) => <link rel="alternate" hreflang={lang} href={url} />)}
+{icons.map(({rel, url, type, media}) => <link rel={rel} href={url} type={type} media={media} />)}
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="RadeQ.cz" />
+<meta property="og:locale" content={lang === 'cs' ? 'cs_CZ' : 'en_US'} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+{ogUrl && <meta property="og:url" content={ogUrl} />}
+{imageUrl && <meta property="og:image" content={imageUrl} />}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+{imageUrl && <meta name="twitter:image" content={imageUrl} />}
+<title>{title}</title>

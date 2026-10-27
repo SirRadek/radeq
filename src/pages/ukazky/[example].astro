@@ -1,0 +1,104 @@
+---
+import { siteContent } from '../../data/siteContent';
+import { getShowcaseExample, showcaseExamples, type ShowcaseSlug } from '../../data/showcaseExamples';
+import { withBaseHref } from '../../lib/links';
+import RqLayout from '../../layouts/RqLayout.astro';
+import RqHeader from '../../components/RqHeader.astro';
+import RqFooter from '../../components/RqFooter.astro';
+import RqContactForm from '../../components/RqContactForm.astro';
+import { homeContent } from '../../data/home';
+
+
+export function getStaticPaths() {
+  return showcaseExamples.map((example) => ({
+    params: { example: example.slug },
+    props: { slug: example.slug },
+  }));
+}
+
+const { slug } = Astro.props as { slug: ShowcaseSlug };
+const example = getShowcaseExample(slug);
+const content = siteContent.cs;
+
+if (!example) {
+  throw new Error(`Unknown showcase example: ${slug}`);
+}
+---
+
+<RqLayout title={example.title} description={example.description} lang={content.layout.lang}>
+  <RqHeader />
+  <main>
+    <section class="showcase-hero" id="top" aria-labelledby="showcase-detail-title">
+      <p class="section-code">{example.eyebrow}</p>
+      <h1 id="showcase-detail-title">{example.h1}</h1>
+      <p>{example.summary}</p>
+      <div class="showcase-hero__actions">
+        <a class="button-primary" href={withBaseHref(example.primaryCta.href)}>{slug === 'nabidka-eshop' ? 'Popsat nabídku v poptávce' : example.primaryCta.label}</a>
+        {example.secondaryCta ? <a class="button-secondary" href={withBaseHref(example.secondaryCta.href)}>{example.secondaryCta.label}</a> : null}
+      </div>
+    </section>
+
+    {slug === 'automatizace' && (
+      <section class="showcase-safety showcase-example-detail" aria-labelledby="automation-process-title">
+        <h2 id="automation-process-title">Příklad: poptávka po opravě stroje</h2>
+        <p>Statický příklad procesu. Tato ukázka nic nespouští ani neodesílá.</p>
+        <ol>
+          <li><strong>Příjem:</strong> formulář obsahuje popis závady a kontakt.</li>
+          <li><strong>Kontrola:</strong> ověří se vyplněný kontakt a popis.</li>
+          <li><strong>Třídění:</strong> úplná poptávka se zařadí do fronty oprav.</li>
+          <li><strong>Předání:</strong> člověk zkontroluje podklady a domluví další postup.</li>
+        </ol>
+        <p><strong>Chybí kontakt?</strong> Předání se zastaví. Člověk ručně dohledá nebo doplní chybějící údaj; teprve potom pokračuje kontrola.</p>
+      </section>
+    )}
+
+    {slug === 'nabidka-eshop' && (
+      <section class="showcase-safety showcase-example-detail" aria-labelledby="offer-comparison-title">
+        <h2 id="offer-comparison-title">Příklad: dvě podoby nabídky</h2>
+        <p>Ilustrační porovnání. V této ukázce se nic nekupuje.</p>
+        <p><strong>Jedna stránka:</strong> několik služeb, jejich rozsah a společná poptávka. Hodí se, když nabídku vysvětlíte v několika bodech.</p>
+        <p><strong>Katalog bez objednávky:</strong> více položek rozdělených podle typu a dotaz na konkrétní položku. Hodí se, když zákazník nejdřív vybírá z více možností.</p>
+      </section>
+    )}
+
+    <section class="showcase-safety" aria-labelledby="showcase-safety-title">
+      <h2 id="showcase-safety-title">Bezpečnost a hranice ukázky</h2>
+      <ul>
+        {example.safetyNotes.map((note) => <li>{note}</li>)}
+      </ul>
+    </section>
+
+    <section class="showcase-sections" aria-label="Popis ukázky">
+      {
+        example.sections.map((section) => (
+          <article class="showcase-section-card">
+            <h2>{section.title}</h2>
+            <p>{section.body}</p>
+            <ul>
+              {section.points.map((point) => (
+                <li>{point}</li>
+              ))}
+            </ul>
+          </article>
+        ))
+      }
+    </section>
+
+    <section class="showcase-out-of-scope" aria-labelledby="showcase-out-of-scope-title">
+      <h2 id="showcase-out-of-scope-title">Co tato ukázka neslibuje</h2>
+      <ul>
+        {example.outOfScope.map((item) => <li>{item}</li>)}
+      </ul>
+    </section>
+
+    <section id="terminal"><span id="kontakt"></span><h2>Probrat projekt</h2><RqContactForm content={homeContent.cs.contact} lang={content.layout.lang} /></section>
+  </main>
+  <RqFooter homeHref="/" />
+</RqLayout>
+
+<style>
+  .showcase-safety.showcase-example-detail { padding: 1.5rem; }
+  @media (max-width: 700px) {
+    .showcase-safety.showcase-example-detail { padding: 1rem; }
+  }
+</style>

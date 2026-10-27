@@ -1,0 +1,8 @@
+---
+import RqLayout from '../../../layouts/RqLayout.astro';
+import RqHeader from '../../../components/RqHeader.astro';
+import RqFooter from '../../../components/RqFooter.astro';
+import MinimalGallery from '../../../components/MinimalGallery.astro';
+import { homeContent } from '../../../data/home';
+---
+<RqLayout title="Practical examples | RadeQ.cz" description="Four fictional demos: services, bookings, a workshop and a small coffee shop. Explore how the steps connect." lang="en" canonicalPath="/en/ukazky/" alternatePath="/ukazky/" alternateLang="cs" preview={false}><RqHeader alternateLabel="CS" alternatePath="/ukazky/" /><MinimalGallery lang="en" /><RqFooter homeHref="/en/" content={homeContent.en.footer} /></RqLayout>

@@ -1,0 +1,40 @@
+---
+interface NavLink {
+  href: string;
+  label: string;
+}
+
+interface HeaderContent {
+  navItems?: readonly NavLink[];
+  items?: readonly NavLink[];
+  navAriaLabel?: string;
+  brandAriaLabel?: string;
+  homeHref?: string;
+  ctaHref?: string;
+  cta?: string;
+}
+
+interface Props {
+  content?: HeaderContent;
+  alternateLabel?: string;
+  alternatePath?: string;
+}
+
+const { content = {}, alternateLabel, alternatePath } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const resolve = (h: string) => {
+  if (!h || !h.startsWith("/")) return h;
+  if (base && (h === base || h.startsWith(base + "/"))) return h;
+  return base + h;
+};
+const logoMask = `${base}/brand/radeq-logo-b-mask.png`;
+const en = Astro.url.pathname.includes('/en/');
+const modernHome = en ? '/en/' : '/';
+const navItems = [{href: modernHome+'#sluzby', label:en?'Services':'Služby'}, {href: modernHome+'#pristup', label:en?'Approach':'Přístup'}, {href:modernHome+'#kontakt',label:en?'Contact':'Kontakt'}];
+const navAriaLabel = content.navAriaLabel ?? (en ? "Main navigation" : "Hlavní navigace");
+const brandAriaLabel = content.brandAriaLabel ?? "RadeQ.cz";
+const homeHref = content.homeHref ?? modernHome;
+const ctaHref = content.ctaHref ?? "/#kontakt";
+---
+
+<header class="rq-minimal-header"><a class="rq-minimal-preview__logo" href={resolve(homeHref)} aria-label={brandAriaLabel} style={`--logo-mask:url("${logoMask}")`}><span aria-hidden="true"></span></a><nav aria-label={navAriaLabel}>{navItems.map(item=><a href={resolve(item.href)}>{item.label}</a>)}{alternateLabel && alternatePath && <a href={resolve(alternatePath)} lang={alternateLabel.toLowerCase()}>{alternateLabel}</a>}</nav></header>

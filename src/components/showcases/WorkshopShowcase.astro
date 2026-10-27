@@ -1,0 +1,49 @@
+---
+import DemoThemeDocument from '../themed-demos/DemoThemeDocument.astro';
+import { JOBS, INITIAL_STOCK } from '../themed-demos/workshop-state.mjs';
+const first = JOBS[0];
+---
+<DemoThemeDocument title="Dílna — pracovní den v malém provozu | Demo RadeQ" description="Tři modelové zakázky, jeden pracovní list. Dokončení práce a přehled materiálu bez odesílání dat." theme="workshop">
+  <main data-workshop>
+    <p class="eyebrow">Malá dílna · modelový provoz</p>
+    <div class="day-heading"><h1>LIST DNE</h1><p>Čtvrtek<br/> 8. října 2026</p></div>
+    <div class="day-intro"><p>Tři zakázky. Jeden jasný další krok.</p><p class="fixed">Fiktivní pracovní den.<br/>Změny zůstávají jen v této ukázce.</p></div>
+    <section class="job" aria-labelledby="current-step">
+      <div class="job-copy">
+        <p class="step"><span data-step-number>01</span><span data-step-label>Právě na stole</span></p>
+        <h2 id="current-step" data-current-step>{first.step}</h2>
+        <p class="job-detail" data-current-job>{first.id} · dubová police</p>
+        <p class="job-help" data-job-status>{first.detail}</p>
+      </div>
+      <div class="job-actions">
+        <button type="button" class="done" data-done data-action="done" data-job-id={first.id} data-js-action hidden>Hotovo → další</button>
+        <p data-completion-note>Dokončení odečte 1 desku z modelového skladu.</p>
+        <button type="button" class="text-action" data-undo data-action="undo" hidden>Vrátit poslední dokončení</button>
+      </div>
+    </section>
+    <section class="day-list" aria-labelledby="day-list-title">
+      <div class="list-heading"><h2 id="day-list-title">DNEŠNÍ POŘADÍ</h2><p>Hotovo <strong data-done-count>0 / 3</strong><span data-remaining>Zbývá 3 zakázky.</span></p></div>
+      <ol>
+        {JOBS.map((job, index) => <li data-job={job.id} class:list={[index === 0 && 'is-current']} aria-current={index === 0 ? 'step' : undefined}>
+          <span class="row-number">{String(index + 1).padStart(2, '0')}</span>
+          <div class="row-copy"><h3>{job.title}</h3><p>{job.id} · {job.step.toLocaleLowerCase('cs')} · {job.boards} {job.boards === 1 ? 'deska' : 'desky'}</p></div>
+          <span class="row-status" data-row-status>{index === 0 ? 'Na stole' : 'Čeká'}</span>
+        </li>)}
+      </ol>
+    </section>
+    <div class="resources">
+      <section aria-labelledby="material-title"><h2 id="material-title">MATERIÁL PO RUCE</h2><p>Dubová deska · <strong data-stock>{INITIAL_STOCK} desky</strong></p><p class="resource-note" data-material-status>Výchozí zásoba 4 ks · spotřebováno 0 ks.</p></section>
+      <section aria-labelledby="next-title"><h2 id="next-title">POTOM NA STŮL</h2><p data-next>D-025 · dvojice polic</p><p class="resource-note">Dokončení posune pořadí a odečte materiál společně.</p></section>
+    </div>
+    <div class="closing"><p class="status" data-status role="status" aria-live="polite" aria-atomic="true">Fiktivní údaje. Nic se neodesílá.</p><button type="button" class="text-action" data-action="reset" data-js-action hidden>Začít den znovu</button></div>
+    <noscript><p>Interaktivní část vyžaduje JavaScript. Zobrazen je výchozí pracovní list: tři čekající zakázky a čtyři desky ve skladu.</p></noscript>
+  </main>
+  <script>
+    import { mount } from '../themed-demos/workshop-client.js';
+    const root = document.querySelector<HTMLElement>('[data-workshop]');
+    if (root) mount(root);
+  </script>
+</DemoThemeDocument>
+<style>
+main{padding-top:3.5rem}.eyebrow,.fixed{font-size:.95rem}.eyebrow{color:#d6ab59}.day-heading{display:flex;justify-content:space-between;align-items:end;gap:2rem}.day-heading p{font-size:1.2rem;line-height:1.5;margin-bottom:.7rem}h1,h2,h3{font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:-.015em}h1{font-size:clamp(4rem,8.5vw,8rem);margin-bottom:0}.day-intro{display:flex;justify-content:space-between;gap:2rem;align-items:baseline;border-bottom:1px solid #858b83;padding:1.25rem 0 1.5rem}.day-intro>p{margin-bottom:0}.fixed{color:#c2c7bd}.job{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:4rem;padding:3rem 0 2.5rem;border-bottom:1px solid #858b83}.step{display:flex;gap:3rem;color:#d6ab59;font-weight:500}.job-copy h2{max-width:10ch;font-size:clamp(3.8rem,7vw,7rem);line-height:.98;margin:.75rem 0 1rem;padding-left:4rem}.job-detail{font-size:1.2rem}.job-detail,.job-help{margin-left:4rem}.job-help{font-size:.95rem;color:#c2c7bd;max-width:40ch;margin-bottom:0}.job-actions{align-self:center;text-align:center}.done{background:#d6ab59;color:#222826;width:100%;border-radius:999px;padding:1rem;font-size:1.4rem;font-weight:500;min-height:60px}.job-actions p{font-size:.9rem;margin:1rem 0;color:#c2c7bd}.text-action{display:block;min-height:44px;background:transparent;color:#d6ab59;text-decoration:underline;text-underline-offset:.4em;padding:.6rem 0;font-size:.95rem;max-width:100%;text-align:left;overflow-wrap:anywhere}.job-actions .text-action{margin:0 auto;text-align:center}button:disabled{opacity:.65;cursor:default}.day-list{padding-top:2rem}.list-heading{display:flex;justify-content:space-between;gap:2rem;align-items:baseline}.list-heading h2,.resources h2{font-size:1.8rem;margin-bottom:.75rem}.list-heading p{font-size:1rem}.list-heading p span{display:block;font-size:.85rem;color:#c2c7bd}.list-heading strong{color:#d6ab59}.day-list ol{list-style:none;margin:0;padding:0}.day-list li{display:grid;grid-template-columns:2.5rem minmax(0,1fr) auto;align-items:center;gap:1.5rem;padding:1.2rem 0;border-bottom:1px solid #626d63}.row-number{color:#c2c7bd;font-size:.9rem}.row-copy h3{font-size:1.6rem;margin:0 0 .2rem;overflow-wrap:anywhere}.row-copy p{font-size:.85rem;color:#c2c7bd;margin:0}.row-status{font-size:.85rem}.is-current .row-number,.is-current .row-status{color:#d6ab59}.is-done .row-copy h3{text-decoration:line-through;color:#c2c7bd}.resources{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4rem;padding-top:2rem}.resources section+section{border-left:1px solid #858b83;padding-left:4rem}.resources p{font-size:1rem;margin-bottom:.7rem}.resources .resource-note{color:#c2c7bd;font-size:.85rem}.resources strong{color:#d6ab59}.closing{display:flex;justify-content:space-between;gap:2rem;align-items:baseline;margin-top:2rem}.status{font-size:.85rem;max-width:65ch;margin:0}strong{font-weight:500}@media(max-width:900px){.job{gap:2rem}.job-copy h2{padding-left:0}.job-detail,.job-help{margin-left:0}.step{gap:1rem}.resources{gap:2rem}.resources section+section{padding-left:2rem}}@media(max-width:650px){main{padding-top:2.5rem}.day-heading,.day-intro,.closing{display:block}.day-heading p{font-size:1rem;margin:1rem 0 0}.day-heading p br{display:none}.day-intro .fixed{margin-top:1rem}.job,.resources{grid-template-columns:1fr;gap:1.5rem}.job-actions{padding:0}.resources section+section{padding:1.5rem 0 0;border-left:0;border-top:1px solid #858b83}.job-copy h2{font-size:clamp(3rem,14vw,5rem)}.job-detail{font-size:1rem}.list-heading{display:block}.list-heading p{display:flex;gap:.5rem;flex-wrap:wrap}.day-list li{gap:.75rem;grid-template-columns:1.6rem minmax(0,1fr)}.row-status{grid-column:2}.closing .text-action{margin-top:1rem}}@media(forced-colors:active){.done,.text-action{border:1px solid ButtonText}button:disabled{color:GrayText;opacity:1}}
+</style>

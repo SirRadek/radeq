@@ -1,0 +1,329 @@
+---
+import CoffeeDemoDocument from './CoffeeDemoDocument.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+type Product = { name: string; profile: string; category: string; badge: string; prices: Record<string, number> };
+const products: Product[] = [
+  { name: 'Mlýnské espresso', profile: 'Čokoláda, lískový oříšek, plné tělo.', category: 'espresso', badge: 'espresso', prices: { '250 g': 219, '500 g': 399, '1 kg': 749 } },
+  { name: 'Etiopie Sidamo', profile: 'Meruňka, černý čaj, květinová vůně.', category: 'filtr', badge: 'filtr', prices: { '250 g': 269, '500 g': 499 } },
+  { name: 'Kolumbie Huila', profile: 'Třtinový cukr, jablko, čistý dozvuk.', category: 'filtr', badge: 'filtr', prices: { '250 g': 249, '500 g': 459, '1 kg': 859 } },
+  { name: 'Brazílie bez kofeinu', profile: 'Kakao, mandle, nízká acidita.', category: 'bezkofeinova', badge: 'bez kofeinu', prices: { '250 g': 259, '500 g': 479 } },
+
+];
+---
+
+<CoffeeDemoDocument title="Pražírna U Mlýna | Vzorový e-shop" description="Vzorová ukázka malého českého e-shopu pro lokální pražírnu kávy: rychlý katalog, varianty gramáže a jednoduchý košík bez backendu.">
+  <main class="shop-page">
+    <div class="demo-banner" role="region" aria-label="Vzorová ukázka">
+      <p>RadeQ · modelová ukázka fiktivní pražírny</p>
+      <nav aria-label="Zpět na RadeQ"><a href={base + '/ukazky/'}>← Další ukázky</a><a href={base + '/en/ukazky/'} lang="en">Examples in English</a><a href={base + '/'}>RadeQ.cz</a></nav>
+    </div>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Pražírna U Mlýna</p>
+        <h1 id="hero-title">Čerstvě pražená káva z malé pražírny.</h1>
+        <p class="hero-text">Čokoládové espresso, ovocný filtr i šálek bez kofeinu. Čtyři kávy, které si snadno najdou místo ve vašem ranním rituálu.</p>
+        <a class="primary-link" href="#katalog">Prohlédnout kávu</a>
+      </div>
+      <div class="hero-photo" aria-label="Ilustrační blok balení kávy"><span class="bag bag-one"></span><span class="bag bag-two"></span><span class="steam"></span></div>
+    </section>
+
+    <section class="trust" aria-label="Dostupnost a doprava">
+      <p><strong>Malé dávky.</strong> Velká radost z každého šálku.</p>
+      <p><strong>Výběr → objednávka → balení.</strong> Vyzkoušejte celý příběh.</p>
+      <button class="cart-open" hidden data-coffee-action type="button" aria-controls="kosik">Košík <span data-cart-count>0</span></button>
+    </section>
+
+    <section class="catalog" id="katalog" aria-labelledby="catalog-title">
+      <div class="catalog-head">
+        <div><p class="eyebrow">Katalog</p><h2 id="catalog-title">Káva pro doma i do kanceláře</h2></div>
+        <div class="filters" hidden data-coffee-action aria-label="Filtrovat produkty">
+          <button class="filter is-active" type="button" data-filter="all" aria-pressed="true">vše</button>
+          <button class="filter" type="button" data-filter="espresso" aria-pressed="false">espresso</button>
+          <button class="filter" type="button" data-filter="filtr" aria-pressed="false">filtr</button>
+          <button class="filter" type="button" data-filter="bezkofeinova" aria-pressed="false">bezkofeinová</button>
+        </div>
+      </div>
+
+      <div class="product-grid">
+        {products.map((product, index) => {
+          const weights = Object.keys(product.prices);
+          const firstWeight = weights[0];
+          const imageClass = `photo-tone tone-${(index % 4) + 1}`;
+          return (
+            <article class="product-card" data-category={product.category} data-name={product.name} data-prices={JSON.stringify(product.prices)}>
+              <div class={imageClass} aria-hidden="true"><i class="coffee-pack"><b>U MLÝNA</b></i><span>{product.badge}</span></div>
+              <div class="product-body">
+                <p class="stock">Pražírna U Mlýna</p>
+                <h3>{product.name}</h3>
+                <p>{product.profile}</p>
+                <label><span>Gramáž</span><select class="weight-select" disabled aria-label={`Gramáž produktu ${product.name}`}>{weights.map((weight) => <option value={weight}>{weight}</option>)}</select></label>
+                <noscript><p class="variant-prices">{weights.map(weight => `${weight}: ${product.prices[weight].toLocaleString('cs-CZ')} Kč`).join(' · ')}</p></noscript>
+                <div class="buy-row"><strong class="price" data-price>{product.prices[firstWeight].toLocaleString('cs-CZ')} Kč</strong><button type="button" class="add-cart" hidden data-coffee-action>Do košíku</button></div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+
+    <section class="basket-section" hidden data-coffee-action id="kosik" aria-labelledby="cart-title">
+      <div class="basket-copy"><p class="eyebrow">Váš výběr</p><h2 id="cart-title" tabindex="-1">Ještě jeden šálek?</h2><p>Upravte počet balení a vytvořte modelovou objednávku. Její příběh pak pokračuje ve stejné pražírně.</p><p class="demo-explanation">Ilustrační ceny. Nic se neposílá ani neplatí; nejsou potřeba osobní údaje.</p></div>
+      <div class="basket-box">
+        <div class="cart-items" data-cart-items><p class="empty-cart">Košík je zatím prázdný.</p></div>
+        <div class="cart-total"><span>Celkem za kávu</span><strong data-cart-total>0 Kč</strong></div>
+        <button type="button" class="checkout-button" data-checkout disabled>Vytvořit modelovou objednávku</button>
+        <p class="checkout-message" data-checkout-message role="status" hidden></p>
+        <button type="button" class="quiet-button" data-operator-open aria-controls="pro-prazirnu" aria-expanded="false" disabled>Ukázat objednávku v pražírně ↓</button>
+      </div>
+    </section>
+    <section class="operator-section" id="pro-prazirnu" aria-labelledby="operator-title" hidden>
+      <div class="operator-head"><div><p class="eyebrow">Na druhé straně pultu</p><h2 id="operator-title" tabindex="-1">Teď jsme v pražírně.</h2></div><p>Stejná káva, stejná objednávka.<br />Jen pohled člověka, který ji balí.</p></div>
+      <div class="order-top"><strong data-order-id></strong><span class="order-status" data-order-status role="status"></span></div>
+      <div class="order-lines" data-order-lines></div>
+      <div class="cart-total"><span>Celkem za objednávku</span><strong data-order-total></strong></div>
+      <div class="operator-actions"><button type="button" class="checkout-button" data-order-advance>Začít balit</button><button type="button" class="quiet-button" data-export>Stáhnout položky CSV</button></div>
+      <p class="operator-note">Export obsahuje právě tuto objednávku: kávu, gramáž, počet, cenu a stav. Nový nákup nahradí tento modelový přehled.</p>
+    </section>
+    <noscript><p class="no-script">Katalog a ceny si můžete prohlédnout i bez JavaScriptu. Interaktivní košík a modelová objednávka potřebují JavaScript.</p></noscript>
+    <footer class="shop-footer"><div><strong>Pražírna U Mlýna</strong><p>Fiktivní pražírna. Skutečně jednoduchý příběh nákupu.</p></div><button type="button" class="quiet-button" data-reset hidden data-coffee-action>Začít ukázku znovu</button></footer>
+  </main>
+</CoffeeDemoDocument>
+
+<style>
+  :global(html) { scroll-behavior: smooth; }
+  h1, h2 { font-family: 'Plus Jakarta Sans', Inter, sans-serif; }
+  .shop-page { min-height: 100vh; overflow-x: clip; background: #f8efe2; color: #2f1b12; font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .demo-banner { position: relative; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .75rem clamp(1rem, 4vw, 3rem); background: #2f1b12; color: #fff7eb; box-shadow: 0 8px 24px rgba(47, 27, 18, .18); }
+  .demo-banner p { margin: 0; font-size: .95rem; line-height: 1.4; color: #fff7eb; }
+  .demo-banner a { flex: 0 0 auto; color: #f7d9a6; font-weight: 700; text-decoration: none; }
+  .hero, .trust, .catalog, .shop-footer { width: min(1120px, calc(100% - 3rem)); margin-inline: auto; }
+  .hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr); gap: clamp(2rem, 6vw, 5rem); align-items: center; padding: clamp(3rem, 9vw, 6rem) 0 2rem; }
+  .eyebrow { margin: 0 0 .75rem; color: #8b4b24; font-size: .82rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  h1, h2, h3, p { overflow-wrap: anywhere; }
+  h1 { max-width: 760px; margin: 0; font-size: clamp(2.4rem, 7vw, 5.3rem); line-height: .95; letter-spacing: 0; }
+  .hero-text { max-width: 620px; margin: 1.25rem 0 1.75rem; color: #604033; font-size: clamp(1rem, 2vw, 1.2rem); line-height: 1.7; }
+  .primary-link, .add-cart, .cart-open, .checkout-button, .filter { min-height: 44px; border: 0; border-radius: 999px; cursor: pointer; font: inherit; font-weight: 700; }
+  .primary-link { display: inline-flex; align-items: center; padding: .85rem 1.15rem; background: #6f351b; color: #fff7eb; text-decoration: none; }
+  .hero-photo { position: relative; min-height: 380px; border-radius: 2rem; background: radial-gradient(circle at 30% 25%, rgba(255, 244, 220, .9), transparent 26%), linear-gradient(145deg, #d6a15f, #6f351b 62%, #3a2015); box-shadow: 0 22px 70px rgba(71, 39, 22, .26); overflow: hidden; }
+  .bag { position: absolute; bottom: 2.2rem; width: 34%; min-width: 120px; aspect-ratio: 3 / 4; border-radius: 1.2rem .8rem 1rem 1rem; background: linear-gradient(180deg, #f3d9ac, #b46b32); box-shadow: 0 18px 40px rgba(47, 27, 18, .3); }
+  .bag::before { content: ''; position: absolute; inset: 18% 18% auto; height: 34%; border-radius: 50%; background: #3b2014; }
+  .bag-one { left: 16%; transform: rotate(-5deg); }
+  .bag-two { right: 16%; width: 29%; background: linear-gradient(180deg, #fff2d4, #8b4b24); transform: rotate(6deg); }
+  .steam { position: absolute; top: 3rem; left: 50%; width: 44%; height: 38%; transform: translateX(-50%); border: 2px solid rgba(255, 247, 235, .55); border-inline-color: transparent; border-bottom-color: transparent; border-radius: 50%; }
+  .trust { display: grid; grid-template-columns: 1fr 1fr auto; gap: 1rem; align-items: center; margin-top: 1rem; padding: 1rem; border: 1px solid #e7ceb1; border-radius: 1rem; background: #fff9ee; }
+  .trust p { margin: 0; color: #604033; line-height: 1.5; }
+  .cart-open { padding: .75rem 1rem; background: #3a2015; color: #fff7eb; }
+  .catalog { padding: clamp(3rem, 8vw, 5rem) 0 2rem; }
+  .catalog-head { display: flex; justify-content: space-between; gap: 1.25rem; align-items: end; margin-bottom: 1.5rem; }
+  .catalog h2 { margin: 0; font-size: clamp(1.8rem, 4vw, 3rem); line-height: 1.05; }
+  .filters { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: flex-end; }
+  .filter { padding: .65rem .9rem; border: 1px solid #d9b991; background: #fff9ee; color: #4a2818; }
+  .filter.is-active { background: #6f351b; color: #fff7eb; border-color: #6f351b; }
+  .product-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  .product-card { display: flex; min-width: 0; flex-direction: column; overflow: hidden; border: 1px solid #e3c6a4; border-radius: .8rem; background: #fffaf1; }
+  .product-card[hidden] { display: none; }
+  .photo-tone { position: relative; display: grid; min-height: 200px; place-items: end start; padding: 1rem; background: linear-gradient(135deg, #d8a866, #6f351b); }
+  .photo-tone span { border-radius: 999px; padding: .35rem .6rem; background: rgba(255, 249, 238, .9); color: #3a2015; font-size: .78rem; font-weight: 900; }
+  .tone-2 { background: linear-gradient(135deg, #c77d3e, #422317); }
+  .tone-3 { background: linear-gradient(135deg, #e1c293, #7c4625); }
+  .tone-4 { background: linear-gradient(135deg, #b98354, #2f1b12); }
+  .product-body { display: flex; flex: 1; flex-direction: column; gap: .85rem; padding: 1rem; }
+  .stock { margin: 0; color: #247343; font-size: .82rem; font-weight: 900; text-transform: uppercase; }
+  .product-body h3 { margin: 0; font-size: 1.45rem; line-height: 1.2; }
+  .product-body p:not(.stock) { margin: 0; color: #604033; line-height: 1.5; }
+  label { display: grid; gap: .35rem; margin-top: auto; color: #604033; font-size: .9rem; font-weight: 700; }
+  select { width: 100%; min-height: 42px; border: 1px solid #d7b58b; border-radius: .65rem; padding: .55rem .65rem; background: #fffef9; color: #2f1b12; font: inherit; }
+  .buy-row { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+  .price { font-size: 1.15rem; white-space: nowrap; }
+  .add-cart { flex: 0 0 auto; padding: .65rem .85rem; background: #6f351b; color: #fff7eb; }
+  .shop-footer { display: flex; justify-content: space-between; gap: 1rem; padding: 2rem 0 3rem; color: #604033; }
+  .shop-footer p, address { margin: .35rem 0 0; font-style: normal; line-height: 1.6; }
+  .cart-total, :global(.cart-line) { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .cart-items { display: grid; gap: 1rem; }
+  .empty-cart { color: #604033; }
+  :global(.cart-line) { align-items: flex-start; border-bottom: 1px solid #e7ceb1; padding-bottom: .75rem; }
+  :global(.cart-line p) { margin: 0; font-weight: 700; }
+  :global(.cart-line small) { color: #604033; }
+  :global(.cart-quantity) { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; margin-top: .5rem; }
+  :global(.cart-quantity button) { min-width: 44px; min-height: 44px; padding: .4rem .6rem; border: 1px solid #b68b69; border-radius: .35rem; background: #fff7eb; color: #3a2015; font: inherit; cursor: pointer; }
+  :global(.cart-quantity button:disabled) { opacity: .45; cursor: default; }
+  :global(.cart-quantity button:focus-visible) { outline: 2px solid #6f351b; outline-offset: 2px; }
+  .cart-total { margin-top: auto; border-top: 1px solid #e7ceb1; padding-top: 1rem; font-size: 1.15rem; }
+  .checkout-button { width: 100%; padding: .85rem 1rem; background: #3a2015; color: #fff7eb; }
+  .checkout-message { margin: 0; border-radius: .75rem; padding: .9rem; background: #f1dfc4; color: #3a2015; line-height: 1.5; }
+  @media (max-width: 900px) { .hero, .trust, .catalog-head, .shop-footer { grid-template-columns: 1fr; flex-direction: column; align-items: stretch; } .hero-photo { min-height: 300px; } .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .filters { justify-content: flex-start; } }
+  @media (max-width: 560px) { .demo-banner { align-items: flex-start; flex-direction: column; } .hero, .trust, .catalog, .shop-footer { width: min(100% - 1rem, 1120px); } .product-grid { grid-template-columns: 1fr; } .buy-row { align-items: stretch; flex-direction: column; } .add-cart { width: 100%; } }
+
+  .demo-banner nav { display:flex; flex-wrap:wrap; gap:1.25rem; }
+  .coffee-pack { position:absolute; width:80px; height:120px; left:50%; top:28px; transform:translateX(-50%) rotate(-8deg); display:grid; place-items:center; background:#ead5b1; color:#3b2014; border-radius:8px 8px 14px 14px; box-shadow:12px 15px 22px #2f1b1238; font-style:normal; }
+  .coffee-pack b { display:grid; place-items:center; width:58px; height:58px; border:1px solid #68432c; border-radius:50%; font-size:.62rem; letter-spacing:.05em; }
+  .photo-tone span { position:relative; }
+  .bag::after { content:'U MLÝNA'; position:absolute; top:31%; width:100%; text-align:center; color:#f3d9ac; font-size:.65rem; font-weight:700; letter-spacing:.1em; }
+  .basket-section, .operator-section, .no-script { width:min(1120px,calc(100% - 3rem)); margin:3rem auto; }
+  .basket-section { display:grid; grid-template-columns:1fr 1fr; gap:3rem; border-top:1px solid #d9b991; padding-top:3rem; scroll-margin-top:1rem; }
+  .basket-copy h2, .operator-head h2 { margin:0; font-size:clamp(1.8rem,4vw,2.6rem); line-height:1.1; }
+  .basket-copy p:not(.eyebrow) { color:#604033; max-width:30rem; line-height:1.7; }
+  .demo-explanation, .operator-note { font-size:.88rem; }
+  .basket-box { display:flex; flex-direction:column; gap:1rem; padding:1.5rem; background:#fffaf1; border:1px solid #e3c6a4; border-radius:1rem; }
+  .cart-total { margin-top:.5rem; padding-block:1rem 0; }
+  .quiet-button { min-height:44px; padding:.65rem 1rem; border:1px solid #b68b69; border-radius:999px; background:transparent; color:#4a2818; font-weight:700; cursor:pointer; }
+  button:disabled { opacity:.55; cursor:default; }
+  button:focus-visible, a:focus-visible, select:focus-visible { outline:3px solid #8b4b24; outline-offset:4px; }
+  .operator-section { padding:2rem; background:#efe0c9; border-radius:1rem; scroll-margin-top:1rem; }
+  .operator-head { display:flex; justify-content:space-between; gap:2rem; align-items:start; padding-bottom:1.5rem; border-bottom:1px solid #c9a881; }
+  .operator-head > p { margin:0; color:#604033; line-height:1.6; }
+  .order-top { display:flex; gap:1rem; justify-content:space-between; align-items:center; margin:1.5rem 0; }
+  .order-status { border:1px solid #9b754f; border-radius:999px; padding:.5rem .8rem; font-size:.9rem; }
+  :global(.order-line) { display:flex; gap:1rem; justify-content:space-between; padding:.85rem 0; border-bottom:1px solid #d4b894; line-height:1.5; }
+  :global(.order-line strong) { white-space:nowrap; }
+  .operator-actions { display:flex; flex-wrap:wrap; gap:.75rem; margin-top:1.5rem; }
+  .operator-actions .checkout-button { width:auto; }
+  .operator-note { margin:1rem 0 0; color:#604033; line-height:1.7; }
+  @media(max-width:900px) { .basket-section { gap:1.5rem; } }
+  @media(max-width:650px) { .basket-section { grid-template-columns:1fr; } .operator-head { flex-direction:column; gap:1rem; } .operator-section { padding:1.25rem; } .basket-section, .operator-section, .no-script { width:calc(100% - 2rem); } .order-top { flex-wrap:wrap; } }
+  @media(prefers-reduced-motion:reduce) { :global(html) { scroll-behavior:auto; } *, *::before, *::after { transition:none!important; } }
+</style>
+
+<script>
+  import {addCoffee, changeQuantity, removeCoffee, cartSummary} from '../../lib/coffee-cart';
+  import {initialCoffeeSession, placeCoffeeOrder, advanceCoffeeOrder, coffeeOrderCsv} from '../../lib/coffee-orders';
+  const page = document.querySelector<HTMLElement>('.shop-page');
+  if (page) {
+    const get = <T extends HTMLElement>(selector: string) => page.querySelector<T>(selector)!;
+    const basket = get<HTMLElement>('[data-cart-items]');
+    const basketTitle = get<HTMLElement>('#cart-title');
+    const checkout = get<HTMLButtonElement>('[data-checkout]');
+    const message = get<HTMLElement>('[data-checkout-message]');
+    const operatorOpen = get<HTMLButtonElement>('[data-operator-open]');
+    const operator = get<HTMLElement>('#pro-prazirnu');
+    const nextStatus = get<HTMLButtonElement>('[data-order-advance]');
+    const cards = Array.from(page.querySelectorAll<HTMLElement>('.product-card'));
+    const filters = Array.from(page.querySelectorAll<HTMLButtonElement>('.filter'));
+    const formatCzk = (value: number) => `${value.toLocaleString('cs-CZ')} Kč`;
+    let session = initialCoffeeSession();
+    const scrollTo = (element: HTMLElement) => {
+      element.scrollIntoView({behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
+    };
+    const controlFor = (key: string, action: string) => Array.from(basket.querySelectorAll<HTMLElement>('[data-cart-key]'))
+      .find(row => row.dataset.cartKey === key)?.querySelector<HTMLButtonElement>(`[data-cart-action="${action}"]`);
+    const renderCart = () => {
+      basket.replaceChildren();
+      if (!session.cart.length) {
+        const empty = document.createElement('p'); empty.className = 'empty-cart'; empty.textContent = 'Košík je zatím prázdný.'; basket.append(empty);
+      }
+      session.cart.forEach(item => {
+        const row = document.createElement('div'); row.className = 'cart-line'; row.dataset.cartKey = item.key;
+        const info = document.createElement('div');
+        const name = document.createElement('p'); name.textContent = item.name;
+        const weight = document.createElement('small'); weight.textContent = `${item.weight} · ${formatCzk(item.price)} / balení`;
+        const controls = document.createElement('div'); controls.className = 'cart-quantity';
+        const quantity = document.createElement('span'); quantity.textContent = `${item.quantity} ks`;
+        const makeButton = (action: string, text: string, label: string, handler: () => void) => {
+          const button = document.createElement('button'); button.type = 'button'; button.textContent = text;
+          button.dataset.cartAction = action; button.setAttribute('aria-label', `${label}: ${item.name}, ${item.weight}`);
+          button.addEventListener('click', handler); return button;
+        };
+        const adjust = (delta: number, action: string) => {
+          session = {...session, cart: changeQuantity(session.cart, item.key, delta)}; renderCart();
+          const target = controlFor(item.key, action);
+          (target?.disabled ? controlFor(item.key, 'plus') : target)?.focus();
+        };
+        const minus = makeButton('minus', '−', 'Snížit počet', () => adjust(-1, 'minus')); minus.disabled = item.quantity === 1;
+        const plus = makeButton('plus', '+', 'Zvýšit počet', () => adjust(1, 'plus'));
+        const remove = makeButton('remove', 'Odebrat', 'Odebrat položku', () => {
+          const index = session.cart.findIndex(line => line.key === item.key);
+          session = {...session, cart: removeCoffee(session.cart, item.key)}; renderCart();
+          const next = session.cart[Math.min(index, session.cart.length - 1)];
+          (next ? controlFor(next.key, 'remove') : basketTitle)?.focus();
+        });
+        controls.append(minus, quantity, plus, remove); info.append(name, weight, controls);
+        const total = document.createElement('strong'); total.textContent = formatCzk(item.price * item.quantity);
+        row.append(info, total); basket.append(row);
+      });
+      const summary = cartSummary(session.cart);
+      get<HTMLElement>('[data-cart-total]').textContent = formatCzk(summary.total);
+      get<HTMLElement>('[data-cart-count]').textContent = String(summary.count);
+      checkout.disabled = summary.count === 0;
+      cards.forEach(card => {
+        const selected = card.querySelector<HTMLSelectElement>('.weight-select')!.value;
+        const line = session.cart.find(item => item.name === card.dataset.name && item.weight === selected);
+        const add = card.querySelector<HTMLButtonElement>('.add-cart')!;
+        add.textContent = line ? `Přidat další · ${line.quantity} ks` : 'Do košíku';
+        add.setAttribute('aria-label', `Přidat do košíku: ${card.dataset.name}, ${selected}${line ? `, aktuálně ${line.quantity} ks` : ''}`);
+      });
+    };
+    const renderOrder = () => {
+      operatorOpen.disabled = !session.order;
+      if (!session.order) return;
+      const order = session.order;
+      const labels = {received: 'Přijato', packing: 'Balíme', ready: 'Připraveno'};
+      get<HTMLElement>('[data-order-id]').textContent = `Objednávka ${order.id} · ${order.count} balení`;
+      get<HTMLElement>('[data-order-status]').textContent = labels[order.status];
+      get<HTMLElement>('[data-order-total]').textContent = formatCzk(order.total);
+      const lines = get<HTMLElement>('[data-order-lines]'); lines.replaceChildren();
+      order.lines.forEach(line => {
+        const row = document.createElement('div'); row.className = 'order-line';
+        const info = document.createElement('span'); info.textContent = `${line.name} · ${line.weight} · ${line.quantity} ks × ${formatCzk(line.price)}`;
+        const total = document.createElement('strong'); total.textContent = formatCzk(line.quantity * line.price);
+        row.append(info, total); lines.append(row);
+      });
+      nextStatus.disabled = order.status === 'ready';
+      nextStatus.textContent = order.status === 'received' ? 'Začít balit' : order.status === 'packing' ? 'Označit jako připravené' : 'Připraveno k předání';
+    };
+    const applyFilter = (button: HTMLButtonElement) => {
+      filters.forEach(item => { item.classList.toggle('is-active', item === button); item.setAttribute('aria-pressed', String(item === button)); });
+      cards.forEach(card => { card.hidden = button.dataset.filter !== 'all' && card.dataset.category !== button.dataset.filter; });
+    };
+    filters.forEach(button => button.addEventListener('click', () => applyFilter(button)));
+    cards.forEach(card => {
+      const select = card.querySelector<HTMLSelectElement>('.weight-select')!;
+      const price = card.querySelector<HTMLElement>('[data-price]')!;
+      const prices: Record<string, number> = JSON.parse(card.dataset.prices || '{}');
+      select.addEventListener('change', () => { price.textContent = formatCzk(prices[select.value]); renderCart(); });
+      card.querySelector<HTMLButtonElement>('.add-cart')!.addEventListener('click', () => {
+        session = {...session, cart: addCoffee(session.cart, {name: card.dataset.name || 'Káva', weight: select.value, price: prices[select.value]})};
+        renderCart(); message.hidden = false;
+        message.textContent = `${card.dataset.name}, ${select.value}: přidáno do košíku.${session.order ? ' Předchozí objednávka zůstává beze změny.' : ''}`;
+      });
+    });
+    get<HTMLButtonElement>('.cart-open').addEventListener('click', () => { scrollTo(basketTitle); basketTitle.focus({preventScroll: true}); });
+    checkout.addEventListener('click', () => {
+      const next = placeCoffeeOrder(session);
+      if (next === session || !next.order) return;
+      session = next; renderCart(); renderOrder();
+      message.hidden = false; message.textContent = `Modelová objednávka ${session.order!.id} je vytvořena: ${formatCzk(session.order!.total)}. Podívejte se, jak pokračuje v pražírně.`;
+      operatorOpen.focus();
+    });
+    operatorOpen.addEventListener('click', () => {
+      operator.hidden = !operator.hidden;
+      operatorOpen.setAttribute('aria-expanded', String(!operator.hidden));
+      operatorOpen.textContent = operator.hidden ? 'Ukázat objednávku v pražírně ↓' : 'Skrýt pohled pražírny ↑';
+      if (!operator.hidden) { const title = get<HTMLElement>('#operator-title'); scrollTo(operator); title.focus({preventScroll: true}); }
+    });
+    nextStatus.addEventListener('click', () => { session = advanceCoffeeOrder(session); renderOrder(); if (nextStatus.disabled) get<HTMLElement>('#operator-title').focus({preventScroll: true}); });
+    get<HTMLButtonElement>('[data-export]').addEventListener('click', () => {
+      if (!session.order) return;
+      const url = URL.createObjectURL(new Blob(['\uFEFF', coffeeOrderCsv(session.order)], {type: 'text/csv;charset=utf-8'}));
+      const link = document.createElement('a'); link.href = url; link.download = `${session.order.id}-kava.csv`; link.hidden = true;
+      page.append(link); link.click(); link.remove(); window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+    get<HTMLButtonElement>('[data-reset]').addEventListener('click', () => {
+      session = initialCoffeeSession(); renderCart(); renderOrder();
+      operator.hidden = true; operatorOpen.setAttribute('aria-expanded', 'false'); operatorOpen.textContent = 'Ukázat objednávku v pražírně ↓';
+      get<HTMLElement>('[data-order-lines]').replaceChildren();
+      for (const selector of ['[data-order-id]', '[data-order-status]', '[data-order-total]']) get<HTMLElement>(selector).textContent = '';
+      nextStatus.disabled = true; nextStatus.textContent = 'Začít balit';
+      applyFilter(filters[0]);
+      cards.forEach(card => { const select = card.querySelector<HTMLSelectElement>('.weight-select')!; select.selectedIndex = 0; select.dispatchEvent(new Event('change')); });
+      message.hidden = true; message.textContent = '';
+      const first = cards[0].querySelector<HTMLButtonElement>('.add-cart')!; scrollTo(cards[0]); first.focus({preventScroll: true});
+    });
+    renderCart();
+    // Reveal only after every control has its handler and initial state.
+    page.querySelectorAll<HTMLElement>('[data-coffee-action]').forEach(element => { element.hidden = false; });
+    page.querySelectorAll<HTMLSelectElement>('.weight-select').forEach(select => { select.disabled = false; });
+  }
+</script>

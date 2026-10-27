@@ -1,0 +1,5 @@
+---
+interface Props {base:string;theme:'plumber'|'physio'|'workshop'}
+const {base}=Astro.props;
+---
+<header><a class="logo" href={`${base}/`} aria-label="RadeQ — domů"><span aria-hidden="true" style={`--logo:url('${base}/brand/radeq-logo-b-mask.png')`}></span><span class="logo-fallback">RadeQ</span></a><nav aria-label="Navigace ukázky"><a href={`${base}/ukazky/`}>Modelová ukázka</a><a href={`${base}/en/ukazky/`} lang="en">Examples in English</a><a href={`${base}/`}>Zpět na RadeQ</a></nav></header>

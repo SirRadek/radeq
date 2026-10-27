@@ -1,0 +1,174 @@
+---
+import RqLayout from '../../layouts/RqLayout.astro';
+import RqHeader from '../../components/RqHeader.astro';
+import RqFooter from '../../components/RqFooter.astro';
+import RqContactForm from '../../components/RqContactForm.astro';
+import { homeContent } from '../../data/home';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const nav = [
+  { href: base + '/#co-resim', label: 'Co řeším' },
+  { href: base + '/#sluzby', label: 'Služby' },
+  { href: base + '/#jak-pracuji', label: 'Jak pracuji' },
+  { href: base + '/#ceny', label: 'Ceny' },
+  { href: base + '/ukazky/', label: 'Ukázky' },
+  { href: base + '/zapisky/', label: 'Zápisky' },
+  { href: base + '/#kontakt', label: 'Kontakt' },
+];
+---
+
+<RqLayout
+  title="Kontakt | RadeQ.cz"
+  description="Napište pár vět k webu nebo problému. Ozvu se do 1 pracovního dne. E-mail i telefon."
+  lang="cs"
+>
+  <RqHeader content={{ navItems: nav }} alternateLabel="EN" alternatePath="/en/kontakt/" />
+
+  <main class="rq-contact-page">
+    <section class="rq-section rq-contact-hero" id="top">
+      <p class="rq-eyebrow">Kontakt</p>
+      <h1 class="rq-display">Napište mi</h1>
+      <p class="rq-lead">
+        Stačí pár vět — typ webu nebo problém, současný stav a co se má zlepšit. Ozvu se
+        do 1 pracovního dne, bez závazku.
+      </p>
+      <div class="rq-actions">
+        <a class="rq-btn rq-btn--primary" href="#poptavka">Napsat poptávku</a>
+        <a class="rq-btn rq-btn--ghost" href={base + '/ukazky/'}>Ukázky práce</a>
+      </div>
+    </section>
+
+    <section class="rq-section rq-contact-methods" aria-labelledby="rq-contact-methods-title">
+      <p class="rq-eyebrow">Jak mě zastihnete</p>
+      <h2 class="rq-h2" id="rq-contact-methods-title">Přímý kontakt</h2>
+
+      <div class="rq-contact-grid">
+        <article class="rq-card rq-contact-card">
+          <h3>E-mail</h3>
+          <p>
+            <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a>
+          </p>
+        </article>
+        <article class="rq-card rq-contact-card">
+          <h3>Telefon</h3>
+          <p><a href="tel:+420730634439">+420 730 634 439</a></p>
+        </article>
+        <article class="rq-card rq-contact-card">
+          <h3>Kde</h3>
+          <p>Praha, celá ČR · IČO 08748811</p>
+        </article>
+        <article class="rq-card rq-contact-card">
+          <h3>Odezva</h3>
+          <p>Ozvu se do 1 pracovního dne.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="rq-section" id="poptavka">
+      <RqContactForm content={homeContent.cs.contact} lang="cs" />
+    </section>
+
+    <section class="rq-section rq-contact-process" aria-labelledby="rq-contact-process-title">
+      <p class="rq-eyebrow">Než napíšete</p>
+      <h2 class="rq-h2" id="rq-contact-process-title">Co poslat a jak to chodí</h2>
+
+      <div class="rq-contact-grid rq-contact-grid--steps">
+        <article class="rq-card rq-info-card">
+          <h3>Co poslat</h3>
+          <p>
+            Popište, jestli řešíte nový web, redesign, audit webu nebo procesu, nebo něco jiného. Odkaz na
+            současný web pomůže, ale není povinný.
+          </p>
+        </article>
+        <article class="rq-card rq-info-card">
+          <h3>Kam poptávky chodí</h3>
+          <p>
+            Formulář je pro pracovní poptávky a domluvu. Citlivé údaje, hesla ani interní
+            dokumenty do něj nepatří.
+          </p>
+        </article>
+        <article class="rq-card rq-info-card">
+          <h3>Předání člověku</h3>
+          <p>
+            Poptávka nekončí automatem. Nejasné nebo citlivé věci řeším ručně a s jasnými
+            hranicemi.
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <RqFooter navItems={nav} />
+</RqLayout>
+
+<style>
+  .rq-contact-page :is(h1, h2, h3) {
+    letter-spacing: 0;
+  }
+
+  .rq-contact-hero {
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.4rem);
+    padding-block-start: clamp(5rem, 9vw, 8rem);
+  }
+
+  .rq-contact-hero .rq-display {
+    max-width: 13ch;
+  }
+
+  .rq-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.35rem;
+  }
+
+  .rq-contact-methods,
+  .rq-contact-process {
+    padding-block-start: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .rq-contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: 1.1rem;
+    margin-top: clamp(1.6rem, 3vw, 2.4rem);
+  }
+
+  .rq-contact-grid--steps {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  }
+
+  .rq-contact-card,
+  .rq-info-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    padding: clamp(1.15rem, 2vw, 1.45rem);
+  }
+
+  .rq-contact-card h3,
+  .rq-info-card h3 {
+    font-size: clamp(1.25rem, 2vw, 1.65rem);
+    line-height: 1.12;
+  }
+
+  .rq-contact-card p,
+  .rq-info-card p {
+    color: var(--rq-ink-2);
+    line-height: 1.55;
+  }
+
+  .rq-contact-card a {
+    display: block;
+    color: var(--rq-burgundy);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.18em;
+  }
+
+  .rq-contact-card a + a {
+    margin-top: 0.35rem;
+  }
+</style>

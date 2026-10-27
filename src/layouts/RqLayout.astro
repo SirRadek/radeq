@@ -1,0 +1,56 @@
+---
+import { isPreviewChannel } from '../lib/preview-channel.mjs';
+import RqMetadata from '../components/RqMetadata.astro';
+import type { Locale } from '../data/locales';
+import MeasurementTracker from '../components/MeasurementTracker';
+import '../styles/minimal-home-preview.css';
+import '../styles/minimal-site.css';
+interface Props {
+  title: string;
+  description: string;
+  lang?: Locale;
+  canonicalPath?: string;
+  alternatePath?: string;
+  alternateLang?: Locale;
+  allowStoredStyle?: boolean;
+  preview?: boolean;
+}
+
+const { title, description, lang = 'cs', canonicalPath, alternatePath, alternateLang } = Astro.props;
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const siteUrl = Astro.site ?? new URL(Astro.url.origin);
+const canonicalUrl = new URL(canonicalPath ? `${basePath}${canonicalPath}` : Astro.url.pathname, siteUrl).toString();
+const alternateUrl = alternatePath ? new URL(`${basePath}${alternatePath}`, siteUrl).toString() : undefined;
+const ogImageUrl = new URL(`${basePath}/og-default.jpg`, siteUrl).toString();
+const defaultUrl = lang === 'cs' ? canonicalUrl : alternateUrl;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <RqMetadata
+      title={title}
+      description={description}
+      lang={lang}
+      canonicalUrl={canonicalUrl}
+      ogUrl={canonicalUrl}
+      imageUrl={ogImageUrl}
+      alternates={alternatePath && alternateLang && alternateUrl ? [
+        { lang, url: canonicalUrl },
+        { lang: alternateLang, url: alternateUrl },
+        { lang: 'x-default', url: defaultUrl! },
+      ] : []}
+      icons={[
+        { rel: 'icon', type: 'image/png', url: basePath + '/favicon.png' },
+        { rel: 'icon', type: 'image/png', media: '(prefers-color-scheme: dark)', url: basePath + '/favicon-dark.png' },
+        { rel: 'apple-touch-icon', url: basePath + '/apple-touch-icon.png' },
+      ]}
+    />
+    <style is:global set:html={`@font-face{font-family:Chillax;src:url('${basePath}/fonts/radeq/chillax.woff2') format('woff2');font-weight:200 700;font-display:swap}@font-face{font-family:'Cabinet Grotesk';src:url('${basePath}/fonts/radeq/cabinet-grotesk.woff2') format('woff2');font-weight:100 900;font-display:swap}`} />
+    {(isPreviewChannel || Astro.props.preview) && <meta name="robots" content="noindex,nofollow" />}
+  </head>
+  <body class="rq-minimal-preview rq-minimal-site">
+    <MeasurementTracker client:idle />
+    <div class="rq-minimal-preview__wrap"><slot /></div>
+  </body>
+</html>

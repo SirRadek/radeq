@@ -1,0 +1,16 @@
+---
+import ServiceReturn from '../ServiceReturn.astro';
+import RqMetadata from '../RqMetadata.astro';
+interface Props {title: string; description: string;}
+const {title, description} = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<!doctype html>
+<html lang="cs">
+  <head>
+    <RqMetadata title={title} description={description} lang="cs" icons={[{rel: 'icon', type: 'image/svg+xml', url: base + '/favicon.svg'}]} />
+    <meta name="robots" content="noindex,nofollow" />
+    <style is:global set:html={`@font-face{font-family:Inter;src:url('${base}/paper-stack/assets/brand-fonts/Inter-latin-ext.woff2') format('woff2');font-weight:400 700;font-display:swap}@font-face{font-family:'Plus Jakarta Sans';src:url('${base}/paper-stack/assets/brand-fonts/PlusJakartaSans-latin-ext.woff2') format('woff2');font-weight:700 800;font-display:swap}*{box-sizing:border-box}html{color-scheme:light}body{margin:0;font-family:Inter,system-ui,sans-serif}button,select{font:inherit}[hidden]{display:none!important}`} />
+  </head>
+  <body><slot /><div style="padding:0 5%"><ServiceReturn service="web" /></div></body>
+</html>

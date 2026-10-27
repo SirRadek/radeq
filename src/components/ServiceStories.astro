@@ -1,0 +1,84 @@
+---
+import type { Locale } from '../data/locales';
+import '../styles/service-stories.css';
+const { lang = 'cs' } = Astro.props as { lang?: Locale };
+const en = lang === 'en';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const choose = (cs: string, english: string) => en ? english : cs;
+const stories = [
+  {id:'web', slug:'instalater', image:'flow-plumber.jpg',
+   title:choose('Web a viditelnost','Website and visibility'),
+   description:choose('Web, ze kterého je jasné, co nabízíte, pro koho to je a jak se ozvat. Přehledná struktura, čitelný obsah a použití na mobilu — od prezentace služby po malý e-shop.','A website that makes your offer, audience and contact clear. Readable content and mobile use, from a service page to a small shop.'),
+   aside:choose('Jasná nabídka. Snadná domluva.','Clear offer. Easy contact.'),
+   note:choose('Od problému k domluvě.','From a problem to a conversation.'),
+   steps:en?['Describe the problem','Find a solution','Get in touch','Contact received']:['Popsat problém','Najít řešení','Ozvat se','Kontakt získán'],
+   handoff:choose('Poptávka vám dorazí do e-mailu. Další domluva je na vás.','The enquiry arrives in your inbox. You take the conversation from there.'),
+   name:choose('Web pro instalatéra','Plumber website'),cta:choose('Prohlédnout web instalatéra','Explore the plumber website'),
+   action:choose('Odeslat poptávku','Send an enquiry'),result:choose('Poptávka připravena','Enquiry prepared'),symbol:'↗'},
+  {id:'terminy',slug:'sluzba',image:'booking-desktop.png',
+   title:choose('Termíny a rezervace','Appointments and bookings'),
+   description:choose('Přehled služeb a cesta k objednání termínu. Společně projdeme, co zákazník potřebuje vědět a co potřebujete mít pod kontrolou vy.','Clear services and appointment booking. We review what customers need to know and what you need to manage.'),
+   aside:choose('Jeden volný termín. Méně telefonování.','One available appointment. Fewer calls.'),
+   note:choose('Místo telefonování jeden termín.','An appointment without a phone call.'),
+   steps:en?['Choose a service','Find a time','Book','Booking confirmed']:['Vybrat službu','Najít termín','Rezervovat','Termín potvrzen'],
+   handoff:choose('O rezervaci víte i e-mailem. Další péče je na vás.','You also receive the booking by email. You take care of the next step.'),
+   name:choose('Fyzioterapie s rezervací','Physiotherapy with booking'),cta:choose('Vyzkoušet rezervaci','Try the booking'),
+   action:'',result:choose('Termín vybrán','Appointment selected'),symbol:'✓'},
+  {id:'data',slug:'provozni-terminal',image:'flow-workshop.jpg',
+   title:choose('Data a návaznost práce','Data and connected work'),
+   description:choose('Evidence, předávání informací a exporty bez zbytečného přepisování. Začneme jedním procesem a hledáme, kde propojení dat usnadní každodenní práci.','Records, information handoff and exports without unnecessary retyping. We start with one process and connect data where it helps everyday work.'),
+   aside:choose('Co je hotové, je i v evidenci.','Completed work stays on record.'),
+   note:choose('Hotová práce nezůstane jen v hlavě.','Completed work is more than a memory.'),
+   steps:en?['Log the work','Add material','See the overview','Work recorded']:['Zapsat práci','Přidat materiál','Mít přehled','Práce v evidenci'],
+   handoff:choose('Práce i materiál jsou zapsané. Další krok je na vás.','Work and materials are recorded. The next step is yours.'),
+   name:choose('Dílenský terminál','Workshop terminal'),cta:choose('Otevřít modelovou dílnu','Explore the model workshop'),
+   action:choose('Zapsat práci','Log the work'),result:choose('Práce zapsaná','Work recorded'),symbol:'✓'},
+];
+const href = (slug: string) => `${base}/ukazky/${slug}/${en ? '?from=en' : ''}`;
+---
+<span id="co-resim"></span><span id="services"></span><span id="situace"></span><span id="how"></span><span id="co-delam"></span>
+<section id="sluzby" class="rq-service-stories" aria-labelledby="sluzby-nadpis">
+  <div class="rq-minimal-preview__section-head"><h2 id="sluzby-nadpis">{choose('Služby','Services')}</h2><p>{choose('Méně nástrojů pro nástroje.','Fewer tools for their own sake.')}<br />{choose('Více prostoru pro vaši práci.','More room for your work.')}</p></div>
+  {stories.map((story, i) => <article id={`sluzba-${story.id}`} class="rq-minimal-preview__service preview-service">
+    <span class="rq-minimal-preview__number" aria-hidden="true">0{i + 1}</span>
+    <div class="service-copy"><h3>{story.title}</h3><p>{story.description}</p><span class="service-aside">{story.aside}</span></div>
+    <div class="flow-wrap" data-demo={story.id}>
+      <p class="flow-note">{story.note}</p>
+      <ol class="flow" aria-label={`${story.name}: ${choose('modelová cesta zákazníka','illustrative customer journey')}`}>
+        {story.steps.map((step, j) => <li class={j === 3 ? 'flow-finish' : undefined}><span class="flow-node" aria-hidden="true">{j === 3 ? '✓' : `0${j + 1}`}</span><span>{step}</span></li>)}
+      </ol>
+      <p class="flow-handoff">{story.handoff}</p>
+      <a class="flow-example" href={href(story.slug)}>
+        <span class="flow-photo">
+          <img src={`${base}/images/services/${story.image}`} alt={choose(`Výřez modelové ukázky: ${story.name}`,`Model example detail: ${story.name}`)} width="520" height="325" loading="lazy" />
+          <span class="demo-scene" aria-hidden="true">
+            <span class="demo-cursor"><svg viewBox="0 0 20 26" aria-hidden="true"><path d="M2 2v18l5-4 4 8 4-2-4-8h7L2 2Z" /></svg></span>
+            {story.action && <span class="demo-action">{story.action}</span>}
+            <span class="demo-target"></span><span class="demo-done">{story.symbol}</span><span class="demo-result">{story.result}</span>
+          </span>
+        </span>
+        <span><small>{choose('Modelový příklad','Model example')}</small><strong>{story.name}</strong><span>{story.cta} ↗</span></span><b aria-hidden="true">↗</b>
+      </a>
+      {i === 0 && <a class="secondary-example" href={href('eshop')}>{choose('Také: pražírna a malý e-shop','Also: a roastery and small shop')} ↗</a>}
+      <small class="flow-model-note">{choose('Modelový průběh · nic se neodesílá.','Illustrative journey · nothing is sent.')} {en && 'Interactive examples are in Czech.'}</small>
+    </div>
+  </article>)}
+</section>
+
+<script>
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  document.querySelectorAll<HTMLAnchorElement>('.rq-service-stories .flow-example').forEach(link => {
+    const wrap = link.closest<HTMLElement>('.flow-wrap');
+    if (!wrap) return;
+    let timer: ReturnType<typeof setTimeout>;
+    const stop = () => { clearTimeout(timer); wrap.classList.remove('is-demo-playing'); };
+    const play = () => {
+      if (motion.matches || wrap.classList.contains('is-demo-playing')) return;
+      wrap.classList.add('is-demo-playing');
+      timer = setTimeout(stop, 2100);
+    };
+    link.addEventListener('pointerenter', event => { if (event.pointerType !== 'touch') play(); });
+    link.addEventListener('focus', play);
+    motion.addEventListener('change', stop);
+  });
+</script>

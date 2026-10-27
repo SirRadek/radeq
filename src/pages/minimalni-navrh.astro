@@ -1,0 +1,13 @@
+---
+import RqLayout from '../layouts/RqLayout.astro';
+import RqHeader from '../components/RqHeader.astro';
+import RqFooter from '../components/RqFooter.astro';
+import MinimalHomePage from '../components/MinimalHomePage.astro';
+import { homeContent } from '../data/home';
+const content = homeContent.cs;
+---
+<RqLayout title={content.seo.title} description={content.seo.description} lang="cs" canonicalPath={content.seo.canonicalPath} alternatePath={content.seo.alternatePath} alternateLang="en" preview={true}>
+<RqHeader alternateLabel={content.seo.alternateLabel} alternatePath={content.seo.alternatePath} />
+<MinimalHomePage lang="cs" />
+<RqFooter homeHref="/" content={content.footer} />
+</RqLayout>

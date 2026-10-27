@@ -1,0 +1,298 @@
+---
+import RqLayout from '../../../layouts/RqLayout.astro';
+import RqHeader from '../../../components/RqHeader.astro';
+import RqFooter from '../../../components/RqFooter.astro';
+import { homeContent } from '../../../data/home';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const nav = [
+  { href: base + '/en/#co-resim', label: 'What I solve' },
+  { href: base + '/en/#sluzby', label: 'Services' },
+  { href: base + '/en/#jak-pracuji', label: 'How I work' },
+  { href: base + '/en/#ceny', label: 'Pricing' },
+  { href: base + '/en/ukazky/', label: 'Examples' },
+  { href: base + '/zapisky/', label: 'Notes' },
+  { href: base + '/en/#kontakt', label: 'Contact' },
+];
+
+const services = homeContent.en.services.items;
+const extraServices = [
+  {
+    price: 'from CZK 25,000',
+    title: 'Company website (1–5 pages)',
+    result: 'A multi-page website with a clear offer, structure, and contact.',
+    outputs: ['1–5 pages', 'content structure', 'SEO basics and form'],
+  },
+  {
+    price: 'from CZK 10,000',
+    title: 'Redesign of an older site',
+    result: 'Rebuild of a site that needs better content, mobile, speed, and credibility.',
+    outputs: ['audit of the current site', 'new structure and copy', 'pre-launch check'],
+  },
+];
+const guarantee = homeContent.en.guarantee;
+const steps = [
+  {
+    number: '1.',
+    title: 'Problem',
+    text: "you briefly describe what you're solving; I propose the smallest sensible step.",
+  },
+  {
+    number: '2.',
+    title: 'Verification',
+    text: 'I build and test it (forms, mobile, speed, SEO basics).',
+  },
+  {
+    number: '3.',
+    title: 'Handover',
+    text: 'you get it finished and tested, and can manage the small things yourself.',
+  },
+];
+---
+
+<RqLayout
+  title="Services | RadeQ.cz"
+  description="Websites, data, and practical automation for sole traders and small businesses — scope and price upfront."
+  lang="en"
+>
+  <RqHeader content={{ navItems: nav }} alternateLabel="CS" alternatePath="/sluzby/" />
+
+  <main class="rq-services-page">
+    <section class="rq-section rq-services-hero" id="top">
+      <p class="rq-eyebrow">Services</p>
+      <h1 class="rq-display">What I'll do for you</h1>
+      <p class="rq-lead">
+        Websites, data, and practical automation for sole traders and small businesses.
+        E-shop or offer work follows the concrete goal — I'll tell you the scope and price upfront.
+      </p>
+      <div class="rq-actions">
+        <a class="rq-btn rq-btn--primary" href={base + '/en/#kontakt'}>Send an enquiry</a>
+        <a class="rq-btn rq-btn--ghost" href={base + '/en/ukazky/'}>See examples</a>
+      </div>
+    </section>
+
+    <section class="rq-section rq-services-list" id="sluzby" aria-labelledby="rq-services-title">
+      <p class="rq-eyebrow">Pick what you're solving</p>
+      <h2 class="rq-h2" id="rq-services-title">Services based on what you need</h2>
+      <p class="rq-services-note">
+        Websites: one-page from CZK 10,000 · company website (1–5 pages) from CZK 25,000 ·
+        redesign of an older site from CZK 10,000.
+      </p>
+
+      <div class="rq-services-grid">
+        {[...services, ...extraServices].map((service) => (
+          <article class="rq-card rq-service-card">
+            <p class="rq-service-card__price">{service.price}</p>
+            <h3>{service.title}</h3>
+            <p class="rq-service-card__result">{service.result}</p>
+            <ul class="rq-service-card__outputs">
+              {service.outputs.map((output) => <li>{output}</li>)}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="rq-section rq-process" id="process" aria-labelledby="rq-process-title">
+      <p class="rq-eyebrow">How it works</p>
+      <h2 class="rq-h2" id="rq-process-title">From the problem to a delivered result.</h2>
+      <ol class="rq-process-grid" aria-label="Collaboration process">
+        {steps.map((step) => (
+          <li class="rq-card rq-step">
+            <h3><span>{step.number}</span> {step.title}</h3>
+            <p>— {step.text}</p>
+          </li>
+        ))}
+      </ol>
+      <a class="rq-process-link" href={base + '/en/#jak-pracuji'}>Detailed process</a>
+    </section>
+
+    <section class="rq-section rq-services-guarantee" aria-labelledby="rq-services-guarantee-title">
+      <article class="rq-guarantee">
+        <p class="rq-eyebrow">{guarantee.eyebrow}</p>
+        <h2 class="rq-h2" id="rq-services-guarantee-title">{guarantee.title}</h2>
+        <p>{guarantee.text}</p>
+      </article>
+    </section>
+
+    <section class="rq-section rq-services-cta" aria-label="Enquiry">
+      <div class="rq-services-cta__panel">
+        <p>Not sure what you need? Send a few sentences and I'll suggest a first step.</p>
+        <a class="rq-btn rq-services-cta__button" href={base + '/en/#kontakt'}>Send an enquiry</a>
+      </div>
+    </section>
+  </main>
+
+  <RqFooter navItems={nav} content={homeContent.en.footer} homeHref="/en/" />
+</RqLayout>
+
+<style>
+  .rq-services-page :is(h1, h2, h3) {
+    letter-spacing: 0;
+  }
+
+  .rq-services-hero {
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.4rem);
+    padding-block-start: clamp(5rem, 9vw, 8rem);
+  }
+
+  .rq-services-hero .rq-display {
+    max-width: 13ch;
+  }
+
+  .rq-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.35rem;
+  }
+
+  .rq-services-list,
+  .rq-process,
+  .rq-services-guarantee {
+    padding-block-start: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .rq-services-guarantee .rq-h2 {
+    max-width: 48rem;
+    color: var(--rq-surface);
+  }
+
+  .rq-services-note {
+    max-width: 72ch;
+    margin-top: clamp(1rem, 2vw, 1.3rem);
+    border-left: 3px solid var(--rq-burgundy);
+    border-radius: 0 var(--rq-r) var(--rq-r) 0;
+    padding: 0.85rem 1rem;
+    color: var(--rq-ink-2);
+    background: var(--rq-burgundy-tint);
+    line-height: 1.55;
+  }
+
+  .rq-services-grid,
+  .rq-process-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+    gap: 1.1rem;
+    margin-top: clamp(1.6rem, 3vw, 2.4rem);
+  }
+
+  .rq-service-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    padding: clamp(1.2rem, 2vw, 1.6rem);
+  }
+
+  .rq-service-card__price {
+    align-self: flex-start;
+    border-radius: var(--rq-r-pill);
+    padding: 0.28rem 0.62rem;
+    color: var(--rq-burgundy-strong);
+    background: var(--rq-burgundy-tint);
+    font-family: var(--rq-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  .rq-service-card h3,
+  .rq-step h3 {
+    font-size: clamp(1.25rem, 2vw, 1.65rem);
+    line-height: 1.12;
+  }
+
+  .rq-service-card__result,
+  .rq-service-card__outputs,
+  .rq-step p {
+    color: var(--rq-ink-2);
+  }
+
+  .rq-service-card__result {
+    line-height: 1.55;
+  }
+
+  .rq-service-card__outputs {
+    display: grid;
+    gap: 0.45rem;
+    margin: 0;
+    padding-left: 1.1rem;
+    line-height: 1.5;
+  }
+
+  .rq-step {
+    padding: clamp(1.15rem, 2vw, 1.45rem);
+  }
+
+  .rq-step h3 {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+  }
+
+  .rq-step h3 span {
+    color: var(--rq-burgundy);
+    font-family: var(--rq-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.78em;
+  }
+
+  .rq-step p {
+    margin-top: 0.65rem;
+    line-height: 1.55;
+  }
+
+  .rq-process-link {
+    display: inline-flex;
+    margin-top: clamp(1.2rem, 2vw, 1.6rem);
+    color: var(--rq-burgundy);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.18em;
+  }
+
+  .rq-services-cta {
+    padding-block-start: clamp(1.5rem, 3vw, 3rem);
+  }
+
+  .rq-services-cta__panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-radius: var(--rq-r);
+    padding: clamp(1.35rem, 3vw, 2.2rem);
+    color: #fff;
+    background: var(--rq-burgundy);
+  }
+
+  .rq-services-cta__panel p {
+    max-width: 58ch;
+    font-size: clamp(1.05rem, 1.7vw, 1.35rem);
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .rq-services-cta__button {
+    flex: 0 0 auto;
+    border: 1px solid #fff;
+    color: var(--rq-burgundy-strong);
+    background: #fff;
+  }
+
+  .rq-services-cta__button:hover {
+    color: #fff;
+    background: transparent;
+  }
+
+  @media (max-width: 720px) {
+    .rq-services-cta__panel {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .rq-services-cta__button {
+      width: 100%;
+    }
+  }
+</style>

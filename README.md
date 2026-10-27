@@ -1,12 +1,9 @@
-# RadeQ — aktuální web a ověřený GitHub Pages náhled
+# RadeQ — web a ověřený GitHub Pages náhled
 
-Minimalistický web v Astro, CS/EN, se schválenou variantou V3 Stopa. Tři služby obsahují modelový průběh a přímé prokliky na čtyři interaktivní ukázky. Miniatury mají krátkou animaci kurzoru při najetí nebo zaměření klávesnicí; respektují omezení pohybu.
+Astro, CS/EN, varianta Stopa s ukázkami přímo u služeb, ceníkem, rozsahem předání a reakční dobou. Mobilní miniatury mají čitelný průběh a krátkou animaci kurzoru; podporují klávesnici a omezení pohybu.
 
-## Vývoj
+Node24. `npm ci`, `npm run dev`, `npm test`, `npm run build`. Kořenové a GitHub sestavení s cílenou typovou kontrolou: `node scripts/verify-themed-demos.mjs`. Obecný `npm run typecheck` zahrnuje i pracovní výstupy; doložená cílená kontrola se vztahuje na src/functions. Pro GitHub: `DEPLOY_TARGET=github-pages npm run build`.
 
-Node 24. `npm ci`, `npm run dev`, `npm test`, `npm run build`.
-Pro root a GitHub sestavení a kontrolu skutečných zdrojů: `node scripts/verify-themed-demos.mjs`. Tento skript vytvoří dočasné ověřovací výstupy pod docs/audits; nepublikují se. Obecné `npm run typecheck` zahrnuje i pracovní výstupy, proto je pro tento snapshot doložena cílená kontrola src/functions.
+GitHub Pages běží na https://sirradek.github.io/radeq/ se základem/radeq a noindex. Kontakt zde vede přímo na e-mail; není zde formulář ani backend pro poptávky. Homepage nenačítá nevyužité sledování kliknutí. Produkční form/backend kód zůstává zachován pro oddělené nasazení s existující Cloudflare konfigurací. Toto vydání nemění radeq.cz.
 
-Pro GitHub sestavení použijte `DEPLOY_TARGET=github-pages npm run build`; výsledkem je základ /radeq/. Publikovaný přesný výstup je ve složce site, jeho součty v publication-manifest.json. Workflow clean-pages.yml publikuje tento výstup z větve codex/radeq-clean-pages-20261013.
-
-GitHub Pages je statický veřejný náhled na https://sirradek.github.io/radeq/, s noindex. Formulář a měření zde nemají backend. Produkční kód Functions je zachován; nasazení na radeq.cz vyžaduje existující Cloudflare konfiguraci (wrangler.example.toml), D1 a neveřejné proměnné. Žádné klíče ani lokální pracovní podklady nejsou součástí snapshotu.
+Přesné sestavení je vsite/, součty vpublication-manifest.json. Stávající clean-pages.yml publikuje site zcodex/radeq-clean-pages-20261013. Pracovní audity, lokální prototypy, závislosti a přihlašovací údaje se nepublikují.

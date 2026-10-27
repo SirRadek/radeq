@@ -50,14 +50,14 @@ const href = (slug: string) => `${base}/ukazky/${slug}/${en ? '?from=en' : ''}`;
       <p class="flow-handoff">{story.handoff}</p>
       <a class="flow-example" href={href(story.slug)}>
         <span class="flow-photo">
-          <img src={`${base}/images/services/${story.image}`} alt={choose(`Výřez modelové ukázky: ${story.name}`,`Model example detail: ${story.name}`)} width="520" height="325" loading="lazy" />
+          <img src={`${base}/images/services/${story.image}`} alt="" width="520" height="325" loading="lazy" />
           <span class="demo-scene" aria-hidden="true">
             <span class="demo-cursor"><svg viewBox="0 0 20 26" aria-hidden="true"><path d="M2 2v18l5-4 4 8 4-2-4-8h7L2 2Z" /></svg></span>
             {story.action && <span class="demo-action">{story.action}</span>}
             <span class="demo-target"></span><span class="demo-done">{story.symbol}</span><span class="demo-result">{story.result}</span>
           </span>
         </span>
-        <span><small>{choose('Modelový příklad','Model example')}</small><strong>{story.name}</strong><span>{story.cta} ↗</span></span><b aria-hidden="true">↗</b>
+        <span><small>{choose('Modelový příklad','Model example')}</small><strong>{story.name}</strong><span>{story.cta}</span></span><b aria-hidden="true">↗</b>
       </a>
       {i === 0 && <a class="secondary-example" href={href('eshop')}>{choose('Také: pražírna a malý e-shop','Also: a roastery and small shop')} ↗</a>}
       <small class="flow-model-note">{choose('Modelový průběh · nic se neodesílá.','Illustrative journey · nothing is sent.')} {en && 'Interactive examples are in Czech.'}</small>

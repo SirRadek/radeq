@@ -1,4 +1,6 @@
 ---
+import PreviewEmailContact from './PreviewEmailContact.astro';
+import { isPreviewChannel } from '../lib/preview-channel.mjs';
 import type { HomeContent } from '../data/home';
 import type { Locale } from '../data/locales';
 
@@ -22,6 +24,7 @@ const turnstileNote = lang === 'en'
   : 'Formulář chrání Cloudflare Turnstile — většinou bez klikání, jen tiše na pozadí.';
 ---
 
+{isPreviewChannel ? <PreviewEmailContact lang={lang} /> : <Fragment>
 <form class="rq-contact-form" method="post" action={resolve('/api/leads')} id="rq-lead-form">
   <div class="rq-form-field">
     <label for="rq-lead-name">{content.fields.name}</label>
@@ -231,3 +234,5 @@ const turnstileNote = lang === 'en'
     });
   })();
 </script>
+
+</Fragment>}

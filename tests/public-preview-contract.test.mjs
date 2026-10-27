@@ -13,6 +13,10 @@ describe.runIf(Boolean(m))('whole public preview contract',()=>{
     expect((home.match(/class="demo-cursor"/g)??[])).toHaveLength(3);
     expect(home).not.toContain('id="ukazky"');
     expect(home).not.toContain('preview-tools');
+    expect(home).toContain('id="ceny"');
+    expect(home).not.toContain('astro-island');
+    expect(home).toContain(locale==='en'?'One-page website':'Jednostránkový web');
+    expect(home).toContain(locale==='en'?'one working day':'1 pracovního dne');
     for(const slug of ['instalater','sluzba','provozni-terminal','eshop']){
      expect(home).toContain(`href="${v.base}/ukazky/${slug}/${locale==='en'?'?from=en':''}"`);
      const demo=readFileSync(join(v.dist,`ukazky/${slug}/index.html`),'utf8');
@@ -32,7 +36,9 @@ describe.runIf(Boolean(m))('whole public preview contract',()=>{
    for(const r of ['instalater','sluzba','provozni-terminal','eshop'])expect(gallery).toContain(`href="${v.base}/ukazky/${r}/"`);
   });
   it(`${v.name}: production form and measurement contracts remain present`,()=>{
-   expect(readFileSync(join(v.dist,'index.html'),'utf8')).toContain(`action="${v.base}/api/leads"`);
+   const home=readFileSync(join(v.dist,'index.html'),'utf8');
+   if(v.name==='subpath'){ expect(home).not.toContain('/api/leads'); expect(home).not.toContain('loadTurnstile'); expect(home).toContain('Napsat e-mail'); }
+   else expect(home).toContain('action="/api/leads"');
    expect(readFileSync(join(v.dist,'audit/index.html'),'utf8')).toContain(`${v.base}/api/measure`);
   });
   if(v.name==='subpath')it('every deployed HTML explicitly blocks indexing while crawl remains possible',()=>{

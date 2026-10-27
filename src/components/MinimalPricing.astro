@@ -1,0 +1,37 @@
+---
+import { homeContent } from '../data/home';
+import type { Locale } from '../data/locales';
+import '../styles/minimal-pricing.css';
+const { lang = 'cs' } = Astro.props as { lang?: Locale };
+const en = lang === 'en';
+const pricing = homeContent[lang].pricing;
+// Reuse the established price list, with websites first in this presentation.
+const projects = [4, 2, 5, 3, 0, 1].map(index => pricing.projectItems[index]);
+const care = [...pricing.items].reverse();
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<section id="ceny" class="rq-pricing" aria-labelledby="ceny-nadpis">
+  <span id="pricing"></span>
+  <div class="rq-minimal-preview__section-head"><h2 id="ceny-nadpis">{en ? 'Prices and scope' : 'Ceny a rozsah'}</h2><p>{en ? 'A clear scope.' : 'Jasný rozsah.'}<br />{en ? 'An agreed price.' : 'Domluvená cena.'}</p></div>
+  <div class="rq-pricing__grid">
+    <div class="rq-pricing__audit">
+      <p class="rq-pricing__eyebrow">{en ? 'When you need a clearer starting point' : 'Když potřebujete vědět, kde začít'}</p>
+      <h3>{pricing.audit.title}</h3>
+      <p class="rq-pricing__price">{pricing.audit.price}</p>
+      <p>{en ? 'You receive priorities, an estimate of scope and price, and a recommendation on what to address first. I deduct the full audit price from implementation if we continue together.' : 'Dostanete seznam priorit, odhad rozsahu a ceny a doporučení, co řešit první. Cenu auditu vám celou odečtu z realizace, pokud se domluvíme na pokračování.'}</p>
+      <a href="#kontakt">{en ? 'Discuss the audit' : 'Probrat audit'} <span aria-hidden="true">↗</span></a>
+    </div>
+    <div>
+      <h3>{pricing.projectTitle}</h3>
+      <dl class="rq-pricing__list">{projects.map(item => <div><dt>{item.name}</dt><dd>{item.price}</dd></div>)}</dl>
+      <p class="rq-pricing__note">{en ? 'One-off indicative prices. We agree the exact scope and price before starting. The first conversation is non-binding; it does not order a paid audit.' : 'Jednorázové orientační ceny. Přesný rozsah a cenu domluvíme předem. První domluva je nezávazná, placený audit jí neobjednáváte.'}</p>
+    </div>
+  </div>
+  <details class="rq-pricing__care">
+    <summary>{pricing.careTitle} <span>{en ? 'from CZK 2,500 / month' : 'od 2 500 Kč / měsíc'}</span></summary>
+    <p>{en ? 'Care after launch is a separate service, agreed alongside your project.' : 'Péče po spuštění je samostatná služba, kterou domluvíme zvlášť od realizace.'}</p>
+    <dl class="rq-pricing__list">{care.map(item => <div><dt><strong>{item.title}</strong><small>{item.text}</small></dt><dd>{item.price} {item.suffix}</dd></div>)}</dl>
+  </details>
+  <p class="rq-pricing__note rq-pricing__terms">{pricing.note}</p>
+  <a href={`${base}${en ? '/en/sluzby/#sluzby' : '/sluzby/#sluzby'}`}>{en ? 'Full service scope' : 'Podrobný rozsah služeb'} <span aria-hidden="true">↗</span></a>
+</section>

@@ -26,6 +26,7 @@ describe.runIf(Boolean(manifestPath))('four curated compiled showcases',()=>{
     expect(html).toContain('noindex,nofollow');
     expect(html).not.toMatch(/<form\b|tel:|mailto:|astro-island|fonts.googleapis.com/);
     expect(html).toContain(`${v.base}/ukazky/`);
+    expect(html).toContain(`${v.base}/favicon.${route.endsWith('eshop')?'svg':'png'}`);
    }
   });
  }

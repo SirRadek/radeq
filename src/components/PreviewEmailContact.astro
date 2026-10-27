@@ -1,0 +1,14 @@
+---
+import type { Locale } from '../data/locales';
+const { lang } = Astro.props as { lang: Locale };
+const en = lang === 'en';
+---
+<aside class="rq-preview-contact" aria-label={en ? 'Contact by email' : 'Kontakt e-mailem'}>
+  <p class="rq-preview-contact__title">{en ? 'What should your message include?' : 'Co mi napsat?'}</p>
+  <ul><li>{en ? 'What you do and whom you help.' : 'Čemu se věnujete a pro koho pracujete.'}</li><li>{en ? 'What you would like to simplify.' : 'Co potřebujete zjednodušit.'}</li><li>{en ? 'Your timing and budget, if you know them.' : 'Představu o termínu a rozpočtu, pokud ji máte.'}</li></ul>
+  <p>{en ? 'Send your enquiry directly by email. The first conversation is non-binding.' : 'Poptávku mi pošlete přímo e-mailem. První domluva je nezávazná.'}</p>
+  <a class="rq-preview-contact__action" href="mailto:siroky@radeq.cz">{en ? 'Write an email' : 'Napsat e-mail'} <span aria-hidden="true">↗</span></a>
+</aside>
+<style>
+  .rq-preview-contact{padding:.25rem 0}.rq-preview-contact__title{font-size:1.3rem;font-weight:600}.rq-preview-contact__action{display:inline-block;font-weight:500}.rq-preview-contact li{border:0;padding:.4rem 0}.rq-preview-contact li::before{content:'—';margin-right:.75rem;color:#7a1f2b}
+</style>

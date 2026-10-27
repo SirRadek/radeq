@@ -14,9 +14,10 @@ interface Props {
   alternateLang?: Locale;
   allowStoredStyle?: boolean;
   preview?: boolean;
+  trackEvents?: boolean;
 }
 
-const { title, description, lang = 'cs', canonicalPath, alternatePath, alternateLang } = Astro.props;
+const { title, description, lang = 'cs', canonicalPath, alternatePath, alternateLang, trackEvents = true } = Astro.props;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 const siteUrl = Astro.site ?? new URL(Astro.url.origin);
 const canonicalUrl = new URL(canonicalPath ? `${basePath}${canonicalPath}` : Astro.url.pathname, siteUrl).toString();
@@ -50,7 +51,7 @@ const defaultUrl = lang === 'cs' ? canonicalUrl : alternateUrl;
     {(isPreviewChannel || Astro.props.preview) && <meta name="robots" content="noindex,nofollow" />}
   </head>
   <body class="rq-minimal-preview rq-minimal-site">
-    <MeasurementTracker client:idle />
+    {trackEvents && <MeasurementTracker client:idle />}
     <div class="rq-minimal-preview__wrap"><slot /></div>
   </body>
 </html>

@@ -1,12 +1,11 @@
 ---
+import MinimalPricing from './MinimalPricing.astro';
 import ServiceStories from './ServiceStories.astro';
 import MinimalAudience from './MinimalAudience.astro';
 import RqContactForm from './RqContactForm.astro';
 import { homeContent } from '../data/home';
 import type { Locale } from '../data/locales';
 const { lang = 'cs' } = Astro.props as {lang?: Locale};
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const local = (path:string) => `${base}${path}`;
 ---
       <main>
         <section class="rq-minimal-preview__intro" aria-labelledby="uvod">
@@ -14,17 +13,21 @@ const local = (path:string) => `${base}${path}`;
           {lang === "cs" ? <MinimalAudience /> : <p class="rq-minimal-preview__lead">For sole traders and small businesses.</p>}
           <p class="rq-minimal-preview__lead">{lang === "en" ? 'Websites, data and automation for sole traders and small businesses.' : 'Weby, data a automatizace pro živnostníky a malé firmy.'}</p>
           <p class="rq-minimal-preview__intro-detail">{lang === "en" ? 'When work repeats unnecessarily or your website does not explain your offer, we start there. From the first idea to a solution you can use.' : 'Když se práce zbytečně opakuje nebo web nevysvětluje vaši nabídku, začneme právě tam. Od prvního nápadu k řešení, které dokážete používat.'}</p>
-          <a class="rq-minimal-preview__cta" href="#kontakt">{lang === "en" ? 'Discuss your project' : 'Probrat projekt'}</a>
+          <p class="rq-home-price">{lang === 'en' ? 'One-page website from CZK 10,000. Scope and price agreed upfront.' : 'Jednostránkový web od 10 000 Kč. Rozsah a cenu domluvíme předem.'}</p>
+          <div class="rq-home-actions"><a class="rq-minimal-preview__cta" href="#kontakt">{lang === "en" ? 'Discuss your project' : 'Probrat projekt'}</a><a href="#ceny">{lang === 'en' ? 'View prices' : 'Prohlédnout ceny'} <span aria-hidden="true">↗</span></a></div>
+          <p class="rq-home-response">{lang === 'en' ? 'No obligation. I reply within one working day.' : 'Nezávazně. Ozvu se do 1 pracovního dne.'}</p>
         </section>
         <ServiceStories lang={lang} />
+        <MinimalPricing lang={lang} />
         <span id="jak-pracuji"></span><span id="process"></span><section id="pristup" aria-labelledby="pristup-nadpis">
           <div class="rq-minimal-preview__section-head"><h2 id="pristup-nadpis">{lang === "en" ? 'Approach' : 'Přístup'}</h2><p>{lang === "en" ? 'Understand first.' : 'Nejdřív porozumět.'}<br />{lang === "en" ? 'Then build.' : 'Potom stavět.'}</p></div>
           <ol class="rq-minimal-preview__steps">
             <li><strong>{lang === "en" ? 'Understand the task' : 'Ujasnit zadání'}</strong><p>{lang === "en" ? 'What makes your work harder? What already works? We define the goal and the limits.' : 'Co vám komplikuje práci? Co už funguje? Pojmenujeme cíl i hranice řešení.'}</p></li>
             <li><strong>{lang === "en" ? 'Plan a small solution' : 'Navrhnout malé řešení'}</strong><p>{lang === "en" ? 'We review scope, priorities and the first useful result. We agree a price based on the task.' : 'Projdeme rozsah, priority a podobu prvního použitelného výsledku. Cenu domluvíme podle zadání.'}</p></li>
             <li><strong>{lang === "en" ? 'Build and verify' : 'Postavit a ověřit'}</strong><p>{lang === "en" ? 'We build a working solution and review how to use it together.' : 'Návrh převedeme do funkční podoby a společně projdeme, jak se používá v praxi.'}</p></li>
-            <li><strong>{lang === "en" ? 'Hand over and explain' : 'Předat a vysvětlit'}</strong><p>{lang === "en" ? 'You receive an overview of the result, how to use it and possible next steps.' : 'Dostanete přehled toho, co vzniklo, jak s tím pracovat a co případně řešit dál.'}</p></li>
+            <li><strong>{lang === "en" ? 'Hand over and explain' : 'Předat a vysvětlit'}</strong><p>{lang === "en" ? 'You receive source code, access to your accounts, a short guide and training.' : 'Dostanete zdrojový kód, přístupy, stručný návod a zaškolení.'}</p></li>
           </ol>
+          <p class="rq-handoff">{lang === 'en' ? 'Your website and source code are handed over to accounts you own. You receive a record of the work and agreed next steps. Post-launch care is arranged separately.' : 'Web i zdrojový kód předám pod vaše vlastní účty. Dostanete přehled provedené práce a domluvených dalších kroků. Péči po spuštění domluvíme zvlášť.'}</p>
         </section>
         <span id="about"></span><section id="autor" aria-labelledby="autor-nadpis" class="rq-minimal-preview__about">
           <h2 id="autor-nadpis">{lang === "en" ? 'Who is behind RadeQ' : 'Kdo za tím stojí'}</h2>
@@ -33,9 +36,8 @@ const local = (path:string) => `${base}${path}`;
         <span id="terminal"></span><span id="contact"></span><section id="kontakt" aria-labelledby="kontakt-nadpis" class="rq-minimal-preview__contact">
           <h2 id="kontakt-nadpis">{lang === "en" ? 'Let’s discuss your project' : 'Pojďme probrat váš záměr'}</h2>
           <div class="rq-minimal-preview__contact-grid">
-            <div><p>{lang === "en" ? 'Tell me what you do, what makes your work harder and what result would help. We can find a sensible place to start.' : 'Stačí napsat, čemu se věnujete, co vám teď komplikuje práci a jaký výsledek by vám pomohl. Podíváme se, kde dává smysl začít.'}</p><a class="rq-minimal-preview__email" href="mailto:siroky@radeq.cz">siroky@radeq.cz</a><div class="rq-minimal-preview__contact-links"><a href="tel:+420730634439">+420 730 634 439</a></div></div>
+            <div><p>{lang === "en" ? 'Tell me what you do, what makes your work harder and what result would help. We can find a sensible place to start.' : 'Stačí napsat, čemu se věnujete, co vám teď komplikuje práci a jaký výsledek by vám pomohl. Podíváme se, kde dává smysl začít.'}</p><p class="rq-home-response">{lang === 'en' ? 'I reply within one working day.' : 'Odpovídám do 1 pracovního dne.'}</p><a class="rq-minimal-preview__email" href="mailto:siroky@radeq.cz">siroky@radeq.cz</a><div class="rq-minimal-preview__contact-links"><a href="tel:+420730634439">+420 730 634 439</a></div></div>
             <div class="rq-minimal-preview__form-surface"><RqContactForm content={homeContent[lang].contact} lang={lang} /></div>
           </div>
         </section>
-<p><a id="ceny" href={local(lang === "en" ? "/en/sluzby/#sluzby" : "/sluzby/#sluzby")}>{lang === "en" ? "Service scope and prices" : "Rozsah služeb a ceny"}</a><span id="pricing"></span></p>
       </main>

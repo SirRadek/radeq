@@ -6,7 +6,7 @@ import MinimalHomePage from '../../components/MinimalHomePage.astro';
 import { homeContent } from '../../data/home';
 const content = homeContent.en;
 ---
-<RqLayout title={content.seo.title} description={content.seo.description} lang="en" canonicalPath={content.seo.canonicalPath} alternatePath={content.seo.alternatePath} alternateLang="cs" preview={false}>
+<RqLayout title={content.seo.title} description={content.seo.description} lang="en" canonicalPath={content.seo.canonicalPath} alternatePath={content.seo.alternatePath} alternateLang="cs" preview={false} trackEvents={false}>
 <RqHeader alternateLabel={content.seo.alternateLabel} alternatePath={content.seo.alternatePath} />
 <MinimalHomePage lang="en" />
 <RqFooter homeHref="/en/" content={content.footer} />

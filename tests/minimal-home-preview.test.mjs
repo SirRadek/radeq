@@ -20,7 +20,7 @@ describe('unified minimalist homepage and local design route', () => {
         writeFileSync(join(scratch, `pages/${route}.astro`), source);
       }
       writeFileSync(join(scratch, 'config.mjs'), `import config from ${JSON.stringify(resolve(root, 'astro.config.mjs'))};\nexport default {...config,srcDir:${JSON.stringify(scratch)},outDir:${JSON.stringify(join(scratch, 'dist'))},cacheDir:${JSON.stringify(join(scratch, 'cache'))}};`);
-      const env = { ...process.env, NODE_ENV: 'production', DEPLOY_TARGET: base ? 'github-pages' : '' };
+      const env = { ...process.env, NODE_ENV: 'production', DEPLOY_TARGET: base ? 'github-pages' : '', PUBLIC_TURNSTILE_SITE_KEY: 'fixture-public-key' };
       delete env.BASE_URL;
       execFileSync(process.execPath, ['node_modules/astro/bin/astro.mjs', 'build', '--config', relative(root, join(scratch, 'config.mjs'))], { cwd: root, env, encoding: 'utf8', stdio: 'pipe' });
       for (const route of ['index.html', 'minimalni-navrh/index.html']) {
@@ -31,9 +31,17 @@ describe('unified minimalist homepage and local design route', () => {
         expect(tags('nav')).toHaveLength(2); // Main and footer navigation are both intentional.
         expect(attr(tags('html')[0], 'lang')).toBe('cs');
         expect(text(tags('h1')[0])).toBe('Weby a automatizace, které usnadňují podnikání.');
-        expect(tags('h2').map(text)).toEqual(['Služby', 'Přístup', 'Kdo za tím stojí', 'Pojďme probrat váš záměr']);
-        expect(tags('h3').map(text)).toEqual(['Web a viditelnost', 'Termíny a rezervace', 'Data a návaznost práce']);
+        expect(tags('h2').map(text)).toEqual(['Služby', 'Ceny a rozsah', 'Přístup', 'Kdo za tím stojí', 'Pojďme probrat váš záměr']);
+        expect(tags('h3').map(text)).toEqual(['Web a viditelnost', 'Termíny a rezervace', 'Data a návaznost práce', 'Audit webu nebo procesu', 'Projektové realizace']);
         expect(html).not.toContain('Lokální náhled');
+        const prices = all.find(n => n.tagName === 'section' && attr(n,'id') === 'ceny');
+        expect(prices).toBeDefined();
+        expect(all.indexOf(prices)).toBeLessThan(all.findIndex(n => attr(n,'id') === 'kontakt'));
+        for (const price of ['od 10 000 Kč','od 20 000 Kč','od 12 000 Kč','od 15 000 Kč','od 25 000 Kč','od 3 000 Kč','2 500 Kč']) expect(text(prices)).toContain(price);
+        expect(html).toContain('1 pracovního dne');
+        expect(html).toContain('zdrojový kód');
+        expect(html).toContain('zaškolení');
+        expect(tags('astro-island')).toHaveLength(0);
         const audience = all.find(node => attr(node, 'data-minimal-audience') !== undefined);
         expect(audience).toBeDefined();
         expect(attr(audience, 'data-words')).toBe('živnostníky|salony|malé firmy|lokální služby');
@@ -48,16 +56,25 @@ describe('unified minimalist homepage and local design route', () => {
         expect(all.some(n => attr(n, 'id') === 'ukazky')).toBe(false);
         for (const img of tags('img')) expect(attr(img, 'src')).toMatch(new RegExp('^' + base + '/images/services/'));
         const links = tags('a').map(node => [text(node).trim(), attr(node, 'href')]);
-        for (const pair of [['Služby', `${base}/#sluzby`], ['Přístup', `${base}/#pristup`], ['Ukázky', `${base}/ukazky/`], ['Kontakt', `${base}/#kontakt`], ['Probrat projekt', '#kontakt'], ['Soukromí', `${base}/soukromi/`]]) expect(links).toContainEqual(pair);
+        for (const pair of [['Služby', `${base}/#sluzby`], ['Přístup', `${base}/#pristup`], ['Ceny', `${base}/#ceny`], ['Ukázky', `${base}/ukazky/`], ['Kontakt', `${base}/#kontakt`], ['Probrat projekt', '#kontakt'], ['Soukromí', `${base}/soukromi/`]]) expect(links).toContainEqual(pair);
         const origin = base ? 'https://sirradek.github.io' : 'https://radeq.cz';
         expect(all.filter(node => attr(node, 'rel') === 'canonical').map(node => attr(node, 'href'))).toEqual([`${origin}${base}/`]);
         expect(all.filter(node => attr(node, 'hreflang')).map(node => [attr(node, 'hreflang'), attr(node, 'href')])).toEqual([['cs', `${origin}${base}/`], ['en', `${origin}${base}/en/`], ['x-default', `${origin}${base}/`]]);
         expect(all.filter(node => node.tagName === 'meta' && attr(node, 'name') === 'robots').map(node => attr(node, 'content'))).toEqual(base || route.startsWith('minimalni') ? ['noindex,nofollow'] : []);
         expect(all.filter(node => attr(node, 'property') === 'og:url').map(node => attr(node, 'content'))).toEqual([`${origin}${base}/`]);
-        expect(tags('form')).toHaveLength(1);
-        expect(attr(tags('form')[0], 'action')).toBe(`${base}/api/leads`);
-        for (const name of ['name', 'email', 'message']) expect(all.find(node => attr(node, 'name') === name).attrs.some(item => item.name === 'required')).toBe(true);
-        expect(all.find(node => attr(node, 'name') === 'project_type').attrs.some(item => item.name === 'required')).toBe(false);
+        expect(tags('form')).toHaveLength(base ? 0 : 1);
+        if (base) {
+          expect(html).not.toContain('/api/leads');
+          expect(html).not.toContain('loadTurnstile');
+          expect(html).not.toContain('fixture-public-key');
+          expect(html).toContain('Napsat e-mail');
+        } else {
+          expect(attr(tags('form')[0], 'action')).toBe('/api/leads');
+          expect(html).toContain('fixture-public-key');
+          expect(html).toContain('loadTurnstile');
+          for (const name of ['name', 'email', 'message']) expect(all.find(node => attr(node, 'name') === name).attrs.some(item => item.name === 'required')).toBe(true);
+          expect(all.find(node => attr(node, 'name') === 'project_type').attrs.some(item => item.name === 'required')).toBe(false);
+        }
         expect(tags('canvas')).toHaveLength(0);
         expect(tags('iframe')).toHaveLength(0);
         expect(html).toContain(`${base}/brand/radeq-logo-b-mask.png`);

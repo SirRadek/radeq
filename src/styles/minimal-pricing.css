@@ -1,5 +1,6 @@
 .rq-minimal-preview .rq-pricing { border-top:1px solid #1c1a1729; }
 .rq-pricing__grid { display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); gap:clamp(2rem,5vw,4rem); }
+.rq-pricing #audit { scroll-margin-top:2rem; }
 .rq-pricing h3 { margin:0 0 1rem; font-size:1.3rem; font-weight:600; }
 .rq-minimal-preview .rq-pricing__eyebrow { margin-bottom:.75rem; font-size:.9rem; color:var(--wine); }
 .rq-minimal-preview .rq-pricing__price { margin-bottom:1.25rem; font-size:clamp(2.5rem,4vw,3.25rem); font-weight:500; line-height:1.2; color:var(--wine); }

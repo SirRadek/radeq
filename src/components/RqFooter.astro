@@ -33,8 +33,8 @@ const navAriaLabel = content.navAriaLabel ?? "Navigace v patičce";
 const legal = content.legal ?? "© 2026 Radek Široký — RadeQ.cz · IČO 08748811 · Praha · celá ČR";
 const isEnglishFooter = homeHref.startsWith("/en") || navItems.some((item) => item.href.includes("/en/"));
 const auditLink = isEnglishFooter
-  ? { href: "/en/audit/", label: "Website audit" }
-  : { href: "/audit/", label: "Audit webu" };
+  ? { href: "/en/audit/", label: "Automated website check" }
+  : { href: "/audit/", label: "Automatická kontrola webu" };
 ---
 
 <footer class="rq-minimal-footer"><a class="rq-minimal-preview__logo" href={resolve(homeHref)} aria-label={isEnglishFooter ? 'RadeQ — home' : 'RadeQ — domů'} style={`--logo-mask:url("${logoMask}")`}><span aria-hidden="true"></span></a><p>{legal}</p><nav aria-label={navAriaLabel}><a href={resolve(isEnglishFooter?'/en/ukazky/':'/ukazky/')}>{isEnglishFooter?'Examples':'Ukázky'}</a><a href={resolve(isEnglishFooter?'/en/soukromi/':'/soukromi/')}>{isEnglishFooter?'Privacy':'Soukromí'}</a><a href={resolve(auditLink.href)}>{auditLink.label}</a><a href={resolve('/zapisky/')} lang="cs">{isEnglishFooter?'Notes (in Czech)':'Zápisky'}</a></nav></footer>

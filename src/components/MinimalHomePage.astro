@@ -28,6 +28,10 @@ const starts = lang === 'en' ? [
           </div>
           <nav class="rq-starts" aria-label={lang === 'en' ? 'Where can we start?' : 'Kde můžeme začít?'}>
             <p class="rq-starts__label">{lang === 'en' ? 'Where can we start?' : 'Kde můžeme začít?'}</p>
+            <div class="rq-starts__audit">
+              <p>{lang === 'en' ? 'Not sure yet? Let’s identify what to tackle first.' : 'Nejste si jistí? Ujasníme, co řešit jako první.'}</p>
+              <a class="rq-starts__audit-link" href="#audit"><span>{homeContent[lang].pricing.audit.title}</span><span class="rq-starts__audit-price">{homeContent[lang].pricing.audit.price} <span aria-hidden="true">↗</span></span></a>
+            </div>
             <ol>{starts.map((item,i)=><li><a href={`#sluzba-${item.id}`}><span class="rq-starts__number" aria-hidden="true">0{i+1}</span><span><strong>{item.title}</strong><small>{item.detail}</small></span><span class="rq-starts__arrow" aria-hidden="true">↘</span></a></li>)}</ol>
           </nav>
         </section>

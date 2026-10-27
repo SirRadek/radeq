@@ -16,10 +16,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   <div class="rq-pricing__grid">
     <div class="rq-pricing__audit">
       <p class="rq-pricing__eyebrow">{en ? 'When you need a clearer starting point' : 'Když potřebujete vědět, kde začít'}</p>
-      <h3>{pricing.audit.title}</h3>
+      <h3 id="audit">{pricing.audit.title}</h3>
       <p class="rq-pricing__price">{pricing.audit.price}</p>
-      <p>{en ? 'You receive priorities, an estimate of scope and price, and a recommendation on what to address first. I deduct the full audit price from implementation if we continue together.' : 'Dostanete seznam priorit, odhad rozsahu a ceny a doporučení, co řešit první. Cenu auditu vám celou odečtu z realizace, pokud se domluvíme na pokračování.'}</p>
-      <a href="#kontakt">{en ? 'Discuss the audit' : 'Probrat audit'} <span aria-hidden="true">↗</span></a>
+      <p>{en ? 'You receive clear priorities, an estimate of scope and cost, and a recommendation on where to start. If we go ahead with the project, I’ll deduct the full audit fee from the project price.' : 'Dostanete jasné priority, odhad rozsahu a ceny a doporučení, čím začít. Když navážeme realizací, celou cenu auditu odečtu z ceny projektu.'}</p>
+      <a href="#kontakt">{en ? 'Discuss an audit' : 'Domluvit audit'} <span aria-hidden="true">↗</span></a>
     </div>
     <div>
       <h3>{pricing.projectTitle}</h3>

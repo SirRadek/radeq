@@ -1,6 +1,7 @@
 import {describe,it,expect} from 'vitest';
 import {readFileSync,readdirSync} from 'node:fs';
 import {join} from 'node:path';
+import {documentNodes,nodes,attr,text} from './helpers/compiled-html.mjs';
 const file=process.env.DEMO_ARTIFACT_MANIFEST;
 const m=file?JSON.parse(readFileSync(file,'utf8')):null;
 const walk=p=>readdirSync(p,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(join(p,e.name)):[join(p,e.name)]);
@@ -14,6 +15,17 @@ describe.runIf(Boolean(m))('whole public preview contract',()=>{
     expect(home).not.toContain('id="ukazky"');
     expect(home).not.toContain('preview-tools');
     expect(home).toContain('id="ceny"');
+    const all=documentNodes(home);
+    const starts=all.find(n=>n.tagName==='nav'&&(attr(n,'class')??'').split(' ').includes('rq-starts'));
+    expect(starts).toBeDefined();
+    const auditJump=nodes(starts).find(n=>n.tagName==='a'&&attr(n,'href')==='#audit');
+    expect(auditJump).toBeDefined();
+    expect(text(auditJump)).toContain(locale==='en'?'from CZK 3,000':'od 3 000 Kč');
+    const paidAudit=all.find(n=>(attr(n,'class')??'').split(' ').includes('rq-pricing__audit'));
+    const auditHeading=all.find(n=>attr(n,'id')==='audit');
+    expect(auditHeading?.tagName).toBe('h3');
+    expect(nodes(paidAudit)).toContain(auditHeading);
+    expect(text(auditHeading)).toBe(locale==='en'?'Website or process audit':'Audit webu nebo procesu');
     expect(home).not.toContain('astro-island');
     expect(home).toContain(locale==='en'?'One-page website':'Jednostránkový web');
     expect(home).toContain(locale==='en'?'one working day':'1 pracovního dne');
@@ -23,8 +35,9 @@ describe.runIf(Boolean(m))('whole public preview contract',()=>{
      expect(demo).toContain('data-service-return');
     }
     for(const image of ['flow-plumber.jpg','booking-desktop.png','flow-workshop.jpg'])expect(home).toContain(`${v.base}/images/services/${image}`);
-    expect(home).toContain(locale==='en'?'Interactive examples are in Czech.':'Zakázka získána');
-    expect(home).toContain(locale==='en'?'Work recorded':'Práce v evidenci');
+    expect(home).toContain(locale==='en'?'Interactive examples are in Czech.':'Poptávka dorazila');
+    expect(home).toContain(locale==='en'?'Work logged':'Práce zapsaná');
+    expect(home).toContain(locale==='en'?'Enquiry received':'Poptávka dorazila');
    }
   });
   it(`${v.name}: English entry retains language and discloses Czech demos`,()=>{

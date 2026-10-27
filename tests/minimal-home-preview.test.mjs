@@ -39,7 +39,7 @@ describe('unified minimalist homepage and local design route', () => {
         expect(attr(tags('html')[0], 'lang')).toBe('cs');
         expect(text(tags('h1')[0])).toBe('Weby a automatizace, které usnadňují podnikání.');
         expect(tags('h2').map(text)).toEqual(['Služby', 'Ceny a rozsah', 'Přístup', 'Kdo za tím stojí', 'Pojďme probrat váš záměr']);
-        expect(tags('h3').map(text)).toEqual(['Web a viditelnost', 'Termíny a rezervace', 'Data a návaznost práce', 'Audit webu nebo procesu', 'Projektové realizace']);
+        expect(tags('h3').map(text)).toEqual(['Web a viditelnost', 'Rezervace termínů', 'Propojená evidence', 'Audit webu nebo procesu', 'Projektové realizace']);
         expect(html).not.toContain('Lokální náhled');
         const prices = all.find(n => n.tagName === 'section' && attr(n,'id') === 'ceny');
         expect(prices).toBeDefined();

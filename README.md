@@ -1,6 +1,6 @@
 # RadeQ — web a ověřený GitHub Pages náhled
 
-Astro, CS/EN, varianta Stopa s ukázkami přímo u služeb, ceníkem, rozsahem předání a reakční dobou. Mobilní miniatury mají čitelný průběh a krátkou animaci kurzoru; podporují klávesnici a omezení pohybu.
+Astro, CS/EN, varianta Stopa s ukázkami přímo u služeb, ceníkem, rozsahem předání a reakční dobou. Úvod obsahuje funkční rozcestník, ceny mají výraznější typografii a mobilní kontakt je výš. Miniatury mají kurzor a pevné postupně vybarvované kroky; podporují klávesnici a omezení pohybu.
 
 Node24. `npm ci`, `npm run dev`, `npm test`, `npm run build`. Kořenové a GitHub sestavení s cílenou typovou kontrolou: `node scripts/verify-themed-demos.mjs`. Obecný `npm run typecheck` zahrnuje i pracovní výstupy; doložená cílená kontrola se vztahuje na src/functions. Pro GitHub: `DEPLOY_TARGET=github-pages npm run build`.
 

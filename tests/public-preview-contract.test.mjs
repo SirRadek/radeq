@@ -23,7 +23,7 @@ describe.runIf(Boolean(m))('whole public preview contract',()=>{
      expect(demo).toContain('data-service-return');
     }
     for(const image of ['flow-plumber.jpg','booking-desktop.png','flow-workshop.jpg'])expect(home).toContain(`${v.base}/images/services/${image}`);
-    expect(home).toContain(locale==='en'?'Interactive examples are in Czech.':'Kontakt získán');
+    expect(home).toContain(locale==='en'?'Interactive examples are in Czech.':'Zakázka získána');
     expect(home).toContain(locale==='en'?'Work recorded':'Práce v evidenci');
    }
   });

@@ -1,24 +1,26 @@
 .rq-minimal-preview .rq-pricing { border-top:1px solid #1c1a1729; }
-.rq-pricing__grid { display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); gap:4rem; }
+.rq-pricing__grid { display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); gap:clamp(2rem,5vw,4rem); }
 .rq-pricing h3 { margin:0 0 1rem; font-size:1.3rem; font-weight:600; }
 .rq-minimal-preview .rq-pricing__eyebrow { margin-bottom:.75rem; font-size:.9rem; color:var(--wine); }
-.rq-minimal-preview .rq-pricing__price { margin-bottom:1.25rem; font-size:2rem; line-height:1.2; color:var(--wine); }
-.rq-pricing__audit { max-width:28rem; }
+.rq-minimal-preview .rq-pricing__price { margin-bottom:1.25rem; font-size:clamp(2.5rem,4vw,3.25rem); font-weight:500; line-height:1.2; color:var(--wine); }
+.rq-pricing__audit { max-width:28rem; padding-left:1.5rem; border-left:2px solid var(--wine); align-self:start; }
 .rq-pricing__list { margin:0; }
-.rq-pricing__list>div { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:baseline; gap:.5rem 1.5rem; border-bottom:1px solid #1c1a1729; padding:1rem 0; }
+.rq-pricing__list>div { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:baseline; gap:.5rem 1.5rem; border-bottom:1px solid #1c1a1729; padding:1.15rem 0; }
 .rq-pricing__list>div:first-child { padding-top:0; }
-.rq-pricing__list dd { margin:0; white-space:nowrap; color:var(--wine); }
+.rq-pricing__list dt { font-size:1.125rem; }
+.rq-pricing__list dd { margin:0; white-space:nowrap; color:var(--wine); font-size:1.25rem; font-weight:500; font-variant-numeric:tabular-nums; }
 .rq-pricing__list small { display:block; max-width:40rem; margin-top:.4rem; font-size:.95rem; font-weight:400; }
 .rq-minimal-preview .rq-pricing__note { margin:1.25rem 0 0; font-size:.95rem; color:#64574f; }
 .rq-pricing__care { margin-top:2.5rem; border-top:1px solid #1c1a1729; border-bottom:1px solid #1c1a1729; padding:1rem 0; }
 .rq-pricing__care summary { cursor:pointer; font-weight:500; padding:.25rem 0; }
-.rq-pricing__care summary span { margin-left:1rem; color:var(--wine); font-weight:400; }
+.rq-pricing__care summary span { margin-left:1rem; color:var(--wine); font-weight:500; }
 .rq-pricing__care[open] summary { margin-bottom:1.5rem; }
 .rq-pricing__care summary:focus-visible { outline:2px solid var(--wine); outline-offset:6px; }
 .rq-minimal-preview .rq-pricing__terms { margin-bottom:1rem; }
 .rq-home-actions { display:flex; flex-wrap:wrap; align-items:center; gap:1rem 2rem; }
 .rq-minimal-preview .rq-home-response { margin:1rem 0 0; color:#64574f; font-size:.95rem; }
-.rq-minimal-preview .rq-home-price { margin:0 0 1rem; color:var(--wine); font-size:1rem; }
+.rq-minimal-preview .rq-home-price { display:flex; flex-wrap:wrap; align-items:baseline; gap:.25rem .65rem; margin:0 0 1.25rem; color:var(--ink); font-size:1rem; }
+.rq-home-price strong { color:var(--wine); font-size:1.375rem; font-weight:500; font-variant-numeric:tabular-nums; }
 .rq-home-actions .rq-minimal-preview__cta { margin:0; padding:.65rem 1.2rem; background:var(--wine); color:var(--cream); border-radius:3px; text-decoration:none; }
 .rq-home-actions .rq-minimal-preview__cta:hover { background:var(--ink); color:var(--cream); }
 .rq-minimal-preview .rq-handoff { max-width:none; margin:2rem 0 0; padding-top:1.5rem; border-top:1px solid #1c1a1729; }

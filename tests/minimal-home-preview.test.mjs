@@ -28,7 +28,14 @@ describe('unified minimalist homepage and local design route', () => {
         const all = documentNodes(html);
         const tags = name => all.filter(node => node.tagName === name);
         for (const tag of ['html', 'body', 'header', 'main', 'h1', 'footer']) expect(tags(tag), tag).toHaveLength(1);
-        expect(tags('nav')).toHaveLength(2); // Main and footer navigation are both intentional.
+        expect(tags('nav')).toHaveLength(3); // Header, useful service index, and footer.
+        const serviceIndex = tags('nav').find(node => attr(node, 'aria-label') === 'Kde můžeme začít?');
+        expect(serviceIndex).toBeDefined();
+        for (const id of ['sluzba-web', 'sluzba-terminy', 'sluzba-data']) {
+          expect(text(serviceIndex)).not.toBe('');
+          expect(tags('a').some(node => attr(node, 'href') === '#' + id)).toBe(true);
+          expect(all.some(node => attr(node, 'id') === id)).toBe(true);
+        }
         expect(attr(tags('html')[0], 'lang')).toBe('cs');
         expect(text(tags('h1')[0])).toBe('Weby a automatizace, které usnadňují podnikání.');
         expect(tags('h2').map(text)).toEqual(['Služby', 'Ceny a rozsah', 'Přístup', 'Kdo za tím stojí', 'Pojďme probrat váš záměr']);

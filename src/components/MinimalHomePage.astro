@@ -6,16 +6,30 @@ import RqContactForm from './RqContactForm.astro';
 import { homeContent } from '../data/home';
 import type { Locale } from '../data/locales';
 const { lang = 'cs' } = Astro.props as {lang?: Locale};
+const starts = lang === 'en' ? [
+  {id:'web', title:'Make your offer clear.', detail:'A website that starts a conversation.'},
+  {id:'terminy', title:'Let customers choose a time.', detail:'Bookings without the back-and-forth.'},
+  {id:'data', title:'Keep work connected.', detail:'Records without retyping.'},
+] : [
+  {id:'web', title:'Ať je jasné, co nabízíte.', detail:'Web, ze kterého vznikne domluva.'},
+  {id:'terminy', title:'Ať si zákazník vybere termín.', detail:'Rezervace bez telefonování sem a tam.'},
+  {id:'data', title:'Ať na sebe práce navazuje.', detail:'Evidence bez zbytečného přepisování.'},
+];
 ---
       <main>
-        <section class="rq-minimal-preview__intro" aria-labelledby="uvod">
-          <h1 id="uvod">{lang === "en" ? 'Websites and automation that make running your business easier.' : 'Weby a automatizace, které usnadňují podnikání.'}</h1>
+        <section class="rq-minimal-preview__intro rq-home-intro" aria-labelledby="uvod">
+          <div class="rq-home-intro__main">
+          <h1 id="uvod">{lang === "en" ? 'Websites and automation that simplify your work.' : 'Weby a automatizace, které usnadňují podnikání.'}</h1>
           {lang === "cs" ? <MinimalAudience /> : <p class="rq-minimal-preview__lead">For sole traders and small businesses.</p>}
-          <p class="rq-minimal-preview__lead">{lang === "en" ? 'Websites, data and automation for sole traders and small businesses.' : 'Weby, data a automatizace pro živnostníky a malé firmy.'}</p>
-          <p class="rq-minimal-preview__intro-detail">{lang === "en" ? 'When work repeats unnecessarily or your website does not explain your offer, we start there. From the first idea to a solution you can use.' : 'Když se práce zbytečně opakuje nebo web nevysvětluje vaši nabídku, začneme právě tam. Od prvního nápadu k řešení, které dokážete používat.'}</p>
-          <p class="rq-home-price">{lang === 'en' ? 'One-page website from CZK 10,000. Scope and price agreed upfront.' : 'Jednostránkový web od 10 000 Kč. Rozsah a cenu domluvíme předem.'}</p>
+          <p class="rq-minimal-preview__intro-detail">{lang === "en" ? 'A clear website, easier bookings or connected records. We start with what would help your work most.' : 'Srozumitelný web, jednodušší rezervace nebo propojená evidence. Začneme tím, co vaší práci pomůže nejvíc.'}</p>
+          <p class="rq-home-price">{lang === 'en' ? 'One-page website' : 'Jednostránkový web'} <strong>{lang === 'en' ? 'from CZK 10,000' : 'od 10 000 Kč'}</strong></p>
           <div class="rq-home-actions"><a class="rq-minimal-preview__cta" href="#kontakt">{lang === "en" ? 'Discuss your project' : 'Probrat projekt'}</a><a href="#ceny">{lang === 'en' ? 'View prices' : 'Prohlédnout ceny'} <span aria-hidden="true">↗</span></a></div>
           <p class="rq-home-response">{lang === 'en' ? 'No obligation. I reply within one working day.' : 'Nezávazně. Ozvu se do 1 pracovního dne.'}</p>
+          </div>
+          <nav class="rq-starts" aria-label={lang === 'en' ? 'Where can we start?' : 'Kde můžeme začít?'}>
+            <p class="rq-starts__label">{lang === 'en' ? 'Where can we start?' : 'Kde můžeme začít?'}</p>
+            <ol>{starts.map((item,i)=><li><a href={`#sluzba-${item.id}`}><span class="rq-starts__number" aria-hidden="true">0{i+1}</span><span><strong>{item.title}</strong><small>{item.detail}</small></span><span class="rq-starts__arrow" aria-hidden="true">↘</span></a></li>)}</ol>
+          </nav>
         </section>
         <ServiceStories lang={lang} />
         <MinimalPricing lang={lang} />

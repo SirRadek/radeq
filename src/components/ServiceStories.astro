@@ -11,7 +11,7 @@ const stories = [
    description:choose('Web, ze kterého je jasné, co nabízíte, pro koho to je a jak se ozvat. Přehledná struktura, čitelný obsah a použití na mobilu — od prezentace služby po malý e-shop.','A website that makes your offer, audience and contact clear. Readable content and mobile use, from a service page to a small shop.'),
    aside:choose('Jasná nabídka. Snadná domluva.','Clear offer. Easy contact.'),
    note:choose('Od problému k domluvě.','From a problem to a conversation.'),
-   steps:en?['Describe the problem','Find a solution','Get in touch','Contact received']:['Popsat problém','Najít řešení','Ozvat se','Kontakt získán'],
+   steps:en?['Describe the problem','Find a solution','Get in touch','Job secured']:['Popsat problém','Najít řešení','Ozvat se','Zakázka získána'],
    handoff:choose('Poptávka vám dorazí do e-mailu. Další domluva je na vás.','The enquiry arrives in your inbox. You take the conversation from there.'),
    name:choose('Web pro instalatéra','Plumber website'),cta:choose('Prohlédnout web instalatéra','Explore the plumber website'),
    action:choose('Odeslat poptávku','Send an enquiry'),result:choose('Poptávka připravena','Enquiry prepared'),symbol:'↗'},
@@ -67,18 +67,25 @@ const href = (slug: string) => `${base}/ukazky/${slug}/${en ? '?from=en' : ''}`;
 
 <script>
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  document.querySelectorAll<HTMLAnchorElement>('.rq-service-stories .flow-example').forEach(link => {
-    const wrap = link.closest<HTMLElement>('.flow-wrap');
-    if (!wrap) return;
+  document.querySelectorAll<HTMLElement>('.rq-service-stories .flow-wrap').forEach(wrap => {
     let timer: ReturnType<typeof setTimeout>;
     const stop = () => { clearTimeout(timer); wrap.classList.remove('is-demo-playing'); };
     const play = () => {
       if (motion.matches || wrap.classList.contains('is-demo-playing')) return;
       wrap.classList.add('is-demo-playing');
-      timer = setTimeout(stop, 2100);
+      timer = setTimeout(stop, 3000);
     };
-    link.addEventListener('pointerenter', event => { if (event.pointerType !== 'touch') play(); });
-    link.addEventListener('focus', play);
-    motion.addEventListener('change', stop);
+    wrap.addEventListener('pointerenter', event => { if (event.pointerType !== 'touch') play(); });
+    wrap.addEventListener('focusin', play);
+    const flow = wrap.querySelector('.flow');
+    const observer = !motion.matches && flow && 'IntersectionObserver' in window
+      ? new IntersectionObserver(entries => {
+          if (!entries.some(entry => entry.isIntersecting && entry.intersectionRatio >= .55)) return;
+          play();
+          observer?.disconnect();
+        }, { threshold: .55 })
+      : null;
+    if (flow) observer?.observe(flow);
+    motion.addEventListener('change', () => { stop(); observer?.disconnect(); });
   });
 </script>

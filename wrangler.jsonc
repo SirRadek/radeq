@@ -1,0 +1,35 @@
+{
+  "name": "radeq",
+  "account_id": "010410e6274eaf7df61aba234a2d25f4",
+  "main": "release/index.js",
+  "compatibility_date": "2026-06-11",
+  "no_bundle": true,
+  "keep_vars": true,
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "d1_databases": [
+    {
+      "binding": "LEADS_DB",
+      "database_name": "radeq-leads",
+      "database_id": "50e2c98b-9ecc-4d28-a674-4fa8b44b7a78"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "MEASURE_RATE_LIMIT",
+      "id": "5cd5df0326a7478cbfb3f84d001af783"
+    }
+  ],
+  "rules": [
+    {
+      "type": "ESModule",
+      "globs": [
+        "**/*.js"
+      ],
+      "fallthrough": true
+    }
+  ]
+}

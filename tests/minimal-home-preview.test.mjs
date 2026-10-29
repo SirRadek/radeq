@@ -3,11 +3,11 @@ import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync } from 'nod
 import { join, relative, resolve } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { documentNodes, attr, text } from './helpers/compiled-html.mjs';
+import { documentNodes, nodes, attr, text } from './helpers/compiled-html.mjs';
 
 const root = process.cwd();
 const digest = path => createHash('sha256').update(readFileSync(path)).digest('hex');
-const stories = ['instalater', 'eshop', 'sluzba', 'provozni-terminal'];
+const stories = ['instalater', 'sluzba', 'provozni-terminal', 'eshop'];
 
 describe('unified minimalist homepage and local design route', () => {
   it.each(['', '/radeq'])('compiles current public content, metadata and four portals under base %s', base => {
@@ -16,7 +16,7 @@ describe('unified minimalist homepage and local design route', () => {
       mkdirSync(join(scratch, 'pages'));
       // Compile actual current route sources in a narrow fixture, rather than the whole site.
       for (const route of ['index', 'minimalni-navrh']) {
-        const source = readFileSync(join(root, `src/pages/${route}.astro`), 'utf8').replaceAll("'../", "'" + resolve(root, 'src') + '/');
+        const source = readFileSync(join(root, `src/pages/${route}.astro`), 'utf8').replaceAll("'../", "'" + resolve(root, 'src').replaceAll('\\', '/') + '/');
         writeFileSync(join(scratch, `pages/${route}.astro`), source);
       }
       writeFileSync(join(scratch, 'config.mjs'), `import config from ${JSON.stringify(resolve(root, 'astro.config.mjs'))};\nexport default {...config,srcDir:${JSON.stringify(scratch)},outDir:${JSON.stringify(join(scratch, 'dist'))},cacheDir:${JSON.stringify(join(scratch, 'cache'))}};`);
@@ -27,8 +27,18 @@ describe('unified minimalist homepage and local design route', () => {
         const html = readFileSync(join(scratch, 'dist', route), 'utf8');
         const all = documentNodes(html);
         const tags = name => all.filter(node => node.tagName === name);
+        const tiles = tags('details').filter(n => (attr(n,'class') || '').split(' ').includes('rq-showcase'));
+        expect(tiles).toHaveLength(4);
+        for (const tile of tiles) {
+          expect(attr(tile,'open')).toBeUndefined();
+          const summary = tile.childNodes.find(n => n.tagName === 'summary');
+          expect(summary).toBeDefined();
+          expect(text(summary).trim()).not.toBe('');
+          expect(nodes(summary).some(n => n.tagName === 'a')).toBe(false);
+          expect(text(tile)).toContain('Modelový průběh · nic se neodesílá.');
+        }
         for (const tag of ['html', 'body', 'header', 'main', 'h1', 'footer']) expect(tags(tag), tag).toHaveLength(1);
-        expect(tags('nav')).toHaveLength(3); // Header, useful service index, and footer.
+        expect(tags('nav')).toHaveLength(4); // Desktop, native mobile menu, useful service index, footer.
         const serviceIndex = tags('nav').find(node => attr(node, 'aria-label') === 'Kde můžeme začít?');
         expect(serviceIndex).toBeDefined();
         for (const id of ['sluzba-web', 'sluzba-terminy', 'sluzba-data']) {
@@ -38,8 +48,8 @@ describe('unified minimalist homepage and local design route', () => {
         }
         expect(attr(tags('html')[0], 'lang')).toBe('cs');
         expect(text(tags('h1')[0])).toBe('Weby a automatizace, které usnadňují podnikání.');
-        expect(tags('h2').map(text)).toEqual(['Služby', 'Ceny a rozsah', 'Přístup', 'Kdo za tím stojí', 'Pojďme probrat váš záměr']);
-        expect(tags('h3').map(text)).toEqual(['Web a viditelnost', 'Rezervace termínů', 'Propojená evidence', 'Audit webu nebo procesu', 'Projektové realizace']);
+        expect(tags('h2').filter(n=>attr(n,'id')!=='rq-consent-title').map(text)).toEqual(['Služby', 'Ceny a rozsah', 'Přístup', 'Kdo za tím stojí', 'Pojďme probrat váš záměr']);
+        expect(tags('h3').map(text)).toEqual(['Web pro instalatéra', 'Fyzioterapie s rezervací', 'Dílenský terminál', 'Pražírna a malý e-shop', 'Audit webu nebo procesu', 'Projektové realizace']);
         expect(html).not.toContain('Lokální náhled');
         const prices = all.find(n => n.tagName === 'section' && attr(n,'id') === 'ceny');
         expect(prices).toBeDefined();
@@ -58,8 +68,8 @@ describe('unified minimalist homepage and local design route', () => {
         const portals = tags('a').filter(node => (attr(node, 'class') || '').split(' ').some(c => ['flow-example','secondary-example'].includes(c)));
         expect(portals.map(node => attr(node, 'href'))).toEqual(stories.map(slug => `${base}/ukazky/${slug}/`));
         for (const portal of portals) expect(text(portal).trim().length).toBeGreaterThan(20);
-        expect(all.filter(n => attr(n, 'class') === 'flow-node')).toHaveLength(12);
-        expect(tags('svg')).toHaveLength(3);
+        expect(all.filter(n => attr(n, 'class') === 'flow-node')).toHaveLength(16);
+        expect(tags('svg')).toHaveLength(0);
         expect(all.some(n => attr(n, 'id') === 'ukazky')).toBe(false);
         for (const img of tags('img')) expect(attr(img, 'src')).toMatch(new RegExp('^' + base + '/images/services/'));
         const links = tags('a').map(node => [text(node).trim(), attr(node, 'href')]);
@@ -69,7 +79,8 @@ describe('unified minimalist homepage and local design route', () => {
         expect(all.filter(node => attr(node, 'hreflang')).map(node => [attr(node, 'hreflang'), attr(node, 'href')])).toEqual([['cs', `${origin}${base}/`], ['en', `${origin}${base}/en/`], ['x-default', `${origin}${base}/`]]);
         expect(all.filter(node => node.tagName === 'meta' && attr(node, 'name') === 'robots').map(node => attr(node, 'content'))).toEqual(base || route.startsWith('minimalni') ? ['noindex,nofollow'] : []);
         expect(all.filter(node => attr(node, 'property') === 'og:url').map(node => attr(node, 'content'))).toEqual([`${origin}${base}/`]);
-        expect(tags('form')).toHaveLength(base ? 0 : 1);
+        expect(tags('form').filter(n=>attr(n,'method')!=='dialog')).toHaveLength(base ? 0 : 1);
+        expect(tags('dialog')).toHaveLength(!base && route==='index.html'?1:0);
         if (base) {
           expect(html).not.toContain('/api/leads');
           expect(html).not.toContain('loadTurnstile');

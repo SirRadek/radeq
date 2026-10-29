@@ -1,52 +1,56 @@
 ---
+import {demoText} from '../themed-demos/demo-i18n.mjs';
+const {lang = 'cs'} = Astro.props as {lang?: 'cs' | 'en'};
+const t = (value: string) => demoText(lang, value);
+
 import DemoThemeDocument from '../themed-demos/DemoThemeDocument.astro';
 import {createInitialState,getProblemSummary,getContactSummary} from '../themed-demos/plumber-state.mjs';
 const initial=createInitialState();
 const help=getProblemSummary(initial);
 ---
-<DemoThemeDocument title="Instalatér — modelová ukázka RadeQ" description="Model instalatérské služby: vyberte problém, připravte popis a prohlédněte si kontakt. Nic se neodesílá." theme="plumber">
- <main data-plumber>
+<DemoThemeDocument lang={lang} title={t("Instalatér — modelová ukázka RadeQ")} description={t("Model instalatérské služby: vyberte problém, připravte popis a prohlédněte si kontakt. Nic se neodesílá.")} theme="plumber">
+ <main data-plumber data-lang={lang}>
   <div class="composition">
    <section class="problem" aria-labelledby="problem-title">
-    <p class="eyebrow">Voda · odpady · montáž</p>
-    <h1 id="problem-title">Co doma<br/> zlobí?</h1>
+    <p class="eyebrow">{t("Voda · odpady · montáž")}</p>
+    <h1 id="problem-title">{t("Co doma")}<br/> {t("zlobí?")}</h1>
     <fieldset>
-     <legend class="visually-hidden">Typ problému (nepovinné)</legend>
-     { [['water','Voda teče'],['connect','Něco zapojit'],['other','Jiné']].map(([value,label])=><label><input type="radio" name="problem" value={value}/><span>{label}</span></label>) }
+     <legend class="visually-hidden">{t("Typ problému (nepovinné)")}</legend>
+     { [['water',t("Voda teče")],['connect',t("Něco zapojit")],['other',t("Jiné")]].map(([value,label])=><label><input type="radio" name="problem" value={value}/><span>{label}</span></label>) }
     </fieldset>
-    <label class="description" for="description">Popište závadu (nepovinné)</label>
-    <textarea id="description" rows="3" maxlength="500" placeholder="Třeba: pod dřezem kape voda." aria-describedby="description-note"></textarea>
-    <p class="note" id="description-note">Stačí závada, bez osobních údajů. Text zůstává jen v této ukázce.</p>
+    <label class="description" for="description">{t("Popište závadu (nepovinné)")}</label>
+    <textarea id="description" rows="3" maxlength="500" placeholder={t("Třeba: pod dřezem kape voda.")} aria-describedby="description-note"></textarea>
+    <p class="note" id="description-note">{t("Stačí závada, bez osobních údajů. Text zůstává jen v této ukázce.")}</p>
    </section>
    <div class="contact-services">
     <section class="contact" aria-labelledby="contact-title">
      <div class="help" aria-live="polite" aria-atomic="true">
-      <p class="eyebrow">S čím pomůžeme</p>
-      <h2 id="contact-title" data-help-title>{help.title}</h2>
-      <p data-help-detail>{help.detail}</p>
+      <p class="eyebrow">{t("S čím pomůžeme")}</p>
+      <h2 id="contact-title" data-help-title>{t(help.title)}</h2>
+      <p data-help-detail>{t(help.detail)}</p>
      </div>
-     <button type="button" data-js-action data-contact aria-expanded="false" aria-controls="contact-explanation" hidden>Kontakt v ukázce <span aria-hidden="true">↗</span></button>
+     <button type="button" data-js-action data-contact aria-expanded="false" aria-controls="contact-explanation" hidden>{t("Kontakt v ukázce")} <span aria-hidden="true">↗</span></button>
      <div id="contact-explanation" data-contact-explanation>
-      <p class="eyebrow">Připraveno k domluvě</p>
-      <p class="contact-summary" data-contact-summary>{getContactSummary(initial)}</p>
-      <p>Na skutečném webu by následoval telefon nebo poptávka s tímto popisem. Tady pouze prohlížíte model kontaktu: nikomu se nevolá a nic se neodesílá.</p>
+      <p class="eyebrow">{t("Připraveno k domluvě")}</p>
+      <p class="contact-summary" data-contact-summary>{t(getContactSummary(initial))}</p>
+      <p>{t("Na skutečném webu by následoval telefon nebo poptávka s tímto popisem. Tady pouze prohlížíte model kontaktu: nikomu se nevolá a nic se neodesílá.")}</p>
      </div>
-     <noscript><p>Výběr a shrnutí vyžadují JavaScript. Přehled služeb a vysvětlení kontaktu jsou dostupné i bez něj.</p></noscript>
-     <button class="reset" type="button" data-js-action data-reset hidden>Vrátit ukázku</button>
+     <noscript><p>{t("Výběr a shrnutí vyžadují JavaScript. Přehled služeb a vysvětlení kontaktu jsou dostupné i bez něj.")}</p></noscript>
+     <button class="reset" type="button" data-js-action data-reset hidden>{t("Vrátit ukázku")}</button>
      <p class="status" data-status role="status" aria-live="polite"></p>
     </section>
     <section class="services" aria-labelledby="services-title">
-     <h2 id="services-title">Od kapky po výměnu</h2>
+     <h2 id="services-title">{t("Od kapky po výměnu")}</h2>
      <ul>
-      <li><strong>Voda a odpady</strong><span>Netěsné spoje, baterie, odpady a WC.</span></li>
-      <li><strong>Montáž a výměna</strong><span>Armatury, sanita a připojení bojleru.</span></li>
-      <li><strong>Drobné opravy</strong><span>Ventily a menší úpravy rozvodů.</span></li>
+      <li><strong>{t("Voda a odpady")}</strong><span>{t("Netěsné spoje, baterie, odpady a WC.")}</span></li>
+      <li><strong>{t("Montáž a výměna")}</strong><span>{t("Armatury, sanita a připojení bojleru.")}</span></li>
+      <li><strong>{t("Drobné opravy")}</strong><span>{t("Ventily a menší úpravy rozvodů.")}</span></li>
      </ul>
      <dl class="area-hours">
-      <div><dt>Modelová oblast</dt><dd>Kolín a okolní obce</dd></div>
-      <div><dt>Provozní doba</dt><dd>Termín i víkend podle domluvy</dd></div>
+      <div><dt>{t("Modelová oblast")}</dt><dd>{t("Kolín a okolní obce")}</dd></div>
+      <div><dt>{t("Provozní doba")}</dt><dd>{t("Termín i víkend podle domluvy")}</dd></div>
      </dl>
-     <p class="note">Fiktivní služba pro ukázku webu, bez skutečné dostupnosti.</p>
+     <p class="note">{t("Fiktivní služba pro ukázku webu, bez skutečné dostupnosti.")}</p>
     </section>
    </div>
    <svg class="pipe" aria-hidden="true" viewBox="0 0 1000 300" fill="none"><path d="M20 20h40q25 0 25 25v160q0 25 25 25h570q25 0 25-25V90q0-25 25-25h150q25 0 25-25V10"/><circle cx="20" cy="20" r="8"/><circle cx="430" cy="230" r="8"/><circle cx="905" cy="10" r="8"/></svg>

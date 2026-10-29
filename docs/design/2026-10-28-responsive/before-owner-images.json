@@ -1,0 +1,50 @@
+[
+  {
+    "box": {
+      "h": 180,
+      "w": 449.6000061035156
+    },
+    "fit": "cover",
+    "natural": {
+      "h": 644,
+      "w": 1088
+    },
+    "src": "/images/services/flow-plumber-wide.png"
+  },
+  {
+    "box": {
+      "h": 180,
+      "w": 449.6000061035156
+    },
+    "fit": "cover",
+    "natural": {
+      "h": 619,
+      "w": 1088
+    },
+    "src": "/images/services/booking-wide.png"
+  },
+  {
+    "box": {
+      "h": 180,
+      "w": 449.6000061035156
+    },
+    "fit": "cover",
+    "natural": {
+      "h": 644,
+      "w": 1088
+    },
+    "src": "/images/services/flow-workshop-wide.png"
+  },
+  {
+    "box": {
+      "h": 180,
+      "w": 449.6000061035156
+    },
+    "fit": "cover",
+    "natural": {
+      "h": 642,
+      "w": 1120
+    },
+    "src": "/images/services/flow-shop.png"
+  }
+]

@@ -4,6 +4,13 @@ import {initialCoffeeSession, placeCoffeeOrder, advanceCoffeeOrder, coffeeOrderC
 const coffee = {name: 'Mlýnské espresso', weight: '250 g', price: 219};
 const filled = () => ({...initialCoffeeSession(), cart: addCoffee(addCoffee([], coffee), {...coffee, weight: '500 g', price: 399})});
 describe('coffee model orders', () => {
+  it('exports English column labels while retaining quoted product data and Czech default headers', () => {
+    const order = placeCoffeeOrder({...initialCoffeeSession(),cart:addCoffee([],{name:'=Coffee; "special"',weight:'250 g',price:219})}).order;
+    const english = coffeeOrderCsv(order, 'en');
+    expect(english.split('\r\n')[0]).toBe('order;status;coffee;pack_size;quantity;unit_price_CZK;total_CZK');
+    expect(english).toContain('"\'=Coffee; ""special"""');
+    expect(coffeeOrderCsv(order).split('\r\n')[0]).toContain('objednavka;stav;kava');
+  });
   it('snapshots quantities and prices, clears the basket, and keeps its source unchanged', () => {
     const source = filled(); source.cart = changeQuantity(source.cart, source.cart[0].key, 1);
     const placed = placeCoffeeOrder(source);

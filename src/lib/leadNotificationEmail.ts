@@ -1,3 +1,4 @@
+import { renderConfirmationEmail } from '../../release/confirmation-email.js';
 import type { LeadSubmission } from './leads';
 
 export interface LeadNotificationMessage {
@@ -6,6 +7,7 @@ export interface LeadNotificationMessage {
   replyTo: string;
   subject: string;
   text: string;
+  html?: string;
 }
 
 const notificationTo = 'siroky@radeq.cz';
@@ -30,6 +32,7 @@ async function postToResend(
       reply_to: message.replyTo,
       subject: message.subject,
       text: message.text,
+      ...(message.html ? { html: message.html } : {}),
     }),
   });
 
@@ -102,54 +105,8 @@ export function createLeadNotificationEmail(
 }
 
 export function createLeadConfirmationEmail(lead: LeadSubmission): LeadNotificationMessage {
-  const english = lead.locale.toLowerCase().startsWith('en');
-  return english ? englishConfirmation(lead) : czechConfirmation(lead);
-}
-
-function czechConfirmation(lead: LeadSubmission): LeadNotificationMessage {
-  return {
-    to: lead.email,
-    from: confirmationFrom,
-    replyTo: notificationTo,
-    subject: 'Děkujeme za vaši poptávku — Radeq.cz',
-    text: [
-      `Dobrý den ${lead.name},`,
-      '',
-      'děkuji za vaši poptávku přes radeq.cz — v pořádku dorazila a co nejdřív se vám ozvu (obvykle do jednoho pracovního dne).',
-      '',
-      'Co jste odeslal(a):',
-      `Typ: ${lead.project_type}`,
-      `Zpráva: ${lead.message}`,
-      '',
-      'Kdybyste chtěl(a) cokoli doplnit, stačí odpovědět na tento e-mail.',
-      '',
-      'Radek Široký',
-      'radeq.cz · siroky@radeq.cz',
-    ].join('\n'),
-  };
-}
-
-function englishConfirmation(lead: LeadSubmission): LeadNotificationMessage {
-  return {
-    to: lead.email,
-    from: confirmationFrom,
-    replyTo: notificationTo,
-    subject: 'Thanks for your inquiry — Radeq.cz',
-    text: [
-      `Hi ${lead.name},`,
-      '',
-      "thanks for your inquiry via radeq.cz — it arrived safely and I'll get back to you soon (usually within one business day).",
-      '',
-      'What you sent:',
-      `Type: ${lead.project_type}`,
-      `Message: ${lead.message}`,
-      '',
-      'If you would like to add anything, just reply to this email.',
-      '',
-      'Radek Široký',
-      'radeq.cz · siroky@radeq.cz',
-    ].join('\n'),
-  };
+  const { subject, html, text } = renderConfirmationEmail(lead);
+  return { to: lead.email, from: confirmationFrom, replyTo: notificationTo, subject, text, html };
 }
 
 function optionalLine(label: string, value: string): string {

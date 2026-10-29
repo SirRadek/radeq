@@ -15,7 +15,7 @@ describe.runIf(Boolean(manifestPath))('four curated compiled showcases',()=>{
    for(const path of ['index.html','en/index.html']){
     const html=readFileSync(`${v.dist}/${path}`,'utf8');
     const portals=[...html.matchAll(/<a\b[^>]*class="(?:flow-example|secondary-example)"[^>]*href="([^"]+)"/g)].map(x=>x[1]);
-    expect(portals).toEqual(['instalater','eshop','sluzba','provozni-terminal'].map(route=>`${v.base}/ukazky/${route}/${path.startsWith('en/')?'?from=en':''}`));
+    expect(portals).toEqual(routes.map(route=>`${v.base}/${path.startsWith('en/')?'en/':''}ukazky/${route}/`));
    }
   });
   it(`${v.name} canonical demos retain harmless complete document boundaries`,()=>{

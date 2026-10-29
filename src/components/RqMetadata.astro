@@ -1,4 +1,6 @@
 ---
+import {measurement} from '../data/measurement';
+import {isPreviewChannel} from '../lib/preview-channel.mjs';
 /** Values are resolved by the caller. This component owns no URL/base policy. */
 export interface Props {
   title: string;
@@ -32,3 +34,6 @@ const { title, description, lang, canonicalUrl, ogUrl, alternates = [], imageUrl
 <meta name="twitter:description" content={description} />
 {imageUrl && <meta name="twitter:image" content={imageUrl} />}
 <title>{title}</title>
+
+{!isPreviewChannel && measurement.seznamVerification && <meta name="seznam-wmt" content={measurement.seznamVerification} />}
+{!isPreviewChannel && measurement.googleVerification && <meta name="google-site-verification" content={measurement.googleVerification} />}

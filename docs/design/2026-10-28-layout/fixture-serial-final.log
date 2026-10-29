@@ -1,0 +1,9 @@
+
+ RUN  v4.1.5 C:/Users/sirok/Documents/ChatGPT/RadeQ/app
+
+
+ Test Files  3 passed (3)
+      Tests  24 passed (24)
+   Start at  20:03:27
+   Duration  135.95s (transform 362ms, setup 0ms, import 775ms, tests 132.19s, environment 1ms)
+

@@ -1,0 +1,18 @@
+# Independent implementation review — responsive scaling
+
+Date: 2026-10-28. Reviewer: critic, native gpt-6.1-sol, medium. Reviewed the frozen patch in `app/src/styles/studio.css` and `app/src/styles/service-stories.css` against the accepted plan SHA-256 `2faebea16c13fa2e731ccbab9ae5ef2e1cedd45ca169a41234451064f343906a` and the recorded baseline source observations.
+
+Verdict: **no blocking source finding; proceed to the independent rendered acceptance gate.** This is a source review, not proof of browser acceptance. No build, viewport change, or external mutation was performed by the reviewer.
+
+The crop cause is removed in `service-stories.css:8`: auto dimensions with both maximum dimensions and `object-fit:contain` replace fixed-height cover cropping. The PNG can retain its own intrinsic proportions even though `ServiceStories.astro:53` supplies common width/height attributes. The card no longer hides overflow. The outer grid now limits two-column layouts to a usable minimum card width, while the card's own 24rem query changes only descendants into a horizontal composition. Applying inline-size containment to the full block-level details card, rather than summary itself, permits that descendant query without suppressing natural block growth; the existing native summary element and hash-opening script remain intact.
+
+`studio.css:10` makes the actual main content a named inline-size container. The hero, about, pricing, and contact area start with a single column and acquire columns only with enough content width, including after the desktop rail begins. The changed selectors have sufficient specificity against `minimal-home-preview.css`, `minimal-site.css`, and `minimal-pricing.css`; `RqLayout.astro:7–9` imports studio after both shared base styles. The pricing override also outranks the pricing component's media rules. Existing viewport rules for the contact gap do not reverse its container-based column choice. Cards' flow and main steps use bounded auto-fit tracks, and price rows can wrap without hidden content.
+
+The footer keeps its grouped structure while auto-fit reduces the number of navigation columns; the outer single-column rule at 760px remains. At the point where contact regains two columns (54rem of main content), the form column has substantially more usable width than its former threshold. Its first two fields and optional fields still collapse at 480px viewport width. No content, backend, disclosure markup, locale links, prices or legal text are edited by these CSS changes.
+
+Required rendered checks: confirm computed image sizing/full-image visibility for all eight PNGs; confirm summary remains keyboard-operable with visible focus after `display:grid`; examine the horizontal-summary transition near 24rem card width for EN heading/toggle wrapping and thumbnail usefulness. Check 1099/1100px around the rail transition, 498×562 owner panel, 320px, expanded optional form and all expanded cards, long footer labels, and low-height rail reachability. No source issue currently warrants a repair or an extra review cycle. Native zoom support and actual viewport dimensions must be recorded by the verifier.
+
+Evidence: complete changed styles; relevant base and pricing styles; `RqLayout.astro` import order; `MinimalHomePage.astro` section selectors; `ServiceStories.astro` native card markup and reveal script; `RqHeader.astro` native menu and close-on-link logic; `RqFooter.astro` grouped links and local button style. Parent/verifier retain responsibility for final byte-identity and compiled/browser evidence.
+
+Reviewed source hashes: studio.css `c44a4a1fcbf49e64b9c5fbba0d909f7be3e9b7b7b6a2165c4d51c12ebbb9f276`; service-stories.css `2a5869a4a89dac34c29a6167217aa78abf02a7172ad2c01a7f33b1d77f16ebb1`.
+

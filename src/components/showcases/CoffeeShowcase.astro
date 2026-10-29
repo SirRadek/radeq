@@ -1,49 +1,54 @@
 ---
+import {demoText, demoMoney} from '../themed-demos/demo-i18n.mjs';
+const {lang = 'cs'} = Astro.props as {lang?: 'cs' | 'en'};
+const en = lang === 'en';
+const t = (value: string) => demoText(lang, value);
+
 import CoffeeDemoDocument from './CoffeeDemoDocument.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 type Product = { name: string; profile: string; category: string; badge: string; prices: Record<string, number> };
 const products: Product[] = [
-  { name: 'Mlýnské espresso', profile: 'Čokoláda, lískový oříšek, plné tělo.', category: 'espresso', badge: 'espresso', prices: { '250 g': 219, '500 g': 399, '1 kg': 749 } },
-  { name: 'Etiopie Sidamo', profile: 'Meruňka, černý čaj, květinová vůně.', category: 'filtr', badge: 'filtr', prices: { '250 g': 269, '500 g': 499 } },
-  { name: 'Kolumbie Huila', profile: 'Třtinový cukr, jablko, čistý dozvuk.', category: 'filtr', badge: 'filtr', prices: { '250 g': 249, '500 g': 459, '1 kg': 859 } },
-  { name: 'Brazílie bez kofeinu', profile: 'Kakao, mandle, nízká acidita.', category: 'bezkofeinova', badge: 'bez kofeinu', prices: { '250 g': 259, '500 g': 479 } },
+  { name: t("Mlýnské espresso"), profile: t("Čokoláda, lískový oříšek, plné tělo."), category: 'espresso', badge: t("espresso"), prices: { '250 g': 219, '500 g': 399, '1 kg': 749 } },
+  { name: t("Etiopie Sidamo"), profile: t("Meruňka, černý čaj, květinová vůně."), category: 'filtr', badge: t("filtr"), prices: { '250 g': 269, '500 g': 499 } },
+  { name: t("Kolumbie Huila"), profile: t("Třtinový cukr, jablko, čistý dozvuk."), category: 'filtr', badge: t("filtr"), prices: { '250 g': 249, '500 g': 459, '1 kg': 859 } },
+  { name: t("Brazílie bez kofeinu"), profile: t("Kakao, mandle, nízká acidita."), category: 'bezkofeinova', badge: t("bez kofeinu"), prices: { '250 g': 259, '500 g': 479 } },
 
 ];
 ---
 
-<CoffeeDemoDocument title="Pražírna U Mlýna | Vzorový e-shop" description="Vzorová ukázka malého českého e-shopu pro lokální pražírnu kávy: rychlý katalog, varianty gramáže a jednoduchý košík bez backendu.">
-  <main class="shop-page">
-    <div class="demo-banner" role="region" aria-label="Vzorová ukázka">
-      <p>RadeQ · modelová ukázka fiktivní pražírny</p>
-      <nav aria-label="Zpět na RadeQ"><a href={base + '/ukazky/'}>← Další ukázky</a><a href={base + '/en/ukazky/'} lang="en">Examples in English</a><a href={base + '/'}>RadeQ.cz</a></nav>
+<CoffeeDemoDocument lang={lang} title={t("Pražírna U Mlýna | Vzorový e-shop")} description={t("Vzorová ukázka malého českého e-shopu pro lokální pražírnu kávy: rychlý katalog, varianty gramáže a jednoduchý košík bez backendu.")}>
+  <main class="shop-page" data-lang={lang}>
+    <div class="demo-banner" role="region" aria-label={t("Vzorová ukázka")}>
+      <p>{t("RadeQ · modelová ukázka fiktivní pražírny")}</p>
+      <nav aria-label={t("Zpět na RadeQ")}><a href={base + (en ? '/en/ukazky/' : '/ukazky/')}>{t("← Další ukázky")}</a><a href={base + (en ? '/ukazky/eshop/' : '/en/ukazky/eshop/')} lang={en ? 'cs' : 'en'}>{en ? 'Česky' : 'English'}</a><a href={base + (en ? '/en/' : '/')}>RadeQ.cz</a></nav>
     </div>
 
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <p class="eyebrow">Pražírna U Mlýna</p>
-        <h1 id="hero-title">Čerstvě pražená káva z malé pražírny.</h1>
-        <p class="hero-text">Čokoládové espresso, ovocný filtr i šálek bez kofeinu. Čtyři kávy, které si snadno najdou místo ve vašem ranním rituálu.</p>
-        <a class="primary-link" href="#katalog">Prohlédnout kávu</a>
+        <p class="eyebrow">{t("Pražírna U Mlýna")}</p>
+        <h1 id="hero-title">{t("Čerstvě pražená káva z malé pražírny.")}</h1>
+        <p class="hero-text">{t("Čokoládové espresso, ovocný filtr i šálek bez kofeinu. Čtyři kávy, které si snadno najdou místo ve vašem ranním rituálu.")}</p>
+        <a class="primary-link" href="#katalog">{t("Prohlédnout kávu")}</a>
       </div>
-      <div class="hero-photo" aria-label="Ilustrační blok balení kávy"><span class="bag bag-one"></span><span class="bag bag-two"></span><span class="steam"></span></div>
+      <div class="hero-photo" aria-label={t("Ilustrační blok balení kávy")}><span class="bag bag-one"></span><span class="bag bag-two"></span><span class="steam"></span></div>
     </section>
 
-    <section class="trust" aria-label="Dostupnost a doprava">
-      <p><strong>Malé dávky.</strong> Velká radost z každého šálku.</p>
-      <p><strong>Výběr → objednávka → balení.</strong> Vyzkoušejte celý příběh.</p>
-      <button class="cart-open" hidden data-coffee-action type="button" aria-controls="kosik">Košík <span data-cart-count>0</span></button>
+    <section class="trust" aria-label={t("Dostupnost a doprava")}>
+      <p><strong>{t("Malé dávky.")}</strong> {t("Velká radost z každého šálku.")}</p>
+      <p><strong>{t("Výběr → objednávka → balení.")}</strong> {t("Vyzkoušejte celý příběh.")}</p>
+      <button class="cart-open" hidden data-coffee-action type="button" aria-controls="kosik">{t("Košík")} <span data-cart-count>0</span></button>
     </section>
 
     <section class="catalog" id="katalog" aria-labelledby="catalog-title">
       <div class="catalog-head">
-        <div><p class="eyebrow">Katalog</p><h2 id="catalog-title">Káva pro doma i do kanceláře</h2></div>
-        <div class="filters" hidden data-coffee-action aria-label="Filtrovat produkty">
-          <button class="filter is-active" type="button" data-filter="all" aria-pressed="true">vše</button>
+        <div><p class="eyebrow">{t("Katalog")}</p><h2 id="catalog-title">{t("Káva pro doma i do kanceláře")}</h2></div>
+        <div class="filters" hidden data-coffee-action aria-label={t("Filtrovat produkty")}>
+          <button class="filter is-active" type="button" data-filter="all" aria-pressed="true">{t("vše")}</button>
           <button class="filter" type="button" data-filter="espresso" aria-pressed="false">espresso</button>
-          <button class="filter" type="button" data-filter="filtr" aria-pressed="false">filtr</button>
-          <button class="filter" type="button" data-filter="bezkofeinova" aria-pressed="false">bezkofeinová</button>
+          <button class="filter" type="button" data-filter="filtr" aria-pressed="false">{t("filtr")}</button>
+          <button class="filter" type="button" data-filter="bezkofeinova" aria-pressed="false">{t("bezkofeinová")}</button>
         </div>
       </div>
 
@@ -56,12 +61,12 @@ const products: Product[] = [
             <article class="product-card" data-category={product.category} data-name={product.name} data-prices={JSON.stringify(product.prices)}>
               <div class={imageClass} aria-hidden="true"><i class="coffee-pack"><b>U MLÝNA</b></i><span>{product.badge}</span></div>
               <div class="product-body">
-                <p class="stock">Pražírna U Mlýna</p>
+                <p class="stock">{t("Pražírna U Mlýna")}</p>
                 <h3>{product.name}</h3>
                 <p>{product.profile}</p>
-                <label><span>Gramáž</span><select class="weight-select" disabled aria-label={`Gramáž produktu ${product.name}`}>{weights.map((weight) => <option value={weight}>{weight}</option>)}</select></label>
-                <noscript><p class="variant-prices">{weights.map(weight => `${weight}: ${product.prices[weight].toLocaleString('cs-CZ')} Kč`).join(' · ')}</p></noscript>
-                <div class="buy-row"><strong class="price" data-price>{product.prices[firstWeight].toLocaleString('cs-CZ')} Kč</strong><button type="button" class="add-cart" hidden data-coffee-action>Do košíku</button></div>
+                <label><span>{t("Gramáž")}</span><select class="weight-select" disabled aria-label={`${t("Gramáž")}: ${product.name}`}>{weights.map((weight) => <option value={weight}>{weight}</option>)}</select></label>
+                <noscript><p class="variant-prices">{weights.map(weight => `${weight}: ${demoMoney(lang, product.prices[weight])}`).join(' · ')}</p></noscript>
+                <div class="buy-row"><strong class="price" data-price>{demoMoney(lang, product.prices[firstWeight])}</strong><button type="button" class="add-cart" hidden data-coffee-action>{t("Do košíku")}</button></div>
               </div>
             </article>
           );
@@ -70,25 +75,25 @@ const products: Product[] = [
     </section>
 
     <section class="basket-section" hidden data-coffee-action id="kosik" aria-labelledby="cart-title">
-      <div class="basket-copy"><p class="eyebrow">Váš výběr</p><h2 id="cart-title" tabindex="-1">Ještě jeden šálek?</h2><p>Upravte počet balení a vytvořte modelovou objednávku. Její příběh pak pokračuje ve stejné pražírně.</p><p class="demo-explanation">Ilustrační ceny. Nic se neposílá ani neplatí; nejsou potřeba osobní údaje.</p></div>
+      <div class="basket-copy"><p class="eyebrow">{t("Váš výběr")}</p><h2 id="cart-title" tabindex="-1">{t("Ještě jeden šálek?")}</h2><p>{t("Upravte počet balení a vytvořte modelovou objednávku. Její příběh pak pokračuje ve stejné pražírně.")}</p><p class="demo-explanation">{t("Ilustrační ceny. Nic se neposílá ani neplatí; nejsou potřeba osobní údaje.")}</p></div>
       <div class="basket-box">
-        <div class="cart-items" data-cart-items><p class="empty-cart">Košík je zatím prázdný.</p></div>
-        <div class="cart-total"><span>Celkem za kávu</span><strong data-cart-total>0 Kč</strong></div>
-        <button type="button" class="checkout-button" data-checkout disabled>Vytvořit modelovou objednávku</button>
+        <div class="cart-items" data-cart-items><p class="empty-cart">{t("Košík je zatím prázdný.")}</p></div>
+        <div class="cart-total"><span>{t("Celkem za kávu")}</span><strong data-cart-total>{demoMoney(lang, 0)}</strong></div>
+        <button type="button" class="checkout-button" data-checkout disabled>{t("Vytvořit modelovou objednávku")}</button>
         <p class="checkout-message" data-checkout-message role="status" hidden></p>
-        <button type="button" class="quiet-button" data-operator-open aria-controls="pro-prazirnu" aria-expanded="false" disabled>Ukázat objednávku v pražírně ↓</button>
+        <button type="button" class="quiet-button" data-operator-open aria-controls="pro-prazirnu" aria-expanded="false" disabled>{t("Ukázat objednávku v pražírně ↓")}</button>
       </div>
     </section>
     <section class="operator-section" id="pro-prazirnu" aria-labelledby="operator-title" hidden>
-      <div class="operator-head"><div><p class="eyebrow">Na druhé straně pultu</p><h2 id="operator-title" tabindex="-1">Teď jsme v pražírně.</h2></div><p>Stejná káva, stejná objednávka.<br />Jen pohled člověka, který ji balí.</p></div>
+      <div class="operator-head"><div><p class="eyebrow">{t("Na druhé straně pultu")}</p><h2 id="operator-title" tabindex="-1">{t("Teď jsme v pražírně.")}</h2></div><p>{t("Stejná káva, stejná objednávka.")}<br />{t("Jen pohled člověka, který ji balí.")}</p></div>
       <div class="order-top"><strong data-order-id></strong><span class="order-status" data-order-status role="status"></span></div>
       <div class="order-lines" data-order-lines></div>
-      <div class="cart-total"><span>Celkem za objednávku</span><strong data-order-total></strong></div>
-      <div class="operator-actions"><button type="button" class="checkout-button" data-order-advance>Začít balit</button><button type="button" class="quiet-button" data-export>Stáhnout položky CSV</button></div>
-      <p class="operator-note">Export obsahuje právě tuto objednávku: kávu, gramáž, počet, cenu a stav. Nový nákup nahradí tento modelový přehled.</p>
+      <div class="cart-total"><span>{t("Celkem za objednávku")}</span><strong data-order-total></strong></div>
+      <div class="operator-actions"><button type="button" class="checkout-button" data-order-advance>{t("Začít balit")}</button><button type="button" class="quiet-button" data-export>{t("Stáhnout položky CSV")}</button></div>
+      <p class="operator-note">{t("Export obsahuje právě tuto objednávku: kávu, gramáž, počet, cenu a stav. Nový nákup nahradí tento modelový přehled.")}</p>
     </section>
-    <noscript><p class="no-script">Katalog a ceny si můžete prohlédnout i bez JavaScriptu. Interaktivní košík a modelová objednávka potřebují JavaScript.</p></noscript>
-    <footer class="shop-footer"><div><strong>Pražírna U Mlýna</strong><p>Fiktivní pražírna. Skutečně jednoduchý příběh nákupu.</p></div><button type="button" class="quiet-button" data-reset hidden data-coffee-action>Začít ukázku znovu</button></footer>
+    <noscript><p class="no-script">{t("Katalog a ceny si můžete prohlédnout i bez JavaScriptu. Interaktivní košík a modelová objednávka potřebují JavaScript.")}</p></noscript>
+    <footer class="shop-footer"><div><strong>{t("Pražírna U Mlýna")}</strong><p>{t("Fiktivní pražírna. Skutečně jednoduchý příběh nákupu.")}</p></div><button type="button" class="quiet-button" data-reset hidden data-coffee-action>{t("Začít ukázku znovu")}</button></footer>
   </main>
 </CoffeeDemoDocument>
 
@@ -188,10 +193,15 @@ const products: Product[] = [
 </style>
 
 <script>
+  import {demoText, demoMoney} from '../themed-demos/demo-i18n.mjs';
   import {addCoffee, changeQuantity, removeCoffee, cartSummary} from '../../lib/coffee-cart';
   import {initialCoffeeSession, placeCoffeeOrder, advanceCoffeeOrder, coffeeOrderCsv} from '../../lib/coffee-orders';
   const page = document.querySelector<HTMLElement>('.shop-page');
   if (page) {
+    const lang = page.dataset.lang === 'en' ? 'en' : 'cs';
+    const en = lang === 'en';
+    const t = (value: string) => demoText(lang,value);
+    const packs = (count: number) => `${count} ${en ? (count === 1 ? 'pack' : 'packs') : 'ks'}`;
     const get = <T extends HTMLElement>(selector: string) => page.querySelector<T>(selector)!;
     const basket = get<HTMLElement>('[data-cart-items]');
     const basketTitle = get<HTMLElement>('#cart-title');
@@ -202,7 +212,7 @@ const products: Product[] = [
     const nextStatus = get<HTMLButtonElement>('[data-order-advance]');
     const cards = Array.from(page.querySelectorAll<HTMLElement>('.product-card'));
     const filters = Array.from(page.querySelectorAll<HTMLButtonElement>('.filter'));
-    const formatCzk = (value: number) => `${value.toLocaleString('cs-CZ')} Kč`;
+    const formatCzk = (value: number) => demoMoney(lang,value);
     let session = initialCoffeeSession();
     const scrollTo = (element: HTMLElement) => {
       element.scrollIntoView({behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
@@ -212,15 +222,15 @@ const products: Product[] = [
     const renderCart = () => {
       basket.replaceChildren();
       if (!session.cart.length) {
-        const empty = document.createElement('p'); empty.className = 'empty-cart'; empty.textContent = 'Košík je zatím prázdný.'; basket.append(empty);
+        const empty = document.createElement('p'); empty.className = 'empty-cart'; empty.textContent = t("Košík je zatím prázdný."); basket.append(empty);
       }
       session.cart.forEach(item => {
         const row = document.createElement('div'); row.className = 'cart-line'; row.dataset.cartKey = item.key;
         const info = document.createElement('div');
         const name = document.createElement('p'); name.textContent = item.name;
-        const weight = document.createElement('small'); weight.textContent = `${item.weight} · ${formatCzk(item.price)} / balení`;
+        const weight = document.createElement('small'); weight.textContent = `${item.weight} · ${formatCzk(item.price)} / ${en ? "pack" : "balení"}`;
         const controls = document.createElement('div'); controls.className = 'cart-quantity';
-        const quantity = document.createElement('span'); quantity.textContent = `${item.quantity} ks`;
+        const quantity = document.createElement('span'); quantity.textContent = packs(item.quantity);
         const makeButton = (action: string, text: string, label: string, handler: () => void) => {
           const button = document.createElement('button'); button.type = 'button'; button.textContent = text;
           button.dataset.cartAction = action; button.setAttribute('aria-label', `${label}: ${item.name}, ${item.weight}`);
@@ -231,9 +241,9 @@ const products: Product[] = [
           const target = controlFor(item.key, action);
           (target?.disabled ? controlFor(item.key, 'plus') : target)?.focus();
         };
-        const minus = makeButton('minus', '−', 'Snížit počet', () => adjust(-1, 'minus')); minus.disabled = item.quantity === 1;
-        const plus = makeButton('plus', '+', 'Zvýšit počet', () => adjust(1, 'plus'));
-        const remove = makeButton('remove', 'Odebrat', 'Odebrat položku', () => {
+        const minus = makeButton('minus', '−', t("Snížit počet"), () => adjust(-1, 'minus')); minus.disabled = item.quantity === 1;
+        const plus = makeButton('plus', '+', t("Zvýšit počet"), () => adjust(1, 'plus'));
+        const remove = makeButton('remove', t("Odebrat"), t("Odebrat položku"), () => {
           const index = session.cart.findIndex(line => line.key === item.key);
           session = {...session, cart: removeCoffee(session.cart, item.key)}; renderCart();
           const next = session.cart[Math.min(index, session.cart.length - 1)];
@@ -251,27 +261,27 @@ const products: Product[] = [
         const selected = card.querySelector<HTMLSelectElement>('.weight-select')!.value;
         const line = session.cart.find(item => item.name === card.dataset.name && item.weight === selected);
         const add = card.querySelector<HTMLButtonElement>('.add-cart')!;
-        add.textContent = line ? `Přidat další · ${line.quantity} ks` : 'Do košíku';
-        add.setAttribute('aria-label', `Přidat do košíku: ${card.dataset.name}, ${selected}${line ? `, aktuálně ${line.quantity} ks` : ''}`);
+        add.textContent = line ? (en ? `Add another · ${packs(line.quantity)}` : `Přidat další · ${line.quantity} ks`) : t("Do košíku");
+        add.setAttribute('aria-label', (en ? `Add to basket: ${card.dataset.name}, ${selected}${line ? `, currently ${packs(line.quantity)}` : ''}` : `Přidat do košíku: ${card.dataset.name}, ${selected}${line ? `, aktuálně ${line.quantity} ks` : ''}`));
       });
     };
     const renderOrder = () => {
       operatorOpen.disabled = !session.order;
       if (!session.order) return;
       const order = session.order;
-      const labels = {received: 'Přijato', packing: 'Balíme', ready: 'Připraveno'};
-      get<HTMLElement>('[data-order-id]').textContent = `Objednávka ${order.id} · ${order.count} balení`;
+      const labels = {received: t("Přijato"), packing: t("Balíme"), ready: t("Připraveno")};
+      get<HTMLElement>('[data-order-id]').textContent = (en ? `Order ${order.id} · ${packs(order.count)}` : `Objednávka ${order.id} · ${order.count} balení`);
       get<HTMLElement>('[data-order-status]').textContent = labels[order.status];
       get<HTMLElement>('[data-order-total]').textContent = formatCzk(order.total);
       const lines = get<HTMLElement>('[data-order-lines]'); lines.replaceChildren();
       order.lines.forEach(line => {
         const row = document.createElement('div'); row.className = 'order-line';
-        const info = document.createElement('span'); info.textContent = `${line.name} · ${line.weight} · ${line.quantity} ks × ${formatCzk(line.price)}`;
+        const info = document.createElement('span'); info.textContent = `${line.name} · ${line.weight} · ${packs(line.quantity)} × ${formatCzk(line.price)}`;
         const total = document.createElement('strong'); total.textContent = formatCzk(line.quantity * line.price);
         row.append(info, total); lines.append(row);
       });
       nextStatus.disabled = order.status === 'ready';
-      nextStatus.textContent = order.status === 'received' ? 'Začít balit' : order.status === 'packing' ? 'Označit jako připravené' : 'Připraveno k předání';
+      nextStatus.textContent = order.status === 'received' ? t("Začít balit") : order.status === 'packing' ? t("Označit jako připravené") : t("Připraveno k předání");
     };
     const applyFilter = (button: HTMLButtonElement) => {
       filters.forEach(item => { item.classList.toggle('is-active', item === button); item.setAttribute('aria-pressed', String(item === button)); });
@@ -284,9 +294,9 @@ const products: Product[] = [
       const prices: Record<string, number> = JSON.parse(card.dataset.prices || '{}');
       select.addEventListener('change', () => { price.textContent = formatCzk(prices[select.value]); renderCart(); });
       card.querySelector<HTMLButtonElement>('.add-cart')!.addEventListener('click', () => {
-        session = {...session, cart: addCoffee(session.cart, {name: card.dataset.name || 'Káva', weight: select.value, price: prices[select.value]})};
+        session = {...session, cart: addCoffee(session.cart, {name: card.dataset.name || t("Káva"), weight: select.value, price: prices[select.value]})};
         renderCart(); message.hidden = false;
-        message.textContent = `${card.dataset.name}, ${select.value}: přidáno do košíku.${session.order ? ' Předchozí objednávka zůstává beze změny.' : ''}`;
+        message.textContent = (en ? `${card.dataset.name}, ${select.value}: added to basket.${session.order ? ' The previous order is unchanged.' : ''}` : `${card.dataset.name}, ${select.value}: přidáno do košíku.${session.order ? ' Předchozí objednávka zůstává beze změny.' : ''}`);
       });
     });
     get<HTMLButtonElement>('.cart-open').addEventListener('click', () => { scrollTo(basketTitle); basketTitle.focus({preventScroll: true}); });
@@ -294,28 +304,28 @@ const products: Product[] = [
       const next = placeCoffeeOrder(session);
       if (next === session || !next.order) return;
       session = next; renderCart(); renderOrder();
-      message.hidden = false; message.textContent = `Modelová objednávka ${session.order!.id} je vytvořena: ${formatCzk(session.order!.total)}. Podívejte se, jak pokračuje v pražírně.`;
+      message.hidden = false; message.textContent = (en ? `Demo order ${session.order!.id} created: ${formatCzk(session.order!.total)}. Follow its journey at the roastery.` : `Modelová objednávka ${session.order!.id} je vytvořena: ${formatCzk(session.order!.total)}. Podívejte se, jak pokračuje v pražírně.`);
       operatorOpen.focus();
     });
     operatorOpen.addEventListener('click', () => {
       operator.hidden = !operator.hidden;
       operatorOpen.setAttribute('aria-expanded', String(!operator.hidden));
-      operatorOpen.textContent = operator.hidden ? 'Ukázat objednávku v pražírně ↓' : 'Skrýt pohled pražírny ↑';
+      operatorOpen.textContent = operator.hidden ? t("Ukázat objednávku v pražírně ↓") : t("Skrýt pohled pražírny ↑");
       if (!operator.hidden) { const title = get<HTMLElement>('#operator-title'); scrollTo(operator); title.focus({preventScroll: true}); }
     });
     nextStatus.addEventListener('click', () => { session = advanceCoffeeOrder(session); renderOrder(); if (nextStatus.disabled) get<HTMLElement>('#operator-title').focus({preventScroll: true}); });
     get<HTMLButtonElement>('[data-export]').addEventListener('click', () => {
       if (!session.order) return;
-      const url = URL.createObjectURL(new Blob(['\uFEFF', coffeeOrderCsv(session.order)], {type: 'text/csv;charset=utf-8'}));
-      const link = document.createElement('a'); link.href = url; link.download = `${session.order.id}-kava.csv`; link.hidden = true;
+      const url = URL.createObjectURL(new Blob(['\uFEFF', coffeeOrderCsv(session.order,lang)], {type: 'text/csv;charset=utf-8'}));
+      const link = document.createElement('a'); link.href = url; link.download = `${session.order.id}-${en ? "coffee" : "kava"}.csv`; link.hidden = true;
       page.append(link); link.click(); link.remove(); window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     });
     get<HTMLButtonElement>('[data-reset]').addEventListener('click', () => {
       session = initialCoffeeSession(); renderCart(); renderOrder();
-      operator.hidden = true; operatorOpen.setAttribute('aria-expanded', 'false'); operatorOpen.textContent = 'Ukázat objednávku v pražírně ↓';
+      operator.hidden = true; operatorOpen.setAttribute('aria-expanded', 'false'); operatorOpen.textContent = t("Ukázat objednávku v pražírně ↓");
       get<HTMLElement>('[data-order-lines]').replaceChildren();
       for (const selector of ['[data-order-id]', '[data-order-status]', '[data-order-total]']) get<HTMLElement>(selector).textContent = '';
-      nextStatus.disabled = true; nextStatus.textContent = 'Začít balit';
+      nextStatus.disabled = true; nextStatus.textContent = t("Začít balit");
       applyFilter(filters[0]);
       cards.forEach(card => { const select = card.querySelector<HTMLSelectElement>('.weight-select')!; select.selectedIndex = 0; select.dispatchEvent(new Event('change')); });
       message.hidden = true; message.textContent = '';

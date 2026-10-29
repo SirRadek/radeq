@@ -1,9 +1,12 @@
-import {createInitialState,transition,getProblemSummary,getContactSummary} from './plumber-state.mjs';
+import {demoText} from './demo-i18n.mjs';
+import {createInitialState,transition,getProblemSummary} from './plumber-state.mjs';
 const mounted=new WeakMap();
 /** @param {HTMLElement} root @returns {()=>void} */
 export function mount(root){
+ const lang=root.dataset.lang==='en'?'en':'cs',t=value=>demoText(lang,value);
  if(mounted.has(root))return mounted.get(root);
  let state=createInitialState();
+ const contactSummary=()=>[state.problem?t(getProblemSummary(state).title):t('Typ problému zatím nevybrán.'),state.description.trim()].filter(Boolean).join(' · ');
  const contact=root.querySelector('[data-contact]');
  const explanation=root.querySelector('[data-contact-explanation]');
  const status=root.querySelector('[data-status]');
@@ -16,9 +19,9 @@ export function mount(root){
   radios.forEach(r=>r.checked=r.value===state.problem);
   if(description.value!==state.description)description.value=state.description;
   const help=getProblemSummary(state);
-  title.textContent=help.title;
-  detail.textContent=help.detail;
-  summary.textContent=getContactSummary(state);
+  title.textContent=t(help.title);
+  detail.textContent=t(help.detail);
+  summary.textContent=contactSummary();
   contact.setAttribute('aria-expanded',String(state.contactOpen));
   explanation.hidden=!state.contactOpen;
  }
@@ -28,10 +31,10 @@ export function mount(root){
   if(!target||!root.contains(target))return;
   if(target.matches('[data-contact]')){
    state=transition(state,{type:'contact'});
-   status.textContent=state.contactOpen?'Kontakt v ukázce otevřen. Nic se neodesílá.':'Kontakt v ukázce zavřen.';
+   status.textContent=state.contactOpen?t("Kontakt v ukázce otevřen. Nic se neodesílá."):t("Kontakt v ukázce zavřen.");
   }else if(target.matches('[data-reset]')){
    state=transition(state,{type:'reset'});
-   status.textContent='Ukázka vrácena do výchozího stavu.';
+   status.textContent=t("Ukázka vrácena do výchozího stavu.");
   }
   render();
  }
@@ -45,7 +48,7 @@ export function mount(root){
   if(event.target===description){
    state=transition(state,{type:'description',value:description.value});
    // User text is rendered only as text, including strings that look like HTML.
-   summary.textContent=getContactSummary(state);
+   summary.textContent=contactSummary();
   }
  }
  root.addEventListener('click',click);root.addEventListener('change',change);root.addEventListener('input',input);

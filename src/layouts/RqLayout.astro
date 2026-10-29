@@ -1,10 +1,12 @@
 ---
 import { isPreviewChannel } from '../lib/preview-channel.mjs';
+import ConsentPanel from '../components/ConsentPanel.astro';
 import RqMetadata from '../components/RqMetadata.astro';
 import type { Locale } from '../data/locales';
 import MeasurementTracker from '../components/MeasurementTracker';
 import '../styles/minimal-home-preview.css';
 import '../styles/minimal-site.css';
+import '../styles/studio.css';
 interface Props {
   title: string;
   description: string;
@@ -23,6 +25,7 @@ const siteUrl = Astro.site ?? new URL(Astro.url.origin);
 const canonicalUrl = new URL(canonicalPath ? `${basePath}${canonicalPath}` : Astro.url.pathname, siteUrl).toString();
 const alternateUrl = alternatePath ? new URL(`${basePath}${alternatePath}`, siteUrl).toString() : undefined;
 const ogImageUrl = new URL(`${basePath}/og-default.jpg`, siteUrl).toString();
+const businessSchema={'@context':'https://schema.org','@type':'ProfessionalService','@id':'https://radeq.cz/#business',name:'RadeQ',legalName:'Radek Široký',url:'https://radeq.cz/',email:'siroky@radeq.cz',telephone:'+420730634439',identifier:'IČO 08748811',address:{'@type':'PostalAddress',streetAddress:'Nezamyslova 274/10',addressLocality:'Praha 2',postalCode:'128 00',addressCountry:'CZ'},areaServed:'CZ'};
 const defaultUrl = lang === 'cs' ? canonicalUrl : alternateUrl;
 ---
 
@@ -47,11 +50,17 @@ const defaultUrl = lang === 'cs' ? canonicalUrl : alternateUrl;
         { rel: 'apple-touch-icon', url: basePath + '/apple-touch-icon.png' },
       ]}
     />
+    {!isPreviewChannel && !Astro.props.preview && <script is:inline type="application/ld+json" set:html={JSON.stringify(businessSchema).replaceAll('<','\\u003c')} />}
     <style is:global set:html={`@font-face{font-family:Chillax;src:url('${basePath}/fonts/radeq/chillax.woff2') format('woff2');font-weight:200 700;font-display:swap}@font-face{font-family:'Cabinet Grotesk';src:url('${basePath}/fonts/radeq/cabinet-grotesk.woff2') format('woff2');font-weight:100 900;font-display:swap}`} />
     {(isPreviewChannel || Astro.props.preview) && <meta name="robots" content="noindex,nofollow" />}
   </head>
   <body class="rq-minimal-preview rq-minimal-site">
     {trackEvents && <MeasurementTracker client:idle />}
     <div class="rq-minimal-preview__wrap"><slot /></div>
+    {!isPreviewChannel && !Astro.props.preview && <ConsentPanel lang={lang} />}
   </body>
 </html>
+<script>
+ import {startFaviconMotion} from '../lib/favicon-motion.mjs';
+ startFaviconMotion();
+</script>

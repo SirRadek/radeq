@@ -12,3 +12,9 @@
 
 /favicon.ico
   Cache-Control: public, max-age=604800
+
+/measurement/*
+  ! X-Frame-Options
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: no-referrer
+  X-Robots-Tag: noindex, nofollow

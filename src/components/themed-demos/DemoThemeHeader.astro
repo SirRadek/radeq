@@ -1,5 +1,5 @@
 ---
-interface Props {base:string;theme:'plumber'|'physio'|'workshop'}
-const {base}=Astro.props;
+interface Props {base:string;theme:'plumber'|'physio'|'workshop';lang?:'cs'|'en'}
+const {base,lang='cs',theme}=Astro.props;const en=lang==='en';
 ---
-<header><a class="logo" href={`${base}/`} aria-label="RadeQ — domů"><span aria-hidden="true" style={`--logo:url('${base}/brand/radeq-logo-b-mask.png')`}></span><span class="logo-fallback">RadeQ</span></a><nav aria-label="Navigace ukázky"><a href={`${base}/ukazky/`}>Modelová ukázka</a><a href={`${base}/en/ukazky/`} lang="en">Examples in English</a><a href={`${base}/`}>Zpět na RadeQ</a></nav></header>
+<header><a class="logo" href={`${base}/${lang === 'en' ? 'en/' : ''}`} aria-label={en ? 'RadeQ — home' : 'RadeQ — domů'}><span aria-hidden="true" style={`--logo:url('${base}/brand/radeq-logo-b-mask.png')`}></span><span class="logo-fallback">RadeQ</span></a><nav aria-label={en ? 'Demo navigation' : 'Navigace ukázky'}><a href={`${base}/${lang === 'en' ? 'en/' : ''}ukazky/`}>{en ? 'Example demo' : 'Modelová ukázka'}</a><a href={`${base}/${en ? '' : 'en/'}ukazky/${theme === 'physio' ? 'sluzba' : theme === 'workshop' ? 'provozni-terminal' : 'instalater'}/`} lang={en ? 'cs' : 'en'}>{en ? 'Česky' : 'English'}</a><a href={`${base}/${lang === 'en' ? 'en/' : ''}`}>{lang === 'en' ? 'Back to RadeQ' : 'Zpět na RadeQ'}</a></nav></header>

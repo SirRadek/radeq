@@ -1,0 +1,45 @@
+---
+import {measurement} from '../../data/measurement';
+import {isPreviewChannel} from '../../lib/preview-channel.mjs';
+const config=isPreviewChannel?{ga4:'',sem:''}:measurement;
+---
+<!doctype html><html lang="en"><head><meta charset="utf-8" /><meta name="robots" content="noindex,nofollow" /><meta name="referrer" content="no-referrer" /><title>Measurement</title></head><body>
+<script is:inline define:vars={{config}}>
+(()=>{
+ let initialized=false,loaded=false,purpose='';
+ const send=(type)=>parent.postMessage({type},location.origin);
+ const script=(src,onload)=>{const s=document.createElement('script');s.src=src;s.async=true;s.referrerPolicy='no-referrer';s.onload=onload;document.head.append(s)};
+ window.addEventListener('message',e=>{
+  if(parent===window||e.source!==parent||e.origin!==location.origin)return;
+  if(e.data?.type==='radeq:measurement-init'&&!initialized){
+   const path=e.data.path;
+   if(typeof path!=='string'||!/^\/(?:[a-z0-9-]+\/)*$/.test(path))return;
+   purpose=e.data.purpose;
+   if(purpose!=='analytics'&&purpose!=='marketing')return;
+   initialized=true;
+   // Clean document URL and empty referrer prevent automatic SDK metadata leaks.
+   history.replaceState(null,'',path);document.title='RadeQ';
+   if(purpose==='analytics'&&/^G-[A-Z0-9]+$/.test(config.ga4)){
+    window.dataLayer=[];window.gtag=function(){dataLayer.push(arguments)};
+    gtag('consent','default',{analytics_storage:'granted',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});
+    gtag('js',new Date());
+    gtag('config',config.ga4,{send_page_view:false,page_location:location.origin+path,page_referrer:'',allow_google_signals:false,allow_ad_personalization_signals:false,cookie_expires:15552000});
+    script('https://www.googletagmanager.com/gtag/js?id='+encodeURIComponent(config.ga4),()=>{loaded=true;gtag('event','page_view',{page_location:location.origin+path,page_referrer:''});send('radeq:measurement-loaded')});
+   }
+   if(purpose==='marketing'&&/^[a-z0-9]+$/.test(config.sem)){
+    script('https://l.seznam.cz/sul.js?id='+encodeURIComponent(config.sem),()=>{
+     if(typeof window.SEM!=='function')return;
+     SEM('updateConsent',{consent_mode:{ad_storage:'granted',ad_user_data:'granted',ad_personalization:'granted',functionality_storage:'denied',analytics_storage:'denied'}});
+     SEM('track','PageView');loaded=true;send('radeq:measurement-loaded');
+    });
+   }
+  }
+  if(e.data?.type==='radeq:lead-received'&&loaded){
+   if(purpose==='analytics')gtag('event','generate_lead',{page_location:location.origin+location.pathname,page_referrer:''});
+   if(purpose==='marketing')SEM('track','Lead');
+  }
+ });
+ if(parent!==window)send('radeq:measurement-ready');
+})();
+</script>
+</body></html>

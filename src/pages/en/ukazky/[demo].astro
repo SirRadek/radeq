@@ -1,0 +1,12 @@
+---
+import Plumber from '../../../components/showcases/PlumberShowcase.astro';
+import Booking from '../../../components/showcases/BookingShowcase.astro';
+import Workshop from '../../../components/showcases/WorkshopShowcase.astro';
+import Coffee from '../../../components/showcases/CoffeeShowcase.astro';
+export function getStaticPaths() {
+  return ['instalater', 'sluzba', 'provozni-terminal', 'eshop'].map(demo => ({params: {demo}}));
+}
+const demos = {instalater: Plumber, sluzba: Booking, 'provozni-terminal': Workshop, eshop: Coffee};
+const Component = demos[Astro.params.demo as keyof typeof demos];
+---
+<Component lang="en" />

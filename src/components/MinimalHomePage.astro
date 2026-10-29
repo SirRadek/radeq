@@ -24,6 +24,7 @@ const starts = lang === 'en' ? [
           <p class="rq-minimal-preview__intro-detail">{lang === "en" ? 'A clear website, easier bookings or connected records. We start with what would help your work most.' : 'Srozumitelný web, jednodušší rezervace nebo propojená evidence. Začneme tím, co vaší práci pomůže nejvíc.'}</p>
           <p class="rq-home-price">{lang === 'en' ? 'One-page website' : 'Jednostránkový web'} <strong>{lang === 'en' ? 'from CZK 10,000' : 'od 10 000 Kč'}</strong></p>
           <div class="rq-home-actions"><a class="rq-minimal-preview__cta" href="#kontakt">{lang === "en" ? 'Discuss your project' : 'Probrat projekt'}</a><a href="#ceny">{lang === 'en' ? 'View prices' : 'Prohlédnout ceny'} <span aria-hidden="true">↗</span></a></div>
+          <a class="rq-home-audit" href="#audit"><span>{homeContent[lang].pricing.audit.title}</span><span class="rq-starts__audit-price">{homeContent[lang].pricing.audit.price} <span aria-hidden="true">↗</span></span></a>
           <p class="rq-home-response">{lang === 'en' ? 'No obligation. I reply within one working day.' : 'Nezávazně. Ozvu se do 1 pracovního dne.'}</p>
           </div>
           <nav class="rq-starts" aria-label={lang === 'en' ? 'Where can we start?' : 'Kde můžeme začít?'}>
@@ -46,10 +47,39 @@ const starts = lang === 'en' ? [
             <li><strong>{lang === "en" ? 'Hand over and explain' : 'Předat a vysvětlit'}</strong><p>{lang === "en" ? 'You receive source code, access to your accounts, a short guide and training.' : 'Dostanete zdrojový kód, přístupy, stručný návod a zaškolení.'}</p></li>
           </ol>
           <p class="rq-handoff">{lang === 'en' ? 'Your website and source code are handed over to accounts you own. You receive a record of the work and agreed next steps. Post-launch care is arranged separately.' : 'Web i zdrojový kód předám pod vaše vlastní účty. Dostanete přehled provedené práce a domluvených dalších kroků. Péči po spuštění domluvíme zvlášť.'}</p>
+          <div class="rq-disclosures">
+            <details id="predani-podrobnosti" class="rq-disclosure">
+              <summary><span>{lang === 'en' ? 'What you receive' : 'Co přesně převezmete'}</span><span class="rq-disclosure__mark" aria-hidden="true"></span></summary>
+              <div class="rq-disclosure__body">
+                <p>{lang === 'en' ? 'We go through the finished solution together, so you know where to find everything and how to use it.' : 'Hotové řešení projdeme společně, abyste věděli, kde co najít a jak s ním pracovat.'}</p>
+                <ul>
+                  <li>{lang === 'en' ? 'Source code and access under your own accounts.' : 'Zdrojový kód a přístupy pod vašimi účty.'}</li>
+                  <li>{lang === 'en' ? 'A short guide and training for everyday use.' : 'Stručný návod a zaškolení pro běžnou práci.'}</li>
+                  <li>{lang === 'en' ? 'A record of completed work and agreed next steps.' : 'Přehled hotové práce a domluvených dalších kroků.'}</li>
+                </ul>
+                <p>{lang === 'en' ? 'You can continue with another developer. Care after launch is a separate service, agreed with you in advance.' : 'Můžete pokračovat i s jiným vývojářem. Péče po spuštění je samostatná služba, kterou domluvíme předem.'}</p>
+              </div>
+            </details>
+            <details id="overeni-podrobnosti" class="rq-disclosure">
+              <summary><span>{lang === 'en' ? 'How we check the result' : 'Jak ověříme výsledek'}</span><span class="rq-disclosure__mark" aria-hidden="true"></span></summary>
+              <div class="rq-disclosure__body">
+                <p>{lang === 'en' ? 'We agree what the solution needs to do before work starts. Before handover, we check the main tasks, common error cases and, for websites, how it works on mobile.' : 'Předem domluvíme, co má řešení splnit. Před předáním projdeme hlavní úkoly, běžné chybové stavy a u webu i použití na mobilu.'}</p>
+                <p>{lang === 'en' ? 'The handover record explains what is finished, what we checked and which next steps make sense. Any changes beyond the agreed scope are discussed first.' : 'Do přehledu práce zapíšu, co je hotové, co jsme ověřili a které další kroky dávají smysl. Změny mimo domluvený rozsah si nejdřív odsouhlasíme.'}</p>
+              </div>
+            </details>
+          </div>
         </section>
         <span id="about"></span><section id="autor" aria-labelledby="autor-nadpis" class="rq-minimal-preview__about">
           <h2 id="autor-nadpis">{lang === "en" ? 'Who is behind RadeQ' : 'Kdo za tím stojí'}</h2>
-          <div><p class="rq-minimal-preview__author">{homeContent[lang].about.name}</p><p>{lang === "en" ? 'I run RadeQ personally. You work with me on the design, build and handoff, and know whom to ask.' : 'RadeQ vedu osobně. Návrh, realizaci i předání řešíte se mnou — víte, s kým mluvíte a koho se zeptat.'}</p><p>{lang === "en" ? 'I help turn everyday problems into clear tasks and useful solutions. We choose technology based on the work it should simplify.' : 'Pomáhám převést každodenní problém do srozumitelného zadání a použitelného řešení. Technologie vybíráme podle práce, kterou mají usnadnit.'}</p></div>
+          <div><p class="rq-minimal-preview__author">{homeContent[lang].about.name}</p><p>{lang === "en" ? 'I run RadeQ personally. You work with me on the design, build and handoff, and know whom to ask.' : 'RadeQ vedu osobně. Návrh, realizaci i předání řešíte se mnou — víte, s kým mluvíte a koho se zeptat.'}</p><p>{lang === "en" ? 'I help turn everyday problems into clear tasks and useful solutions. We choose technology based on the work it should simplify.' : 'Pomáhám převést každodenní problém do srozumitelného zadání a použitelného řešení. Technologie vybíráme podle práce, kterou mají usnadnit.'}</p>
+            <div class="rq-disclosures">
+              <details id="zkusenosti-podrobnosti" class="rq-disclosure">
+                <summary><span>{lang === 'en' ? 'Experience behind the work' : 'Zkušenosti za mou prací'}</span><span class="rq-disclosure__mark" aria-hidden="true"></span></summary>
+                <div class="rq-disclosure__body">{homeContent[lang].about.paragraphs.slice(1, 3).map(paragraph => <p>{paragraph}</p>)}</div>
+              </details>
+
+            </div>
+          </div>
         </section>
         <span id="terminal"></span><span id="contact"></span><section id="kontakt" aria-labelledby="kontakt-nadpis" class="rq-minimal-preview__contact">
           <h2 id="kontakt-nadpis">{lang === "en" ? 'Let’s discuss your project' : 'Pojďme probrat váš záměr'}</h2>

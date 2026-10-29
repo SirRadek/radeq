@@ -1,0 +1,64 @@
+20:44:46 [types] Generated 370ms
+20:44:46 [build] output: "static"
+20:44:46 [build] mode: "static"
+20:44:46 [build] directory: C:\Users\sirok\Documents\ChatGPT\RadeQ\app\docs\audits\2026-10-09-themed-demos\build-1793216670490\root\dist\
+20:44:46 [build] Collecting build info...
+20:44:46 [build] ✓ Completed in 686ms.
+20:44:46 [build] Building static entrypoints...
+20:45:05 [vite] ✓ built in 18.56s
+20:45:12 [vite] ✓ built in 6.60s
+20:45:12 [build] Rearranging server assets...
+
+ generating static routes 
+20:45:13   ├─ /audit/index.html (+232ms) 
+20:45:13   ├─ /demo/blog-docs/index.html (+64ms) 
+20:45:13   ├─ /demo/service-landing/index.html (+47ms) 
+20:45:13   ├─ /demo/admin-dashboard/index.html (+32ms) 
+20:45:13   ├─ /demo/eshop-offers/index.html (+87ms) 
+20:45:13   ├─ /en/audit/index.html (+51ms) 
+20:45:13   ├─ /en/demo/blog-docs/index.html (+22ms) 
+20:45:13   ├─ /en/demo/service-landing/index.html (+24ms) 
+20:45:13   ├─ /en/demo/admin-dashboard/index.html (+21ms) 
+20:45:13   ├─ /en/demo/eshop-offers/index.html (+28ms) 
+20:45:13   ├─ /en/kontakt/index.html (+33ms) 
+20:45:13   ├─ /en/sluzby/index.html (+31ms) 
+20:45:13   ├─ /en/soukromi/index.html (+37ms) 
+20:45:13   ├─ /en/spoluprace/index.html (+29ms) 
+20:45:13   ├─ /en/ukazky/instalater/index.html (+14ms) 
+20:45:13   ├─ /en/ukazky/sluzba/index.html (+16ms) 
+20:45:13   ├─ /en/ukazky/provozni-terminal/index.html (+12ms) 
+20:45:13   ├─ /en/ukazky/eshop/index.html (+20ms) 
+20:45:13   ├─ /en/ukazky/index.html (+42ms) 
+20:45:14   ├─ /en/index.html (+49ms) 
+20:45:14   ├─ /kontakt/index.html (+27ms) 
+20:45:14   ├─ /measurement/index.html (+24ms) 
+20:45:14   ├─ /minimalni-navrh/ukazky/instalater/index.html (+24ms) 
+20:45:14   ├─ /minimalni-navrh/ukazky/provozni-terminal/index.html (+23ms) 
+20:45:14   ├─ /minimalni-navrh/ukazky/sluzba/index.html (+23ms) 
+20:45:14   ├─ /minimalni-navrh/ukazky/index.html (+22ms) 
+20:45:14   ├─ /minimalni-navrh/index.html (+28ms) 
+20:45:14   ├─ /portfolio/index.html (+25ms) 
+20:45:14   ├─ /robots.txt (+13ms) 
+20:45:14   ├─ /sitemap.xml (+16ms) 
+20:45:14   ├─ /sluzby/index.html (+32ms) 
+20:45:14   ├─ /soukromi/index.html (+43ms) 
+20:45:14   ├─ /spoluprace/index.html (+31ms) 
+20:45:14   ├─ /ukazky/chatbot/index.html (+60ms) 
+20:45:14   ├─ /ukazky/eshop/index.html (+30ms) 
+20:45:14   ├─ /ukazky/eshop-system/index.html (+38ms) 
+20:45:14   ├─ /ukazky/instalater/index.html (+23ms) 
+20:45:14   ├─ /ukazky/provozni-terminal/index.html (+23ms) 
+20:45:14   ├─ /ukazky/sluzba/index.html (+21ms) 
+20:45:14   ├─ /ukazky/automatizace/index.html (+19ms) 
+20:45:14   ├─ /ukazky/nabidka-eshop/index.html (+19ms) 
+20:45:14   ├─ /ukazky/index.html (+25ms) 
+20:45:14   ├─ /zapisky/jak-se-staram-o-web-po-predani/index.html (+32ms) 
+20:45:14   ├─ /zapisky/vlastni-eshop-nebo-shoptet/index.html (+30ms) 
+20:45:14   ├─ /zapisky/web-pro-zivnostnika-cena/index.html (+89ms) 
+20:45:14   ├─ /zapisky/index.html (+97ms) 
+20:45:14   ├─ /index.html (+33ms) 
+20:45:14 ✓ Completed in 2.49s.
+
+20:45:15 [build] ✓ Completed in 28.46s.
+20:45:15 [build] 45 page(s) built in 29.16s
+20:45:15 [build] Complete!

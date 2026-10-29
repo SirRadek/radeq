@@ -36,4 +36,14 @@ const brandAriaLabel = content.brandAriaLabel ?? "RadeQ.cz";
 const homeHref = content.homeHref ?? modernHome;
 ---
 
-<header class="rq-minimal-header"><a class="rq-minimal-preview__logo" href={resolve(homeHref)} aria-label={brandAriaLabel} style={`--logo-mask:url("${logoMask}")`}><span aria-hidden="true"></span></a><nav aria-label={navAriaLabel}>{navItems.map(item=><a href={resolve(item.href)}>{item.label}</a>)}{alternateLabel && alternatePath && <a href={resolve(alternatePath)} lang={alternateLabel.toLowerCase()}>{alternateLabel}</a>}</nav></header>
+<header class="rq-minimal-header rq-studio-header">
+ <a class="rq-minimal-preview__logo" href={resolve(homeHref)} aria-label={brandAriaLabel} style={`--logo-mask:url("${logoMask}")`}><span aria-hidden="true"></span></a>
+ <nav class="rq-desktop-nav" aria-label={navAriaLabel}>{navItems.map(item=><a href={resolve(item.href)}>{item.label}</a>)}</nav>
+ <div class="rq-language" aria-label={en?'Language':'Jazyk'}><span lang={en?'en':'cs'} aria-current="true">{en?'EN':'CS'}</span>{alternateLabel && alternatePath && <a href={resolve(alternatePath)} lang={alternateLabel.toLowerCase()}>{alternateLabel}</a>}</div>
+ <details class="rq-mobile-menu"><summary>{en?'Menu':'Menu'}</summary><nav aria-label={en?'Mobile navigation':'Mobilní navigace'}>{navItems.map(item=><a href={resolve(item.href)}>{item.label}</a>)}</nav></details>
+</header>
+<script>
+ document.querySelectorAll<HTMLDetailsElement>('.rq-mobile-menu').forEach(menu=>{
+  menu.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{menu.open=false;}));
+ });
+</script>

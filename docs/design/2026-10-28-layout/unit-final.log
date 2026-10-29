@@ -1,0 +1,205 @@
+
+ RUN  v4.1.5 C:/Users/sirok/Documents/ChatGPT/RadeQ/app
+
+19:59:45 [vite] (ssr) Failed to load source map for C:/Users/sirok/Documents/ChatGPT/RadeQ/app/release/production-backend.js.
+Error: An error occurred while trying to read the map file at index.js.map
+Error: ENOENT: no such file or directory, open 'C:\Users\sirok\Documents\ChatGPT\RadeQ\app\release\index.js.map'
+    at open (node:internal/fs/promises:640:25)
+    at Object.readFile (node:internal/fs/promises:1287:14)
+    at extractSourcemapFromFile (file:///C:/Users/sirok/Documents/ChatGPT/RadeQ/app/node_modules/vite/dist/node/chunks/config.js:8066:65)
+    at loadAndTransform (file:///C:/Users/sirok/Documents/ChatGPT/RadeQ/app/node_modules/vite/dist/node/chunks/config.js:22657:22)
+stdout | tests/metadata-adoption.test.mjs > actual RqLayout URL policy and metadata contract > builds root/subpath /radeq CS/EN and optional metadata cases; mutations fail
+RED observable omission + duplication rejected; GREEN /radeq cs
+RED observable omission + duplication rejected; GREEN /radeq en
+RED observable omission + duplication rejected; GREEN /radeq noalternate
+RED observable omission + duplication rejected; GREEN /radeq fallback
+RED observable omission + duplication rejected; GREEN /radeq guard
+
+ ❯ tests/metadata-adoption.test.mjs (2 tests | 1 failed) 123064ms
+     × builds root/subpath /radeq CS/EN and optional metadata cases; mutations fail 70787ms
+ ❯ tests/minimal-home-preview.test.mjs (2 tests | 1 failed) 135319ms
+     × compiles current public content, metadata and four portals under base /radeq 77041ms
+stdout | tests/contact-optionality.test.mjs
+20:00:04 [types] Generated 404ms
+20:00:04 [build] output: "static"
+20:00:04 [build] mode: "static"
+20:00:04 [build] directory: C:\Users\sirok\Documents\ChatGPT\RadeQ\app\.rq-optionality-fixture-zVGOK0\dist\
+20:00:04 [build] Collecting build info...
+20:00:04 [build] ✓ Completed in 2.12s.
+20:00:04 [build] Building static entrypoints...
+20:00:30 [vite] ✓ built in 25.52s
+20:00:41 [vite] ✓ built in 11.89s
+20:00:42 [build] Rearranging server assets...
+
+ generating static routes 
+20:00:43   ├─ /audit/index.html (+797ms) 
+20:00:44   ├─ /demo/blog-docs/index.html (+386ms) 
+20:00:45   ├─ /demo/service-landing/index.html (+133ms) 
+20:00:45   ├─ /demo/admin-dashboard/index.html (+19ms) 
+20:00:45   ├─ /demo/eshop-offers/index.html (+218ms) 
+20:00:45   ├─ /en/audit/index.html (+83ms) 
+20:00:45   ├─ /en/demo/blog-docs/index.html (+146ms) 
+20:00:45   ├─ /en/demo/service-landing/index.html (+84ms) 
+20:00:45   ├─ /en/demo/admin-dashboard/index.html (+62ms) 
+20:00:45   ├─ /en/demo/eshop-offers/index.html (+165ms) 
+20:00:45   ├─ /en/kontakt/index.html (+90ms) 
+20:00:46   ├─ /en/sluzby/index.html (+110ms) 
+20:00:46   ├─ /en/soukromi/index.html (+66ms) 
+20:00:46   ├─ /en/spoluprace/index.html (+43ms) 
+20:00:46   ├─ /en/ukazky/instalater/index.html (+12ms) 
+20:00:46   ├─ /en/ukazky/sluzba/index.html (+215ms) 
+20:00:46   ├─ /en/ukazky/provozni-terminal/index.html (+21ms) 
+20:00:46   ├─ /en/ukazky/eshop/index.html (+13ms) 
+20:00:46   ├─ /en/ukazky/index.html (+136ms) 
+20:00:46   ├─ /en/index.html (+135ms) 
+20:00:46   ├─ /kontakt/index.html (+300ms) 
+20:00:47   ├─ /measurement/index.html (+38ms) 
+20:00:47   ├─ /minimalni-navrh/ukazky/instalater/index.html (+146ms) 
+20:00:47   ├─ /minimalni-navrh/ukazky/provozni-terminal/index.html (+142ms) 
+20:00:47   ├─ /minimalni-navrh/ukazky/sluzba/index.html (+66ms) 
+20:00:47   ├─ /minimalni-navrh/ukazky/index.html (+222ms) 
+20:00:47   ├─ /minimalni-navrh/index.html (+23ms) 
+20:00:47   ├─ /portfolio/index.html (+226ms) 
+20:00:47   ├─ /robots.txt (+29ms) 
+20:00:48   ├─ /sitemap.xml (+29ms) 
+20:00:48   ├─ /sluzby/index.html (+150ms) 
+20:00:48   ├─ /soukromi/index.html (+16ms) 
+20:00:48   ├─ /spoluprace/index.html (+84ms) 
+20:00:48   ├─ /ukazky/chatbot/index.html (+86ms) 
+20:00:48   ├─ /ukazky/eshop/index.html (+30ms) 
+20:00:48   ├─ /ukazky/eshop-system/index.html (+50ms) 
+20:00:48   ├─ /ukazky/instalater/index.html (+18ms) 
+20:00:48   ├─ /ukazky/provozni-terminal/index.html (+189ms) 
+20:00:48   ├─ /ukazky/sluzba/index.html (+25ms) 
+20:00:48   ├─ /ukazky/automatizace/index.html (+126ms) 
+20:00:48   ├─ /ukazky/nabidka-eshop/index.html (+14ms) 
+20:00:48   ├─ /ukazky/index.html (+51ms) 
+20:00:48   ├─ /zapisky/jak-se-staram-o-web-po-predani/index.html (+224ms) 
+20:00:49   ├─ /zapisky/vlastni-eshop-nebo-shoptet/index.html (+41ms) 
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/contact-optionality.test.mjs [ tests/contact-optionality.test.mjs ]
+Error: Hook timed out in 120000ms.
+If this is a long-running hook, pass a timeout value as the last argument or configure it globally with "hookTimeout".
+ ❯ tests/contact-optionality.test.mjs:54:10
+     52|
+     53| const root = process.cwd(); const fixtures = [];
+     54| beforeAll(() => {
+       |          ^
+     55|   for (const base of ['/', '/preview/']) {
+     56|     const scratch = mkdtempSync(join(root, '.rq-optionality-fixture-')…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/metadata-adoption.test.mjs > actual RqLayout URL policy and metadata contract > builds root/subpath /radeq CS/EN and optional metadata cases; mutations fail
+Error: Test timed out in 60000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/metadata-adoption.test.mjs:21:26
+     19| }
+     20| describe('actual RqLayout URL policy and metadata contract', () => {
+     21|   it.each(['', '/radeq'])('builds root/subpath %s CS/EN and optional m…
+       |                          ^
+     22|     const scratch = mkdtempSync(join(root, '.rq-metadata-fixture-'));
+     23|     try {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/minimal-home-preview.test.mjs > unified minimalist homepage and local design route > compiles current public content, metadata and four portals under base /radeq
+Error: Test timed out in 60000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/minimal-home-preview.test.mjs:13:26
+20:00:49   ├─ /zapisky/web-pro-zivnostnika-cena/index.html (+31ms) 
+20:00:49   ├─ /zapisky/index.html (+18ms) 
+20:00:49   ├─ /index.html (+198ms) 
+20:00:49 ✓ Completed in 6.92s.
+
+20:00:49 [build] ✓ Completed in 45.84s.
+20:00:49 [build] 45 page(s) built in 47.97s
+20:00:49 [build] Complete!
+
+20:01:33 [types] Generated 3.44s
+20:01:33 [build] output: "static"
+20:01:33 [build] mode: "static"
+20:01:33 [build] directory: C:\Users\sirok\Documents\ChatGPT\RadeQ\app\.rq-optionality-fixture-xGwHSP\dist\
+20:01:33 [build] Collecting build info...
+20:01:33 [build] ✓ Completed in 5.53s.
+20:01:33 [build] Building static entrypoints...
+20:02:08 [vite] ✓ built in 34.45s
+20:02:27 [vite] ✓ built in 18.48s
+20:02:27 [build] Rearranging server assets...
+
+ generating static routes 
+20:02:28   ├─ /audit/index.html (+428ms) 
+20:02:29   ├─ /demo/blog-docs/index.html (+177ms) 
+20:02:29   ├─ /demo/service-landing/index.html (+107ms) 
+20:02:29   ├─ /demo/admin-dashboard/index.html (+44ms) 
+20:02:29   ├─ /demo/eshop-offers/index.html (+19ms) 
+20:02:29   ├─ /en/audit/index.html (+125ms) 
+20:02:29   ├─ /en/demo/blog-docs/index.html (+114ms) 
+20:02:29   ├─ /en/demo/service-landing/index.html (+102ms) 
+20:02:29   ├─ /en/demo/admin-dashboard/index.html (+18ms) 
+20:02:29   ├─ /en/demo/eshop-offers/index.html (+112ms) 
+20:02:30   ├─ /en/kontakt/index.html (+21ms) 
+20:02:30   ├─ /en/sluzby/index.html (+67ms) 
+20:02:30   ├─ /en/soukromi/index.html (+130ms) 
+20:02:30   ├─ /en/spoluprace/index.html (+37ms) 
+20:02:30   ├─ /en/ukazky/instalater/index.html (+89ms) 
+20:02:30   ├─ /en/ukazky/sluzba/index.html (+17ms) 
+20:02:30   ├─ /en/ukazky/provozni-terminal/index.html (+13ms) 
+20:02:30   ├─ /en/ukazky/eshop/index.html (+22ms) 
+20:02:30   ├─ /en/ukazky/index.html (+77ms) 
+20:02:30   ├─ /en/index.html (+59ms) 
+20:02:30   ├─ /kontakt/index.html (+42ms) 
+20:02:30   ├─ /measurement/index.html (+21ms) 
+20:02:30   ├─ /minimalni-navrh/ukazky/instalater/index.html (+54ms) 
+20:02:30   ├─ /minimalni-navrh/ukazky/provozni-terminal/index.html (+24ms) 
+20:02:30   ├─ /minimalni-navrh/ukazky/sluzba/index.html (+36ms) 
+20:02:30   ├─ /minimalni-navrh/ukazky/index.html (+55ms) 
+20:02:30   ├─ /minimalni-navrh/index.html (+44ms) 
+20:02:30   ├─ /portfolio/index.html (+105ms) 
+20:02:30   ├─ /robots.txt (+64ms) 
+20:02:31   ├─ /sitemap.xml (+33ms) 
+20:02:31   ├─ /sluzby/index.html (+31ms) 
+20:02:31   ├─ /soukromi/index.html (+25ms) 
+20:02:31   ├─ /spoluprace/index.html (+86ms) 
+20:02:31   ├─ /ukazky/chatbot/index.html (+269ms) 
+20:02:31   ├─ /ukazky/eshop/index.html (+49ms) 
+20:02:31   ├─ /ukazky/eshop-system/index.html (+50ms) 
+20:02:31   ├─ /ukazky/instalater/index.html (+30ms) 
+20:02:31   ├─ /ukazky/provozni-terminal/index.html (+36ms) 
+20:02:31   ├─ /ukazky/sluzba/index.html (+49ms) 
+20:02:31   ├─ /ukazky/automatizace/index.html (+44ms) 
+20:02:31   ├─ /ukazky/nabidka-eshop/index.html (+39ms) 
+20:02:31   ├─ /ukazky/index.html (+108ms) 
+20:02:31   ├─ /zapisky/jak-se-staram-o-web-po-predani/index.html (+50ms) 
+20:02:31   ├─ /zapisky/vlastni-eshop-nebo-shoptet/index.html (+50ms) 
+20:02:31   ├─ /zapisky/web-pro-zivnostnika-cena/index.html (+112ms) 
+20:02:32   ├─ /zapisky/index.html (+47ms) 
+20:02:32   ├─ /index.html (+46ms) 
+20:02:32 ✓ Completed in 4.76s.
+
+20:02:32 [build] ✓ Completed in 58.56s.
+20:02:32 [build] 45 page(s) built in 64.11s
+20:02:32 [build] Complete!
+
+
+ ❯ tests/contact-optionality.test.mjs (20 tests | 20 skipped) 176015ms
+     11|
+     12| describe('unified minimalist homepage and local design route', () => {
+     13|   it.each(['', '/radeq'])('compiles current public content, metadata a…
+       |                          ^
+     14|     const scratch = mkdtempSync(join(root, '.rq-minimal-fixture-'));
+     15|     try {
+
+ Test Files  3 failed | 22 passed | 3 skipped (28)
+      Tests  2 failed | 119 passed | 21 skipped (142)
+   Start at  19:59:34
+   Duration  179.48s (transform 12.31s, setup 0ms, import 15.38s, tests 579.11s, environment 23ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+

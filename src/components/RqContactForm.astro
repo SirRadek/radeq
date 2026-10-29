@@ -1,4 +1,5 @@
 ---
+import { turnstileSiteKey } from '../data/site-config';
 import PreviewEmailContact from './PreviewEmailContact.astro';
 import { isPreviewChannel } from '../lib/preview-channel.mjs';
 import type { HomeContent } from '../data/home';
@@ -16,9 +17,8 @@ const resolve = (href: string) => {
   if (base && (href === base || href.startsWith(`${base}/`))) return href;
   return `${base}${href}`;
 };
-const turnstileSiteKey = (import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '').toString().trim();
 const verifyLabel = lang === 'en' ? 'Verify you are not a robot' : 'Ověření, že nejste robot';
-const doneTitle = lang === 'en' ? 'Enquiry sent ✓' : 'Poptávka odeslána ✓';
+const doneTitle = lang === 'en' ? 'Enquiry received ✓' : 'Poptávka přijata ✓';
 const turnstileNote = lang === 'en'
   ? 'The form is protected by Cloudflare Turnstile — usually silent, no clicking needed.'
   : 'Formulář chrání Cloudflare Turnstile — většinou bez klikání, jen tiše na pozadí.';
@@ -28,12 +28,12 @@ const turnstileNote = lang === 'en'
 <form class="rq-contact-form" method="post" action={resolve('/api/leads')} id="rq-lead-form">
   <div class="rq-form-field">
     <label for="rq-lead-name">{content.fields.name}</label>
-    <input id="rq-lead-name" name="name" type="text" autocomplete="name" required />
+    <input maxlength="90" id="rq-lead-name" name="name" type="text" autocomplete="name" required />
   </div>
 
   <div class="rq-form-field">
     <label for="rq-lead-email">{content.fields.email}</label>
-    <input id="rq-lead-email" name="email" type="email" autocomplete="email" required />
+    <input maxlength="160" id="rq-lead-email" name="email" type="email" autocomplete="email" required />
   </div>
 
   <div class="rq-form-field">
@@ -45,7 +45,7 @@ const turnstileNote = lang === 'en'
 
   <div class="rq-form-field">
     <label for="rq-lead-need">{content.fields.message}</label>
-    <textarea id="rq-lead-need" name="message" rows="6" required></textarea>
+    <textarea maxlength="1200" id="rq-lead-need" name="message" rows="6" required></textarea>
   </div>
 
   <details class="rq-form-optional">
@@ -59,7 +59,7 @@ const turnstileNote = lang === 'en'
       </div>
       <div class="rq-form-field">
         <label for="rq-lead-deadline">{content.fields.deadline}</label>
-        <input id="rq-lead-deadline" name="deadline" type="text" autocomplete="off" placeholder={content.fields.deadlinePlaceholder} />
+        <input maxlength="80" id="rq-lead-deadline" name="deadline" type="text" autocomplete="off" placeholder={content.fields.deadlinePlaceholder} />
       </div>
     </div>
   </details>
@@ -73,6 +73,8 @@ const turnstileNote = lang === 'en'
       <p class="rq-turnstile-note">{turnstileNote}</p>
     </div>
   ) : null}
+  <p class="rq-form-legal">{lang === 'en' ? 'A non-binding enquiry, not an order. If you leave the category blank, it is sent as “General enquiry”.' : 'Nezávazná poptávka, nikoli objednávka. Bez výběru kategorie ji odešleme jako „Obecná poptávka“.'} <a href={resolve(lang === 'en' ? '/en/soukromi/' : '/soukromi/')}>{lang === 'en' ? 'Privacy' : 'Soukromí'}</a> · <a href={resolve(lang === 'en' ? '/en/spoluprace/' : '/spoluprace/')}>{lang === 'en' ? 'How we work together' : 'Podmínky spolupráce'}</a></p>
+  <noscript><p>{lang === 'en' ? 'Please enable JavaScript to use the protected form, or email' : 'Pro chráněný formulář zapněte JavaScript, nebo napište na'} <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a>.</p></noscript>
   <button class="rq-btn rq-btn--primary" type="submit">{content.submitLabel}</button>
   <p class="rq-form-status" id="rq-lead-status" role="status" aria-live="polite"></p>
 </form>
@@ -82,6 +84,10 @@ const turnstileNote = lang === 'en'
   <p class="rq-contact-done__text">{content.status.success}</p>
 </div>
 
+<script>
+  import { buildLeadPayload, createSubmissionController } from '../lib/contact-client.mjs';
+  window.dispatchEvent(new CustomEvent('radeq:contact-ready', {detail:{buildLeadPayload,createSubmissionController}}));
+</script>
 <script is:inline define:vars={{
   leadsUrl: resolve('/api/leads'),
   leadLocale: lang,
@@ -92,7 +98,7 @@ const turnstileNote = lang === 'en'
   doneLeadHtml: content.doneLeadHtml,
   turnstileSiteKey,
 }}>
-  (() => {
+  window.addEventListener("radeq:contact-ready", ({detail: {buildLeadPayload,createSubmissionController}}) => {
     const form = document.getElementById("rq-lead-form");
     const statusEl = document.getElementById("rq-lead-status");
     if (!form) return;
@@ -170,8 +176,12 @@ const turnstileNote = lang === 'en'
       return input && input.value ? input.value : "";
     }
 
+    const button = form.querySelector('button[type="submit"]');
+    const submitter = createSubmissionController({fetch: window.fetch.bind(window), onSuccess: () => window.dispatchEvent(new Event('radeq:lead-received'))});
+    let submitting = false;
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      if (submitting || !form.reportValidity()) return;
       const fd = new FormData(form);
       if (fd.get("honeypot")) return;
 
@@ -188,26 +198,16 @@ const turnstileNote = lang === 'en'
         }
       }
 
-      const payload = {
-        name: fd.get("name") || "", email: fd.get("email") || "",
-        project_type: fd.get("project_type") || "", message: fd.get("message") || "",
-        company: "", audience: "", deadline: fd.get("deadline") || "", current_url: currentUrlHint, budget_range: fd.get("budget_range") || "",
-        honeypot: "", source_path: location.pathname + location.search,
-        referrer: document.referrer || "", locale: leadLocale
-      };
+      const payload = buildLeadPayload(fd,{locale:leadLocale,path:location.pathname,referrer:document.referrer,currentUrl:currentUrlHint});
       if (turnstileEnabled) payload.turnstileToken = submittedToken;
 
       statusEl.textContent = statusSending;
+      submitting = true;
+      button.disabled = true;
+      form.setAttribute('aria-busy','true');
       try {
-        const r = await fetch(leadsUrl, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
-        const ct = r.headers.get("content-type") || "";
-        if (!ct.includes("application/json")) throw new Error("nojson");
-        const res = await r.json();
-        if (!r.ok || !res.ok) {
-          const serverMsg = res && typeof res.error === "string" ? res.error : "";
-          if (serverMsg) { statusEl.textContent = serverMsg; return; }
-          throw new Error("fail");
-        }
+        const outcome = await submitter.submit(leadsUrl, payload);
+        if (outcome !== 'received') throw new Error('receipt');
         form.reset();
         const done = document.getElementById("rq-lead-done");
         if (done) {
@@ -226,13 +226,16 @@ const turnstileNote = lang === 'en'
       } catch (err) {
         statusEl.innerHTML = statusFailureHtml;
       } finally {
+        submitting = false;
+        button.disabled = false;
+        form.removeAttribute('aria-busy');
         if (turnstileEnabled && turnstileWidgetId && window.turnstile) {
-          window.turnstile.reset(turnstileWidgetId);
           turnstileToken = "";
+          window.turnstile.reset(turnstileWidgetId);
         }
       }
     });
-  })();
+  }, {once:true});
 </script>
 
 </Fragment>}

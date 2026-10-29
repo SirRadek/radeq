@@ -1,0 +1,154 @@
+
+> radeq@0.0.1 test
+> vitest run --reporter=dot --maxWorkers=1
+
+
+ RUN  v4.1.5 C:/Users/sirok/Documents/ChatGPT/RadeQ/app
+
+stdout | tests/contact-optionality.test.mjs
+14:39:53 [types] Generated 126ms
+14:39:53 [build] output: "static"
+14:39:53 [build] mode: "static"
+14:39:53 [build] directory: C:\Users\sirok\Documents\ChatGPT\RadeQ\app\.rq-optionality-fixture-ymuBWa\dist\
+14:39:53 [build] Collecting build info...
+14:39:53 [build] ✓ Completed in 221ms.
+14:39:53 [build] Building static entrypoints...
+14:39:58 [vite] ✓ built in 4.95s
+14:40:00 [vite] ✓ built in 1.87s
+14:40:00 [build] Rearranging server assets...
+
+ generating static routes 
+14:40:00   ├─ /audit/index.html (+93ms) 
+14:40:00   ├─ /demo/blog-docs/index.html (+24ms) 
+14:40:00   ├─ /demo/service-landing/index.html (+18ms) 
+14:40:00   ├─ /demo/admin-dashboard/index.html (+11ms) 
+14:40:00   ├─ /demo/eshop-offers/index.html (+11ms) 
+14:40:00   ├─ /en/audit/index.html (+14ms) 
+14:40:00   ├─ /en/demo/blog-docs/index.html (+14ms) 
+14:40:00   ├─ /en/demo/service-landing/index.html (+10ms) 
+14:40:00   ├─ /en/demo/admin-dashboard/index.html (+8ms) 
+14:40:00   ├─ /en/demo/eshop-offers/index.html (+12ms) 
+14:40:00   ├─ /en/kontakt/index.html (+18ms) 
+14:40:00   ├─ /en/sluzby/index.html (+19ms) 
+14:40:00   ├─ /en/soukromi/index.html (+17ms) 
+14:40:00   ├─ /en/ukazky/instalater/index.html (+11ms) 
+14:40:00   ├─ /en/ukazky/sluzba/index.html (+11ms) 
+14:40:00   ├─ /en/ukazky/provozni-terminal/index.html (+8ms) 
+14:40:00   ├─ /en/ukazky/eshop/index.html (+8ms) 
+14:40:00   ├─ /en/ukazky/index.html (+23ms) 
+14:40:00   ├─ /en/index.html (+32ms) 
+14:40:00   ├─ /kontakt/index.html (+20ms) 
+14:40:00   ├─ /minimalni-navrh/ukazky/instalater/index.html (+17ms) 
+14:40:00   ├─ /minimalni-navrh/ukazky/provozni-terminal/index.html (+34ms) 
+14:40:00   ├─ /minimalni-navrh/ukazky/sluzba/index.html (+15ms) 
+14:40:00   ├─ /minimalni-navrh/ukazky/index.html (+18ms) 
+14:40:01   ├─ /minimalni-navrh/index.html (+36ms) 
+14:40:01   ├─ /portfolio/index.html (+14ms) 
+14:40:01   ├─ /robots.txt (+9ms) 
+14:40:01   ├─ /sitemap.xml (+13ms) 
+14:40:01   ├─ /sluzby/index.html (+16ms) 
+14:40:01   ├─ /soukromi/index.html (+12ms) 
+14:40:01   ├─ /ukazky/chatbot/index.html (+32ms) 
+14:40:01   ├─ /ukazky/eshop/index.html (+16ms) 
+14:40:01   ├─ /ukazky/eshop-system/index.html (+26ms) 
+14:40:01   ├─ /ukazky/instalater/index.html (+25ms) 
+14:40:01   ├─ /ukazky/provozni-terminal/index.html (+28ms) 
+14:40:01   ├─ /ukazky/sluzba/index.html (+23ms) 
+14:40:01   ├─ /ukazky/automatizace/index.html (+22ms) 
+14:40:01   ├─ /ukazky/nabidka-eshop/index.html (+10ms) 
+14:40:01   ├─ /ukazky/index.html (+20ms) 
+14:40:01   ├─ /zapisky/jak-se-staram-o-web-po-predani/index.html (+18ms) 
+14:40:01   ├─ /zapisky/vlastni-eshop-nebo-shoptet/index.html (+15ms) 
+14:40:01   ├─ /zapisky/web-pro-zivnostnika-cena/index.html (+18ms) 
+14:40:01   ├─ /zapisky/index.html (+16ms) 
+14:40:01   ├─ /index.html (+18ms) 
+14:40:01 ✓ Completed in 1.19s.
+
+14:40:01 [build] ✓ Completed in 8.29s.
+14:40:01 [build] 42 page(s) built in 8.52s
+14:40:01 [build] Complete!
+
+14:40:11 [types] Generated 148ms
+14:40:11 [build] output: "static"
+14:40:11 [build] mode: "static"
+14:40:11 [build] directory: C:\Users\sirok\Documents\ChatGPT\RadeQ\app\.rq-optionality-fixture-RDIivo\dist\
+14:40:11 [build] Collecting build info...
+14:40:11 [build] ✓ Completed in 245ms.
+14:40:11 [build] Building static entrypoints...
+14:40:18 [vite] ✓ built in 6.62s
+14:40:22 [vite] ✓ built in 3.93s
+14:40:22 [build] Rearranging server assets...
+
+ generating static routes 
+14:40:23   ├─ /audit/index.html (+149ms) 
+14:40:23   ├─ /demo/blog-docs/index.html (+24ms) 
+14:40:23   ├─ /demo/service-landing/index.html (+23ms) 
+14:40:23   ├─ /demo/admin-dashboard/index.html (+15ms) 
+14:40:23   ├─ /demo/eshop-offers/index.html (+17ms) 
+14:40:23   ├─ /en/audit/index.html (+74ms) 
+14:40:24   ├─ /en/demo/blog-docs/index.html (+80ms) 
+14:40:24   ├─ /en/demo/service-landing/index.html (+33ms) 
+14:40:24   ├─ /en/demo/admin-dashboard/index.html (+20ms) 
+14:40:24   ├─ /en/demo/eshop-offers/index.html (+35ms) 
+14:40:24   ├─ /en/kontakt/index.html (+82ms) 
+14:40:24   ├─ /en/sluzby/index.html (+27ms) 
+14:40:24   ├─ /en/soukromi/index.html (+18ms) 
+14:40:24   ├─ /en/ukazky/instalater/index.html (+11ms) 
+14:40:24   ├─ /en/ukazky/sluzba/index.html (+10ms) 
+14:40:24   ├─ /en/ukazky/provozni-terminal/index.html (+12ms) 
+14:40:24   ├─ /en/ukazky/eshop/index.html (+14ms) 
+14:40:24   ├─ /en/ukazky/index.html (+26ms) 
+14:40:24   ├─ /en/index.html (+57ms) 
+14:40:24   ├─ /kontakt/index.html (+48ms) 
+14:40:24   ├─ /minimalni-navrh/ukazky/instalater/index.html (+51ms) 
+14:40:24   ├─ /minimalni-navrh/ukazky/provozni-terminal/index.html (+23ms) 
+14:40:24   ├─ /minimalni-navrh/ukazky/sluzba/index.html (+25ms) 
+14:40:24   ├─ /minimalni-navrh/ukazky/index.html (+20ms) 
+14:40:24   ├─ /minimalni-navrh/index.html (+31ms) 
+14:40:24   ├─ /portfolio/index.html (+16ms) 
+14:40:24   ├─ /robots.txt (+14ms) 
+14:40:24   ├─ /sitemap.xml (+16ms) 
+14:40:24   ├─ /sluzby/index.html (+20ms) 
+14:40:24   ├─ /soukromi/index.html (+19ms) 
+14:40:24   ├─ /ukazky/chatbot/index.html (+57ms) 
+14:40:24   ├─ /ukazky/eshop/index.html (+49ms) 
+14:40:24   ├─ /ukazky/eshop-system/index.html (+26ms) 
+14:40:24   ├─ /ukazky/instalater/index.html (+18ms) 
+14:40:24   ├─ /ukazky/provozni-terminal/index.html (+18ms) 
+14:40:24   ├─ /ukazky/sluzba/index.html (+25ms) 
+14:40:24   ├─ /ukazky/automatizace/index.html (+16ms) 
+14:40:24   ├─ /ukazky/nabidka-eshop/index.html (+7ms) 
+14:40:24   ├─ /ukazky/index.html (+19ms) 
+14:40:24   ├─ /zapisky/jak-se-staram-o-web-po-predani/index.html (+28ms) 
+14:40:25   ├─ /zapisky/vlastni-eshop-nebo-shoptet/index.html (+40ms) 
+14:40:25   ├─ /zapisky/web-pro-zivnostnika-cena/index.html (+21ms) 
+14:40:25   ├─ /zapisky/index.html (+15ms) 
+14:40:25   ├─ /index.html (+25ms) 
+14:40:25 ✓ Completed in 2.35s.
+
+14:40:25 [build] ✓ Completed in 13.39s.
+14:40:25 [build] 42 page(s) built in 13.65s
+14:40:25 [build] Complete!
+
+
+························stdout | tests/metadata-adoption.test.mjs > actual RqLayout URL policy and metadata contract > builds root/subpath  CS/EN and optional metadata cases; mutations fail
+RED observable omission + duplication rejected; GREEN / cs
+RED observable omission + duplication rejected; GREEN / en
+RED observable omission + duplication rejected; GREEN / noalternate
+RED observable omission + duplication rejected; GREEN / fallback
+RED observable omission + duplication rejected; GREEN / guard
+
+·stdout | tests/metadata-adoption.test.mjs > actual RqLayout URL policy and metadata contract > builds root/subpath /radeq CS/EN and optional metadata cases; mutations fail
+RED observable omission + duplication rejected; GREEN /radeq cs
+RED observable omission + duplication rejected; GREEN /radeq en
+RED observable omission + duplication rejected; GREEN /radeq noalternate
+RED observable omission + duplication rejected; GREEN /radeq fallback
+RED observable omission + duplication rejected; GREEN /radeq guard
+
+·······························································································
+
+ Test Files  20 passed | 3 skipped (23)
+      Tests  120 passed (120)
+   Start at  14:39:46
+   Duration  231.04s (transform 1.05s, setup 0ms, import 2.65s, tests 205.77s, environment 16ms)
+

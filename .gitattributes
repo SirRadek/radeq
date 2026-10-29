@@ -1,0 +1,3 @@
+# Preserve the exact reviewed source/artifact bytes and portable SHA256 hashes.
+# No checkout-dependent LF/CRLF conversion, including on the returning PC.
+* -text

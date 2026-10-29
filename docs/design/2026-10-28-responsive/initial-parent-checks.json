@@ -1,0 +1,13 @@
+{
+  "manifest": "C:\\Users\\sirok\\Documents\\ChatGPT\\RadeQ\\app\\docs\\audits\\2026-10-09-themed-demos\\build-1793216043446\\artifact-manifest.json",
+  "manifestSha256": "02b5d0d62aa21756f0cb7076190f2dadf107bd71eb27647b645087a99e1a161a",
+  "sourceFiles": 198,
+  "sourceHashFailures": [],
+  "artifactHashFailures": [],
+  "changedSinceBaseline": [
+    "C:\\Users\\sirok\\Documents\\ChatGPT\\RadeQ\\app\\src\\styles\\service-stories.css",
+    "C:\\Users\\sirok\\Documents\\ChatGPT\\RadeQ\\app\\src\\styles\\studio.css"
+  ],
+  "gate": "24/24 compiled tests; Astro 87 files, 0 errors, 0 warnings, 6 hints",
+  "deployment": "none"
+}

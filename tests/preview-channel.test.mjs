@@ -46,8 +46,8 @@ describe('compiled preview indexing and English gallery boundaries', () => {
       const gallery = readFileSync(join(scratch, 'dist/en/gallery/index.html'), 'utf8');
       expect(gallery).toContain(`href="${base}/en/#sluzby"`);
       expect(gallery).toContain(`href="${base}/ukazky/" lang="cs"`);
-      expect(gallery).toMatch(/demos? (?:are|remain) in Czech/i);
-      for (const slug of ['instalater', 'sluzba', 'provozni-terminal', 'eshop']) expect(gallery).toContain(`href="${base}/ukazky/${slug}/"`);
+      expect(gallery).not.toMatch(/demos? (?:are|remain) in Czech/i);
+      for (const slug of ['instalater', 'sluzba', 'provozni-terminal', 'eshop']) expect(gallery).toContain(`href="${base}/en/ukazky/${slug}/"`);
       expect(gallery).toContain(`href="${base}/en/#kontakt"`);
       const page = readFileSync(join(scratch, 'dist/en/ukazky/index.html'), 'utf8');
       expect(page).toContain('<html lang="en"');
@@ -55,8 +55,8 @@ describe('compiled preview indexing and English gallery boundaries', () => {
       expect(page).toContain(`hreflang="en" href="https://${preview ? 'sirradek.github.io' : 'radeq.cz'}${base}/en/ukazky/"`);
       expect((page.match(/name="robots"/g) ?? []).length).toBe(preview ? 1 : 0);
       const home = readFileSync(join(scratch, 'dist/en/home/index.html'), 'utf8');
-      expect(home).toContain(`href="${base}/ukazky/instalater/?from=en"`);
-      expect(home).toContain('Interactive examples are in Czech.');
+      expect(home).toContain(`href="${base}/en/ukazky/instalater/"`);
+      expect(home).not.toContain('Interactive examples are in Czech.');
     } finally { rmSync(scratch, { recursive: true, force: true }); }
   }, 90000);
 });

@@ -1,0 +1,13 @@
+# RadeQ — portable authority, 2026-10-29
+
+- Read README.md, CHANGELOG.md and docs/handoff/2026-10-29/README.md first. Later owner directions prevail. Source is repository root, formerly app/ on Windows. PREVZETI.md is historical.
+- Publish branch codex/radeq-clean-pages-20261013; default new is a different line. Preserve history/unrelated work. Never reset old checkout or replay LOCAL-CHANGES.patch.
+- On return to first PC restore, verify and preview only until next owner task. This GitHub release does not authorize another Cloudflare deploy, cleanup, deletion or credential transfer.
+- Preserve V3/Stopa brand: cream #f7f4ee, wine #7a1f2b, ink #1c1a17; original logo; Chillax600 H1, Cabinet Grotesk600 headings/400 body/500 menu-CTA. No fabricated clients/certifications/metrics.
+- Preserve prices, locale links and all four localized demos. Enquiry received is not won business; selected slot is not confirmed booking. Paid audit and free automatic check are distinct.
+- GitHub is static/noindex /radeq with email contact. Root Cloudflare has form/consent/measurement/API. release/ contains actual backend; do not replace it with an older source factory or incidentally alter D1/KV/secrets.
+- New implementation plans require independent native gpt-6.1-sol review, normally medium, with hash/bounded scope. Preserve independent review for releases, privacy, secrets, persistence and other high-risk work. Normal work at most two direct workers/no recursion, one primary review plus at most one targeted re-review unless new serious finding.
+- Reuse source-bound receipts only while code/tests/dependencies/config match. After app changes run node scripts/verify-themed-demos.mjs and affected unit checks; avoid concurrent Astro fixture builds. UI changes need actual CZ/EN rendering across small/intermediate/low-height screens. Global overflow absence does not prove local image/text integrity.
+- Workflow uploads site/, not dist/. Refresh publication-manifest.json intentionally for a changed release. New PC needs a new build manifest with local paths, not edited historical evidence.
+- Keep auth stores, .env/.dev.vars, .wrangler, node_modules, private rollback exports and real lead records out of Git. Provider login is separate on destination. Never edit native trust records.
+- Windows Autopilot logging/lifecycle/Context Manager were deferred; do not activate them during restoration or substitute another project mesh. No project Decision Mesh was present in the snapshot.

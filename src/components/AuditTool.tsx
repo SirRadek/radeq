@@ -1,3 +1,4 @@
+import { turnstileSiteKey } from '../data/site-config';
 import { useMemo, useState } from 'react';
 import type { AuditContent } from '../data/audit';
 import type { Locale } from '../data/locales';
@@ -33,7 +34,7 @@ interface Props {
   contactHref: string;
 }
 
-const TURNSTILE_SITE_KEY = String(import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '').trim();
+const TURNSTILE_SITE_KEY = turnstileSiteKey;
 
 export default function AuditTool({ locale, content, measurePath, contactHref }: Props) {
   const [url, setUrl] = useState('');

@@ -1,4 +1,5 @@
 ---
+import {isPreviewChannel} from '../lib/preview-channel.mjs';
 interface NavLink {
   href: string;
   label: string;
@@ -29,7 +30,7 @@ const resolve = (h: string) => {
   return base + h;
 };
 const logoMask = `${base}/brand/radeq-logo-b-mask.png`;
-const navAriaLabel = content.navAriaLabel ?? "Navigace v patičce";
+const navAriaLabel = content.navAriaLabel ?? (homeHref.startsWith('/en')?'Footer navigation':'Navigace v patičce');
 const legal = content.legal ?? "© 2026 Radek Široký — RadeQ.cz · IČO 08748811 · Praha · celá ČR";
 const isEnglishFooter = homeHref.startsWith("/en") || navItems.some((item) => item.href.includes("/en/"));
 const auditLink = isEnglishFooter
@@ -37,4 +38,13 @@ const auditLink = isEnglishFooter
   : { href: "/audit/", label: "Automatická kontrola webu" };
 ---
 
-<footer class="rq-minimal-footer"><a class="rq-minimal-preview__logo" href={resolve(homeHref)} aria-label={isEnglishFooter ? 'RadeQ — home' : 'RadeQ — domů'} style={`--logo-mask:url("${logoMask}")`}><span aria-hidden="true"></span></a><p>{legal}</p><nav aria-label={navAriaLabel}><a href={resolve(isEnglishFooter?'/en/ukazky/':'/ukazky/')}>{isEnglishFooter?'Examples':'Ukázky'}</a><a href={resolve(isEnglishFooter?'/en/soukromi/':'/soukromi/')}>{isEnglishFooter?'Privacy':'Soukromí'}</a><a href={resolve(auditLink.href)}>{auditLink.label}</a><a href={resolve('/zapisky/')} lang="cs">{isEnglishFooter?'Notes (in Czech)':'Zápisky'}</a></nav></footer>
+<footer class="rq-minimal-footer rq-studio-footer">
+ <div class="rq-footer-identity"><a class="rq-minimal-preview__logo" href={resolve(homeHref)} aria-label={isEnglishFooter ? 'RadeQ — home' : 'RadeQ — domů'} style={`--logo-mask:url("${logoMask}")`}><span aria-hidden="true"></span></a><p>{legal}</p></div>
+ <nav aria-label={navAriaLabel}>
+  <div><p class="rq-footer-heading">{isEnglishFooter?'Contact':'Kontakt'}</p><a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a><a href="tel:+420730634439">+420 730 634 439</a></div>
+  <div><p class="rq-footer-heading">{isEnglishFooter?'Explore':'Prohlédnout'}</p><a href={resolve(isEnglishFooter?'/en/ukazky/':'/ukazky/')}>{isEnglishFooter?'Examples':'Ukázky'}</a><a href={resolve(auditLink.href)}>{auditLink.label}</a><a href={resolve('/zapisky/')} lang="cs">{isEnglishFooter?'Notes (in Czech)':'Zápisky'}</a></div>
+  <div><p class="rq-footer-heading">{isEnglishFooter?'Information':'Informace'}</p><a href={resolve(isEnglishFooter?'/en/soukromi/':'/soukromi/')}>{isEnglishFooter?'Privacy':'Soukromí'}</a><a href={resolve(isEnglishFooter?'/en/spoluprace/':'/spoluprace/')}>{isEnglishFooter?'Working together':'Podmínky spolupráce'}</a>{!isPreviewChannel && !Astro.url.pathname.includes('/minimalni-navrh') && <button type="button" data-consent-open>{isEnglishFooter?'Cookie settings':'Nastavení cookies'}</button>}</div>
+ </nav>
+</footer>
+
+<style>.rq-minimal-footer button{border:0;padding:0;background:none;color:inherit;font:inherit;text-decoration:underline;cursor:pointer;min-height:44px}</style>

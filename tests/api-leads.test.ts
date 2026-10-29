@@ -70,7 +70,7 @@ describe('lead Pages Function', () => {
 
     const payloads = calls.map((call) => JSON.parse(call.init.body as string) as Record<string, unknown>);
     const notify = payloads.find((p) => String(p.subject).includes('Nová poptávka'));
-    const confirm = payloads.find((p) => String(p.subject).includes('Děkujeme'));
+    const confirm = payloads.find((p) => String(p.subject).includes('Poptávka dorazila'));
 
     expect(notify).toMatchObject({
       to: 'siroky@radeq.cz',
@@ -111,9 +111,9 @@ describe('lead Pages Function', () => {
     });
 
     const payloads = calls.map((call) => JSON.parse(call.init.body as string) as Record<string, unknown>);
-    const confirm = payloads.find((p) => String(p.subject).includes('Thanks for your inquiry'));
+    const confirm = payloads.find((p) => String(p.subject).includes('Enquiry received'));
     expect(confirm).toBeDefined();
-    expect(String(confirm?.text)).toContain('Hi Jan Siroky');
+    expect(String(confirm?.text)).toContain('Hello Jan Siroky');
 
     vi.unstubAllGlobals();
   });
@@ -283,7 +283,7 @@ describe('lead Pages Function', () => {
       String((JSON.parse(call.init.body as string) as Record<string, unknown>).subject),
     );
     expect(subjects.filter((s) => s.includes('Nová poptávka'))).toHaveLength(2);
-    expect(subjects.filter((s) => s.includes('Děkujeme'))).toHaveLength(1);
+    expect(subjects.filter((s) => s.includes('Poptávka dorazila'))).toHaveLength(1);
 
     vi.unstubAllGlobals();
   });

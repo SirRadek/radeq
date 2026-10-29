@@ -29,7 +29,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   </div>
   <details class="rq-pricing__care">
     <summary>{pricing.careTitle} <span>{en ? 'from CZK 2,500 / month' : 'od 2 500 Kč / měsíc'}</span></summary>
-    <p>{en ? 'Care after launch is a separate service, agreed alongside your project.' : 'Péče po spuštění je samostatná služba, kterou domluvíme zvlášť od realizace.'}</p>
+    <p>{en ? 'Care after launch is a separate service, agreed separately from the project.' : 'Péče po spuštění je samostatná služba, kterou domluvíme zvlášť od realizace.'}</p>
     <dl class="rq-pricing__list">{care.map(item => <div><dt><strong>{item.title}</strong><small>{item.text}</small></dt><dd>{item.price} {item.suffix}</dd></div>)}</dl>
   </details>
   <p class="rq-pricing__note rq-pricing__terms">{pricing.note}</p>

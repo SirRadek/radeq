@@ -3,7 +3,7 @@ import {resolve,join,relative} from 'node:path';import {pathToFileURL} from 'nod
 function seal(m){
  const sha=p=>createHash('sha256').update(readFileSync(p)).digest('hex');
  const walk=dir=>readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(join(dir,e.name)):[join(dir,e.name)]);
- const sources=[...['src','functions','tests','public','scripts'].flatMap(dir=>walk(resolve(dir))),...['astro.config.mjs','tsconfig.json','package.json','package-lock.json','playwright.themed-demos.config.ts','vitest.config.ts'].map(p=>resolve(p))];
+ const sources=[...['src','functions','tests','public','scripts','release'].flatMap(dir=>walk(resolve(dir))),...['astro.config.mjs','tsconfig.json','package.json','package-lock.json','playwright.themed-demos.config.ts','vitest.config.ts','wrangler.jsonc'].map(p=>resolve(p))];
  m.revision=spawnSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).stdout.trim();m.source_hashes=Object.fromEntries(sources.map(p=>[p,sha(p)]));
  for(const v of m.variants)v.artifact_hashes=Object.fromEntries(walk(v.dist).map(p=>[p,sha(p)]));
  return m;
@@ -15,11 +15,13 @@ for(const [name,base,port]of [['root','',4213],['subpath','/radeq',4214]]){
  const dir=join(run,name);mkdirSync(dir);const config=join(dir,'astro.config.mjs'),dist=join(dir,'dist');
  writeFileSync(config,`import original from ${JSON.stringify(pathToFileURL(resolve('astro.config.mjs')).href)};export default {...original,root:${JSON.stringify(root)},base:${JSON.stringify(base||'/')},outDir:${JSON.stringify(dist)},cacheDir:${JSON.stringify(join(dir,'cache'))}};`);
  const env={...process.env};delete env.DEPLOY_TARGET;if(base)env.DEPLOY_TARGET='github-pages';
- const result=spawnSync('npm',['run','build','--','--config',relative(root,config)],{cwd:root,env,stdio:['ignore',openSync(join(dir,'build.log'),'w'),openSync(join(dir,'error.log'),'w')]});if(result.status!==0)throw new Error(`build failed: ${dir}`);
+ const result=spawnSync(process.execPath,[resolve('node_modules/astro/bin/astro.mjs'),'build','--config',relative(root,config)],{cwd:root,env,stdio:['ignore',openSync(join(dir,'build.log'),'w'),openSync(join(dir,'error.log'),'w')]});if(result.status!==0)throw new Error(`build failed: ${dir}`);
  const html=join(dist,'minimalni-navrh/ukazky/instalater/index.html');variants.push({name,base,port,config,dist,config_hash:hash(config),html_hash:hash(html)});
 }
 const manifest=join(run,'artifact-manifest.json');writeFileSync(manifest,JSON.stringify(seal({root,variants}),null,2));writeFileSync(resolve('docs/audits/2026-10-09-themed-demos/latest-manifest.txt'),manifest);
-const tests=spawnSync('npx',['vitest','run','tests/themed-demos-state.test.mjs','tests/themed-demos-preview.test.mjs','tests/four-showcases-preview.test.mjs','tests/public-preview-contract.test.mjs'],{env:{...process.env,DEMO_ARTIFACT_MANIFEST:manifest},stdio:['ignore',openSync(join(run,'green.log'),'w'),openSync(join(run,'green-error.log'),'w')]});if(tests.status!==0)throw new Error('compiled tests failed');
-const config=join(run,'tsconfig.json');writeFileSync(config,JSON.stringify({extends:resolve('tsconfig.json'),compilerOptions:{allowJs:true,checkJs:false},include:[resolve('.astro/types.d.ts'),resolve('src/**/*.astro'),resolve('src/**/*.ts'),resolve('src/**/*.tsx'),resolve('functions/**/*.ts')],exclude:[resolve('docs'),resolve('dist'),resolve('node_modules')]}));
-const check=spawnSync('npx',['astro','check','--tsconfig',config],{stdio:['ignore',openSync(join(run,'typecheck.log'),'w'),openSync(join(run,'typecheck-error.log'),'w')]});if(check.status!==0)throw new Error('scoped typecheck failed');
+const tests=spawnSync(process.execPath,[resolve('node_modules/vitest/vitest.mjs'),'run','tests/themed-demos-state.test.mjs','tests/themed-demos-preview.test.mjs','tests/four-showcases-preview.test.mjs','tests/public-preview-contract.test.mjs','tests/english-showcases.test.mjs'],{env:{...process.env,DEMO_ARTIFACT_MANIFEST:manifest},stdio:['ignore',openSync(join(run,'green.log'),'w'),openSync(join(run,'green-error.log'),'w')]});if(tests.status!==0)throw new Error('compiled tests failed');
+// Astro's file discovery needs forward slashes for absolute Windows globs.
+const checkPath=p=>resolve(p).replaceAll('\\','/');
+const config=join(run,'tsconfig.json');writeFileSync(config,JSON.stringify({extends:checkPath('tsconfig.json'),compilerOptions:{allowJs:true,checkJs:false},include:[checkPath('.astro/types.d.ts'),checkPath('src/**/*.astro'),checkPath('src/**/*.ts'),checkPath('src/**/*.tsx'),checkPath('functions/**/*.ts')],exclude:[checkPath('docs'),checkPath('dist'),checkPath('node_modules')]}));
+const check=spawnSync(process.execPath,[resolve('node_modules/astro/bin/astro.mjs'),'check','--tsconfig',config],{stdio:['ignore',openSync(join(run,'typecheck.log'),'w'),openSync(join(run,'typecheck-error.log'),'w')]});if(check.status!==0)throw new Error('scoped typecheck failed');
 console.log(manifest);

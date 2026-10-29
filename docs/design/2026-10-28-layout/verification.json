@@ -1,0 +1,50 @@
+{
+  "manifest": "C:\\Users\\sirok\\Documents\\ChatGPT\\RadeQ\\app\\docs\\audits\\2026-10-09-themed-demos\\build-1793213914531\\artifact-manifest.json",
+  "manifest_sha256": "dbde223b10580787ac0d2eea2e2e4eaba160577ace2cd0d089ce0d53c4c322a5",
+  "source_and_artifact_hashes": "all match",
+  "preserved_backend": {
+    "app\\release\\production-backend.js": "b1ebe3a35e6de81be9514421512442b4ac9c2bcc18d7cba9a16e645f630dbbc4",
+    "app\\release\\confirmation-email.js": "aabb0bf5df2b275834d973c032c5f618db441f440e4a194edcfc0c22d3f626ea",
+    "app\\release\\index.js": "8fdf733f6868c2b73328cc5db45ea452addd417108de8b5ca47a1940b1ee7c79",
+    "app\\wrangler.jsonc": "69498a812025b13a30c550d41a38ad426c3a0b3353fad8ddee2b2f5ccb83f1fe"
+  },
+  "tests": {
+    "initial_full_unit": "141 passed (unit.log)",
+    "final_full_unit": "119 passed; three fixture files timed out under concurrent builds (unit-final.log)",
+    "serial_rerun": "all three affected files passed: 24 tests (fixture-serial-final.log)",
+    "compiled_gate": "24 passed; typecheck 87 files, 0 errors, 0 warnings, 6 existing hints",
+    "targeted": "6 passed including compiled preservation of all 4 legal pages and favicon lifecycle"
+  },
+  "browser": {
+    "desktop": "1280x720, no overflow; all four closed tiles visible",
+    "closed_tile_height_px": 279.85,
+    "opened_first_tile_height_px": 594.45,
+    "services_section_height_px": 718.9,
+    "desktop_form_height_px": 524.2,
+    "mobile_form_height_px": 652.6,
+    "mobile_expanded_form_height_px": 822.2,
+    "legal_column_width_px": 651.26,
+    "legal_font_line_px": [
+      16,
+      27.2
+    ],
+    "widths_no_overflow": [
+      320,
+      390,
+      640,
+      1099,
+      1100,
+      1280
+    ],
+    "native_mobile_menu_and_tile_keyboard": "passed",
+    "en_shop_return": "/en/#sluzba-eshop opens and scrolls card",
+    "cookie_settings": "opened and rejected optional consent; no analytics accepted"
+  },
+  "limits": [
+    "Local static root preview has no backend; no enquiry sent.",
+    "Turnstile reports localhost domain error 110200; no CAPTCHA solved.",
+    "640px reflow checked, not native 200% browser zoom.",
+    "Favicon lifecycle tested; IAB does not prove native-tab animation across browsers."
+  ],
+  "deployment": "none; production e1793e7a unchanged"
+}

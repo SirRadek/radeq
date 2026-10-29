@@ -32,9 +32,9 @@ function csvText(value: string): string {
   const guarded = /^[\s]*[=+\-@]/.test(value) ? `'${value}` : value;
   return `"${guarded.replaceAll('"', '""')}"`;
 }
-export function coffeeOrderCsv(order: CoffeeOrder | null): string {
+export function coffeeOrderCsv(order: CoffeeOrder | null, lang: 'cs' | 'en' = 'cs'): string {
   if (!order) return '';
-  const header = 'objednavka;stav;kava;gramaz;pocet;cena_za_kus_Kc;celkem_Kc';
+  const header = lang === 'en' ? 'order;status;coffee;pack_size;quantity;unit_price_CZK;total_CZK' : 'objednavka;stav;kava;gramaz;pocet;cena_za_kus_Kc;celkem_Kc';
   const rows = order.lines.map(line => [csvText(order.id), csvText(order.status), csvText(line.name), csvText(line.weight), line.quantity, line.price, line.price * line.quantity].join(';'));
   return [header, ...rows, ''].join('\r\n');
 }

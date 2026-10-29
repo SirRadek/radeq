@@ -1,0 +1,25 @@
+# Studio index — bounded independent plan review
+
+- Reviewed: 2026-10-28, native gpt-6.1-sol, medium; one reviewer, no delegation.
+- Plan: `docs/superpowers/plans/2026-10-28-studio-index.md`
+- SHA-256: `4625e511e35d0d17e30792a85211edabe0ea4c9e17cfedc2c82f13d89f74caee` (verified from disk).
+- Verdict: **Proceed within local scope**, with the implementation constraints below. No blocking architectural defect. This review accepts the plan, not an unrendered implementation or native favicon animation.
+
+## Material implementation constraints
+
+1. **Fourth tile and return links.** Current `ServiceStories.astro` exposes three service IDs; the e-shop is a secondary link under `sluzba-web`. Existing English demo coverage explicitly expects the e-shop return at `#sluzba-web` (`app/tests/english-showcases.test.mjs`). When introducing `sluzba-eshop`, decide and test the e-shop's return to that tile in both locales, while preserving all existing three anchors. A link to the new card must open its details and scroll after opening, including initial page load and hashchange. Matching a descendant anchor must reveal its owning disclosure as well. Existing destination tests need deliberate updating if the return changes.
+
+2. **Exact legal text needs a structural equality check.** `app/src/data/legal.ts` contains HTML links, email addresses, decimal/article abbreviations and GDPR references. Do not split arbitrary HTML on a period: it can break hrefs and legal sentence fragments. Preserve this data source and use explicit safe paragraph boundaries or HTML-aware rendering. Verify rendered section text (normalizing whitespace only) and ordered link href/text against the unchanged source for all four legal pages; check stable IDs and table-of-contents targets separately. This is preservation verification, not a legal opinion.
+
+## Feasibility and acceptance checks
+
+- Native `details > summary` is suitable. Keep summary to noninteractive preview/title/benefit and put the real demo anchor in the expanded sibling body; no anchor nested in summary, custom role or redundant toggling handler. No-JS disclosure and mobile navigation must work through their native controls. Keep meaningful service headings discoverable, visible focus and usable hit areas. A closed disclosure plus its associated visible direct action must have unambiguous labels if actions are exposed outside it.
+- A persistent desktop nav and mobile disclosure may coexist if the inactive version is truly hidden from keyboard/accessibility. Prefer a desktop rail that can scroll naturally at low viewport heights. Test narrow reflow with the rail disabled and tabbing at both breakpoint edges; a width-only switch does not prove 200% zoom. Ensure fragment targets are not hidden by sticky mobile controls. Retain a visible current-language marker and the real alternate-page URL on legal pages too.
+- Existing `RqHeader`/`RqFooter` resolve subpath URLs, while `RqLayout` separates root production consent from `/radeq` preview. Reuse that resolution and preview gating. The final stylesheet must not accidentally force hidden disclosure content open or affect consent dialogs; legal scoped CSS and service CSS cascade require rendered checks. Footer cookie settings must stay a button with `data-consent-open` and retain preview exclusion.
+- Favicon work is bounded and feasible as progressive enhancement. Select the active light/dark source, draw an already-decoded same-origin image, retain original media attributes/URLs, and reset to the matching static icon after the single pulse, cancellation, errors or color-scheme change. Ensure cancellation prevents an already pending decode/frame callback from restarting motion. Cover initial hidden/reduced-motion state and changes during animation, pagehide, finite frame count and restored original icon in lifecycle tests. If using blob URLs, revoke them. A canvas/DOM test cannot establish actual native tab animation; report that separately and keep the original static favicon as a successful fallback.
+- Four workflows must preserve outcomes: enquiry received, booking selected versus confirmed, work logged, and actual e-shop flow. Use real CZ/EN screenshots and retain model-example disclosures. Do not substitute generated concept content.
+- The proposed root/subpath build gate, browser CZ/EN renders at desktop/390/320, keyboard/fragment checks, and one targeted implementation review are proportionate. Include opened cards, expanded mobile nav, long legal paragraphs and expanded form details/status in overflow inspection. Record measured form height as observation rather than clipping to the target.
+
+## Sources and review boundary
+
+Read the requested plan/hash, project handover/authority, design `ROZBOR.md`, relevant five Astro components/layout, legal data, Astro base configuration and existing English showcase expectations. No application edits, deployments, paid calls, external writes or runtime setup. No test/build execution was required to assess this plan. Final implementation must supply current verification evidence.

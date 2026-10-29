@@ -1,42 +1,47 @@
 ---
+import {demoText} from '../themed-demos/demo-i18n.mjs';
+const {lang = 'cs'} = Astro.props as {lang?: 'cs' | 'en'};
+const en = lang === 'en';
+const t = (value: string) => demoText(lang, value);
+
 import DemoThemeDocument from '../themed-demos/DemoThemeDocument.astro';
 import { JOBS, INITIAL_STOCK } from '../themed-demos/workshop-state.mjs';
 const first = JOBS[0];
 ---
-<DemoThemeDocument title="Dílna — pracovní den v malém provozu | Demo RadeQ" description="Tři modelové zakázky, jeden pracovní list. Dokončení práce a přehled materiálu bez odesílání dat." theme="workshop">
-  <main data-workshop>
-    <p class="eyebrow">Malá dílna · modelový provoz</p>
-    <div class="day-heading"><h1>LIST DNE</h1><p>Čtvrtek<br/> 8. října 2026</p></div>
-    <div class="day-intro"><p>Tři zakázky. Jeden jasný další krok.</p><p class="fixed">Fiktivní pracovní den.<br/>Změny zůstávají jen v této ukázce.</p></div>
+<DemoThemeDocument lang={lang} title={t("Dílna — pracovní den v malém provozu | Demo RadeQ")} description={t("Tři modelové zakázky, jeden pracovní list. Dokončení práce a přehled materiálu bez odesílání dat.")} theme="workshop">
+  <main data-workshop data-lang={lang}>
+    <p class="eyebrow">{t("Malá dílna · modelový provoz")}</p>
+    <div class="day-heading"><h1>{t("LIST DNE")}</h1><p>{t("Čtvrtek")}<br/> {t("8. října 2026")}</p></div>
+    <div class="day-intro"><p>{t("Tři zakázky. Jeden jasný další krok.")}</p><p class="fixed">{t("Fiktivní pracovní den.")}<br/>{t("Změny zůstávají jen v této ukázce.")}</p></div>
     <section class="job" aria-labelledby="current-step">
       <div class="job-copy">
-        <p class="step"><span data-step-number>01</span><span data-step-label>Právě na stole</span></p>
-        <h2 id="current-step" data-current-step>{first.step}</h2>
+        <p class="step"><span data-step-number>01</span><span data-step-label>{t("Právě na stole")}</span></p>
+        <h2 id="current-step" data-current-step>{t(first.step)}</h2>
         <p class="job-detail" data-current-job>{first.id} · dubová police</p>
-        <p class="job-help" data-job-status>{first.detail}</p>
+        <p class="job-help" data-job-status>{t(first.detail)}</p>
       </div>
       <div class="job-actions">
-        <button type="button" class="done" data-done data-action="done" data-job-id={first.id} data-js-action hidden>Hotovo → další</button>
-        <p data-completion-note>Dokončení odečte 1 desku z modelového skladu.</p>
-        <button type="button" class="text-action" data-undo data-action="undo" hidden>Vrátit poslední dokončení</button>
+        <button type="button" class="done" data-done data-action="done" data-job-id={first.id} data-js-action hidden>{t("Hotovo → další")}</button>
+        <p data-completion-note>{t("Dokončení odečte 1 desku z modelového skladu.")}</p>
+        <button type="button" class="text-action" data-undo data-action="undo" hidden>{t("Vrátit poslední dokončení")}</button>
       </div>
     </section>
     <section class="day-list" aria-labelledby="day-list-title">
-      <div class="list-heading"><h2 id="day-list-title">DNEŠNÍ POŘADÍ</h2><p>Hotovo <strong data-done-count>0 / 3</strong><span data-remaining>Zbývá 3 zakázky.</span></p></div>
+      <div class="list-heading"><h2 id="day-list-title">{t("DNEŠNÍ POŘADÍ")}</h2><p>{t("Hotovo")} <strong data-done-count>0 / 3</strong><span data-remaining>{t("Zbývá 3 zakázky.")}</span></p></div>
       <ol>
         {JOBS.map((job, index) => <li data-job={job.id} class:list={[index === 0 && 'is-current']} aria-current={index === 0 ? 'step' : undefined}>
           <span class="row-number">{String(index + 1).padStart(2, '0')}</span>
-          <div class="row-copy"><h3>{job.title}</h3><p>{job.id} · {job.step.toLocaleLowerCase('cs')} · {job.boards} {job.boards === 1 ? 'deska' : 'desky'}</p></div>
-          <span class="row-status" data-row-status>{index === 0 ? 'Na stole' : 'Čeká'}</span>
+          <div class="row-copy"><h3>{t(job.title)}</h3><p>{job.id} · {t(job.step).toLocaleLowerCase(lang)} · {job.boards} {en ? (job.boards === 1 ? 'board' : 'boards') : (job.boards === 1 ? 'deska' : 'desky')}</p></div>
+          <span class="row-status" data-row-status>{index === 0 ? t("Na stole") : t("Čeká")}</span>
         </li>)}
       </ol>
     </section>
     <div class="resources">
-      <section aria-labelledby="material-title"><h2 id="material-title">MATERIÁL PO RUCE</h2><p>Dubová deska · <strong data-stock>{INITIAL_STOCK} desky</strong></p><p class="resource-note" data-material-status>Výchozí zásoba 4 ks · spotřebováno 0 ks.</p></section>
-      <section aria-labelledby="next-title"><h2 id="next-title">POTOM NA STŮL</h2><p data-next>D-025 · dvojice polic</p><p class="resource-note">Dokončení posune pořadí a odečte materiál společně.</p></section>
+      <section aria-labelledby="material-title"><h2 id="material-title">{t("MATERIÁL PO RUCE")}</h2><p>{t("Dubová deska ·")} <strong data-stock>{INITIAL_STOCK} {t("desky")}</strong></p><p class="resource-note" data-material-status>{t("Výchozí zásoba 4 ks · spotřebováno 0 ks.")}</p></section>
+      <section aria-labelledby="next-title"><h2 id="next-title">{t("POTOM NA STŮL")}</h2><p data-next>{t("D-025 · dvojice polic")}</p><p class="resource-note">{t("Dokončení posune pořadí a odečte materiál společně.")}</p></section>
     </div>
-    <div class="closing"><p class="status" data-status role="status" aria-live="polite" aria-atomic="true">Fiktivní údaje. Nic se neodesílá.</p><button type="button" class="text-action" data-action="reset" data-js-action hidden>Začít den znovu</button></div>
-    <noscript><p>Interaktivní část vyžaduje JavaScript. Zobrazen je výchozí pracovní list: tři čekající zakázky a čtyři desky ve skladu.</p></noscript>
+    <div class="closing"><p class="status" data-status role="status" aria-live="polite" aria-atomic="true">{t("Fiktivní údaje. Nic se neodesílá.")}</p><button type="button" class="text-action" data-action="reset" data-js-action hidden>{t("Začít den znovu")}</button></div>
+    <noscript><p>{t("Interaktivní část vyžaduje JavaScript. Zobrazen je výchozí pracovní list: tři čekající zakázky a čtyři desky ve skladu.")}</p></noscript>
   </main>
   <script>
     import { mount } from '../themed-demos/workshop-client.js';

@@ -1,0 +1,18 @@
+# Independent plan review — GitHub publication and portable handoff
+
+Date: 2026-10-29. Reviewer: critic; native gpt-6.1-sol, medium. Scope: release safety and first-PC portability only; no repeated implementation audit.
+
+Plan: `docs/superpowers/plans/2026-10-29-github-handoff.md`.
+Verified SHA-256: `25c34d1c8fef9195f111f0bda9d33a0346240e729a3f7c36b241356deb970b58`.
+
+Verdict: **PROCEED**, subject to the release gates already specified and the concrete interpretations below. No blocking plan finding.
+
+The plan preserves the accepted app and Git history by preparing a separate clone on the existing publication branch, maps the correct subpath artifact to checked-in `site/`, and requires deployed evidence before claiming publication. It correctly separates GitHub authorization from Cloudflare production, and treats older browser/build receipts as dated source-bound evidence. No source redesign or renewed broad audit is needed.
+
+1. Public staging must be an explicit allowlist, including curated documents and screenshots. Review document bodies and image contents as well as filenames: raw request payloads, customer data, authentication state, deployment downloads and private rollback material must remain outside both Git and the ZIP/release asset. Secret scans should return locations/counts without values. A public release ZIP is the same disclosure boundary as Git. References to private Windows artifacts must be clearly identified as separately retained, not falsely promised as included.
+2. The portable publication manifest/verifier should use relative paths, cover exact source and site files, and reject missing, changed and unexpected publication files. Keep accepted runtime source/artifact identity distinct from intentionally new README/AGENTS/changelog/handoff tooling. Exact source equivalence alone does not establish the selected compiled variant; `site/` must match the accepted `/radeq` artifact map, including CZ/EN and all English demo images.
+3. Restore documentation should provide clean-clone or ZIP verification, required Node version, dependency installation, correct build target, static preview and Windows commands without requiring local absolute paths, credentials or private exports. Fresh source builds and previews should have clearly described limits: backend, production delivery and native zoom evidence do not arise from a static package. Existing licences remain included.
+4. Immediately before pushing, confirm the remote publication head still equals the inspected base. If changed, stop that push and inspect the new history instead of force-pushing or silently overwriting. Review every staged deletion and preserve unrelated tracked files. Pages workflow, branch trigger and checked-in `site/` must be inspected in the later staged review; their historical description is not fresh confirmation.
+5. Post-push success requires a successful workflow for the exact commit plus CZ/EN deployment identity and rendered checks. Hash comparison must account only for specifically evidenced delivery transformations, not broad arbitrary normalization. Publish no positive form or analytics test. If the post-release receipt is delivered via a tag/release asset, identify it as release-associated evidence; it is not a new tracked file in the already-pushed commit.
+
+The independent staged release review remains required before commit/push. It should inspect the concrete allowlist, source/site identity, staged deletions, privacy scan results, handoff verifier/commands, workflow, and scope-specific limitations. This review performed only plan/hash and scope assessment; no clone mutation, build, browser action, remote operation or release validation was performed.

@@ -152,6 +152,7 @@ export default function AuditTool({ locale, content, measurePath, contactHref }:
           <div className="audit-tool__turnstile-group">
             <div
               className="audit-tool__turnstile"
+              role="group"
               ref={turnstileContainerRef}
               aria-label={content.verificationLabel}
             />

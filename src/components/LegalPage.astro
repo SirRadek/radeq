@@ -8,11 +8,12 @@ interface Props {lang:'cs'|'en';kind:'privacy'|'cooperation'}
 const {lang,kind}=Astro.props;
 const c=legalContent[lang][kind];const en=lang==='en';
 const slug=kind==='privacy'?'soukromi':'spoluprace';
+const updated=kind==='privacy'?(en?'Updated 30 October 2026':'Aktualizováno 30. října 2026'):(en?'Updated 28 October 2026':'Aktualizováno 28. října 2026');
 const base=import.meta.env.BASE_URL.replace(/\/$/,'');
 ---
 <RqLayout title={c.title+' | RadeQ.cz'} description={c.intro} lang={lang} canonicalPath={'/'+(en?'en/':'')+slug+'/'} alternateLang={en?'cs':'en'} alternatePath={'/'+(en?'':'en/')+slug+'/'} trackEvents={false}>
  <RqHeader alternateLabel={en?'CS':'EN'} alternatePath={'/'+(en?'':'en/')+slug+'/'} />
- <main class="rq-legal"><p class="rq-eyebrow">RadeQ · {en?'Updated 28 October 2026':'Aktualizováno 28. října 2026'}</p><h1>{c.title}</h1><p class="rq-lead">{c.intro}</p>
+ <main class="rq-legal"><p class="rq-eyebrow">RadeQ · {updated}</p><h1>{c.title}</h1><p class="rq-lead">{c.intro}</p>
  <nav class="rq-legal-index" aria-label={en?'On this page':'Na této stránce'}><p>{en?'On this page':'Na této stránce'}</p><ol>{c.sections.map(([title],i)=><li><a href={`#legal-${i+1}`}>{title}</a></li>)}</ol></nav>
  {c.sections.map(([title,body],i)=><section id={`legal-${i+1}`}><h2>{title}</h2>{legalParagraphs(body).map(paragraph=><p set:html={paragraph}/>)}</section>)}
  <nav aria-label={en?'Related information':'Související informace'}><a href={base+(en?'/en/':'/')+'#kontakt'}>{en?'Contact':'Kontakt'}</a> · <a href={base+(en?'/en/':'/')+(kind==='privacy'?'spoluprace/':'soukromi/')}>{kind==='privacy'?(en?'Working together':'Podmínky spolupráce'):(en?'Privacy and cookies':'Soukromí a cookies')}</a></nav>

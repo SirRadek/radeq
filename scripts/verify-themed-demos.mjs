@@ -3,7 +3,7 @@ import {resolve,join,relative} from 'node:path';import {pathToFileURL} from 'nod
 function seal(m){
  const sha=p=>createHash('sha256').update(readFileSync(p)).digest('hex');
  const walk=dir=>readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(join(dir,e.name)):[join(dir,e.name)]);
- const sources=[...['src','functions','tests','public','scripts','release'].flatMap(dir=>walk(resolve(dir))),...['astro.config.mjs','tsconfig.json','package.json','package-lock.json','playwright.themed-demos.config.ts','vitest.config.ts','wrangler.jsonc'].map(p=>resolve(p))];
+ const sources=[...['src','functions','tests','public','scripts','release','migrations'].flatMap(dir=>walk(resolve(dir))),...['astro.config.mjs','tsconfig.json','package.json','package-lock.json','playwright.themed-demos.config.ts','vitest.config.ts','wrangler.jsonc'].map(p=>resolve(p))];
  m.revision=spawnSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).stdout.trim();m.source_hashes=Object.fromEntries(sources.map(p=>[p,sha(p)]));
  for(const v of m.variants)v.artifact_hashes=Object.fromEntries(walk(v.dist).map(p=>[p,sha(p)]));
  return m;

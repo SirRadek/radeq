@@ -1,3 +1,5 @@
+import { reserveQuota, type QuotaDatabase } from '../../release/atomic-quotas.js';
+import { getCfConnectingIp } from '../../src/lib/requestGuards';
 import { isPublicHttpUrl } from '../../src/lib/leads';
 
 type MeasureStatus =
@@ -14,17 +16,12 @@ interface Env {
   // TODO pre-launch: set PSI_API_KEY as a Cloudflare secret for production volume.
   PSI_API_KEY?: string;
   TURNSTILE_SECRET?: string;
-  MEASURE_RATE_LIMIT?: KVNamespace;
+  LEADS_DB?: QuotaDatabase;
 }
 
 interface PagesContext {
   request: Request;
   env: Env;
-}
-
-interface KVNamespace {
-  get(key: string): Promise<string | null>;
-  put(key: string, value: string, options?: { expirationTtl?: number }): Promise<void>;
 }
 
 interface MeasureFinding {
@@ -70,11 +67,6 @@ interface PsiResponse {
   };
 }
 
-interface RateLimitResult {
-  allowed: boolean;
-  retryAfterSeconds?: number;
-}
-
 interface TurnstileVerifyResponse {
   success?: boolean;
   'error-codes'?: string[];
@@ -84,9 +76,6 @@ const PSI_ENDPOINT = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed
 const TURNSTILE_SITEVERIFY_ENDPOINT = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 const RATE_LIMIT_MAX = 5;
 const RATE_LIMIT_WINDOW_SECONDS = 10 * 60;
-const RATE_LIMIT_WINDOW_MS = RATE_LIMIT_WINDOW_SECONDS * 1000;
-
-const memoryRateLimit = new Map<string, { count: number; resetAt: number }>();
 
 export async function onRequestPost(context: PagesContext) {
   const { request, env } = context;
@@ -122,8 +111,9 @@ export async function onRequestPost(context: PagesContext) {
     }
   }
 
-  const rateLimit = await checkRateLimit(request, env);
-  if (!rateLimit.allowed) {
+  const rateLimit = await reserveQuota(env.LEADS_DB, { scope: 'measure', subject: getCfConnectingIp(request) || 'unknown', max: RATE_LIMIT_MAX, windowSeconds: RATE_LIMIT_WINDOW_SECONDS });
+  if (rateLimit.status === 'unavailable') return jsonResponse(createFailureResponse('psi_error', measuredUrl, locale), 503);
+  if (rateLimit.status === 'limited') {
     return jsonResponse(createFailureResponse('rate_limited', measuredUrl, locale), 429, rateLimit.retryAfterSeconds);
   }
 
@@ -239,97 +229,6 @@ function createPsiUrl(measuredUrl: string, apiKey?: string): string {
   }
 
   return url.toString();
-}
-
-async function checkRateLimit(request: Request, env: Env): Promise<RateLimitResult> {
-  const clientIp = getClientIp(request);
-  const key = `measure:${clientIp || 'unknown'}`;
-
-  // TODO pre-launch: configure PUBLIC_TURNSTILE_SITE_KEY (build env), TURNSTILE_SECRET (CF secret), and bind MEASURE_RATE_LIMIT KV; this fallback is isolate-local only.
-  if (env.MEASURE_RATE_LIMIT) {
-    return checkKvRateLimit(env.MEASURE_RATE_LIMIT, key);
-  }
-
-  return checkMemoryRateLimit(key);
-}
-
-async function checkKvRateLimit(kv: KVNamespace, key: string): Promise<RateLimitResult> {
-  const now = Date.now();
-  const raw = await kv.get(key);
-  const current = parseRateLimitEntry(raw, now);
-  if (current.count >= RATE_LIMIT_MAX) {
-    return { allowed: false, retryAfterSeconds: secondsUntil(current.resetAt, now) };
-  }
-
-  await kv.put(
-    key,
-    JSON.stringify({
-      count: current.count + 1,
-      resetAt: current.resetAt,
-    }),
-    { expirationTtl: RATE_LIMIT_WINDOW_SECONDS + 60 },
-  );
-
-  return { allowed: true };
-}
-
-function checkMemoryRateLimit(key: string): RateLimitResult {
-  const now = Date.now();
-  pruneMemoryRateLimit(now);
-
-  const current = memoryRateLimit.get(key);
-  if (!current || current.resetAt <= now) {
-    memoryRateLimit.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
-    return { allowed: true };
-  }
-
-  if (current.count >= RATE_LIMIT_MAX) {
-    return { allowed: false, retryAfterSeconds: secondsUntil(current.resetAt, now) };
-  }
-
-  current.count += 1;
-  return { allowed: true };
-}
-
-function parseRateLimitEntry(raw: string | null, now: number): { count: number; resetAt: number } {
-  if (!raw) return { count: 0, resetAt: now + RATE_LIMIT_WINDOW_MS };
-
-  try {
-    const parsed = JSON.parse(raw) as { count?: unknown; resetAt?: unknown };
-    const count = typeof parsed.count === 'number' && Number.isFinite(parsed.count) ? parsed.count : 0;
-    const resetAt = typeof parsed.resetAt === 'number' && parsed.resetAt > now
-      ? parsed.resetAt
-      : now + RATE_LIMIT_WINDOW_MS;
-
-    return { count, resetAt };
-  } catch {
-    return { count: 0, resetAt: now + RATE_LIMIT_WINDOW_MS };
-  }
-}
-
-function pruneMemoryRateLimit(now: number): void {
-  if (memoryRateLimit.size < 1000) return;
-
-  for (const [key, entry] of memoryRateLimit) {
-    if (entry.resetAt <= now) {
-      memoryRateLimit.delete(key);
-    }
-  }
-}
-
-function secondsUntil(resetAt: number, now: number): number {
-  return Math.max(1, Math.ceil((resetAt - now) / 1000));
-}
-
-function getClientIp(request: Request): string {
-  const cfIp = request.headers.get('cf-connecting-ip')?.trim();
-  if (cfIp) return cfIp;
-
-  return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? '';
-}
-
-function getCfConnectingIp(request: Request): string {
-  return request.headers.get('cf-connecting-ip')?.trim() ?? '';
 }
 
 async function verifyTurnstile(secret: string, token: string, remoteip: string): Promise<boolean> {

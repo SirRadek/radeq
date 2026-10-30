@@ -5,6 +5,7 @@ import { execFileSync } from 'node:child_process';
 import { assertContactContract, archiveCompiled } from './helpers/compiled-html.mjs';
 import { createEmptyLeadSubmission, validateLeadSubmission, normalizeLeadSubmission, getMissingLeadFields } from '../src/lib/leads';
 import { onRequestPost } from '../functions/api/leads';
+import { sqliteD1, closeSqliteDbs } from './helpers/sqlite-d1.mjs';
 
 const valid = { name: 'Fixture visitor', email: 'fixture@example.test', message: 'Please simplify our workflow.' };
 // A required category, fabricated fallback or weakened retained guard breaks these cases.
@@ -35,10 +36,9 @@ for (const [description, patch] of [
 ]) test(`retains rejection of ${description}`, () => expect(validateLeadSubmission({ ...valid, project_type: 'Web', ...patch }).ok).toBe(false));
 
 test('keyless API stores empty category for an omitted category', async () => {
-  const rows = []; const kv = new Map();
-  const statement = { bind(...values) { rows.push(values); return this; }, async run() { return { success: true }; } };
-  const env = { LEADS_DB: { prepare: () => statement }, MEASURE_RATE_LIMIT: { async get(key) { return kv.get(key) ?? null; }, async put(key, value) { kv.set(key, value); } } };
-  // D1/KV are fixture-only; provider fetch is blocked even if the production branch changes.
+  const rows = [];
+  const env = { LEADS_DB: sqliteD1({onQuery:(q,v)=>{if(q.includes('INSERT INTO leads'))rows.push(v)}}) };
+  // Real fixture-only SQLite; provider fetch remains blocked.
   const fetchMock = vi.fn(async () => { throw new Error('Unexpected provider fetch in keyless fixture'); });
   vi.stubGlobal('fetch', fetchMock);
   try {
@@ -47,7 +47,7 @@ test('keyless API stores empty category for an omitted category', async () => {
     expect(await response.json()).toMatchObject({ ok: true });
     expect(rows).toHaveLength(1); expect(rows[0][5]).toBe('');
     expect(fetchMock).not.toHaveBeenCalled();
-  } finally { vi.unstubAllGlobals(); }
+  } finally { vi.unstubAllGlobals(); closeSqliteDbs(); }
 });
 
 const root = process.cwd(); const fixtures = [];

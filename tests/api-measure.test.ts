@@ -1,3 +1,4 @@
+import { sqliteD1, closeSqliteDbs } from './helpers/sqlite-d1.mjs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { onRequestPost } from '../functions/api/measure';
 
@@ -8,7 +9,7 @@ const validMeasureBody = {
 
 describe('measure Pages Function Turnstile gate', () => {
   afterEach(() => {
-    vi.unstubAllGlobals();
+    vi.unstubAllGlobals(); closeSqliteDbs();
   });
 
   it('keeps measurement inert when TURNSTILE_SECRET is absent', async () => {
@@ -17,7 +18,7 @@ describe('measure Pages Function Turnstile gate', () => {
 
     const response = await onRequestPost({
       request: createMeasureRequest(validMeasureBody),
-      env: {},
+      env: { LEADS_DB: sqliteD1() },
     });
     const body = (await response.json()) as { status: string };
 
@@ -29,17 +30,14 @@ describe('measure Pages Function Turnstile gate', () => {
 
   it('rejects missing verification before rate limiting when TURNSTILE_SECRET is present', async () => {
     const fetchMock = vi.fn();
-    const rateLimit = {
-      get: vi.fn(),
-      put: vi.fn(),
-    };
+    const prepare = vi.fn(() => { throw Error('quota accessed before verification'); });
     vi.stubGlobal('fetch', fetchMock);
 
     const response = await onRequestPost({
       request: createMeasureRequest(validMeasureBody),
       env: {
         TURNSTILE_SECRET: 'secret',
-        MEASURE_RATE_LIMIT: rateLimit,
+        LEADS_DB: { prepare },
       },
     });
     const body = (await response.json()) as { status: string };
@@ -47,8 +45,7 @@ describe('measure Pages Function Turnstile gate', () => {
     expect(response.status).toBe(403);
     expect(body.status).toBe('verification_failed');
     expect(fetchMock).not.toHaveBeenCalled();
-    expect(rateLimit.get).not.toHaveBeenCalled();
-    expect(rateLimit.put).not.toHaveBeenCalled();
+    expect(prepare).not.toHaveBeenCalled();
   });
 
   it('verifies the Turnstile token before measuring when TURNSTILE_SECRET is present', async () => {
@@ -69,7 +66,7 @@ describe('measure Pages Function Turnstile gate', () => {
         },
       ),
       env: {
-        TURNSTILE_SECRET: 'secret',
+        TURNSTILE_SECRET: 'secret', LEADS_DB: sqliteD1(),
       },
     });
     const body = (await response.json()) as { status: string };

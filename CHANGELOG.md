@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-10-30 — audit fixes, patched dependencies and atomic quotas
+
+- **Přístupnost CZ/EN:** servisní CTA má krémový text na existujícím vínovém panelu (naměřeno 9,2935:1), odkaz do češtiny používá cs nezávisle na popisku, ověření má pojmenovanou roli group a kávová ilustrace roli img. Bez redesignu nebo změny cen.
+- **Závislosti:** Astro 7.4.4, React integrace 7.1.2, Vitest 4.1.12, Vite 8.3.5 a Sharp 0.35.5; minimální Node 22.23.4. React 19.2.6, Tailwind 4.3.0 a TypeScript 6 zůstávají. parse5 je výslovná testovací závislost. Čistá instalace a oba npm audity bez známých advisory.
+- **Kvóty:** sdílený atomic-quotas.js používají TS handlery i skutečný Worker. Atomické D1 rezervace nahrazují závodící KV čítače; společná recipient/global rezervace nevyčerpává rozpočet odmítnutým opakovaným příjemcem. Při chybě úložiště žádný fail-open; již uložená poptávka zachová 201 i při přeskočeném potvrzení. Přidána aditivní migrace a skutečné SQLite/D1 testy.
+- **Soukromí:** CZ/EN vysvětluje pseudonymní D1 čítače,24 h/10 min okna a doběh fyzického cleanupu při neaktivním webu. Datum soukromí 30.října; spolupráce 28.října. Ruční zákaznická retence zůstává oddělená.
+- **Ověření kandidáta:**164 unit PASS/1 skip,24 compiled PASS, Astro 87 souborů/0 chyb/0 varování/6 hints, source-bound browser 32 frontend+32 dem+4 Reactguards+16 právních renderů+36 metadata. Nezávislé finální review schválilo lokální kandidát; neprohlašuje neprovedené živé testy.
+- **Přenos:**206 přesných zdrojů,117 souborů site/, nové předání a veřejný allowlist. Historie/větev/workflow zachovány. Zdroj migrace ani statický GitHub balíček samy o sobě neprokazují provedení Cloudflare deploye. [Aktuální předání](docs/handoff/2026-10-30/README.md).
+
+
 ## 2026-10-29 — publikace GitHub CZ/EN a předání
 
 Na dosavadní publikační historii navazuje kompletní přijatý Windows stav. Přidány aktivní zdroje, aktuální `site/`, release backend/renderer, přenositelné součty/verifikátor/náhled, podrobné předání a historické review/snímky/testy. Stávající větev `codex/radeq-clean-pages-20261013` a workflow zachovány. Výchozí větev `new` a Cloudflare se nemění. Přihlašovací údaje, zákaznická data a soukromé rollback exporty v Git nejsou.

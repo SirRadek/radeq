@@ -1,3 +1,4 @@
+import { reserveQuota, reserveConfirmation } from './atomic-quotas.js';
 import { renderConfirmationEmail } from './confirmation-email.js';
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
@@ -253,79 +254,9 @@ async function verifyTurnstile(secret, token, remoteip, fetchImpl = fetch) {
   }
 }
 __name(verifyTurnstile, "verifyTurnstile");
-var memoryRateLimit = /* @__PURE__ */ new Map();
-async function checkRateLimit(kv, key, options) {
-  if (kv) return checkKvRateLimit(kv, key, options);
-  return checkMemoryRateLimit(key, options);
-}
-__name(checkRateLimit, "checkRateLimit");
-async function checkKvRateLimit(kv, key, options) {
-  const now = Date.now();
-  const windowMs = options.windowSeconds * 1e3;
-  let current;
-  try {
-    current = parseRateLimitEntry(await kv.get(key), now, windowMs);
-  } catch {
-    return { allowed: true };
-  }
-  if (current.count >= options.max) {
-    return { allowed: false, retryAfterSeconds: secondsUntil(current.resetAt, now) };
-  }
-  try {
-    await kv.put(
-      key,
-      JSON.stringify({ count: current.count + 1, resetAt: current.resetAt }),
-      { expirationTtl: options.windowSeconds + 60 }
-    );
-  } catch {
-  }
-  return { allowed: true };
-}
-__name(checkKvRateLimit, "checkKvRateLimit");
-function checkMemoryRateLimit(key, options) {
-  const now = Date.now();
-  const windowMs = options.windowSeconds * 1e3;
-  pruneMemoryRateLimit(now);
-  const current = memoryRateLimit.get(key);
-  if (!current || current.resetAt <= now) {
-    memoryRateLimit.set(key, { count: 1, resetAt: now + windowMs });
-    return { allowed: true };
-  }
-  if (current.count >= options.max) {
-    return { allowed: false, retryAfterSeconds: secondsUntil(current.resetAt, now) };
-  }
-  current.count += 1;
-  return { allowed: true };
-}
-__name(checkMemoryRateLimit, "checkMemoryRateLimit");
-function parseRateLimitEntry(raw, now, windowMs) {
-  if (!raw) return { count: 0, resetAt: now + windowMs };
-  try {
-    const parsed = JSON.parse(raw);
-    const count = typeof parsed.count === "number" && Number.isFinite(parsed.count) ? parsed.count : 0;
-    const resetAt = typeof parsed.resetAt === "number" && parsed.resetAt > now ? parsed.resetAt : now + windowMs;
-    return { count, resetAt };
-  } catch {
-    return { count: 0, resetAt: now + windowMs };
-  }
-}
-__name(parseRateLimitEntry, "parseRateLimitEntry");
-function pruneMemoryRateLimit(now) {
-  if (memoryRateLimit.size < 1e3) return;
-  for (const [key, entry] of memoryRateLimit) {
-    if (entry.resetAt <= now) memoryRateLimit.delete(key);
-  }
-}
-__name(pruneMemoryRateLimit, "pruneMemoryRateLimit");
-function secondsUntil(resetAt, now) {
-  return Math.max(1, Math.ceil((resetAt - now) / 1e3));
-}
-__name(secondsUntil, "secondsUntil");
-
 // functions/api/leads.ts
 var LEAD_RATE_LIMIT_MAX = 2;
 var LEAD_RATE_LIMIT_WINDOW_SECONDS = 24 * 60 * 60;
-var CONFIRMATION_GLOBAL_DAILY_MAX = 50;
 async function onRequestPost(context) {
   const { request, env } = context;
   if (!env.LEADS_DB) {
@@ -367,11 +298,13 @@ async function onRequestPost(context) {
       );
     }
   }
-  const rateLimit = rateLimitExempt ? { allowed: true } : await checkRateLimit(env.MEASURE_RATE_LIMIT, `lead:${clientIp || "unknown"}`, {
+  const rateLimit = rateLimitExempt ? { status: "allowed" } : await reserveQuota(env.LEADS_DB, {
+    scope: "lead", subject: clientIp || "unknown",
     max: LEAD_RATE_LIMIT_MAX,
     windowSeconds: LEAD_RATE_LIMIT_WINDOW_SECONDS
   });
-  if (!rateLimit.allowed) {
+  if (rateLimit.status === "unavailable") return jsonResponse({ ok: false, error: isEnglish ? "The form is temporarily unavailable. Please try later or write by email." : "Formulář je dočasně nedostupný. Zkuste to později nebo napište e-mailem." }, 503);
+  if (rateLimit.status === "limited") {
     return jsonResponse(
       {
         ok: false,
@@ -424,7 +357,7 @@ async function onRequestPost(context) {
   } catch {
     return jsonResponse({ ok: false, error: "Lead could not be stored." }, 500);
   }
-  const confirmationAllowed = await allowConfirmationEmail(env.MEASURE_RATE_LIMIT, lead.email);
+  const confirmationAllowed = Boolean(env.RESEND_API_KEY) && (await reserveConfirmation(env.LEADS_DB, lead.email)).status === "allowed";
   const [notifyResult, confirmResult] = await Promise.allSettled([
     sendLeadNotificationEmail(env.RESEND_API_KEY, lead, id, createdAt),
     confirmationAllowed ? sendLeadConfirmationEmail(env.RESEND_API_KEY, lead) : Promise.resolve("skipped")
@@ -477,21 +410,6 @@ function responseHeaders() {
   };
 }
 __name(responseHeaders, "responseHeaders");
-async function allowConfirmationEmail(kv, recipient) {
-  const email = recipient.trim().toLowerCase();
-  if (!email) return false;
-  const global = await checkRateLimit(kv, "confirm:global", {
-    max: CONFIRMATION_GLOBAL_DAILY_MAX,
-    windowSeconds: LEAD_RATE_LIMIT_WINDOW_SECONDS
-  });
-  if (!global.allowed) return false;
-  const perRecipient = await checkRateLimit(kv, `confirm:${email}`, {
-    max: 1,
-    windowSeconds: LEAD_RATE_LIMIT_WINDOW_SECONDS
-  });
-  return perRecipient.allowed;
-}
-__name(allowConfirmationEmail, "allowConfirmationEmail");
 function getEmailErrorCode(error) {
   if (typeof error === "object" && error !== null && "code" in error && typeof error.code === "string") {
     return error.code;
@@ -505,8 +423,6 @@ var PSI_ENDPOINT = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed";
 var TURNSTILE_SITEVERIFY_ENDPOINT2 = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 var RATE_LIMIT_MAX = 5;
 var RATE_LIMIT_WINDOW_SECONDS = 10 * 60;
-var RATE_LIMIT_WINDOW_MS = RATE_LIMIT_WINDOW_SECONDS * 1e3;
-var memoryRateLimit2 = /* @__PURE__ */ new Map();
 async function onRequestPost2(context) {
   const { request, env } = context;
   if (!isJsonRequest2(request)) {
@@ -528,14 +444,15 @@ async function onRequestPost2(context) {
     const verified = await verifyTurnstile2(
       turnstileSecret,
       readTurnstileToken2(body),
-      getCfConnectingIp2(request)
+      getCfConnectingIp(request)
     );
     if (!verified) {
       return jsonResponse2(createFailureResponse("verification_failed", measuredUrl, locale), 403);
     }
   }
-  const rateLimit = await checkRateLimit2(request, env);
-  if (!rateLimit.allowed) {
+  const rateLimit = await reserveQuota(env.LEADS_DB, { scope: "measure", subject: getCfConnectingIp(request) || "unknown", max: RATE_LIMIT_MAX, windowSeconds: RATE_LIMIT_WINDOW_SECONDS });
+  if (rateLimit.status === "unavailable") return jsonResponse2(createFailureResponse("psi_error", measuredUrl, locale), 503);
+  if (rateLimit.status === "limited") {
     return jsonResponse2(createFailureResponse("rate_limited", measuredUrl, locale), 429, rateLimit.retryAfterSeconds);
   }
   let psiResponse;
@@ -638,83 +555,6 @@ function createPsiUrl(measuredUrl, apiKey) {
   return url.toString();
 }
 __name(createPsiUrl, "createPsiUrl");
-async function checkRateLimit2(request, env) {
-  const clientIp = getClientIp(request);
-  const key = `measure:${clientIp || "unknown"}`;
-  if (env.MEASURE_RATE_LIMIT) {
-    return checkKvRateLimit2(env.MEASURE_RATE_LIMIT, key);
-  }
-  return checkMemoryRateLimit2(key);
-}
-__name(checkRateLimit2, "checkRateLimit");
-async function checkKvRateLimit2(kv, key) {
-  const now = Date.now();
-  const raw = await kv.get(key);
-  const current = parseRateLimitEntry2(raw, now);
-  if (current.count >= RATE_LIMIT_MAX) {
-    return { allowed: false, retryAfterSeconds: secondsUntil2(current.resetAt, now) };
-  }
-  await kv.put(
-    key,
-    JSON.stringify({
-      count: current.count + 1,
-      resetAt: current.resetAt
-    }),
-    { expirationTtl: RATE_LIMIT_WINDOW_SECONDS + 60 }
-  );
-  return { allowed: true };
-}
-__name(checkKvRateLimit2, "checkKvRateLimit");
-function checkMemoryRateLimit2(key) {
-  const now = Date.now();
-  pruneMemoryRateLimit2(now);
-  const current = memoryRateLimit2.get(key);
-  if (!current || current.resetAt <= now) {
-    memoryRateLimit2.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
-    return { allowed: true };
-  }
-  if (current.count >= RATE_LIMIT_MAX) {
-    return { allowed: false, retryAfterSeconds: secondsUntil2(current.resetAt, now) };
-  }
-  current.count += 1;
-  return { allowed: true };
-}
-__name(checkMemoryRateLimit2, "checkMemoryRateLimit");
-function parseRateLimitEntry2(raw, now) {
-  if (!raw) return { count: 0, resetAt: now + RATE_LIMIT_WINDOW_MS };
-  try {
-    const parsed = JSON.parse(raw);
-    const count = typeof parsed.count === "number" && Number.isFinite(parsed.count) ? parsed.count : 0;
-    const resetAt = typeof parsed.resetAt === "number" && parsed.resetAt > now ? parsed.resetAt : now + RATE_LIMIT_WINDOW_MS;
-    return { count, resetAt };
-  } catch {
-    return { count: 0, resetAt: now + RATE_LIMIT_WINDOW_MS };
-  }
-}
-__name(parseRateLimitEntry2, "parseRateLimitEntry");
-function pruneMemoryRateLimit2(now) {
-  if (memoryRateLimit2.size < 1e3) return;
-  for (const [key, entry] of memoryRateLimit2) {
-    if (entry.resetAt <= now) {
-      memoryRateLimit2.delete(key);
-    }
-  }
-}
-__name(pruneMemoryRateLimit2, "pruneMemoryRateLimit");
-function secondsUntil2(resetAt, now) {
-  return Math.max(1, Math.ceil((resetAt - now) / 1e3));
-}
-__name(secondsUntil2, "secondsUntil");
-function getClientIp(request) {
-  const cfIp = request.headers.get("cf-connecting-ip")?.trim();
-  if (cfIp) return cfIp;
-  return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "";
-}
-__name(getClientIp, "getClientIp");
-function getCfConnectingIp2(request) {
-  return request.headers.get("cf-connecting-ip")?.trim() ?? "";
-}
-__name(getCfConnectingIp2, "getCfConnectingIp");
 async function verifyTurnstile2(secret, token, remoteip) {
   const trimmedToken = token.trim();
   if (!trimmedToken || trimmedToken.length > 2048) return false;
@@ -1090,4 +930,3 @@ __name(methodNotAllowed, "methodNotAllowed");
 export {
   index_default as default
 };
-//# sourceMappingURL=index.js.map

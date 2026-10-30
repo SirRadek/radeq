@@ -1,34 +1,30 @@
-# RadeQ — CZ/EN vydání a návrat na první PC
+# RadeQ — CZ/EN audit fixes and portable handoff, 30. 10. 2026
 
-**29. 10. 2026.** Kompletní aktivní zdroje z Windows, nový levý index, responzivní ukázky a podrobné předání. Zdroj je zde přímo v kořeni; na Windows byl v `app/`.
+Aktivní zdroje jsou v kořeni repozitáře (na Windows původně v app/). Tato revize obsahuje opravy přístupnosti, aktualizované závislosti a atomické D1 kvóty. Zachovává schválený vzhled, ceny a oba jazyky. [CHANGELOG](CHANGELOG.md) · [Aktuální předání](docs/handoff/2026-10-30/README.md) · [Prompt do Codexu](docs/handoff/2026-10-30/COPY-PASTE-DO-CODEXU.md) · [Podmínky vydání](docs/deployments/2026-10-30-audit-release/README.md).
 
-- [Český náhled](https://sirradek.github.io/radeq/) · [English preview](https://sirradek.github.io/radeq/en/)
-- [CHANGELOG](CHANGELOG.md) · [Předání na první PC](docs/handoff/2026-10-29/README.md) · [Prompt do Codexu](docs/handoff/2026-10-29/COPY-PASTE-DO-CODEXU.md)
-- [Design QA](design-qa.md) · [Nezávislé ověření škálování](docs/design/2026-10-28-responsive/verification.md)
+[Český Pages náhled](https://sirradek.github.io/radeq/) · [English preview](https://sirradek.github.io/radeq/en/). This revision includes bilingual accessibility repairs, patched tooling, atomic D1 quotas, migration and portable sources. A repository snapshot is not proof that the Cloudflare migration or deployment has run.
 
-## Obnova bez přepsání staré práce
+## Ověření a obnova
 
-Node >=22.12, doporučeno Node24; pro statický náhled Python3. Výchozí větev `new` není aktuální publikace. Starý checkout se svými změnami zachovej.
+Node **>=22.23.4**, doporučeno Node 24; statický náhled potřebuje Node a Python 3, nikoli npm instalaci. Výchozí větev new je jiná vývojová linie. Starý checkout ani místní práci nepřepisuj/resetuj.
 
-```sh
-git clone --branch codex/radeq-clean-pages-20261013 --single-branch https://github.com/SirRadek/radeq.git radeq-return-2026-10-29
-cd radeq-return-2026-10-29
+~~~sh
+git clone --branch codex/radeq-clean-pages-20261013 --single-branch https://github.com/SirRadek/radeq.git radeq-return-2026-10-30
+cd radeq-return-2026-10-30
 node tools/verify-publication.mjs
 python tools/serve-verified-preview.py --port 4394
-```
+~~~
 
-Otevři `http://127.0.0.1:4394/radeq/` a `/radeq/en/`. Na Windows případně `py` místo `python`. Server má správné mapování prefixu, poslouchá pouze místně a nepřijímá POST. Npm není pro tento náhled potřeba.
+Otevři http://127.0.0.1:4394/radeq/ a /radeq/en/. Na Windows případně py místo python. Server je místní a nepřijímá POST. Vývoj: npm ci, npm run dev -- --host 127.0.0.1. Oba nové buildy, compiled testy a cílené typy: node scripts/verify-themed-demos.mjs. Nový počítač vytváří nový manifest se svými cestami; historické důkazy nepřepisovat. Nespouštět souběžně další fixture buildy.
 
-Pro vývoj: `npm ci`, `npm run dev -- --host 127.0.0.1`. Pro nové root i GitHub sestavení, compiled testy a cílený Astro check: `node scripts/verify-themed-demos.mjs`. Nový manifest patří novému PC, historické nepřepisuj. Nespouštěj souběžně další fixture buildy. Samostatný GitHub build potřebuje `DEPLOY_TARGET=github-pages`; v PowerShell nastav `$env:DEPLOY_TARGET='github-pages'`. Bez této proměnné vzniká root varianta. Workflow samo nesestavuje: publikuje pouze `site/`.
+## Dva cíle
 
-## Dva různé cíle
+GitHub Pages je statický noindex náhled pod /radeq/, s e-mailovým kontaktem, bez skutečného poptávkového API a volitelného měření. Workflow publikuje přesně site/, nikoli automaticky nově sestavené src/dist. Produkční root pro radeq.cz má formulář, oddělené souhlasy a Worker API. Zachovat tento rozdíl.
 
-GitHub Pages je statický **noindex** náhled pod `/radeq/`, s e-mailovým kontaktem, bez poptávkového formuláře/API a volitelného měření. Root sestavení pro radeq.cz má formulář, oddělené souhlasy, GA4 a Sklik. Zachovej tento záměrný rozdíl. `release/` obsahuje skutečný backend a renderer pro přenos; na Pages se nespouštějí.
+release/ obsahuje skutečný backend včetně atomic-quotas.js; migrations/0001_atomic_quotas.sql je předpokladem jeho aktivace na Cloudflare. Na Pages se backend nespouští. Samotný GitHub commit/push nenasadí Cloudflare ani neprovede migraci. Existující LEADS_DB/D1, KV a secrets se zachovávají; podrobné pořadí, přechod kvót a bezpečný návrat jsou v podmínkách vydání. Historické deploy skripty při obnovení nespouštět.
 
-Toto vydání **nemění Cloudflare**. Poslední doložená produkce: Worker `e1793e7a-6884-4fc7-bcb2-c9a693d860c7` z28.10.2026 19:01CET s novým CZ/EN e-mailem. Pozdější levý index a škálování se nyní publikují jen na GitHub. Před dalším nasazením znovu ověř vzdálený stav, zachovej D1/KV/secrets a soukromé vratné verze. Historické release skripty nespouštěj při obnovení.
+## Identita a doložené kontroly
 
-## Integrita a důkazy
+publication-manifest.json má relativní hashe všech veřejných souborů a původních 206 zdrojů; node tools/verify-publication.mjs --site-only kontroluje 117 souborů webu. Přijatý runtime build-1793375135964, manifest SHA256 07e7ea616855edfd1de03859a94b9a4f23ebc7d2fead9ed9311100c8cb581b8a. [Přenosný souhrn ověření](docs/verification/2026-10-30-audit/README.md) jasně odděluje kontroly lokálního kandidáta od pozdější kontroly kopie či živého nasazení.
 
-`publication-manifest.json` používá relativní cesty a ověřuje zdroje, `site/` i přiložené dokumenty. `node tools/verify-publication.mjs --site-only` ověří pouze veřejný web. Runtime byl přijat jako `build-1793216670490`, původní manifest SHA256 `44e870520221ea468d379347753c4b1288fb6874dc0460d7b6c585b187461ecb`. Testy28.10.jsou jasně odděleny od nové kontroly integrity/publikace29.10.
-
-Podrobnosti v changelogu a předání. Absolutní Windows cesty a stará tvrzení „bez publikace“ v historických důkazech platí k jejich datu. Soukromé provozní exporty, autentizace, zákaznické záznamy, závislosti/cache a původní celý archiv nejsou veřejnou součástí; na Windows zůstávají zachovány.
+Autentizace, zákaznické záznamy, soukromé rollback exporty, auditní baseline, node_modules a cache nejsou součástí veřejného balíčku. Starší předání z 29.října a jeho doklady zůstávají historické; pro tuto revizi má přednost předání z 30.října.

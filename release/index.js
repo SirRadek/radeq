@@ -1,5 +1,5 @@
 import production from './production-backend.js';
-// The API executable is an exact production snapshot. Only the frontend and host gate change.
+// Preserved production API with shared atomic D1 quotas; preview host gate remains enforced.
 export default {async fetch(request,env){
  const url=new URL(request.url);const live=url.hostname==='radeq.cz';
  if(!live&&url.pathname.startsWith('/api/'))return new Response('Preview APIs are disabled',{status:403,headers:{'cache-control':'no-store','x-robots-tag':'noindex, nofollow'}});

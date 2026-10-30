@@ -1,4 +1,6 @@
-import { describe, expect, it, vi } from 'vitest';
+import { sqliteD1, closeSqliteDbs } from './helpers/sqlite-d1.mjs';
+afterEach(closeSqliteDbs);
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { onRequestPost } from '../functions/api/leads';
 
 const completeLead = {
@@ -35,8 +37,8 @@ describe('lead Pages Function', () => {
     expect(response.status).toBe(201);
     expect(body.ok).toBe(true);
     expect(body.leadId).toMatch(/^lead_/);
-    expect(calls[0]?.query).toContain('INSERT INTO leads');
-    expect(calls[1]?.values).toContain('siroky@radeq.cz');
+    expect(calls.find(c => c.query.includes('INSERT INTO leads'))?.query).toContain('INSERT INTO leads');
+    expect(calls.find(c => c.query.includes('INSERT INTO leads'))?.values).toContain('siroky@radeq.cz');
   });
 
   it('sends an owner notification and a visitor confirmation through Resend', async () => {
@@ -291,29 +293,6 @@ describe('lead Pages Function', () => {
 
 function createLeadEnv(extra: Record<string, unknown> = {}) {
   const calls: Array<{ query: string; values: unknown[] }> = [];
-  const statement = {
-    bind: (...values: unknown[]) => {
-      calls.push({ query: '', values });
-      return statement;
-    },
-    run: async () => ({ success: true }),
-  };
-  const kvStore = new Map<string, string>();
-  const env = {
-    LEADS_DB: {
-      prepare: (query: string) => {
-        calls.push({ query, values: [] });
-        return statement;
-      },
-    },
-    MEASURE_RATE_LIMIT: {
-      get: async (key: string) => kvStore.get(key) ?? null,
-      put: async (key: string, value: string) => {
-        kvStore.set(key, value);
-      },
-    },
-    ...extra,
-  };
-
+  const env = { LEADS_DB: sqliteD1({onQuery:(query:string,values:unknown[])=>calls.push({query,values})}), ...extra };
   return { env, calls };
 }

@@ -1,0 +1,7 @@
+Pokračujeme na RadeQ po přenosu revize 30.10.2026. Zachovej starý checkout a klonuj do nové složky větev codex/radeq-clean-pages-20261013 z https://github.com/SirRadek/radeq.git; výchozí new je jiná linie. Neprováděj reset ani opětovné použití LOCAL-CHANGES.patch.
+
+Přečti AGENTS.md, README.md, CHANGELOG.md a docs/handoff/2026-10-30/README.md. Aktivní zdroje jsou v kořeni. Ověř node tools/verify-publication.mjs a spusť python tools/serve-verified-preview.py --port 4394 pro /radeq/ a /radeq/en/. Nejdřív potvrď přesnou identitu a otevři statický náhled; další změny/migrace/deploy potřebují aktuální zadání vlastníka.
+
+Máme opravený kontrast/lang/ARIA CZ/EN, Astro 7.4.4/Reactintegraci 7.1.2/Vitest 4.1. 12 a atomické D1 kvóty. Runtime release/atomic-quotas.js používají source handlery i skutečný Worker; migrace migrations/0001_atomic_quotas.sql musí být na existující LEADS_DB před aktivací nového Workeru. Zdroj migrace ani GitHub push není důkaz, že Cloudflare migrace proběhla. Před jakýmkoli novým releasem ověř živý stav, přechod kvót, bindings a soukromý rollback. Nikdy nemaž leads/zákaznická data, nepřenášej přihlášení.
+
+GitHub je statický noindex /radeq náhled, site/ se publikuje bez rebuild. Root Cloudflare má formulář/souhlasy/API. Zachovej oba cíle, vzhled, ceny a významy ukázek. Node>=22.23.4, doporučeno 24; pro vývoj npm ci a node scripts/verify-themed-demos.mjs vytvoří nový místní manifest. Historické běhy nejsou čerstvými testy tohoto PC. Původní auditní baseline a provozní exporty nejsou veřejnou součástí.

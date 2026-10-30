@@ -1,40 +1,28 @@
+import { reserveQuota, reserveConfirmation, type QuotaDatabase } from '../../release/atomic-quotas.js';
 import { createLeadId, validateLeadSubmission } from '../../src/lib/leads';
 import {
   sendLeadConfirmationEmail,
   sendLeadNotificationEmail,
 } from '../../src/lib/leadNotificationEmail';
 import {
-  checkRateLimit,
   getCfConnectingIp,
   readTurnstileToken,
   verifyTurnstile,
-  type KVNamespaceLike,
 } from '../../src/lib/requestGuards';
 
 const LEAD_RATE_LIMIT_MAX = 2;
 const LEAD_RATE_LIMIT_WINDOW_SECONDS = 24 * 60 * 60;
-const CONFIRMATION_GLOBAL_DAILY_MAX = 50;
 
 interface Env {
-  LEADS_DB?: D1Database;
+  LEADS_DB?: QuotaDatabase;
   RESEND_API_KEY?: string;
   TURNSTILE_SECRET?: string;
-  MEASURE_RATE_LIMIT?: KVNamespaceLike;
   RATE_LIMIT_WHITELIST?: string;
 }
 
 interface PagesContext {
   request: Request;
   env: Env;
-}
-
-interface D1Database {
-  prepare(query: string): D1PreparedStatement;
-}
-
-interface D1PreparedStatement {
-  bind(...values: unknown[]): D1PreparedStatement;
-  run(): Promise<{ success: boolean; error?: string }>;
 }
 
 export async function onRequestPost(context: PagesContext) {
@@ -96,12 +84,14 @@ export async function onRequestPost(context: PagesContext) {
 
   // Volume cap: max LEAD_RATE_LIMIT_MAX submissions per client IP per day (whitelisted IPs exempt).
   const rateLimit = rateLimitExempt
-    ? { allowed: true }
-    : await checkRateLimit(env.MEASURE_RATE_LIMIT, `lead:${clientIp || 'unknown'}`, {
+    ? { status: 'allowed' as const }
+    : await reserveQuota(env.LEADS_DB, {
+        scope: 'lead', subject: clientIp || 'unknown',
         max: LEAD_RATE_LIMIT_MAX,
         windowSeconds: LEAD_RATE_LIMIT_WINDOW_SECONDS,
       });
-  if (!rateLimit.allowed) {
+  if (rateLimit.status === 'unavailable') return jsonResponse({ ok: false, error: isEnglish ? 'The form is temporarily unavailable. Please try later or write by email.' : 'Formulář je dočasně nedostupný. Zkuste to později nebo napište e-mailem.' }, 503);
+  if (rateLimit.status === 'limited') {
     return jsonResponse(
       {
         ok: false,
@@ -164,7 +154,7 @@ export async function onRequestPost(context: PagesContext) {
 
   // The confirmation goes to a visitor-supplied address, so bound the abuse surface:
   // at most one confirmation per recipient per day, under a global daily ceiling.
-  const confirmationAllowed = await allowConfirmationEmail(env.MEASURE_RATE_LIMIT, lead.email);
+  const confirmationAllowed = Boolean(env.RESEND_API_KEY) && (await reserveConfirmation(env.LEADS_DB, lead.email)).status === 'allowed';
 
   const [notifyResult, confirmResult] = await Promise.allSettled([
     sendLeadNotificationEmail(env.RESEND_API_KEY, lead, id, createdAt),
@@ -222,25 +212,6 @@ function responseHeaders(): HeadersInit {
     'access-control-allow-methods': 'POST, OPTIONS',
     'access-control-allow-headers': 'content-type',
   };
-}
-
-async function allowConfirmationEmail(kv: KVNamespaceLike | undefined, recipient: string): Promise<boolean> {
-  const email = recipient.trim().toLowerCase();
-  if (!email) return false;
-
-  // Global ceiling first — protects the sending quota/reputation from a broad spray.
-  const global = await checkRateLimit(kv, 'confirm:global', {
-    max: CONFIRMATION_GLOBAL_DAILY_MAX,
-    windowSeconds: LEAD_RATE_LIMIT_WINDOW_SECONDS,
-  });
-  if (!global.allowed) return false;
-
-  // Per-recipient — never send more than one confirmation to the same address per day.
-  const perRecipient = await checkRateLimit(kv, `confirm:${email}`, {
-    max: 1,
-    windowSeconds: LEAD_RATE_LIMIT_WINDOW_SECONDS,
-  });
-  return perRecipient.allowed;
 }
 
 function getEmailErrorCode(error: unknown): string {

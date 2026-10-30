@@ -1,22 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
-  checkRateLimit,
   getCfConnectingIp,
   getClientIp,
   readTurnstileToken,
   verifyTurnstile,
-  type KVNamespaceLike,
 } from '../src/lib/requestGuards';
-
-function memoryKv(): KVNamespaceLike {
-  const store = new Map<string, string>();
-  return {
-    get: async (key) => store.get(key) ?? null,
-    put: async (key, value) => {
-      store.set(key, value);
-    },
-  };
-}
 
 describe('readTurnstileToken', () => {
   it('reads turnstileToken, falls back to cf-turnstile-response, else empty', () => {
@@ -77,32 +65,3 @@ describe('verifyTurnstile', () => {
   });
 });
 
-describe('checkRateLimit', () => {
-  it('allows up to max then blocks with a retry-after (KV path)', async () => {
-    const kv = memoryKv();
-    const opts = { max: 2, windowSeconds: 3600 };
-    expect((await checkRateLimit(kv, 'k', opts)).allowed).toBe(true);
-    expect((await checkRateLimit(kv, 'k', opts)).allowed).toBe(true);
-    const blocked = await checkRateLimit(kv, 'k', opts);
-    expect(blocked.allowed).toBe(false);
-    expect(blocked.retryAfterSeconds ?? 0).toBeGreaterThan(0);
-  });
-
-  it('keeps separate counters per key', async () => {
-    const kv = memoryKv();
-    const opts = { max: 1, windowSeconds: 3600 };
-    expect((await checkRateLimit(kv, 'a', opts)).allowed).toBe(true);
-    expect((await checkRateLimit(kv, 'b', opts)).allowed).toBe(true);
-    expect((await checkRateLimit(kv, 'a', opts)).allowed).toBe(false);
-  });
-
-  it('fails open when the KV read throws', async () => {
-    const kv: KVNamespaceLike = {
-      get: async () => {
-        throw new Error('kv down');
-      },
-      put: async () => {},
-    };
-    expect((await checkRateLimit(kv, 'k', { max: 1, windowSeconds: 3600 })).allowed).toBe(true);
-  });
-});

@@ -18,6 +18,7 @@ const base=import.meta.env.BASE_URL.replace(/\/$/,'');
 </dialog>
 <script>
  import {createConsentController} from '../lib/consent-core.mjs';
+ import {createMeasurementChannel} from '../lib/measurement-client.mjs';
  const dialog=document.querySelector<HTMLDialogElement>('#rq-consent');
  if(dialog){
   let storage;try{storage=window.localStorage}catch{storage={getItem:()=>null,setItem:()=>{throw Error('storage')}}}
@@ -25,21 +26,14 @@ const base=import.meta.env.BASE_URL.replace(/\/$/,'');
    const names=document.cookie.split(';').map(c=>c.split('=')[0].trim()).filter(n=>purpose==='analytics'?/^_ga(?:_|$)|^_gid$|^_gat/.test(n):/^(sid|udid|szn.*|_szn.*)$/.test(n));
    for(const name of names)for(const domain of ['',location.hostname,'.'+location.hostname])document.cookie=name+'=; Max-Age=0; path=/;'+(domain?' domain='+domain+';':'')+' SameSite=Lax';
   }
-  const control=createConsentController({storage,start:(purpose:string)=>{
+  const seenByPurpose={analytics:new Set<string>(),marketing:new Set<string>()};
+  const control=createConsentController({storage,start:(purpose:'analytics'|'marketing')=>{
    const enabled=purpose==='analytics'?dialog.dataset.ga4==='true':dialog.dataset.sem==='true';
    if(!enabled)return {stop(){},event(){}};
    // Each SDK gets a disposable document with no form fields or incoming referrer.
    // Removing it destroys SDK timers, listeners and pending loaders, including on revocation.
-   const frame=document.createElement('iframe');frame.hidden=true;frame.title=purpose==='analytics'?'Google Analytics':'Seznam Sklik';frame.referrerPolicy='no-referrer';frame.src=dialog.dataset.frame!;
-   let alive=true,ready=false,pending=false;
-   const send=()=>{if(alive&&ready)frame.contentWindow?.postMessage({type:'radeq:lead-received'},location.origin)};
-   const listen=(e:MessageEvent)=>{
-    if(!alive||e.origin!==location.origin||e.source!==frame.contentWindow)return;
-    if(e.data?.type==='radeq:measurement-ready')frame.contentWindow?.postMessage({type:'radeq:measurement-init',purpose,path:location.pathname},location.origin);
-    if(e.data?.type==='radeq:measurement-loaded'){ready=true;if(pending)send();pending=false}
-   };
-   window.addEventListener('message',listen);document.body.append(frame);
-   return {event(){if(ready)send();else pending=true},stop(){alive=false;pending=false;window.removeEventListener('message',listen);frame.remove();clearCookies(purpose)}};
+   const channel=createMeasurementChannel({purpose,frameUrl:dialog.dataset.frame!,seen:seenByPurpose[purpose]});
+   return {event:(name:string)=>channel.event(name),stop(){channel.stop();clearCookies(purpose)}};
   }});
   const analytics=dialog.querySelector<HTMLInputElement>('[name="analytics"]')!;
   const marketing=dialog.querySelector<HTMLInputElement>('[name="marketing"]')!;
@@ -54,6 +48,14 @@ const base=import.meta.env.BASE_URL.replace(/\/$/,'');
   });
   const saved=control.restore();if(!saved&&dialog.dataset.active==='true')open();
   window.addEventListener('radeq:lead-received',()=>control.event('lead_received'));
+  document.addEventListener('click',e=>{
+   const link=(e.target as Element)?.closest('a[href]');if(!link)return;
+   const url=new URL(link.getAttribute('href')!,location.href);
+   if(['tel:','mailto:'].includes(url.protocol)||url.origin===location.origin&&(url.hash==='#kontakt'||/\/(?:en\/)?kontakt\/$/.test(url.pathname)))control.event('contact_intent');
+  });
+  document.addEventListener('focusin',e=>{
+   if((e.target as Element)?.matches('#rq-lead-form input:not([name="honeypot"]):not([type="hidden"]),#rq-lead-form select,#rq-lead-form textarea'))control.event('form_start');
+  });
   // Another tab can revoke immediately without resurrecting a stale local choice.
   window.addEventListener('storage',()=>{const next=control.restore();if(!next)control.choose({analytics:false,marketing:false})});
  }

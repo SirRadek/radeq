@@ -4,6 +4,7 @@ import ConsentPanel from '../components/ConsentPanel.astro';
 import RqMetadata from '../components/RqMetadata.astro';
 import type { Locale } from '../data/locales';
 import MeasurementTracker from '../components/MeasurementTracker';
+import { identity } from '../data/legal';
 import '../styles/minimal-home-preview.css';
 import '../styles/minimal-site.css';
 import '../styles/studio.css';
@@ -25,7 +26,27 @@ const siteUrl = Astro.site ?? new URL(Astro.url.origin);
 const canonicalUrl = new URL(canonicalPath ? `${basePath}${canonicalPath}` : Astro.url.pathname, siteUrl).toString();
 const alternateUrl = alternatePath ? new URL(`${basePath}${alternatePath}`, siteUrl).toString() : undefined;
 const ogImageUrl = new URL(`${basePath}/og-default.jpg`, siteUrl).toString();
-const businessSchema={'@context':'https://schema.org','@type':'ProfessionalService','@id':'https://radeq.cz/#business',name:'RadeQ',legalName:'Radek Široký',url:'https://radeq.cz/',email:'siroky@radeq.cz',telephone:'+420730634439',identifier:'IČO 08748811',address:{'@type':'PostalAddress',streetAddress:'Nezamyslova 274/10',addressLocality:'Praha 2',postalCode:'128 00',addressCountry:'CZ'},areaServed:'CZ'};
+const personId = 'https://radeq.cz/#person';
+const businessId = 'https://radeq.cz/#business';
+const identitySchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'ProfessionalService', '@id': businessId,
+      name: identity.brand, legalName: identity.name, url: 'https://radeq.cz/',
+      email: identity.email, telephone: identity.phone,
+      identifier: { '@type': 'PropertyValue', propertyID: 'IČO', value: identity.ico },
+      address: { '@type': 'PostalAddress', streetAddress: identity.street, addressLocality: identity.city, postalCode: identity.postcode, addressCountry: 'CZ' },
+      areaServed: 'CZ', founder: { '@id': personId },
+      sameAs: ['https://www.firmy.cz/detail/14036384-radeq-praha-nusle.html', 'https://www.zivefirmy.cz/radeq_f1952239'],
+    },
+    {
+      '@type': 'Person', '@id': personId, name: identity.name,
+      url: 'https://radeq.cz/#autor', worksFor: { '@id': businessId },
+      sameAs: ['https://www.linkedin.com/in/sirradek', 'https://github.com/SirRadek'],
+    },
+  ],
+};
 const defaultUrl = lang === 'cs' ? canonicalUrl : alternateUrl;
 ---
 
@@ -50,7 +71,7 @@ const defaultUrl = lang === 'cs' ? canonicalUrl : alternateUrl;
         { rel: 'apple-touch-icon', url: basePath + '/apple-touch-icon.png' },
       ]}
     />
-    {!isPreviewChannel && !Astro.props.preview && <script is:inline type="application/ld+json" set:html={JSON.stringify(businessSchema).replaceAll('<','\\u003c')} />}
+    {!isPreviewChannel && !Astro.props.preview && <script is:inline type="application/ld+json" set:html={JSON.stringify(identitySchema).replaceAll('<','\\u003c')} />}
     <style is:global set:html={`@font-face{font-family:Chillax;src:url('${basePath}/fonts/radeq/chillax.woff2') format('woff2');font-weight:200 700;font-display:swap}@font-face{font-family:'Cabinet Grotesk';src:url('${basePath}/fonts/radeq/cabinet-grotesk.woff2') format('woff2');font-weight:100 900;font-display:swap}`} />
     {(isPreviewChannel || Astro.props.preview) && <meta name="robots" content="noindex,nofollow" />}
   </head>

@@ -1354,8 +1354,8 @@ const enJourney: HomeContent['journey']['phases'] = [
 export const homeContent = {
   cs: {
     seo: {
-      title: 'RadeQ.cz - Racionální digitalizace',
-      description: 'Weby, data a automatizace pro živnostníky, malé firmy a spolky.',
+      title: 'Weby, automatizace a AI pomocníci | Radek Široký — RadeQ',
+      description: 'Radek Široký (RadeQ): tvorba a redesign webů, e-shopy, data, automatizace a AI pomocníci pro živnostníky, malé firmy a spolky. Online i telefonicky.',
       canonicalPath: '/',
       alternatePath: '/en/',
       alternateLabel: 'EN',
@@ -1509,7 +1509,7 @@ export const homeContent = {
       title: 'RadeQ vedu sám — a na větší projekty mám tým.',
       paragraphs: [
         'Jsem Radek Široký a RadeQ vedu sám — návrh, realizaci i předání máte v jedné ruce, takže víte, s kým mluvíte a kdo za výsledek ručí. Na větší projekty přibírám zkušené programátory a designéry, kteří se rádi zapojí — společně zvládneme i větší projekty.',
-        'Webům, e-shopům, SEO, marketingu a supportu se věnuju od roku 2019 — a už tehdy jsem si začal automatizovat opakovanou kancelářskou práci. Od roku 2025 k tomu přidávám analýzu, testování a práci s daty (databáze, procesy, logika, metodika, bezpečnost).',
+        'V roce 2019 jsem v myTimi pracoval na správě webů, základním SEO, rešerších a zákaznické podpoře. Od roku 2025 se věnuji aplikační podpoře a IT analýze, od roku 2026 také testování AI chatbotů.',
         'K technice mám blízko od střední — 3D a počítače. Programovat jsem začal u pětiosého frézovacího centra; tam mi došlo, že mě baví věci řídit, přizpůsobit a opravit — a postupně jsem to přetavil do vývoje softwaru.',
         'Nejde mi o efekt, ale o to, aby web přiváděl poptávky a ubylo vám ruční práce. Předávám hotové a otestované, abyste drobnosti zvládli sami — bez závislosti na dodavateli.',
       ],
@@ -1741,8 +1741,8 @@ export const homeContent = {
   },
   en: {
     seo: {
-      title: 'RadeQ.cz - Rational digitalization',
-      description: 'Websites, data, and automation for sole traders, small businesses, and associations.',
+      title: 'Websites, automation & AI helpers | Radek Široký — RadeQ',
+      description: 'Radek Široký (RadeQ): websites and redesigns, e-commerce, data, automation and AI helpers for sole traders, small businesses and associations. Online and by phone.',
       canonicalPath: '/en/',
       alternatePath: '/',
       alternateLabel: 'CZ',
@@ -1896,7 +1896,7 @@ export const homeContent = {
       title: 'I run RadeQ myself — with a team for bigger projects.',
       paragraphs: [
         "I'm Radek Široký and I run RadeQ myself — design, build, and handover are all in one pair of hands, so you know who you're talking to and who stands behind the result. For bigger projects I bring in experienced developers and designers who are glad to join — so scope is not a limit.",
-        "I've worked with websites, e-shops, SEO, marketing, and support since 2019 — and even back then I started automating repetitive office work. Since 2025 I've added analysis, testing, and data work (databases, processes, logic, methodology, security).",
+        "In 2019, I worked on website maintenance, basic SEO, research and customer support at myTimi. Since 2025, I've worked in application support and IT analysis, adding AI chatbot testing in 2026.",
         "I've been close to tech since high school — 3D and computers. I started programming on a five-axis milling machine; that's where I realized I enjoy controlling, adapting, and fixing things — and gradually turned it into software development.",
         "I'm not after flashy effects, but a website that brings in enquiries and cuts your manual work. I hand over finished and tested, so you can manage the small things yourself — without supplier lock-in.",
       ],

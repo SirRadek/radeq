@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-30 — organická viditelnost, místně ověřený kandidát
+
+- CZ/EN metadata a úvod upřesňují nabídku i Radka Širokého; propojená Person/business identita, čtyři profesní/firemní odkazy a stručný vlastní případový doklad. Modelová dema nejsou klientské reference. H1, ceny a vzhled zachovány.
+- Jasné odlišení automatické kontroly zdarma a ručního auditu od 3 000 Kč na stránkách služeb.
+- Místní GA4 tag G-KEYQT7L6WE, bounded rq_source a contact_intent/form_start/generate_lead pouze po odpovídajícím souhlasu. Úprava CZ/EN soukromí, striktní iframe zprávy, odvolání a deduplikace. Pages providery prázdné; backend a D1 migrace se nemění.
+- 16 cílených + 24 compiled testů PASS, oba buildy a typy bez errors/warnings, 6 stávajících hints; nezávislé M3/M4 APPROVE. Místní SDK fixture nedokazuje ostrý přenos ani přijetí zákaznické poptávky. [Podrobnosti](docs/verification/2026-10-30-organic-foundation/README.md).
+
+
 ## 2026-10-30 — audit fixes, patched dependencies and atomic quotas
 
 - **Přístupnost CZ/EN:** servisní CTA má krémový text na existujícím vínovém panelu (naměřeno 9,2935:1), odkaz do češtiny používá cs nezávisle na popisku, ověření má pojmenovanou roli group a kávová ilustrace roli img. Bez redesignu nebo změny cen.

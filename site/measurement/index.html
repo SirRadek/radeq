@@ -1,16 +1,21 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><title>Measurement</title></head><body><script>(function(){const config = {"ga4":"","sem":""};
+const sourceCategories = ["unknown","google","seznam","bing","chatgpt","perplexity","claude","gemini","copilot","linkedin","github","firmy","zivefirmy"];
 
 (()=>{
- let initialized=false,loaded=false,purpose='';
+ let initialized=false,loaded=false,purpose='',pageLocation='',source='unknown';
+ const seen=new Set();
+ const exactKeys=(value,keys)=>value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).length===keys.length&&keys.every(key=>Object.hasOwn(value,key));
  const send=(type)=>parent.postMessage({type},location.origin);
  const script=(src,onload)=>{const s=document.createElement('script');s.src=src;s.async=true;s.referrerPolicy='no-referrer';s.onload=onload;document.head.append(s)};
  window.addEventListener('message',e=>{
   if(parent===window||e.source!==parent||e.origin!==location.origin)return;
   if(e.data?.type==='radeq:measurement-init'&&!initialized){
+   if(!exactKeys(e.data,['type','purpose','path','source'])||!sourceCategories.includes(e.data.source))return;
    const path=e.data.path;
    if(typeof path!=='string'||!/^\/(?:[a-z0-9-]+\/)*$/.test(path))return;
    purpose=e.data.purpose;
    if(purpose!=='analytics'&&purpose!=='marketing')return;
+   source=e.data.source;pageLocation=location.origin+path;
    initialized=true;
    // Clean document URL and empty referrer prevent automatic SDK metadata leaks.
    history.replaceState(null,'',path);document.title='RadeQ';
@@ -18,8 +23,8 @@
     window.dataLayer=[];window.gtag=function(){dataLayer.push(arguments)};
     gtag('consent','default',{analytics_storage:'granted',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});
     gtag('js',new Date());
-    gtag('config',config.ga4,{send_page_view:false,page_location:location.origin+path,page_referrer:'',allow_google_signals:false,allow_ad_personalization_signals:false,cookie_expires:15552000});
-    script('https://www.googletagmanager.com/gtag/js?id='+encodeURIComponent(config.ga4),()=>{loaded=true;gtag('event','page_view',{page_location:location.origin+path,page_referrer:''});send('radeq:measurement-loaded')});
+    gtag('config',config.ga4,{send_page_view:false,page_location:pageLocation,page_referrer:'',allow_google_signals:false,allow_ad_personalization_signals:false,cookie_expires:15552000});
+    script('https://www.googletagmanager.com/gtag/js?id='+encodeURIComponent(config.ga4),()=>{loaded=true;gtag('event','page_view',{page_location:pageLocation,page_referrer:'',rq_source:source});send('radeq:measurement-loaded')});
    }
    if(purpose==='marketing'&&/^[a-z0-9]+$/.test(config.sem)){
     script('https://l.seznam.cz/sul.js?id='+encodeURIComponent(config.sem),()=>{
@@ -29,9 +34,11 @@
     });
    }
   }
-  if(e.data?.type==='radeq:lead-received'&&loaded){
-   if(purpose==='analytics')gtag('event','generate_lead',{page_location:location.origin+location.pathname,page_referrer:''});
-   if(purpose==='marketing')SEM('track','Lead');
+  if(e.data?.type==='radeq:measurement-event'&&loaded){
+   if(!exactKeys(e.data,['type','name'])||!['contact_intent','form_start','generate_lead'].includes(e.data.name)||seen.has(e.data.name))return;
+   seen.add(e.data.name);
+   if(purpose==='analytics')gtag('event',e.data.name,{page_location:pageLocation,page_referrer:'',rq_source:source});
+   if(purpose==='marketing'&&e.data.name==='generate_lead')SEM('track','Lead');
   }
  });
  if(parent!==window)send('radeq:measurement-ready');

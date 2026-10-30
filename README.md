@@ -1,4 +1,16 @@
-# RadeQ — CZ/EN audit fixes and portable handoff, 30. 10. 2026
+# RadeQ — organická viditelnost CZ/EN, 30. 10. 2026
+
+Aktuální zdrojový kandidát obsahuje sjednocenou osobní a firemní identitu, odkazy na profesní profily, doložený vlastní projekt, přesnější metadata a minimální měření po souhlasu. [Aktuální ověření a meze](docs/verification/2026-10-30-organic-foundation/README.md). Publikace zdrojů sama nedokazuje nasazení Cloudflare nebo získání návštěv či zakázek.
+
+## O projektu / About
+
+RadeQ je vlastní projekt Radka Širokého: web nabídky tvorby webů, automatizací, datových řešení a AI pomocníků pro živnostníky, malé firmy a spolky. Produkční web a kontakt: https://radeq.cz/. Zdrojový repozitář a modelové ukázky jsou dokladem vlastní práce, nikoli klientskou referencí.
+
+RadeQ is Radek Široký's own project. The production website is https://radeq.cz/en/. This repository and the model demos document personal work, not client engagements or measured business outcomes.
+
+## Předchozí auditní vydání — historický podklad
+
+Následující doklady a počty patří předchozímu auditnímu vydání. Pro aktuální zdroje a site/ má přednost publication-manifest.json a výše odkazovaný aktuální souhrn.
 
 Aktivní zdroje jsou v kořeni repozitáře (na Windows původně v app/). Tato revize obsahuje opravy přístupnosti, aktualizované závislosti a atomické D1 kvóty. Zachovává schválený vzhled, ceny a oba jazyky. [CHANGELOG](CHANGELOG.md) · [Aktuální předání](docs/handoff/2026-10-30/README.md) · [Prompt do Codexu](docs/handoff/2026-10-30/COPY-PASTE-DO-CODEXU.md) · [Podmínky vydání](docs/deployments/2026-10-30-audit-release/README.md).
 

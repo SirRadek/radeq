@@ -58,7 +58,7 @@ const serviceSchema = {
     '@type': 'Service',
     name: s.title,
     description: s.result,
-    provider: { '@type': 'ProfessionalService', name: 'RadeQ.cz', url: siteUrl },
+    provider: { '@id': siteUrl + '/#business' },
     areaServed: { '@type': 'Country', name: 'Czech Republic' },
     offers: {
       '@type': 'Offer',
@@ -77,7 +77,7 @@ const faqItems = [
   },
   {
     q: 'Co je audit webu a k čemu slouží?',
-    a: 'Audit webu nebo procesu od 3 000 Kč zhodnotí slabá místa, priority a další smysluplný krok. Když navážeme realizací, cenu auditu odečtu z realizace.',
+    a: 'Automatická kontrola zdarma je orientační strojové měření veřejného webu, nikoli lidský audit. Lidský audit webu nebo procesu od 3 000 Kč vyhodnotí slabá místa, priority a další krok. Pokud navážeme realizací, cenu auditu odečtu z realizace. Konkrétní obchodní výsledek ani pozici ve vyhledávání nezaručuje.',
   },
   {
     q: 'Jak dlouho trvá nový web?',
@@ -173,6 +173,7 @@ const faqSchema = {
     <section class="rq-section rq-services-faq" id="faq" aria-labelledby="rq-faq-title">
       <p class="rq-eyebrow">FAQ</p>
       <h2 class="rq-h2" id="rq-faq-title">Často kladené otázky</h2>
+      <p><a href={base + '/audit/'}>Spustit automatickou kontrolu zdarma</a> · <a href={base + '/#audit'}>Rozsah lidského auditu</a> · <a href={base + '/#radeq-vlastni-projekt'}>Vlastní projekt RadeQ a doklad kontrol</a></p>
       <div class="rq-faq">
         {faqItems.map((it) => (
           <article class="rq-faq__item">

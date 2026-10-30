@@ -16,5 +16,5 @@ export function createConsentController({storage,start,now=()=>Date.now()}){
   const c={v:1,at:now(),analytics:next.analytics===true,marketing:next.marketing===true};
   try{storage.setItem(consentKey,JSON.stringify(c))}catch{apply({analytics:false,marketing:false});return false}
   apply(c);return true;
- },event(name){if(name!=='lead_received')return;for(const channel of active.values())channel.event(name)},get choice(){return choice}};
+ },event(name){if(!['contact_intent','form_start','lead_received'].includes(name))return;for(const channel of active.values())channel.event(name)},get choice(){return choice}};
 }

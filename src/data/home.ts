@@ -1569,8 +1569,9 @@ export const homeContent = {
       note: 'Nechcete paušál? Bloky hodin 5/15/40 h (od 1 100 Kč/h). Nejsem plátce DPH — ceny jsou konečné.',
       items: [
         { title: 'Partner', price: '15 000 Kč', suffix: '/měs.', text: 'mapování procesů + prototypy automatizace/AI, 10 h, prioritní podpora + vše z Růstu', ctaLabel: 'Chci být partner', automationBadge: 'Automatizace' },
-        { title: 'Růst', price: '6 000 Kč', suffix: '/měs.', text: 'vše z Klidu + SEO/výkon hlídání, měsíční report, 3 h vývoje', ctaLabel: 'Chci společně růst', featured: true, badge: 'Doporučeno' },
-        { title: 'Klid', price: '2 500 Kč', suffix: '/měs.', text: 'provoz, zálohy, drobné úpravy (1 h), máte komu zavolat', ctaLabel: 'Chci mít klid' },
+        { title: 'Růst', price: '6 000 Kč', suffix: '/měs.', text: 'vše z Rozvoje + SEO/výkon hlídání, měsíční report, 3 h vývoje', ctaLabel: 'Chci společně růst', featured: true, badge: 'Doporučeno' },
+        { title: 'Rozvoj', price: '2 500 Kč', suffix: '/měs.', text: 'vše ze Základu + průběžné úpravy a rozvoj, celkem 1 h měsíčně', ctaLabel: 'Chci rozvoj' },
+        { title: 'Základ', price: '500 Kč', suffix: '/měs.', text: 'dohled nad provozem a zálohami, jedna drobná obsahová úprava měsíčně do 15 minut; služby třetích stran zvlášť', ctaLabel: 'Chci základní správu' },
       ],
     },
     showcase: {
@@ -1956,8 +1957,9 @@ export const homeContent = {
       note: 'Do not want a retainer? Hour blocks 5/15/40 h (from CZK 1,100/h). I am not a VAT payer - prices are final.',
       items: [
         { title: 'Partner', price: 'CZK 15,000', suffix: '/mo.', text: 'process mapping + automation/AI prototypes, 10 h, priority support + everything in Growth', ctaLabel: 'I want to be a partner', automationBadge: 'Automation' },
-        { title: 'Growth', price: 'CZK 6,000', suffix: '/mo.', text: 'everything in Calm + SEO/performance monitoring, monthly report, 3 h of development', ctaLabel: 'I want to grow together', featured: true, badge: 'Recommended' },
-        { title: 'Calm', price: 'CZK 2,500', suffix: '/mo.', text: 'operation, backups, small edits (1 h), someone to call', ctaLabel: 'I want peace of mind' },
+        { title: 'Growth', price: 'CZK 6,000', suffix: '/mo.', text: 'everything in Development + SEO/performance monitoring, monthly report, 3 h of development', ctaLabel: 'I want to grow together', featured: true, badge: 'Recommended' },
+        { title: 'Development', price: 'CZK 2,500', suffix: '/mo.', text: 'everything in Basic + ongoing changes and development, 1 hour per month in total', ctaLabel: 'I want development' },
+        { title: 'Basic', price: 'CZK 500', suffix: '/mo.', text: 'website and backup oversight, one small content edit up to 15 minutes per month; third-party costs separate', ctaLabel: 'I want basic care' },
       ],
     },
     showcase: {

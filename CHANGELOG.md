@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-17 — osobnější nabídka a praktické ukázky
+
+- CZ/EN představení zkušeností, fotografie, pilotní program, první měsíc podpory a nové tarify správy.
+- Přehlednější nabídka a zobrazení modelové objednávky z pohledu obsluhy. Ukázky nejsou klientské reference ani živé transakce.
+- Statický GitHub Pages build a zdroj; produkční Cloudflare se touto revizí nemění. [Ověření](docs/verification/2026-11-17-sales-refresh/README.md).
+
+
 ## 2026-10-30 — organická viditelnost, místně ověřený kandidát
 
 - CZ/EN metadata a úvod upřesňují nabídku i Radka Širokého; propojená Person/business identita, čtyři profesní/firemní odkazy a stručný vlastní případový doklad. Modelová dema nejsou klientské reference. H1, ceny a vzhled zachovány.

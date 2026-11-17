@@ -20,9 +20,9 @@ const starts = lang === 'en' ? [
       <main>
         <section class="rq-minimal-preview__intro rq-home-intro" aria-labelledby="uvod">
           <div class="rq-home-intro__main">
-          <h1 id="uvod">{lang === "en" ? 'Websites and automation that simplify your work.' : 'Weby a automatizace, které usnadňují podnikání.'}</h1>
+          <h1 id="uvod">{lang === "en" ? 'Less paperwork. More time for your work.' : 'Méně papírování. Více času na vaši práci.'}</h1>
           {lang === "cs" ? <MinimalAudience /> : <p class="rq-minimal-preview__lead">For sole traders and small businesses.</p>}
-          <p class="rq-minimal-preview__intro-detail">{lang === "en" ? 'A clear website, easier bookings or connected records for sole traders, small businesses and associations. Work directly with me, primarily online and by phone.' : 'Srozumitelný web, jednodušší rezervace nebo propojená evidence pro živnostníky, malé firmy a spolky. Spolupracujete přímo se mnou, především online a telefonicky.'}</p>
+          <p class="rq-minimal-preview__intro-detail">{lang === "en" ? 'I build clear websites, easier bookings and useful records. You work directly with me, online or by phone.' : 'Postavím vám srozumitelný web, jednodušší rezervace nebo přehlednou evidenci. Vše řešíte přímo se mnou — online nebo po telefonu.'}</p>
           <p class="rq-home-price">{lang === 'en' ? 'One-page website' : 'Jednostránkový web'} <strong>{lang === 'en' ? 'from CZK 10,000' : 'od 10 000 Kč'}</strong></p>
           <div class="rq-home-actions"><a class="rq-minimal-preview__cta" href="#kontakt">{lang === "en" ? 'Discuss your project' : 'Probrat projekt'}</a><a href="#ceny">{lang === 'en' ? 'View prices' : 'Prohlédnout ceny'} <span aria-hidden="true">↗</span></a></div>
           <a class="rq-home-audit" href="#audit"><span>{homeContent[lang].pricing.audit.title}</span><span class="rq-starts__audit-price">{homeContent[lang].pricing.audit.price} <span aria-hidden="true">↗</span></span></a>
@@ -47,7 +47,7 @@ const starts = lang === 'en' ? [
             <li><strong>{lang === "en" ? 'Build and verify' : 'Postavit a ověřit'}</strong><p>{lang === "en" ? 'We build a working solution and review how to use it together.' : 'Návrh převedeme do funkční podoby a společně projdeme, jak se používá v praxi.'}</p></li>
             <li><strong>{lang === "en" ? 'Hand over and explain' : 'Předat a vysvětlit'}</strong><p>{lang === "en" ? 'You receive source code, access to your accounts, a short guide and training.' : 'Dostanete zdrojový kód, přístupy, stručný návod a zaškolení.'}</p></li>
           </ol>
-          <p class="rq-handoff">{lang === 'en' ? 'Your website and source code are handed over to accounts you own. You receive a record of the work and agreed next steps. Post-launch care is arranged separately.' : 'Web i zdrojový kód předám pod vaše vlastní účty. Dostanete přehled provedené práce a domluvených dalších kroků. Péči po spuštění domluvíme zvlášť.'}</p>
+          <p class="rq-handoff">{lang === 'en' ? 'Your website and source code are handed over to accounts you own. The price includes 30 days of support and fixes within the agreed scope from launch, or from handover if there is no separate launch.' : 'Web i zdrojový kód předám pod vaše vlastní účty. Po spuštění máte 30 dní mé podpory a oprav chyb v domluveném rozsahu v ceně. U řešení bez samostatného spuštění lhůta běží od předání.'}</p>
           <div class="rq-disclosures">
             <details id="predani-podrobnosti" class="rq-disclosure">
               <summary><span>{lang === 'en' ? 'What you receive' : 'Co přesně převezmete'}</span><span class="rq-disclosure__mark" aria-hidden="true"></span></summary>
@@ -58,13 +58,13 @@ const starts = lang === 'en' ? [
                   <li>{lang === 'en' ? 'A short guide and training for everyday use.' : 'Stručný návod a zaškolení pro běžnou práci.'}</li>
                   <li>{lang === 'en' ? 'A record of completed work and agreed next steps.' : 'Přehled hotové práce a domluvených dalších kroků.'}</li>
                 </ul>
-                <p>{lang === 'en' ? 'You can continue with another developer. Care after launch is a separate service, agreed with you in advance.' : 'Můžete pokračovat i s jiným vývojářem. Péče po spuštění je samostatná služba, kterou domluvíme předem.'}</p>
+                <p>{lang === 'en' ? 'You can continue with another developer. After the first 30 days, ongoing paid care is optional and agreed in advance.' : 'Můžete pokračovat i s jiným vývojářem. Po prvních 30 dnech se můžete rozhodnout pro placenou správu; její rozsah domluvíme předem.'}</p>
               </div>
             </details>
             <details id="overeni-podrobnosti" class="rq-disclosure">
               <summary><span>{lang === 'en' ? 'How we check the result' : 'Jak ověříme výsledek'}</span><span class="rq-disclosure__mark" aria-hidden="true"></span></summary>
               <div class="rq-disclosure__body">
-                <p>{lang === 'en' ? 'We agree what the solution needs to do before work starts. Before handover, we check the main tasks, common error cases and, for websites, how it works on mobile.' : 'Předem domluvíme, co má řešení splnit. Před předáním projdeme hlavní úkoly, běžné chybové stavy a u webu i použití na mobilu.'}</p>
+                <p>{lang === 'en' ? 'We agree what the solution needs to do. Before launch, I personally check forms, common situations and the website on mobile.' : 'Předem domluvíme, co má řešení splnit. Před spuštěním osobně vyzkouším formuláře, běžné situace a použití webu na mobilu.'}</p>
                 <p>{lang === 'en' ? 'The handover record explains what is finished, what we checked and which next steps make sense. Any changes beyond the agreed scope are discussed first.' : 'Do přehledu práce zapíšu, co je hotové, co jsme ověřili a které další kroky dávají smysl. Změny mimo domluvený rozsah si nejdřív odsouhlasíme.'}</p>
               </div>
             </details>
@@ -72,25 +72,23 @@ const starts = lang === 'en' ? [
         </section>
         <span id="about"></span><section id="autor" aria-labelledby="autor-nadpis" class="rq-minimal-preview__about">
           <h2 id="autor-nadpis">{lang === "en" ? 'Who is behind RadeQ' : 'Kdo za tím stojí'}</h2>
-          <div><p class="rq-minimal-preview__author">{homeContent[lang].about.name}</p><p>{lang === "en" ? 'RadeQ is my business brand. You work directly with me on the design, build and handoff.' : 'RadeQ je moje podnikatelská značka. Návrh, realizaci i předání řešíte přímo se mnou.'}</p><p>{lang === "en" ? 'I help turn everyday problems into clear tasks and useful solutions. We choose technology based on the work it should simplify.' : 'Pomáhám převést každodenní problém do srozumitelného zadání a použitelného řešení. Technologie vybíráme podle práce, kterou mají usnadnit.'}</p>
+          <div><img src={`${base}/brand/founder-about.webp`} srcset={`${base}/brand/founder-about@2x.webp 2x`} alt={lang === 'en' ? 'Radek Široký, founder of RadeQ' : 'Radek Široký, zakladatel RadeQ'} width="240" height="300" loading="lazy" style="width:min(240px,100%);height:auto;border-radius:8px;margin-bottom:1.25rem;" /><p class="rq-minimal-preview__author">{homeContent[lang].about.name}</p><p>{lang === "en" ? 'RadeQ is my business brand. You work directly with me on the design, build and handoff.' : 'RadeQ je moje podnikatelská značka. Návrh, realizaci i předání řešíte přímo se mnou.'}</p><p>{lang === "en" ? 'I started programming at a five-axis CNC milling machine and also worked in customer support. I know that practical work calls for tools that are easy to use and do not get in the way. I listen first, then design a simple solution for your work.' : 'Začínal jsem u pětiosé CNC frézky a pracoval jsem také v zákaznické podpoře. Vím, že v provozu potřebujete věci, které se snadno používají a nezdržují. Proto nejdřív poslouchám a pak navrhnu jednoduché řešení pro vaši práci.'}</p>
             <p>{lang === 'en' ? 'Professional profiles:' : 'Profesní profily:'} <a href="https://www.linkedin.com/in/sirradek">LinkedIn</a> · <a href="https://github.com/SirRadek">GitHub</a>. {lang === 'en' ? 'Business listings:' : 'Firemní záznamy:'} <a href="https://www.firmy.cz/detail/14036384-radeq-praha-nusle.html">Firmy.cz</a> · <a href="https://www.zivefirmy.cz/radeq_f1952239">Živéfirmy</a>.</p>
             <div class="rq-disclosures">
               <details id="zkusenosti-podrobnosti" class="rq-disclosure">
                 <summary><span>{lang === 'en' ? 'Experience behind the work' : 'Zkušenosti za mou prací'}</span><span class="rq-disclosure__mark" aria-hidden="true"></span></summary>
                 <div class="rq-disclosure__body">{homeContent[lang].about.paragraphs.slice(1, 3).map(paragraph => <p>{paragraph}</p>)}</div>
               </details>
-              <details id="radeq-vlastni-projekt" class="rq-disclosure">
-                <summary><span>{lang === 'en' ? 'My own project: RadeQ.cz' : 'Vlastní projekt: RadeQ.cz'}</span><span class="rq-disclosure__mark" aria-hidden="true"></span></summary>
-                <div class="rq-disclosure__body">
-                  <p><strong>{lang === 'en' ? 'Task. ' : 'Zadání. '}</strong>{lang === 'en' ? 'Present my services clearly and let visitors send an enquiry in Czech or English.' : 'Srozumitelně představit vlastní nabídku a umožnit návštěvníkovi poslat poptávku v češtině i angličtině.'}</p>
-                  <p><strong>{lang === 'en' ? 'Decisions. ' : 'Rozhodnutí. '}</strong>{lang === 'en' ? 'Three starting points: a website, bookings or connected records. Indicative prices, labelled model demos and source code kept under version control.' : 'Tři vstupy podle potřeby: web, rezervace a propojená evidence. Orientační ceny, označené modelové ukázky a zdrojový kód s historií změn.'}</p>
-                  <p><strong>{lang === 'en' ? 'Checks. ' : 'Ověření. '}</strong>{lang === 'en' ? 'The release checks on 30 October 2026 covered both languages, mobile and desktop layouts, keyboard navigation, links and page metadata. Form behaviour was tested in a controlled environment.' : 'Kontroly vydání 30. října 2026 zahrnovaly oba jazyky, mobil i desktop, ovládání klávesnicí, odkazy a metadata stránek. Chování formuláře bylo ověřeno v řízeném testovacím prostředí.'}</p>
-                  <p>{lang === 'en' ? 'This is my own website, not a client engagement. These checks do not establish live email delivery, search rankings or business results.' : 'Jde o můj vlastní web, nikoli klientskou zakázku. Tyto kontroly nedokládají živé doručení e-mailů, pozice ve vyhledávání ani obchodní výsledky.'}</p>
-                  <p><a href="https://github.com/SirRadek/radeq/tree/codex/radeq-clean-pages-20261013">{lang === 'en' ? 'Source code' : 'Zdrojový kód'}</a> · <a href="https://github.com/SirRadek/radeq/blob/55c6be375780094ad2457c329e8fd007fd49a364/docs/verification/2026-10-30-audit/README.md">{lang === 'en' ? 'Release check record and limits' : 'Doklad kontrol vydání a jejich limity'}</a> · <a href={base + (lang === 'en' ? '/en/ukazky/' : '/ukazky/')}>{lang === 'en' ? 'Try the model demos' : 'Vyzkoušet modelové ukázky'}</a></p>
-                </div>
-              </details>
+
             </div>
           </div>
+        </section>
+        <section id="pilot" aria-labelledby="pilot-title">
+          <div class="rq-minimal-preview__section-head"><h2 id="pilot-title">{lang === 'en' ? 'A pilot for my first three clients' : 'Pilotní program pro první 3 klienty'}</h2></div>
+          <p>{lang === 'en' ? 'I am looking for three sole traders or small businesses who want to put a practical idea to work. You receive 40% off the agreed implementation work in exchange for detailed, honest feedback and a photo of your workplace.' : 'Hledám tři živnostníky nebo malé firmy, kterým pomůžu převést praktický nápad do provozu. Za podrobnou, upřímnou referenci a fotografii z vašeho provozu získáte slevu 40 % na domluvenou práci na realizaci.'}</p>
+          <p>{lang === 'en' ? 'Your feedback does not have to be positive. I will only publish your reference or photo with your specific consent. We will agree the scope and availability together.' : 'Reference nemusí být kladná. Zveřejním ji nebo fotografii jen s vaším konkrétním souhlasem. Rozsah a dostupnost programu si spolu domluvíme.'}</p>
+          <p>{lang === 'en' ? 'The discount applies to implementation work, excluding third-party costs. If you have paid for an audit, I deduct its price after the discount, up to the remaining implementation price.' : 'Sleva platí na práci na realizaci, nikoli na náklady dalších služeb. Pokud jste zaplatili audit, jeho cenu odečtu po slevě, nejvýše do zbývající ceny realizace.'}</p>
+          <a href="#kontakt">{lang === 'en' ? 'Ask about the pilot' : 'Zeptat se na pilotní program'} ↗</a>
         </section>
         <span id="terminal"></span><span id="contact"></span><section id="kontakt" aria-labelledby="kontakt-nadpis" class="rq-minimal-preview__contact">
           <h2 id="kontakt-nadpis">{lang === "en" ? 'Let’s discuss your project' : 'Pojďme probrat váš záměr'}</h2>

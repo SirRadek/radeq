@@ -1,6 +1,12 @@
-# RadeQ — organická viditelnost CZ/EN, 30. 10. 2026
+# RadeQ — osobní nabídka a ukázky CZ/EN, 17. 11. 2026
 
-Aktuální zdrojový kandidát obsahuje sjednocenou osobní a firemní identitu, odkazy na profesní profily, doložený vlastní projekt, přesnější metadata a minimální měření po souhlasu. [Aktuální ověření a meze](docs/verification/2026-10-30-organic-foundation/README.md). Publikace zdrojů sama nedokazuje nasazení Cloudflare nebo získání návštěv či zakázek.
+Aktuální revize zpřesňuje nabídku pro živnostníky, představuje pilotní program, osobní zkušenost a ceny péče. Interaktivní ukázky zůstávají modelové. GitHub Pages je statický náhled s e-mailovým kontaktem; zveřejnění této revize neznamená nasazení na radeq.cz. [Ověření této revize](docs/verification/2026-11-17-sales-refresh/README.md).
+
+The current revision updates the personal offer, pilot and care plans in Czech and English. The examples are illustrative. GitHub Pages is a static preview; this commit does not deploy radeq.cz.
+
+# Předchozí revize — organická viditelnost, 30. 10. 2026
+
+Revize z 30. 10. obsahovala sjednocenou osobní a firemní identitu, odkazy na profesní profily, popis vlastního projektu, přesnější metadata a minimální měření po souhlasu. [Tehdejší ověření a meze](docs/verification/2026-10-30-organic-foundation/README.md). Publikace zdrojů sama nedokazuje nasazení Cloudflare nebo získání návštěv či zakázek.
 
 ## O projektu / About
 
@@ -12,9 +18,9 @@ RadeQ is Radek Široký's own project. The production website is https://radeq.c
 
 Následující doklady a počty patří předchozímu auditnímu vydání. Pro aktuální zdroje a site/ má přednost publication-manifest.json a výše odkazovaný aktuální souhrn.
 
-Aktivní zdroje jsou v kořeni repozitáře (na Windows původně v app/). Tato revize obsahuje opravy přístupnosti, aktualizované závislosti a atomické D1 kvóty. Zachovává schválený vzhled, ceny a oba jazyky. [CHANGELOG](CHANGELOG.md) · [Aktuální předání](docs/handoff/2026-10-30/README.md) · [Prompt do Codexu](docs/handoff/2026-10-30/COPY-PASTE-DO-CODEXU.md) · [Podmínky vydání](docs/deployments/2026-10-30-audit-release/README.md).
+Aktivní zdroje jsou v kořeni repozitáře (na Windows původně v app/). Auditní revize z 30. 10. obsahovala opravy přístupnosti, aktualizované závislosti a atomické D1 kvóty; její popis cen je historický. [CHANGELOG](CHANGELOG.md) · [Historické předání](docs/handoff/2026-10-30/README.md) · [Prompt do Codexu](docs/handoff/2026-10-30/COPY-PASTE-DO-CODEXU.md) · [Podmínky vydání](docs/deployments/2026-10-30-audit-release/README.md).
 
-[Český Pages náhled](https://sirradek.github.io/radeq/) · [English preview](https://sirradek.github.io/radeq/en/). This revision includes bilingual accessibility repairs, patched tooling, atomic D1 quotas, migration and portable sources. A repository snapshot is not proof that the Cloudflare migration or deployment has run.
+[Český Pages náhled](https://sirradek.github.io/radeq/) · [English preview](https://sirradek.github.io/radeq/en/). The October revision included bilingual accessibility repairs, patched tooling, atomic D1 quotas, migration and portable sources. A repository snapshot is not proof that the Cloudflare migration or deployment has run.
 
 ## Ověření a obnova
 
@@ -37,6 +43,6 @@ release/ obsahuje skutečný backend včetně atomic-quotas.js; migrations/0001_
 
 ## Identita a doložené kontroly
 
-publication-manifest.json má relativní hashe všech veřejných souborů a původních 206 zdrojů; node tools/verify-publication.mjs --site-only kontroluje 117 souborů webu. Přijatý runtime build-1793375135964, manifest SHA256 07e7ea616855edfd1de03859a94b9a4f23ebc7d2fead9ed9311100c8cb581b8a. [Přenosný souhrn ověření](docs/verification/2026-10-30-audit/README.md) jasně odděluje kontroly lokálního kandidáta od pozdější kontroly kopie či živého nasazení.
+publication-manifest.json obsahuje relativní hashe 211 zdrojových souborů a 120 souborů webu; node tools/verify-publication.mjs ověří celý publikační balík. Přijatý build je build-1794911230605, SHA256 jeho původního manifestu je 411ab54bd4fd6df4dc8274c0d4a9b6bf8f744d7883b47f13a59b1513d693cb71. [Aktuální ověření](docs/verification/2026-11-17-sales-refresh/README.md) odděluje místní kontroly od nasazení.
 
-Autentizace, zákaznické záznamy, soukromé rollback exporty, auditní baseline, node_modules a cache nejsou součástí veřejného balíčku. Starší předání z 29.října a jeho doklady zůstávají historické; pro tuto revizi má přednost předání z 30.října.
+Autentizace, zákaznické záznamy, soukromé rollback exporty, auditní baseline, node_modules a cache nejsou součástí veřejného balíčku. Předání z 29. a 30. října zůstávají historická; aktuální stav určuje tento README, CHANGELOG a publikační manifest.

@@ -12,7 +12,7 @@ const stories = [
    aside:choose('Jasná nabídka. Snadná domluva.','Clear offer. Easy contact.'),
    note:choose('Od problému k poptávce.','From problem to enquiry.'),
    steps:en?['Describe the problem','Explore the options','Send an enquiry','Enquiry received']:['Popsat problém','Zjistit možnosti','Poslat poptávku','Poptávka dorazila'],
-   handoff:choose('Poptávka vám dorazí do e-mailu. Další domluva je na vás.','The enquiry arrives in your inbox. You take the conversation from there.'),
+   handoff:choose('V ostré verzi můžeme domluvit doručení poptávky do e-mailu. Ukázka nic neposílá.','For a live website, we can arrange email delivery of enquiries. The demo sends nothing.'),
    name:choose('Web pro instalatéra','Plumber website'),cta:choose('Prohlédnout web instalatéra','Explore the plumber website'),
    action:choose('Poslat poptávku','Send an enquiry'),result:choose('Poptávka dorazila','Enquiry received'),symbol:'↗'},
   {id:'terminy',slug:'sluzba',image:'booking-wide.png',
@@ -21,7 +21,7 @@ const stories = [
    aside:choose('Jeden volný termín. Méně telefonování.','Easier booking. Fewer calls.'),
    note:choose('Místo telefonování jeden termín.','An appointment without a phone call.'),
    steps:en?['Choose a service','Find a time','Book','Booking confirmed']:['Vybrat službu','Najít termín','Rezervovat','Rezervace potvrzena'],
-   handoff:choose('O rezervaci víte i e-mailem. Další péče je na vás.','You also receive the booking by email. You take care of the next step.'),
+   handoff:choose('V ostré verzi můžeme domluvit upozornění na rezervaci. V ukázce se termín nikam neodesílá.','For a live system, we can arrange booking notifications. The demo sends no appointment.'),
    name:choose('Fyzioterapie s rezervací','Physiotherapy with booking'),cta:choose('Vyzkoušet rezervaci','Try the booking'),
    action:'',result:choose('Termín vybrán','Appointment selected'),symbol:'✓'},
   {id:'data',slug:'provozni-terminal',image:'flow-workshop-wide.png',
@@ -35,7 +35,7 @@ const stories = [
    action:choose('Zapsat práci','Log work'),result:choose('Práce zapsaná','Work logged'),symbol:'✓'},
   {id:'eshop',slug:'eshop',image:'flow-shop.png',
    title:choose('Malý e-shop','Small online shop'),
-   description:choose('Od výběru kávy přes košík až k předání objednávky do pražírny. Ukázka propojuje pohled zákazníka s jednoduchou evidencí objednávek.','From choosing coffee and filling a basket to handing the order to the roastery. This example connects the customer view with simple order management.'),
+   description:choose('Od výběru kávy přes košík až k modelové objednávce. Vyzkoušíte si i pohled pražírny a zpracování objednávky.','From choosing coffee to a sample order. Try the roastery view and see how an order can be handled.'),
    aside:choose('Od košíku k připravené objednávce.','From basket to an order ready for collection.'),
    steps:en?['Choose coffee','Fill the basket','Create a demo order','Prepare for collection']:['Vybrat kávu','Naplnit košík','Vytvořit modelovou objednávku','Připravit k předání'],
    handoff:choose('V ukázce si vyzkoušíte i zpracování objednávky. Bez platby a skutečného nákupu.','Try processing the order at the roastery too. No payment or real purchase.'),
@@ -55,6 +55,7 @@ const englishImages: Record<string, string> = {web:'flow-plumber-wide-en.png',te
   </summary>
   <div class="rq-showcase__body flow-wrap" data-demo={story.id}>
    <p>{story.description}</p>
+   <p>{choose('Úspora času i termín spuštění závisejí na vašem provozu a rozsahu. Obojí s vámi proberu předem.', 'Time savings and launch timing depend on your work and the agreed scope. We will discuss both in advance.')}</p>
    <ol class="flow" aria-label={`${story.name}: ${choose('modelová cesta zákazníka','illustrative customer journey')}`}>
     {story.steps.map((step,j)=><li><span class="flow-node" aria-hidden="true">{`0${j+1}`}</span><span>{step}</span></li>)}
    </ol>

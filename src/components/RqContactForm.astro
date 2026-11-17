@@ -20,8 +20,8 @@ const resolve = (href: string) => {
 const verifyLabel = lang === 'en' ? 'Verify you are not a robot' : 'Ověření, že nejste robot';
 const doneTitle = lang === 'en' ? 'Enquiry received ✓' : 'Poptávka přijata ✓';
 const turnstileNote = lang === 'en'
-  ? 'The form is protected by Cloudflare Turnstile — usually silent, no clicking needed.'
-  : 'Formulář chrání Cloudflare Turnstile — většinou bez klikání, jen tiše na pozadí.';
+  ? 'The form is protected against spam, usually without interrupting you.'
+  : 'Formulář je chráněný proti spamu, většinou bez zbytečného vyrušování.';
 ---
 
 {isPreviewChannel ? <PreviewEmailContact lang={lang} /> : <Fragment>

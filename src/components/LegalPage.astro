@@ -1,17 +1,19 @@
 ---
-import {legalContent} from '../data/legal';
+import {legalContent,previewPrivacyContent} from '../data/legal';
 import {legalParagraphs} from '../lib/legal-paragraphs.mjs';
 import RqLayout from '../layouts/RqLayout.astro';
 import RqHeader from './RqHeader.astro';
 import RqFooter from './RqFooter.astro';
+import {isPreviewChannel} from '../lib/preview-channel.mjs';
 interface Props {lang:'cs'|'en';kind:'privacy'|'cooperation'}
 const {lang,kind}=Astro.props;
-const c=legalContent[lang][kind];const en=lang==='en';
+const seoContent=legalContent[lang][kind];
+const c=kind==='privacy'&&isPreviewChannel?previewPrivacyContent[lang]:seoContent;const en=lang==='en';
 const slug=kind==='privacy'?'soukromi':'spoluprace';
 const updated=kind==='privacy'?(en?'Updated 30 October 2026':'Aktualizováno 30. října 2026'):(en?'Updated 28 October 2026':'Aktualizováno 28. října 2026');
 const base=import.meta.env.BASE_URL.replace(/\/$/,'');
 ---
-<RqLayout title={c.title+' | RadeQ.cz'} description={c.intro} lang={lang} canonicalPath={'/'+(en?'en/':'')+slug+'/'} alternateLang={en?'cs':'en'} alternatePath={'/'+(en?'':'en/')+slug+'/'} trackEvents={false}>
+<RqLayout title={seoContent.title+' | RadeQ.cz'} description={seoContent.intro} lang={lang} canonicalPath={'/'+(en?'en/':'')+slug+'/'} alternateLang={en?'cs':'en'} alternatePath={'/'+(en?'':'en/')+slug+'/'} trackEvents={false}>
  <RqHeader alternateLabel={en?'CS':'EN'} alternatePath={'/'+(en?'':'en/')+slug+'/'} />
  <main class="rq-legal"><p class="rq-eyebrow">RadeQ · {updated}</p><h1>{c.title}</h1><p class="rq-lead">{c.intro}</p>
  <nav class="rq-legal-index" aria-label={en?'On this page':'Na této stránce'}><p>{en?'On this page':'Na této stránce'}</p><ol>{c.sections.map(([title],i)=><li><a href={`#legal-${i+1}`}>{title}</a></li>)}</ol></nav>

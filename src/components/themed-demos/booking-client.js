@@ -3,6 +3,7 @@ import {days,services,availableSlots,initialState,transition} from './booking-st
 export function mount(root){
  const lang=root.dataset.lang==='en'?'en':'cs',en=lang==='en',t=value=>demoText(lang,value);
  let state=initialState();const q=s=>root.querySelector(s);
+ const confirm=q('[data-confirm]'),status=q('[data-status]');
  const update=()=>{
   const slots=availableSlots(state),service=services[state.service];
   root.querySelectorAll('[name=service], [name=day]').forEach(input=>{input.disabled=false;input.checked=input.value===state[input.name];});
@@ -13,12 +14,18 @@ export function mount(root){
   q('[data-summary-time]').textContent=state.time??t("Vyberte čas");
   q('[data-summary-service]').textContent=t(service.label);
   q('[data-summary-details]').textContent=`${service.duration} ${t("minut")} · ${demoMoney(lang,service.price)}`;
-  q('[data-confirm]').disabled=!slots.includes(state.time)||state.confirmed;
-  q('[data-confirm]').textContent=state.confirmed?t("Modelově potvrzeno"):t("Potvrdit modelový výběr");
-  q('[data-status]').textContent=state.confirmed?(en ? `${t(service.label)} · ${t(days[state.day].label)} at ${state.time}. Demo selection confirmed only here; no booking was sent.` : `${service.label} · ${days[state.day].label} v ${state.time}. Modelový výběr potvrzen pouze zde; rezervace se neodeslala.`):(!slots.length?t("Pro tuto službu nejsou v modelovém dni žádné termíny. Zvolte jiný den."):state.time?t("Vybráno. Zatím nepotvrzeno."):t("Vyberte čas pro zvolenou službu a den."));
+  confirm.disabled=!slots.includes(state.time)||state.confirmed;
+  confirm.textContent=state.confirmed?t("Modelově potvrzeno"):t("Potvrdit modelový výběr");
+  status.textContent=state.confirmed?(en ? `${t(service.label)} · ${t(days[state.day].label)} at ${state.time}. Demo selection confirmed only here; no booking was sent.` : `${service.label} · ${days[state.day].label} v ${state.time}. Modelový výběr potvrzen pouze zde; rezervace se neodeslala.`):(!slots.length?t("Pro tuto službu nejsou v modelovém dni žádné termíny. Zvolte jiný den."):state.time?t("Vybráno. Zatím nepotvrzeno."):t("Vyberte čas pro zvolenou službu a den."));
  };
  root.addEventListener('change',event=>{const input=event.target;if(input instanceof HTMLInputElement&&['service','day','time'].includes(input.name)){state=transition(state,{type:input.name,value:input.value});update();}});
- q('[data-confirm]').addEventListener('click',()=>{state=transition(state,{type:'confirm'});update();});
+ confirm.addEventListener('click',()=>{
+  const next=transition(state,{type:'confirm'});
+  if(next===state)return;
+  state=next;
+  update();
+  status.focus();
+ });
  q('[data-reset]').addEventListener('click',()=>{state=transition(state,{type:'reset'});update();});
  update();root.querySelectorAll('[data-js-action]').forEach(el=>el.hidden=false);
 }

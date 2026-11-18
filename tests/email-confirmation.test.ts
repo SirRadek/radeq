@@ -1,5 +1,6 @@
 import {describe,it,expect,vi} from 'vitest';
 import {readFileSync} from 'node:fs';
+import {rollbackWorker} from './helpers/private-rollback.mjs';
 import {createLeadConfirmationEmail,createLeadNotificationEmail} from '../src/lib/leadNotificationEmail';
 import backend from '../release/production-backend.js';
 import {validateLeadSubmission} from '../src/lib/leads';
@@ -20,8 +21,8 @@ describe('visitor confirmation presentation',()=>{
   const cs=createLeadNotificationEmail(lead,'lead_fixture','2026-10-28T00:00:00Z');const en=createLeadNotificationEmail({...lead,locale:'en'},'lead_fixture','2026-10-28T00:00:00Z');
   expect(cs).toEqual(en);expect(cs).not.toHaveProperty('html');expect(cs.replyTo).toBe(lead.email);
  });
- it('preserves production backend outside the authorized email and quota deltas',()=>{
-  const old=readFileSync(new URL('../../docs/deployments/2026-10-28-cloudflare/worker-before/modules/index.js',import.meta.url),'utf8');
+ it.runIf(rollbackWorker !== undefined)('preserves the production backend against the private rollback executable outside authorized deltas',()=>{
+  const old=readFileSync(rollbackWorker!,'utf8');
   const current=readFileSync(new URL('../release/production-backend.js',import.meta.url),'utf8');
   const normalize=(input:string)=>{
    let s=input.replace(/\r\n/g,'\n').replace(/^import .*;\n/gm,'').replace(/^\/\/# sourceMappingURL=.*\n?/gm,'');

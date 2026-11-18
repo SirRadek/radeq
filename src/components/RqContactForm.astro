@@ -25,7 +25,11 @@ const turnstileNote = lang === 'en'
 ---
 
 {isPreviewChannel ? <PreviewEmailContact lang={lang} /> : <Fragment>
-<form class="rq-contact-form" method="post" action={resolve('/api/leads')} id="rq-lead-form">
+<p id="rq-lead-fallback" class="rq-form-legal">
+  {lang === 'en' ? 'If the enquiry form is unavailable, email' : 'Pokud se poptávkový formulář nenačte, napište na'}
+  {' '}<a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a>.
+</p>
+<form class="rq-contact-form" method="post" action={resolve('/api/leads')} id="rq-lead-form" hidden>
   <div class="rq-form-field">
     <label for="rq-lead-name">{content.fields.name}</label>
     <input maxlength="90" id="rq-lead-name" name="name" type="text" autocomplete="name" required />
@@ -74,8 +78,7 @@ const turnstileNote = lang === 'en'
     </div>
   ) : null}
   <p class="rq-form-legal">{lang === 'en' ? 'A non-binding enquiry, not an order. If you leave the category blank, it is sent as “General enquiry”.' : 'Nezávazná poptávka, nikoli objednávka. Bez výběru kategorie ji odešleme jako „Obecná poptávka“.'} <a href={resolve(lang === 'en' ? '/en/soukromi/' : '/soukromi/')}>{lang === 'en' ? 'Privacy' : 'Soukromí'}</a> · <a href={resolve(lang === 'en' ? '/en/spoluprace/' : '/spoluprace/')}>{lang === 'en' ? 'How we work together' : 'Podmínky spolupráce'}</a></p>
-  <noscript><p>{lang === 'en' ? 'Please enable JavaScript to use the protected form, or email' : 'Pro chráněný formulář zapněte JavaScript, nebo napište na'} <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a>.</p></noscript>
-  <button class="rq-btn rq-btn--primary" type="submit">{content.submitLabel}</button>
+  <button class="rq-btn rq-btn--primary" type="submit" disabled>{content.submitLabel}</button>
   <p class="rq-form-status" id="rq-lead-status" role="status" aria-live="polite"></p>
 </form>
 
@@ -235,6 +238,9 @@ const turnstileNote = lang === 'en'
         }
       }
     });
+    button.disabled = false;
+    form.hidden = false;
+    document.getElementById('rq-lead-fallback').hidden = true;
   }, {once:true});
 </script>
 

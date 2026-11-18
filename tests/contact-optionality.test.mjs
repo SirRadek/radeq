@@ -1,8 +1,9 @@
-import { test, expect, beforeAll, afterAll, vi } from 'vitest';
-import { mkdtempSync, writeFileSync, readFileSync, rmSync, cpSync, mkdirSync } from 'node:fs';
-import { join, resolve, relative } from 'node:path';
+import { describe, test, expect, beforeAll, afterAll, vi } from 'vitest';
+import { mkdtempSync, writeFileSync, readFileSync, rmSync, mkdirSync } from 'node:fs';
+import { dirname, join, resolve, relative } from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { assertContactContract, archiveCompiled } from './helpers/compiled-html.mjs';
+import { pathToFileURL } from 'node:url';
+import { assertContactContract, documentNodes, attr } from './helpers/compiled-html.mjs';
 import { createEmptyLeadSubmission, validateLeadSubmission, normalizeLeadSubmission, getMissingLeadFields } from '../src/lib/leads';
 import { onRequestPost } from '../functions/api/leads';
 import { sqliteD1, closeSqliteDbs } from './helpers/sqlite-d1.mjs';
@@ -50,36 +51,69 @@ test('keyless API stores empty category for an omitted category', async () => {
   } finally { vi.unstubAllGlobals(); closeSqliteDbs(); }
 });
 
-const root = process.cwd(); const fixtures = [];
-beforeAll(() => {
-  for (const base of ['/', '/preview/']) {
-    const scratch = mkdtempSync(join(root, '.rq-optionality-fixture-')); const dist = join(scratch, 'dist');
-    fixtures.push({ scratch, dist, base });
-    writeFileSync(join(scratch, 'config.mjs'), `import config from ${JSON.stringify(resolve(root, 'astro.config.mjs'))};\nexport default {...config,base:${JSON.stringify(base)},outDir:${JSON.stringify(dist)},cacheDir:${JSON.stringify(join(scratch, 'cache'))}};`);
-    const env = { ...process.env, NODE_ENV: 'production' }; delete env.DEPLOY_TARGET; delete env.BASE_URL;
-    const log = execFileSync(process.execPath, ['node_modules/astro/bin/astro.mjs', 'build', '--config', relative(root, join(scratch, 'config.mjs'))], { cwd: root, env, encoding: 'utf8', maxBuffer: 20 * 1024 * 1024 });
-    console.info(log);
-    archiveCompiled(dist, join(root, 'docs/audits/2026-10-13-preview-fixes-cleanup/test-output/raw-contact', base === '/' ? 'root' : 'preview'), log);
-  }
-}, 120000);
-afterAll(() => { for (const { scratch } of fixtures) rmSync(scratch, { recursive: true, force: true }); });
-const oldOptions = {
+const root = process.cwd();
+const categoryOptions = {
   cs: ['Web', 'E-shop', 'Automatizace procesů', 'Data a AI', 'Audit webu nebo procesu (od 3 000 Kč)', 'Jiné'],
   en: ['Website', 'E-shop', 'Process automation', 'Data and AI', 'Website or process audit (from CZK 3,000)', 'Other'],
 };
-// A missing blank first choice, required category or disturbed existing choices breaks rendered output.
-for (const base of ['/', '/preview/']) for (const locale of ['cs', 'en']) for (const page of ['home', 'contact']) {
-  test(`compiled ${locale} ${page} has optional category at ${base}`, () => {
-    const { dist } = fixtures.find(f => f.base === base);
-    const path = locale === 'cs' ? (page === 'home' ? 'index.html' : 'kontakt/index.html') : (page === 'home' ? 'en/index.html' : 'en/kontakt/index.html');
-    const html = readFileSync(join(dist, path), 'utf8');
-    assertContactContract(html, locale, oldOptions[locale]);
-  });
-}
 
-test('contact semantic contract rejects removed blank choice and weakened required fields', () => {
-  const html = readFileSync(join(fixtures[0].dist, 'kontakt/index.html'), 'utf8');
-  expect(() => assertContactContract(html.replace(/<option value(?:=\"\")?[^>]*>Bez výběru<\/option>/, ''), 'cs', oldOptions.cs)).toThrow();
-  expect(() => assertContactContract(html.replace('name=\"project_type\"', 'name=\"project_type\" required'), 'cs', oldOptions.cs)).toThrow();
-  expect(() => assertContactContract(html.replace(/(<input[^>]*name=\"name\"[^>]*?) required/, '$1'), 'cs', oldOptions.cs)).toThrow();
+const routes = {
+  cs: ['index.html', 'kontakt/index.html'],
+  en: ['en/index.html', 'en/kontakt/index.html'],
+};
+const bases = ['/', '/preview/'];
+
+describe('rendered contact forms', () => {
+  const fixtures = new Map();
+  beforeAll(() => {
+    for (const base of bases) {
+      const scratch = mkdtempSync(join(root, '.rq-optionality-fixture-'));
+      const dist = join(scratch, 'dist');
+      fixtures.set(base, { scratch, dist });
+
+      // Compile the four actual route entry points and their dependency trees.
+      for (const htmlPath of Object.values(routes).flat()) {
+        const file = htmlPath.replace('.html', '.astro');
+        const original = join(root, 'src/pages', file);
+        const target = join(scratch, 'pages', file);
+        mkdirSync(dirname(target), { recursive: true });
+        const content = readFileSync(original, 'utf8').replace(
+          /from ['"](\.\.?\/[^'"]+)['"]/g,
+          (_, specifier) => 'from ' + JSON.stringify(resolve(dirname(original), specifier).replaceAll('\\', '/')),
+        );
+        writeFileSync(target, content);
+      }
+
+      const config = join(scratch, 'config.mjs');
+      const appConfig = pathToFileURL(resolve(root, 'astro.config.mjs')).href;
+      writeFileSync(config, `import appConfig from ${JSON.stringify(appConfig)};
+export default {...appConfig, base:${JSON.stringify(base)}, srcDir:${JSON.stringify(scratch)}, outDir:${JSON.stringify(dist)}, cacheDir:${JSON.stringify(join(scratch, 'cache'))}};`);
+      const env = { ...process.env, NODE_ENV: 'production', DEPLOY_TARGET: '' };
+      delete env.BASE_URL;
+      execFileSync(process.execPath, ['node_modules/astro/bin/astro.mjs', 'build', '--config', relative(root, config)], {
+        cwd: root, env, encoding: 'utf8', timeout: 90_000,
+      });
+    }
+  }, 200_000);
+
+  afterAll(() => {
+    for (const { scratch } of fixtures.values()) rmSync(scratch, { recursive: true, force: true });
+  });
+
+  for (const base of bases) for (const [locale, paths] of Object.entries(routes)) for (const path of paths) {
+    test(`${locale} ${path} has an optional category at ${base}`, () => {
+      const html = readFileSync(join(fixtures.get(base).dist, path), 'utf8');
+      assertContactContract(html, locale, categoryOptions[locale]);
+      const form = documentNodes(html).find(node => attr(node, 'id') === 'rq-lead-form');
+      expect(attr(form, 'action')).toBe(base + 'api/leads');
+      expect(attr(form, 'method')).toBe('post');
+    });
+  }
+
+  test('rejects removed blank choice, required category and weakened required fields', () => {
+    const html = readFileSync(join(fixtures.get('/').dist, 'kontakt/index.html'), 'utf8');
+    expect(() => assertContactContract(html.replace(/<option value(?:="")?[^>]*>Bez výběru<\/option>/, ''), 'cs', categoryOptions.cs)).toThrow();
+    expect(() => assertContactContract(html.replace('name="project_type"', 'name="project_type" required'), 'cs', categoryOptions.cs)).toThrow();
+    expect(() => assertContactContract(html.replace(/(<input[^>]*name="name"[^>]*?) required/, '$1'), 'cs', categoryOptions.cs)).toThrow();
+  });
 });

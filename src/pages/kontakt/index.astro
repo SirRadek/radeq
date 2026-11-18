@@ -4,6 +4,7 @@ import RqHeader from '../../components/RqHeader.astro';
 import RqFooter from '../../components/RqFooter.astro';
 import RqContactForm from '../../components/RqContactForm.astro';
 import { homeContent } from '../../data/home';
+import { isPreviewChannel } from '../../lib/preview-channel.mjs';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const nav = [
@@ -84,8 +85,9 @@ const nav = [
         <article class="rq-card rq-info-card">
           <h3>Kam poptávky chodí</h3>
           <p>
-            Formulář je pro pracovní poptávky a domluvu. Citlivé údaje, hesla ani interní
-            dokumenty do něj nepatří.
+            {isPreviewChannel
+              ? 'E-mail je určen pro pracovní poptávky a domluvu. Citlivé údaje, hesla ani interní dokumenty neposílejte.'
+              : 'Formulář je pro pracovní poptávky a domluvu. Citlivé údaje, hesla ani interní dokumenty do něj nepatří.'}
           </p>
         </article>
         <article class="rq-card rq-info-card">

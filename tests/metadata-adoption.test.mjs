@@ -29,7 +29,7 @@ describe('actual RqLayout URL policy and metadata contract', () => {
       }
       writeFileSync(join(scratch,'config.mjs'),`import config from ${JSON.stringify(resolve(root,'astro.config.mjs'))};\nexport default {...config,srcDir:${JSON.stringify(scratch)},outDir:${JSON.stringify(join(scratch,'dist'))},cacheDir:${JSON.stringify(join(scratch,'cache'))}};`);
       const env = {...process.env, NODE_ENV:'production', DEPLOY_TARGET:base ? 'github-pages' : ''}; delete env.BASE_URL;
-      execFileSync(process.execPath,['node_modules/astro/bin/astro.mjs','build','--config',relative(root,join(scratch,'config.mjs'))],{cwd:root,env,encoding:'utf8'});
+      execFileSync(process.execPath,['node_modules/astro/bin/astro.mjs','build','--config',relative(root,join(scratch,'config.mjs'))],{cwd:root,env,encoding:'utf8',timeout:110_000});
       for (const kind of ['cs','en','noalternate','fallback','guard']) {
         const html = readFileSync(join(scratch,`dist/${kind}/index.html`),'utf8');
         contract(html,base,kind);
@@ -40,5 +40,5 @@ describe('actual RqLayout URL policy and metadata contract', () => {
         console.info(`RED observable omission + duplication rejected; GREEN ${base || '/'} ${kind}`);
       }
     } finally { rmSync(scratch,{recursive:true,force:true}); }
-  },60000);
+  },120_000);
 });

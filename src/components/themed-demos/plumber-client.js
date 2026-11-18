@@ -10,6 +10,7 @@ export function mount(root){
  const contact=root.querySelector('[data-contact]');
  const explanation=root.querySelector('[data-contact-explanation]');
  const status=root.querySelector('[data-status]');
+ const problems=root.querySelector('fieldset');
  const description=root.querySelector('textarea');
  const title=root.querySelector('[data-help-title]');
  const detail=root.querySelector('[data-help-detail]');
@@ -53,9 +54,11 @@ export function mount(root){
  }
  root.addEventListener('click',click);root.addEventListener('change',change);root.addEventListener('input',input);
  render();root.querySelectorAll('[data-js-action]').forEach(el=>el.hidden=false);
+ problems.disabled=false;description.disabled=false;
  const cleanup=()=>{
   root.removeEventListener('click',click);root.removeEventListener('change',change);root.removeEventListener('input',input);
   root.querySelectorAll('[data-js-action]').forEach(el=>el.hidden=true);
+  problems.disabled=true;description.disabled=true;
   explanation.hidden=false;mounted.delete(root);
  };
  mounted.set(root,cleanup);return cleanup;

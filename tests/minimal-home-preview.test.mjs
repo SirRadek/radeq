@@ -22,7 +22,7 @@ describe('unified minimalist homepage and local design route', () => {
       writeFileSync(join(scratch, 'config.mjs'), `import config from ${JSON.stringify(resolve(root, 'astro.config.mjs'))};\nexport default {...config,srcDir:${JSON.stringify(scratch)},outDir:${JSON.stringify(join(scratch, 'dist'))},cacheDir:${JSON.stringify(join(scratch, 'cache'))}};`);
       const env = { ...process.env, NODE_ENV: 'production', DEPLOY_TARGET: base ? 'github-pages' : '', PUBLIC_TURNSTILE_SITE_KEY: 'fixture-public-key' };
       delete env.BASE_URL;
-      execFileSync(process.execPath, ['node_modules/astro/bin/astro.mjs', 'build', '--config', relative(root, join(scratch, 'config.mjs'))], { cwd: root, env, encoding: 'utf8', stdio: 'pipe' });
+      execFileSync(process.execPath, ['node_modules/astro/bin/astro.mjs', 'build', '--config', relative(root, join(scratch, 'config.mjs'))], { cwd: root, env, encoding: 'utf8', timeout: 110_000, stdio: 'pipe' });
       for (const route of ['index.html', 'minimalni-navrh/index.html']) {
         const html = readFileSync(join(scratch, 'dist', route), 'utf8');
         const all = documentNodes(html);
@@ -47,8 +47,8 @@ describe('unified minimalist homepage and local design route', () => {
           expect(all.some(node => attr(node, 'id') === id)).toBe(true);
         }
         expect(attr(tags('html')[0], 'lang')).toBe('cs');
-        expect(text(tags('h1')[0])).toBe('Weby a automatizace, které usnadňují podnikání.');
-        expect(tags('h2').filter(n=>attr(n,'id')!=='rq-consent-title').map(text)).toEqual(['Služby', 'Ceny a rozsah', 'Přístup', 'Kdo za tím stojí', 'Pojďme probrat váš záměr']);
+        expect(text(tags('h1')[0])).toBe('Méně papírování. Více času na vaši práci.');
+        expect(tags('h2').filter(n=>attr(n,'id')!=='rq-consent-title').map(text)).toEqual(['Služby', 'Ceny a rozsah', 'Přístup', 'Kdo za tím stojí', 'Pilotní program pro první 3 klienty', 'Pojďme probrat váš záměr']);
         expect(tags('h3').map(text)).toEqual(['Web pro instalatéra', 'Fyzioterapie s rezervací', 'Dílenský terminál', 'Pražírna a malý e-shop', 'Audit webu nebo procesu', 'Projektové realizace']);
         expect(html).not.toContain('Lokální náhled');
         const prices = all.find(n => n.tagName === 'section' && attr(n,'id') === 'ceny');
@@ -71,7 +71,12 @@ describe('unified minimalist homepage and local design route', () => {
         expect(all.filter(n => attr(n, 'class') === 'flow-node')).toHaveLength(16);
         expect(tags('svg')).toHaveLength(0);
         expect(all.some(n => attr(n, 'id') === 'ukazky')).toBe(false);
-        for (const img of tags('img')) expect(attr(img, 'src')).toMatch(new RegExp('^' + base + '/images/services/'));
+        const imagePaths = ['images/services/flow-plumber-wide.png', 'images/services/booking-wide.png',
+          'images/services/flow-workshop-wide.png', 'images/services/flow-shop.png', 'brand/founder-about.webp'];
+        expect(tags('img').map(img => attr(img, 'src'))).toEqual(imagePaths.map(path => `${base}/${path}`));
+        for (const path of imagePaths) {
+          expect(digest(join(scratch, 'dist', path))).toBe(digest(join(root, 'public', path)));
+        }
         const links = tags('a').map(node => [text(node).trim(), attr(node, 'href')]);
         for (const pair of [['Služby', `${base}/#sluzby`], ['Přístup', `${base}/#pristup`], ['Ceny', `${base}/#ceny`], ['Ukázky', `${base}/ukazky/`], ['Kontakt', `${base}/#kontakt`], ['Probrat projekt', '#kontakt'], ['Soukromí', `${base}/soukromi/`]]) expect(links).toContainEqual(pair);
         const origin = base ? 'https://sirradek.github.io' : 'https://radeq.cz';
@@ -104,5 +109,5 @@ describe('unified minimalist homepage and local design route', () => {
     } finally {
       rmSync(scratch, { recursive: true, force: true });
     }
-  }, 60000);
+  }, 120_000);
 });

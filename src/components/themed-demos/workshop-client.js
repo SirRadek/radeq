@@ -33,7 +33,15 @@ export function mount(root) {
       row.querySelector('[data-row-status]').textContent = completed ? t("Hotovo") : current ? t("Na stole") : t("Čeká");
     });
   };
-  root.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => {
+  root.addEventListener('keydown', event => {
+    // Holding Enter can keep activating native buttons, even after focus moves to Undo.
+    if (event.repeat && (event.key === 'Enter' || event.key === ' ') && event.target instanceof Element && event.target.matches('[data-action]')) {
+      event.preventDefault();
+    }
+  });
+  root.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', event => {
+    // A multi-click is one gesture. Distinct clicks and key presses need no delay.
+    if (button === doneButton && event instanceof MouseEvent && event.detail > 1) return;
     const action = { type: button.dataset.action, jobId: button.dataset.jobId };
     const before = summarize(state);
     const previous = state;

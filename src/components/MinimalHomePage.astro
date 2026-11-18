@@ -72,12 +72,16 @@ const starts = lang === 'en' ? [
         </section>
         <span id="about"></span><section id="autor" aria-labelledby="autor-nadpis" class="rq-minimal-preview__about">
           <h2 id="autor-nadpis">{lang === "en" ? 'Who is behind RadeQ' : 'Kdo za tím stojí'}</h2>
-          <div><img src={`${base}/brand/founder-about.webp`} srcset={`${base}/brand/founder-about@2x.webp 2x`} alt={lang === 'en' ? 'Radek Široký, founder of RadeQ' : 'Radek Široký, zakladatel RadeQ'} width="240" height="300" loading="lazy" style="width:min(240px,100%);height:auto;border-radius:8px;margin-bottom:1.25rem;" /><p class="rq-minimal-preview__author">{homeContent[lang].about.name}</p><p>{lang === "en" ? 'RadeQ is my business brand. You work directly with me on the design, build and handoff.' : 'RadeQ je moje podnikatelská značka. Návrh, realizaci i předání řešíte přímo se mnou.'}</p><p>{lang === "en" ? 'I started programming at a five-axis CNC milling machine and also worked in customer support. I know that practical work calls for tools that are easy to use and do not get in the way. I listen first, then design a simple solution for your work.' : 'Začínal jsem u pětiosé CNC frézky a pracoval jsem také v zákaznické podpoře. Vím, že v provozu potřebujete věci, které se snadno používají a nezdržují. Proto nejdřív poslouchám a pak navrhnu jednoduché řešení pro vaši práci.'}</p>
+          <div>
+            <img src={`${base}/brand/founder-about.webp`} srcset={`${base}/brand/founder-about@2x.webp 2x`} alt={lang === 'en' ? 'Radek Široký, founder of RadeQ' : 'Radek Široký, zakladatel RadeQ'} width="240" height="300" loading="lazy" style="width:min(240px,100%);height:auto;border-radius:8px;margin-bottom:1.25rem;" />
+            <p class="rq-minimal-preview__author">{homeContent[lang].about.name}</p>
+            <p>{lang === 'en' ? 'I run RadeQ. You work directly with me from the first design to handover.' : 'RadeQ vedu sám. Od prvního návrhu až po předání jednáte přímo se mnou.'}</p>
+            <p>{lang === 'en' ? 'I started programming on a five-axis CNC milling machine and later worked in customer support.' : 'Programovat jsem začal u pětiosé CNC frézky. Později jsem pracoval v zákaznické podpoře.'}</p>
             <p>{lang === 'en' ? 'Professional profiles:' : 'Profesní profily:'} <a href="https://www.linkedin.com/in/sirradek">LinkedIn</a> · <a href="https://github.com/SirRadek">GitHub</a>. {lang === 'en' ? 'Business listings:' : 'Firemní záznamy:'} <a href="https://www.firmy.cz/detail/14036384-radeq-praha-nusle.html">Firmy.cz</a> · <a href="https://www.zivefirmy.cz/radeq_f1952239">Živéfirmy</a>.</p>
             <div class="rq-disclosures">
               <details id="zkusenosti-podrobnosti" class="rq-disclosure">
                 <summary><span>{lang === 'en' ? 'Experience behind the work' : 'Zkušenosti za mou prací'}</span><span class="rq-disclosure__mark" aria-hidden="true"></span></summary>
-                <div class="rq-disclosure__body">{homeContent[lang].about.paragraphs.slice(1, 3).map(paragraph => <p>{paragraph}</p>)}</div>
+                <div class="rq-disclosure__body"><p>{homeContent[lang].about.paragraphs[1]}</p></div>
               </details>
 
             </div>

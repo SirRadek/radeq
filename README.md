@@ -1,4 +1,8 @@
-# RadeQ — osobní nabídka a ukázky CZ/EN, 17. 11. 2026
+# RadeQ — opravený statický náhled CZ/EN, 18. 11. 2026
+
+Statický audit a soukromí nyní odpovídají Pages; opraveny jsou i navigace, kontakt a ukázky. Ověření je místní, dokud není doloženo vydání. [Doklad kandidáta](docs/verification/2026-11-18-pages/README.md).
+
+# Předchozí revize — osobní nabídka a ukázky CZ/EN, 17. 11. 2026
 
 Aktuální revize zpřesňuje nabídku pro živnostníky, představuje pilotní program, osobní zkušenost a ceny péče. Interaktivní ukázky zůstávají modelové. GitHub Pages je statický náhled s e-mailovým kontaktem; zveřejnění této revize neznamená nasazení na radeq.cz. [Ověření této revize](docs/verification/2026-11-17-sales-refresh/README.md).
 
@@ -39,10 +43,10 @@ Otevři http://127.0.0.1:4394/radeq/ a /radeq/en/. Na Windows případně py mí
 
 GitHub Pages je statický noindex náhled pod /radeq/, s e-mailovým kontaktem, bez skutečného poptávkového API a volitelného měření. Workflow publikuje přesně site/, nikoli automaticky nově sestavené src/dist. Produkční root pro radeq.cz má formulář, oddělené souhlasy a Worker API. Zachovat tento rozdíl.
 
-release/ obsahuje skutečný backend včetně atomic-quotas.js; migrations/0001_atomic_quotas.sql je předpokladem jeho aktivace na Cloudflare. Na Pages se backend nespouští. Samotný GitHub commit/push nenasadí Cloudflare ani neprovede migraci. Existující LEADS_DB/D1, KV a secrets se zachovávají; podrobné pořadí, přechod kvót a bezpečný návrat jsou v podmínkách vydání. Historické deploy skripty při obnovení nespouštět.
+release/ obsahuje skutečný backend včetně atomic-quotas.js; migrations/0001_atomic_quotas.sql je předpokladem jeho aktivace na Cloudflare. Na Pages se backend nespouští. Push publikační větve spouští Pages Actions; Workers Builds v minulém běhu rovněž vytvořil verzi Workeru. Samotné vytvoření verze nedokládá změnu aktivního provozu ani provedení migrace; po schváleném pushi je nutné aktivní provoz samostatně ověřit. Existující LEADS_DB/D1, KV a secrets se zachovávají; podrobné pořadí, přechod kvót a bezpečný návrat jsou v podmínkách vydání. Historické deploy skripty při obnovení nespouštět.
 
 ## Identita a doložené kontroly
 
-publication-manifest.json obsahuje relativní hashe 211 zdrojových souborů a 120 souborů webu; node tools/verify-publication.mjs ověří celý publikační balík. Přijatý build je build-1794911230605, SHA256 jeho původního manifestu je 411ab54bd4fd6df4dc8274c0d4a9b6bf8f744d7883b47f13a59b1513d693cb71. [Aktuální ověření](docs/verification/2026-11-17-sales-refresh/README.md) odděluje místní kontroly od nasazení.
+publication-manifest.json obsahuje relativní hashe zdrojů i 120 souborů webu; node tools/verify-publication.mjs ověří celý publikační balík. Místní kandidát je build-1794992389507, SHA256 jeho původního manifestu je 5ddcc57ddbcfde8e432676b8f5f13519da03a19735bc799fd4dbf3001350a063. [Ověření současného kandidáta](docs/verification/2026-11-18-pages/README.md) odděluje místní kontroly od nasazení.
 
 Autentizace, zákaznické záznamy, soukromé rollback exporty, auditní baseline, node_modules a cache nejsou součástí veřejného balíčku. Předání z 29. a 30. října zůstávají historická; aktuální stav určuje tento README, CHANGELOG a publikační manifest.

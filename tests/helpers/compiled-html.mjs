@@ -1,8 +1,7 @@
 import { parse } from 'parse5';
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync, mkdirSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { createHash } from 'node:crypto';
 export const attr = (node, name) => node.attrs?.find(a => a.name === name)?.value;
 export const hasAttr = (node, name) => node.attrs?.some(a => a.name === name) ?? false;
 export function nodes(node) { return [node, ...(node.childNodes ?? []).flatMap(nodes)]; }
@@ -60,16 +59,4 @@ export function assert404Contract(html, base, dist, root) {
     assert.deepEqual(readFileSync(join(dist, `paper-stack/assets/brand-fonts/${font}.woff2`)), readFileSync(join(root, `public/paper-stack/assets/brand-fonts/${font}.woff2`)));
   }
   for (const id of ['situace', 'pristup', 'about', 'contact']) assert.ok(nodes(footer).some(n => n.tagName === 'a' && attr(n, 'href') === `${base}#${id}`));
-}
-export function archiveCompiled(dist, target, log) {
-  mkdirSync(target, { recursive: true }); const manifest = {};
-  function archive(dir, prefix = '') {
-    for (const entry of readdirSync(dir, { withFileTypes: true })) {
-      const relative = prefix + entry.name, source = join(dir, entry.name);
-      if (entry.isDirectory()) { archive(source, relative + '/'); continue; }
-      const bytes = readFileSync(source), opaque = `${Object.keys(manifest).length}.opaque.bin`;
-      writeFileSync(join(target, opaque), bytes); manifest[relative] = { opaque, sha256: createHash('sha256').update(bytes).digest('hex') };
-    }
-  }
-  archive(dist); writeFileSync(join(target, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n'); writeFileSync(join(target, 'build.log'), log);
 }

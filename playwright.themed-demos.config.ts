@@ -1,6 +1,60 @@
-import {defineConfig} from '@playwright/test';import {readFileSync} from 'node:fs';import {relative,join} from 'node:path';import {createHash} from 'node:crypto';
-const manifest=process.env.DEMO_ARTIFACT_MANIFEST;if(!manifest)throw new Error('DEMO_ARTIFACT_MANIFEST required');const m=JSON.parse(readFileSync(manifest,'utf8'));
-for(const [file,expected] of Object.entries(m.source_hashes||{}))if(createHash('sha256').update(readFileSync(file)).digest('hex')!==expected)throw new Error('source changed');
-for(const v of m.variants)for(const [file,expected] of Object.entries(v.artifact_hashes||{}))if(createHash('sha256').update(readFileSync(file)).digest('hex')!==expected)throw new Error('compiled asset changed');
-for(const v of m.variants){for(const [file,expected] of [[v.config,v.config_hash],[join(v.dist,'minimalni-navrh/ukazky/instalater/index.html'),v.html_hash]])if(createHash('sha256').update(readFileSync(file)).digest('hex')!==expected)throw new Error('artifact changed');}
-export default defineConfig({testDir:'tests',testMatch:'themed-demos.spec.ts',workers:1,reporter:'list',outputDir:'docs/audits/2026-10-09-themed-demos/browser-output',use:{launchOptions:{executablePath:'/usr/bin/google-chrome'}},webServer:m.variants.map(v=>{const env={...process.env};delete env.DEPLOY_TARGET;if(v.base)env.DEPLOY_TARGET='github-pages';return {command:`npm run preview -- --config ${relative(m.root,v.config)} --host 127.0.0.1 --port ${v.port}`,url:`http://127.0.0.1:${v.port}${v.base}/minimalni-navrh/ukazky/instalater/`,reuseExistingServer:false,env};}),projects:m.variants.map(v=>({name:v.name,use:{baseURL:`http://127.0.0.1:${v.port}${v.base}/`}}))});
+import { defineConfig } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+import { join, relative } from 'node:path';
+import { tmpdir } from 'node:os';
+import { createHash, randomUUID } from 'node:crypto';
+
+const manifestPath = process.env.DEMO_ARTIFACT_MANIFEST;
+if (!manifestPath) throw new Error('DEMO_ARTIFACT_MANIFEST required');
+const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as {
+  root: string;
+  source_hashes?: Record<string, string>;
+  variants: {
+    name: string;
+    base: string;
+    port: number;
+    config: string;
+    dist: string;
+    config_hash: string;
+    html_hash: string;
+    artifact_hashes?: Record<string, string>;
+  }[];
+};
+
+const plumberPath = 'minimalni-navrh/ukazky/instalater/';
+function verify(file: string, expected: string) {
+  const actual = createHash('sha256').update(readFileSync(file)).digest('hex');
+  if (actual !== expected) throw new Error(`Manifest hash mismatch for ${file}`);
+}
+
+for (const [file, expected] of Object.entries(manifest.source_hashes ?? {})) verify(file, expected);
+for (const variant of manifest.variants) {
+  for (const [file, expected] of Object.entries(variant.artifact_hashes ?? {})) verify(file, expected);
+  verify(variant.config, variant.config_hash);
+  verify(join(variant.dist, plumberPath, 'index.html'), variant.html_hash);
+}
+
+function baseURL(variant: (typeof manifest.variants)[number]) {
+  return `http://127.0.0.1:${variant.port}${variant.base}/`;
+}
+
+export default defineConfig({
+  testDir: './tests',
+  testMatch: 'themed-demos.spec.ts',
+  workers: 1,
+  reporter: 'list',
+  outputDir: join(tmpdir(), `radeq-themed-demos-${randomUUID()}`),
+  use: {
+    serviceWorkers: 'block',
+    launchOptions: { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH },
+  },
+  webServer: manifest.variants.map(variant => ({
+    command: `npm run preview -- --ignore-lock --config "${relative(manifest.root, variant.config)}" --host 127.0.0.1 --port ${variant.port}`,
+    cwd: manifest.root,
+    url: baseURL(variant) + plumberPath,
+    reuseExistingServer: false,
+    env: { DEPLOY_TARGET: variant.base ? 'github-pages' : '' },
+    timeout: 120_000,
+  })),
+  projects: manifest.variants.map(variant => ({ name: variant.name, use: { baseURL: baseURL(variant) } })),
+});

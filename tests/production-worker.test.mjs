@@ -1,9 +1,10 @@
 import {sqliteD1,closeSqliteDbs} from './helpers/sqlite-d1.mjs';
 afterEach(closeSqliteDbs);
 import {afterEach,it,expect,vi} from 'vitest';
-import {readFileSync} from 'node:fs';import {createHash} from 'node:crypto';
+import {readFileSync} from 'node:fs';
+import {rollbackWorker} from './helpers/private-rollback.mjs';import {createHash} from 'node:crypto';
 import backend from '../release/production-backend.js';import worker from '../release/index.js';
-it('retains the original production executable privately',()=>expect(createHash('sha256').update(readFileSync(new URL('../../docs/deployments/2026-10-28-cloudflare/worker-before/modules/index.js',import.meta.url))).digest('hex')).toBe('c80dd654a4775cc1a49a84ec8de4b8b24b643377574cb789caeaaec4379dd67a'));
+it.runIf(rollbackWorker !== undefined)('retains the original production executable privately',()=>expect(createHash('sha256').update(readFileSync(rollbackWorker)).digest('hex')).toBe('c80dd654a4775cc1a49a84ec8de4b8b24b643377574cb789caeaaec4379dd67a'));
 it('preview cannot invoke APIs, storage or email; static response is noindex',async()=>{
  const prepare=vi.fn(()=>{throw Error('production DB touched')});const env={LEADS_DB:{prepare},ASSETS:{fetch:vi.fn(()=>new Response('preview'))}};
  expect((await worker.fetch(new Request('https://version.example.workers.dev/api/leads',{method:'POST'}),env)).status).toBe(403);

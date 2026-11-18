@@ -5,6 +5,7 @@ import RqHeader from './RqHeader.astro';
 import { auditContent, type AuditContent } from '../data/audit';
 import { homeContent, type HomeContent } from '../data/home';
 import type { Locale } from '../data/locales';
+import { isPreviewChannel } from '../lib/preview-channel.mjs';
 
 interface Props {
   content?: AuditContent;
@@ -38,18 +39,29 @@ const measurePath = resolve('/api/measure');
 <RqHeader content={navContent} alternateLabel={home.seo.alternateLabel} alternatePath={content.seo.alternatePath} />
 
 <main>
-  <section class="rq-section rq-audit-page" id="audit" aria-labelledby="rq-audit-title">
-    <div class="rq-audit-page__intro" data-rq-reveal>
-      <h1 class="rq-display" id="rq-audit-title">{content.page.title}</h1>
-      <p class="rq-lead">{content.page.lead}</p>
-      <ul class="rq-audit-page__points" aria-label={lang === 'en' ? 'Measurement boundaries' : 'Hranice měření'}>
-        {content.page.points.map((point) => (
-          <li>{point}</li>
-        ))}
-      </ul>
-    </div>
+  <section class:list={['rq-section', 'rq-audit-page', isPreviewChannel && 'rq-audit-page--preview']} id="audit" aria-labelledby="rq-audit-title">
+    {isPreviewChannel ? (
+      <div class="rq-audit-preview" data-rq-audit-preview>
+        <p class="rq-audit-preview__eyebrow">{lang === 'en' ? 'Static service preview' : 'Statický náhled služby'}</p>
+        <h1 class="rq-display" id="rq-audit-title">{content.preview.title}</h1>
+        <p class="rq-lead">{content.preview.lead}</p>
+        <p class="rq-audit-preview__note">{content.preview.note}</p>
+      </div>
+    ) : (
+      <>
+        <div class="rq-audit-page__intro" data-rq-reveal>
+          <h1 class="rq-display" id="rq-audit-title">{content.page.title}</h1>
+          <p class="rq-lead">{content.page.lead}</p>
+          <ul class="rq-audit-page__points" aria-label={lang === 'en' ? 'Measurement boundaries' : 'Hranice měření'}>
+            {content.page.points.map((point) => (
+              <li>{point}</li>
+            ))}
+          </ul>
+        </div>
 
-    <AuditTool client:load locale={lang} content={content.tool} measurePath={measurePath} contactHref={contactHref} />
+        <AuditTool client:load locale={lang} content={content.tool} measurePath={measurePath} contactHref={contactHref} />
+      </>
+    )}
   </section>
 </main>
 
@@ -64,6 +76,33 @@ const measurePath = resolve('/api/measure');
     align-items: start;
     min-height: calc(100vh - 6rem);
     padding-top: clamp(7rem, 12vw, 10rem);
+  }
+
+  .rq-audit-page--preview {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rq-audit-preview {
+    width: min(100%, 58rem);
+    padding: clamp(1.25rem, 3vw, 2rem) 0;
+    border-block: 1px solid #d8d1c5;
+  }
+
+  .rq-audit-preview__eyebrow {
+    margin: 0 0 1rem;
+    color: var(--rq-burgundy);
+    font-family: var(--rq-mono), ui-monospace, monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .rq-audit-preview__note {
+    max-width: 62ch;
+    margin: 1.5rem 0 0;
+    color: var(--rq-ink-muted);
+    line-height: 1.65;
   }
 
   .rq-audit-page__intro {

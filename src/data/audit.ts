@@ -12,6 +12,11 @@ export interface AuditContent {
     lead: string;
     points: readonly string[];
   };
+  preview: {
+    title: string;
+    lead: string;
+    note: string;
+  };
   tool: {
     formAriaLabel: string;
     inputLabel: string;
@@ -56,6 +61,13 @@ export const auditContent = {
       lead:
         'Krátký PSI náhled ukáže několik signálů k prověření. Není to verdikt ani slib výsledku; závěr dělám až v placeném lidském auditu.',
       points: ['jen oficiální Google PSI', 'bez ukládání měření do D1', 'jen kvalitativní signály'],
+    },
+    preview: {
+      title: 'Statická ukázka auditu webu',
+      lead:
+        'Tento náhled běží jako statická stránka GitHub Pages. Zde se adresa webu neodesílá do Google PageSpeed Insights a živé měření neběží.',
+      note:
+        'Stránka proto nezobrazuje výsledek PSI. Náhled ukazuje pouze informace o službě; skutečnou kontrolu je třeba domluvit samostatně.',
     },
     tool: {
       formAriaLabel: 'Měření webu přes Google PageSpeed Insights',
@@ -108,6 +120,13 @@ export const auditContent = {
       lead:
         'A short PSI preview shows a few signals worth checking. It is not a verdict or a promise; the conclusion comes from the paid human audit.',
       points: ['official Google PSI only', 'measurement is not written to D1', 'qualitative signals only'],
+    },
+    preview: {
+      title: 'Static website audit preview',
+      lead:
+        'This page is a static GitHub Pages preview. It does not send a website address to Google PageSpeed Insights or run a live measurement.',
+      note:
+        'No PSI result is produced here. This preview only describes the service; any actual check must be arranged separately.',
     },
     tool: {
       formAriaLabel: 'Website measurement through Google PageSpeed Insights',

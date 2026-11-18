@@ -1,5 +1,5 @@
 import { turnstileSiteKey } from '../data/site-config';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { AuditContent } from '../data/audit';
 import type { Locale } from '../data/locales';
 import { readSubmittedTurnstileToken, useTurnstileWidget } from '../lib/useTurnstileWidget';
@@ -44,10 +44,14 @@ export default function AuditTool({ locale, content, measurePath, contactHref }:
   const [inlineStatus, setInlineStatus] = useState<StatusState>('idle');
   const [turnstileToken, setTurnstileToken] = useState('');
   const [automationAnswer, setAutomationAnswer] = useState<AutomationAnswer>('no');
+  const [hydrated, setHydrated] = useState(false);
+  const [verificationUnavailable, setVerificationUnavailable] = useState(false);
+  useEffect(() => setHydrated(true), []);
   const isTurnstileEnabled = TURNSTILE_SITE_KEY.length > 0;
   const { containerRef: turnstileContainerRef, resetWidget: resetTurnstileWidget } = useTurnstileWidget({
     enabled: isTurnstileEnabled,
     siteKey: TURNSTILE_SITE_KEY,
+    onUnavailable: setVerificationUnavailable,
     onToken: (token) => {
       setTurnstileToken(token);
       if (!token) return;
@@ -73,6 +77,13 @@ export default function AuditTool({ locale, content, measurePath, contactHref }:
   async function submitMeasurement(event: { preventDefault: () => void }) {
     event.preventDefault();
     if (isSubmitting) return;
+
+    if (!url.trim()) {
+      setResult(null);
+      setInlineStatus('invalid_url');
+      setStatusMessage(content.statusLabels.invalid_url);
+      return;
+    }
 
     const submittedTurnstileToken = readSubmittedTurnstileToken(turnstileToken, turnstileContainerRef.current);
     if (isTurnstileEnabled && !submittedTurnstileToken) {
@@ -141,12 +152,13 @@ export default function AuditTool({ locale, content, measurePath, contactHref }:
             autoComplete="url"
             inputMode="url"
             spellCheck={false}
-            disabled={isSubmitting}
+            disabled={!hydrated || isSubmitting}
             required
           />
         </div>
 
         <p className="audit-tool__consent">{content.consent}</p>
+        <noscript><p>{locale === 'cs' ? 'Pro měření zapněte JavaScript, nebo využijte ' : 'Enable JavaScript to run the check, or use the '}<a href={contactHref}>{locale === 'cs' ? 'kontakt' : 'contact details'}</a>.</p></noscript>
 
         {isTurnstileEnabled ? (
           <div className="audit-tool__turnstile-group">
@@ -161,7 +173,7 @@ export default function AuditTool({ locale, content, measurePath, contactHref }:
         ) : null}
 
         <div className="audit-tool__actions">
-          <button className="rq-btn rq-btn--primary audit-tool__submit" type="submit" disabled={isSubmitting}>
+          <button className="rq-btn rq-btn--primary audit-tool__submit" type="submit" disabled={!hydrated || isSubmitting}>
             {isSubmitting ? content.loadingLabel : content.submitLabel}
           </button>
           {!result ? (
@@ -172,7 +184,9 @@ export default function AuditTool({ locale, content, measurePath, contactHref }:
               aria-live={isAlertStatus ? 'assertive' : 'polite'}
               aria-atomic="true"
             >
-              {statusMessage}
+              {inlineStatus === 'verification_failed' && verificationUnavailable ? (
+                <>{locale === 'cs' ? 'Ověření se nepodařilo načíst. Obnovte stránku, nebo využijte ' : 'Verification could not load. Reload the page or use the '}<a href={contactHref}>{locale === 'cs' ? 'kontakt' : 'contact details'}</a>.</>
+              ) : statusMessage}
             </p>
           ) : null}
         </div>

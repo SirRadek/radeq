@@ -1,27 +1,103 @@
-import {mkdirSync,readFileSync,writeFileSync,openSync,readdirSync} from 'node:fs';
-import {resolve,join,relative} from 'node:path';import {pathToFileURL} from 'node:url';import {spawnSync} from 'node:child_process';import {createHash} from 'node:crypto';
-function seal(m){
- const sha=p=>createHash('sha256').update(readFileSync(p)).digest('hex');
- const walk=dir=>readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(join(dir,e.name)):[join(dir,e.name)]);
- const sources=[...['src','functions','tests','public','scripts','release','migrations'].flatMap(dir=>walk(resolve(dir))),...['astro.config.mjs','tsconfig.json','package.json','package-lock.json','playwright.themed-demos.config.ts','vitest.config.ts','wrangler.jsonc'].map(p=>resolve(p))];
- m.revision=spawnSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).stdout.trim();m.source_hashes=Object.fromEntries(sources.map(p=>[p,sha(p)]));
- for(const v of m.variants)v.artifact_hashes=Object.fromEntries(walk(v.dist).map(p=>[p,sha(p)]));
- return m;
+import { createHash } from 'node:crypto';
+import { spawnSync } from 'node:child_process';
+import { closeSync, mkdirSync, openSync, readFileSync, readdirSync, renameSync, writeFileSync } from 'node:fs';
+import { join, relative, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+
+const sourceDirectories = ['src', 'functions', 'tests', 'public', 'scripts', 'release', 'migrations'];
+const configFiles = [
+  'astro.config.mjs', 'tsconfig.json', 'package.json', 'package-lock.json', 'playwright.config.ts',
+  'playwright.themed-demos.config.ts', 'vitest.config.ts', 'wrangler.jsonc',
+];
+const compiledTests = [
+  'tests/themed-demos-state.test.mjs', 'tests/themed-demos-preview.test.mjs',
+  'tests/four-showcases-preview.test.mjs', 'tests/public-preview-contract.test.mjs', 'tests/english-showcases.test.mjs',
+];
+const root = process.cwd();
+const astro = resolve('node_modules/astro/bin/astro.mjs');
+const hash = file => createHash('sha256').update(readFileSync(file)).digest('hex');
+
+function walk(directory) {
+  return readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
+    const path = join(directory, entry.name);
+    return entry.isDirectory() ? walk(path) : [path];
+  });
 }
-if(process.argv[2]==='--seal'){const file=process.argv[3];const m=JSON.parse(readFileSync(file));writeFileSync(file,JSON.stringify(seal(m),null,2));console.log('retained sources and compiled artifacts sealed; no rebuild');process.exit(0);}
-const root=process.cwd(),run=resolve('docs/audits/2026-10-09-themed-demos',`build-${Date.now()}`);mkdirSync(run,{recursive:true});
-const variants=[];const hash=p=>createHash('sha256').update(readFileSync(p)).digest('hex');
-for(const [name,base,port]of [['root','',4213],['subpath','/radeq',4214]]){
- const dir=join(run,name);mkdirSync(dir);const config=join(dir,'astro.config.mjs'),dist=join(dir,'dist');
- writeFileSync(config,`import original from ${JSON.stringify(pathToFileURL(resolve('astro.config.mjs')).href)};export default {...original,root:${JSON.stringify(root)},base:${JSON.stringify(base||'/')},outDir:${JSON.stringify(dist)},cacheDir:${JSON.stringify(join(dir,'cache'))}};`);
- const env={...process.env};delete env.DEPLOY_TARGET;if(base)env.DEPLOY_TARGET='github-pages';
- const result=spawnSync(process.execPath,[resolve('node_modules/astro/bin/astro.mjs'),'build','--config',relative(root,config)],{cwd:root,env,stdio:['ignore',openSync(join(dir,'build.log'),'w'),openSync(join(dir,'error.log'),'w')]});if(result.status!==0)throw new Error(`build failed: ${dir}`);
- const html=join(dist,'minimalni-navrh/ukazky/instalater/index.html');variants.push({name,base,port,config,dist,config_hash:hash(config),html_hash:hash(html)});
+
+function hashes(files) {
+  return Object.fromEntries(files.sort().map(file => [file, hash(file)]));
 }
-const manifest=join(run,'artifact-manifest.json');writeFileSync(manifest,JSON.stringify(seal({root,variants}),null,2));writeFileSync(resolve('docs/audits/2026-10-09-themed-demos/latest-manifest.txt'),manifest);
-const tests=spawnSync(process.execPath,[resolve('node_modules/vitest/vitest.mjs'),'run','tests/themed-demos-state.test.mjs','tests/themed-demos-preview.test.mjs','tests/four-showcases-preview.test.mjs','tests/public-preview-contract.test.mjs','tests/english-showcases.test.mjs'],{env:{...process.env,DEMO_ARTIFACT_MANIFEST:manifest},stdio:['ignore',openSync(join(run,'green.log'),'w'),openSync(join(run,'green-error.log'),'w')]});if(tests.status!==0)throw new Error('compiled tests failed');
-// Astro's file discovery needs forward slashes for absolute Windows globs.
-const checkPath=p=>resolve(p).replaceAll('\\','/');
-const config=join(run,'tsconfig.json');writeFileSync(config,JSON.stringify({extends:checkPath('tsconfig.json'),compilerOptions:{allowJs:true,checkJs:false},include:[checkPath('.astro/types.d.ts'),checkPath('src/**/*.astro'),checkPath('src/**/*.ts'),checkPath('src/**/*.tsx'),checkPath('functions/**/*.ts')],exclude:[checkPath('docs'),checkPath('dist'),checkPath('node_modules')]}));
-const check=spawnSync(process.execPath,[resolve('node_modules/astro/bin/astro.mjs'),'check','--tsconfig',config],{stdio:['ignore',openSync(join(run,'typecheck.log'),'w'),openSync(join(run,'typecheck-error.log'),'w')]});if(check.status!==0)throw new Error('scoped typecheck failed');
+
+function sourceHashes() {
+  return hashes([...sourceDirectories.flatMap(dir => walk(resolve(dir))), ...configFiles.map(file => resolve(file))]);
+}
+
+function seal(manifest, sources) {
+  const revision = spawnSync('git', ['rev-parse', '--verify', 'HEAD'], { encoding: 'utf8' });
+  manifest.revision = revision.status === 0 ? revision.stdout.trim() : null;
+  manifest.source_directories = sourceDirectories;
+  manifest.source_hashes = sources;
+  for (const variant of manifest.variants) variant.artifact_hashes = hashes(walk(variant.dist));
+  return manifest;
+}
+
+function runNode(args, env, directory, stdout, stderr, failure) {
+  const out = openSync(join(directory, stdout), 'w');
+  try {
+    const err = openSync(join(directory, stderr), 'w');
+    try {
+      const result = spawnSync(process.execPath, args, { cwd: root, env, stdio: ['ignore', out, err] });
+      if (result.error) throw result.error;
+      if (result.status !== 0) throw new Error(`${failure}. See ${join(directory, stdout)} and ${stderr}`);
+    } finally {
+      closeSync(err);
+    }
+  } finally {
+    closeSync(out);
+  }
+}
+
+if (process.argv[2] === '--seal') {
+  const file = process.argv[3];
+  const retained = JSON.parse(readFileSync(file, 'utf8'));
+  writeFileSync(file, JSON.stringify(seal(retained, sourceHashes()), null, 2));
+  console.log('retained sources and compiled artifacts sealed; no rebuild');
+  process.exit(0);
+}
+
+const history = resolve('docs/audits/2026-10-09-themed-demos');
+const run = join(history, `build-${Date.now()}`);
+mkdirSync(history, { recursive: true });
+mkdirSync(run);
+const inputs = sourceHashes();
+const variants = [];
+for (const [name, base, port] of [['root', '', 4213], ['subpath', '/radeq', 4214]]) {
+  const directory = join(run, name);
+  mkdirSync(directory);
+  const config = join(directory, 'astro.config.mjs');
+  const dist = join(directory, 'dist');
+  const configUrl = pathToFileURL(resolve('astro.config.mjs')).href;
+  const overrides = { root, base: base || '/', outDir: dist, cacheDir: join(directory, 'cache') };
+  writeFileSync(config, `import original from ${JSON.stringify(configUrl)};export default {...original,...${JSON.stringify(overrides)}};`);
+  const env = { ...process.env };
+  if (base) env.DEPLOY_TARGET = 'github-pages';
+  else delete env.DEPLOY_TARGET;
+  runNode([astro, 'build', '--config', relative(root, config)], env, directory, 'build.log', 'error.log', 'build failed');
+  const html = join(dist, 'minimalni-navrh/ukazky/instalater/index.html');
+  variants.push({ name, base, port, config, dist, config_hash: hash(config), html_hash: hash(html) });
+}
+const manifest = join(run, 'artifact-manifest.json');
+writeFileSync(manifest, JSON.stringify(seal({ root, variants }, inputs), null, 2));
+runNode([resolve('node_modules/vitest/vitest.mjs'), 'run', ...compiledTests],
+  { ...process.env, DEMO_ARTIFACT_MANIFEST: manifest }, run, 'green.log', 'green-error.log', 'compiled tests failed');
+runNode([astro, 'check', '--tsconfig', 'tsconfig.json'],
+  process.env, run, 'typecheck.log', 'typecheck-error.log', 'scoped typecheck failed');
+
+if (JSON.stringify(sourceHashes()) !== JSON.stringify(inputs)) {
+  throw new Error('Sources changed during verification. Rebuild before previewing.');
+}
+// A failed or interrupted build must leave the previous preview pointer intact.
+const nextPointer = join(run, 'latest-manifest.tmp');
+writeFileSync(nextPointer, manifest);
+renameSync(nextPointer, join(history, 'latest-manifest.txt'));
 console.log(manifest);

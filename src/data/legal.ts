@@ -41,3 +41,28 @@ export const legalContent={
  ['Privacy','I use enquiry information to discuss your project. See Privacy and cookies for processing, retention and optional measurement.']
  ]}}
 } as const;
+
+export const previewPrivacyContent = {
+  cs: {
+    title: 'Soukromí a cookies',
+    intro: 'Informace o statickém náhledu na GitHub Pages a o e-mailové komunikaci.',
+    sections: [
+      ['Kdo odpovídá za údaje', 'Správcem osobních údajů zůstává Radek Široký, IČO 08748811, Nezamyslova 274/10, 128 00 Praha 2. Kontaktovat mě můžete na <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a>.'],
+      ['E-mailové zprávy a uchování', 'Pokud mi napíšete, použiji zprávu a kontaktní údaje k odpovědi a případnému jednání o spolupráci. Neúspěšné poptávky a související korespondenci mažu po 6 měsících od posledního věcného kontaktu. Pokud spolupráce vznikne, potřebné smluvní a účetní záznamy uchovávám po dobu spolupráce a podle zákonných povinností či potřeby ochrany právních nároků.'],
+      ['Provoz statického náhledu', 'Tato stránka běží jako statický web na GitHub Pages. GitHub uvádí, že při návštěvě loguje a ukládá IP adresu pro bezpečnostní účely. Provoz těchto hostitelských záznamů zajišťuje GitHub; RadeQ je nespravuje.'],
+      ['Formuláře a volitelné měření', 'Tento náhled neobsahuje RadeQ formulář ani endpoint automatického měření a neodesílá adresu webu do Google PageSpeed Insights. Náhled nenačítá volitelnou analytiku ani reklamu a neobsahuje panel RadeQ pro volbu cookies.'],
+      ['Vaše práva', 'Můžete žádat přístup, opravu, výmaz, omezení zpracování a v příslušných případech přenositelnost údajů; proti zpracování z oprávněného zájmu můžete vznést námitku. Pište na <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a>. Stížnost lze podat u <a href="https://uoou.gov.cz/">Úřadu pro ochranu osobních údajů</a>. Neprovádím automatizované rozhodování s právními nebo obdobně závažnými účinky.'],
+    ],
+  },
+  en: {
+    title: 'Privacy and cookies',
+    intro: 'Information about this static GitHub Pages preview and email communication.',
+    sections: [
+      ['Who is responsible', 'The controller remains Radek Široký, Czech business ID (IČO) 08748811, Nezamyslova 274/10, 128 00 Prague 2, Czech Republic. You can contact me at <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a>.'],
+      ['Email messages and retention', 'If you email me, I use your message and contact details to reply and discuss possible work. I delete unsuccessful enquiries and related correspondence 6 months after the last substantive contact. If we work together, necessary contract and accounting records are kept for the cooperation and applicable statutory periods or the defence of legal claims.'],
+      ['Static preview hosting', 'This page runs as a static website on GitHub Pages. GitHub states that a visitor’s IP address is logged and stored for security purposes. GitHub operates those hosting logs; RadeQ does not manage them.'],
+      ['Forms and optional measurement', 'This preview has no RadeQ enquiry form or automated measurement endpoint, and it does not send a website address to Google PageSpeed Insights. This preview does not load optional analytics or advertising and has no RadeQ cookie-choice panel.'],
+      ['Your rights', 'You may request access, correction, erasure, restriction and, where applicable, portability. You may object to processing based on legitimate interests. Write to <a href="mailto:siroky@radeq.cz">siroky@radeq.cz</a>. You can complain to the <a href="https://uoou.gov.cz/">Czech Office for Personal Data Protection</a>. I do not use automated decisions with legal or similarly significant effects.'],
+    ],
+  },
+} as const;

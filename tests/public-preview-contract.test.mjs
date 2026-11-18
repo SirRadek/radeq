@@ -1,7 +1,7 @@
 import {describe,it,expect} from 'vitest';
 import {readFileSync,readdirSync} from 'node:fs';
 import {join} from 'node:path';
-import {documentNodes,nodes,attr,text} from './helpers/compiled-html.mjs';
+import {documentNodes,nodes,attr,hasAttr,text} from './helpers/compiled-html.mjs';
 const file=process.env.DEMO_ARTIFACT_MANIFEST;
 const m=file?JSON.parse(readFileSync(file,'utf8')):null;
 const walk=p=>readdirSync(p,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(join(p,e.name)):[join(p,e.name)]);
@@ -72,7 +72,77 @@ describe.runIf(Boolean(m))('whole public preview contract',()=>{
    const home=readFileSync(join(v.dist,'index.html'),'utf8');
    if(v.name==='subpath'){ expect(home).not.toContain('/api/leads'); expect(home).not.toContain('loadTurnstile'); expect(home).toContain('Napsat e-mail'); }
    else expect(home).toContain('action="/api/leads"');
-   expect(readFileSync(join(v.dist,'audit/index.html'),'utf8')).toContain(`${v.base}/api/measure`);
+  });
+  it(`${v.name}: contact guidance describes the available channel in both languages`,()=>{
+   for(const locale of ['cs','en']){
+    const html=readFileSync(join(v.dist,`${locale==='en'?'en/':''}kontakt/index.html`),'utf8');
+    const pageText=text(documentNodes(html).find(n=>n.tagName==='main'));
+    const preview=locale==='en'?'Email is for work enquiries':'E-mail je určen pro pracovní poptávky';
+    const production=locale==='en'?'The form is for work enquiries':'Formulář je pro pracovní poptávky';
+    expect(pageText).toContain(v.name==='subpath'?preview:production);
+    expect(pageText).not.toContain(v.name==='subpath'?production:preview);
+   }
+  });
+  it(`${v.name}: audit route matches its channel in Czech and English`,()=>{
+   for(const locale of ['cs','en']){
+    const html=readFileSync(join(v.dist,`${locale==='en'?'en/':''}audit/index.html`),'utf8');
+    const all=documentNodes(html),auditIsland=all.find(n=>n.tagName==='astro-island'&&(attr(n,'component-url')??'').includes('/AuditTool.'));
+    const form=all.find(n=>n.tagName==='form'&&(attr(n,'class')??'').split(' ').includes('audit-tool__form'));
+    if(v.name==='subpath'){
+     const preview=all.find(n=>hasAttr(n,'data-rq-audit-preview'));
+     expect(preview).toBeDefined();
+     expect(text(preview)).toContain(locale==='en'?'Static website audit preview':'Statická ukázka auditu webu');
+     expect(text(preview)).toContain(locale==='en'?'does not send a website address':'se adresa webu neodesílá');
+     expect(html).not.toContain('/api/measure');
+     expect(auditIsland).toBeUndefined();
+     expect(form).toBeUndefined();
+    }else{
+     expect(html).toContain(`${v.base}/api/measure`);
+     expect(auditIsland).toBeDefined();
+     expect(form).toBeDefined();
+     const heading=all.find(n=>n.tagName==='h1'&&attr(n,'id')==='rq-audit-title');
+     expect(text(heading)).toBe(locale==='en'?'Measure your website without a fake verdict.':'Změřte web bez falešného verdiktu.');
+    }
+    const canonical=all.find(n=>n.tagName==='link'&&attr(n,'rel')==='canonical');
+    const robots=all.find(n=>n.tagName==='meta'&&attr(n,'name')==='robots');
+    expect(new URL(attr(canonical,'href')).pathname).toBe(`${v.base}/${locale==='en'?'en/':''}audit/`.replace('//','/'));
+    if(v.name==='subpath')expect(attr(robots,'content')).toBe('noindex,nofollow');
+    else expect(robots).toBeUndefined();
+   }
+  });
+  it(`${v.name}: privacy body uses the correct channel while SEO metadata stays production-owned`,()=>{
+   for(const locale of ['cs','en']){
+    const route=locale==='en'?'en/soukromi/index.html':'soukromi/index.html';
+    const html=readFileSync(join(v.dist,route),'utf8'),all=documentNodes(html),pageText=text(all.find(n=>n.tagName==='main'));
+    const canonical=all.find(n=>n.tagName==='link'&&attr(n,'rel')==='canonical');
+    const description=all.find(n=>n.tagName==='meta'&&attr(n,'name')==='description');
+    const title=text(all.find(n=>n.tagName==='title')).trim();
+    expect(new URL(attr(canonical,'href')).pathname).toBe(`${v.base}/${locale==='en'?'en/':''}soukromi/`.replace('//','/'));
+    expect(attr(description,'content')).toBe(locale==='en'?'How I handle enquiries, technical information and optional measurement.':'Jak zacházím s poptávkami, technickými údaji a volitelným měřením.');
+    expect(title).toBe(locale==='en'?'Privacy and cookies | RadeQ.cz':'Soukromí a cookies | RadeQ.cz');
+    expect(pageText).toContain(locale==='en'?'6 months after the last substantive contact':'po 6 měsících od posledního věcného kontaktu');
+    expect(all.some(n=>n.tagName==='a'&&attr(n,'href')==='mailto:siroky@radeq.cz')).toBe(true);
+    if(v.name==='subpath'){
+     expect(pageText).toContain('GitHub Pages');
+     expect(pageText).toContain(locale==='en'?'IP address':'IP adresu');
+     expect(pageText).toContain(locale==='en'?'does not load optional analytics or advertising':'nenačítá volitelnou analytiku ani reklamu');
+     expect(pageText).not.toContain('Cloudflare D1');
+     expect(pageText).not.toContain('Google Analytics');
+     expect(html).not.toContain('/api/measure');
+     expect(all.some(n=>n.tagName==='meta'&&attr(n,'name')==='robots'&&attr(n,'content')==='noindex,nofollow')).toBe(true);
+    }else{
+     expect(pageText).toContain('Cloudflare');
+     expect(pageText).toContain('Google Analytics');
+     expect(pageText).not.toContain('GitHub Pages');
+     expect(all.some(n=>n.tagName==='meta'&&attr(n,'name')==='robots')).toBe(false);
+    }
+    const alternates=all.filter(n=>n.tagName==='link'&&attr(n,'rel')==='alternate'&&attr(n,'hreflang'));
+    expect(alternates.map(n=>[attr(n,'hreflang'),new URL(attr(n,'href')).pathname])).toEqual([
+     [locale,`${v.base}/${locale==='en'?'en/':''}soukromi/`.replace('//','/')],
+     [locale==='en'?'cs':'en',`${v.base}/${locale==='en'?'':'en/'}soukromi/`.replace('//','/')],
+     ['x-default',`${v.base}/soukromi/`.replace('//','/')],
+    ]);
+   }
   });
   if(v.name==='subpath')it('every deployed HTML explicitly blocks indexing while crawl remains possible',()=>{
    for(const p of walk(v.dist).filter(p=>p.endsWith('.html'))){

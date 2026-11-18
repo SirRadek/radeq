@@ -214,6 +214,10 @@ const products: Product[] = [
     const filters = Array.from(page.querySelectorAll<HTMLButtonElement>('.filter'));
     const formatCzk = (value: number) => demoMoney(lang,value);
     let session = initialCoffeeSession();
+    const announce = (text: string) => {
+      message.hidden = false;
+      message.textContent = text;
+    };
     const scrollTo = (element: HTMLElement) => {
       element.scrollIntoView({behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
     };
@@ -237,7 +241,11 @@ const products: Product[] = [
           button.addEventListener('click', handler); return button;
         };
         const adjust = (delta: number, action: string) => {
-          session = {...session, cart: changeQuantity(session.cart, item.key, delta)}; renderCart();
+          const cart = changeQuantity(session.cart, item.key, delta);
+          const updated = cart.find(line => line.key === item.key);
+          if (!updated) return;
+          session = {...session, cart}; renderCart();
+          announce(en ? `${item.name}, ${item.weight}: ${packs(updated.quantity)} in the basket.` : `${item.name}, ${item.weight}: v košíku ${packs(updated.quantity)}.`);
           const target = controlFor(item.key, action);
           (target?.disabled ? controlFor(item.key, 'plus') : target)?.focus();
         };
@@ -246,6 +254,7 @@ const products: Product[] = [
         const remove = makeButton('remove', t("Odebrat"), t("Odebrat položku"), () => {
           const index = session.cart.findIndex(line => line.key === item.key);
           session = {...session, cart: removeCoffee(session.cart, item.key)}; renderCart();
+          announce(en ? `${item.name}, ${item.weight}: removed from the basket.` : `${item.name}, ${item.weight}: odebráno z košíku.`);
           const next = session.cart[Math.min(index, session.cart.length - 1)];
           (next ? controlFor(next.key, 'remove') : basketTitle)?.focus();
         });
@@ -261,8 +270,9 @@ const products: Product[] = [
         const selected = card.querySelector<HTMLSelectElement>('.weight-select')!.value;
         const line = session.cart.find(item => item.name === card.dataset.name && item.weight === selected);
         const add = card.querySelector<HTMLButtonElement>('.add-cart')!;
-        add.textContent = line ? (en ? `Add another · ${packs(line.quantity)}` : `Přidat další · ${line.quantity} ks`) : t("Do košíku");
-        add.setAttribute('aria-label', (en ? `Add to basket: ${card.dataset.name}, ${selected}${line ? `, currently ${packs(line.quantity)}` : ''}` : `Přidat do košíku: ${card.dataset.name}, ${selected}${line ? `, aktuálně ${line.quantity} ks` : ''}`));
+        const label = line ? `${en ? 'Add another' : 'Přidat další'} · ${packs(line.quantity)}` : t("Do košíku");
+        add.textContent = label;
+        add.setAttribute('aria-label', `${label}: ${card.dataset.name}, ${selected}`);
       });
     };
     const renderOrder = () => {
@@ -295,8 +305,8 @@ const products: Product[] = [
       select.addEventListener('change', () => { price.textContent = formatCzk(prices[select.value]); renderCart(); });
       card.querySelector<HTMLButtonElement>('.add-cart')!.addEventListener('click', () => {
         session = {...session, cart: addCoffee(session.cart, {name: card.dataset.name || t("Káva"), weight: select.value, price: prices[select.value]})};
-        renderCart(); message.hidden = false;
-        message.textContent = (en ? `${card.dataset.name}, ${select.value}: added to basket.${session.order ? ' The previous order is unchanged.' : ''}` : `${card.dataset.name}, ${select.value}: přidáno do košíku.${session.order ? ' Předchozí objednávka zůstává beze změny.' : ''}`);
+        renderCart();
+        announce(en ? `${card.dataset.name}, ${select.value}: added to basket.${session.order ? ' The previous order is unchanged.' : ''}` : `${card.dataset.name}, ${select.value}: přidáno do košíku.${session.order ? ' Předchozí objednávka zůstává beze změny.' : ''}`);
       });
     });
     get<HTMLButtonElement>('.cart-open').addEventListener('click', () => { scrollTo(basketTitle); basketTitle.focus({preventScroll: true}); });
@@ -304,7 +314,7 @@ const products: Product[] = [
       const next = placeCoffeeOrder(session);
       if (next === session || !next.order) return;
       session = next; renderCart(); renderOrder();
-      message.hidden = false; message.textContent = (en ? `Demo order ${session.order!.id} created: ${formatCzk(session.order!.total)}. Follow its journey at the roastery.` : `Modelová objednávka ${session.order!.id} je vytvořena: ${formatCzk(session.order!.total)}. Podívejte se, jak pokračuje v pražírně.`);
+      announce(en ? `Demo order ${next.order.id} created: ${formatCzk(next.order.total)}. Follow its journey at the roastery.` : `Modelová objednávka ${next.order.id} je vytvořena: ${formatCzk(next.order.total)}. Podívejte se, jak pokračuje v pražírně.`);
       operatorOpen.focus();
     });
     operatorOpen.addEventListener('click', () => {

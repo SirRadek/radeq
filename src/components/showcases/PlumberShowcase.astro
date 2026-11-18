@@ -14,13 +14,14 @@ const help=getProblemSummary(initial);
    <section class="problem" aria-labelledby="problem-title">
     <p class="eyebrow">{t("Voda · odpady · montáž")}</p>
     <h1 id="problem-title">{t("Co doma")}<br/> {t("zlobí?")}</h1>
-    <fieldset>
+    <fieldset disabled>
      <legend class="visually-hidden">{t("Typ problému (nepovinné)")}</legend>
      { [['water',t("Voda teče")],['connect',t("Něco zapojit")],['other',t("Jiné")]].map(([value,label])=><label><input type="radio" name="problem" value={value}/><span>{label}</span></label>) }
     </fieldset>
     <label class="description" for="description">{t("Popište závadu (nepovinné)")}</label>
-    <textarea id="description" rows="3" maxlength="500" placeholder={t("Třeba: pod dřezem kape voda.")} aria-describedby="description-note"></textarea>
+    <textarea id="description" rows="3" maxlength="500" placeholder={t("Třeba: pod dřezem kape voda.")} aria-describedby="description-note" disabled></textarea>
     <p class="note" id="description-note">{t("Stačí závada, bez osobních údajů. Text zůstává jen v této ukázce.")}</p>
+    <noscript><p>{t("Výběr a shrnutí vyžadují JavaScript. Přehled služeb a vysvětlení kontaktu jsou dostupné i bez něj.")}</p></noscript>
    </section>
    <div class="contact-services">
     <section class="contact" aria-labelledby="contact-title">
@@ -35,7 +36,6 @@ const help=getProblemSummary(initial);
       <p class="contact-summary" data-contact-summary>{t(getContactSummary(initial))}</p>
       <p>{t("Na skutečném webu by následoval telefon nebo poptávka s tímto popisem. Tady pouze prohlížíte model kontaktu: nikomu se nevolá a nic se neodesílá.")}</p>
      </div>
-     <noscript><p>{t("Výběr a shrnutí vyžadují JavaScript. Přehled služeb a vysvětlení kontaktu jsou dostupné i bez něj.")}</p></noscript>
      <button class="reset" type="button" data-js-action data-reset hidden>{t("Vrátit ukázku")}</button>
      <p class="status" data-status role="status" aria-live="polite"></p>
     </section>
@@ -69,6 +69,7 @@ const help=getProblemSummary(initial);
  h1{margin-bottom:2rem}.contact h2{font-size:clamp(1.65rem,2.8vw,2.3rem);margin-bottom:1rem}.contact p{font-size:1rem;line-height:1.6;margin-bottom:1.25rem}
  fieldset{border:0;padding:0;margin:2rem 0;display:flex;gap:.75rem 1.2rem;flex-wrap:wrap}fieldset label{display:flex;align-items:center;gap:.5rem;cursor:pointer;font-weight:600;min-height:44px}
  input[type=radio]{accent-color:#235ac6;width:1.1rem;min-height:1.1rem;flex-shrink:0}input:checked+span{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:.4em;color:#235ac6}
+ fieldset:disabled label,textarea:disabled{cursor:default}
  .description{display:block;margin-bottom:.75rem}textarea{display:block;width:100%;min-width:0;padding:1.1rem;border:1px solid #235ac6;border-radius:1rem;color:#142b45;background:#e9f0fc;resize:vertical}textarea::placeholder{color:#405f82;opacity:1}
  .note{font-size:.875rem;line-height:1.6;margin-top:.75rem;color:#405f82}
  .contact button[data-contact]{display:flex;justify-content:space-between;align-items:center;gap:1rem;width:100%;border-radius:999px;background:#235ac6;color:#fff;padding:1.05rem 1.5rem;font-weight:600;text-align:left}

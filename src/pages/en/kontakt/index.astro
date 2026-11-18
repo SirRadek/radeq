@@ -4,6 +4,7 @@ import RqHeader from '../../../components/RqHeader.astro';
 import RqFooter from '../../../components/RqFooter.astro';
 import RqContactForm from '../../../components/RqContactForm.astro';
 import { homeContent } from '../../../data/home';
+import { isPreviewChannel } from '../../../lib/preview-channel.mjs';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const nav = [
@@ -84,8 +85,9 @@ const nav = [
         <article class="rq-card rq-info-card">
           <h3>Where enquiries go</h3>
           <p>
-            The form is for work enquiries and arranging next steps. Don't send passwords,
-            payment details, or internal documents.
+            {isPreviewChannel
+              ? "Email is for work enquiries and arranging next steps. Don't send passwords, payment details, or internal documents."
+              : "The form is for work enquiries and arranging next steps. Don't send passwords, payment details, or internal documents."}
           </p>
         </article>
         <article class="rq-card rq-info-card">

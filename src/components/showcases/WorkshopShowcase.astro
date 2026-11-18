@@ -17,7 +17,7 @@ const first = JOBS[0];
       <div class="job-copy">
         <p class="step"><span data-step-number>01</span><span data-step-label>{t("Právě na stole")}</span></p>
         <h2 id="current-step" data-current-step>{t(first.step)}</h2>
-        <p class="job-detail" data-current-job>{first.id} · dubová police</p>
+        <p class="job-detail" data-current-job>{first.id} · {t(first.title).toLocaleLowerCase(lang)}</p>
         <p class="job-help" data-job-status>{t(first.detail)}</p>
       </div>
       <div class="job-actions">

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-18 — místní kandidát opravených Pages
+
+- Statický audit a soukromí odpovídají kanálu Pages; opraveny jsou také navigace, kontakt a interaktivní ukázky v CZ/EN.
+- Přenositelný zdroj a kompletní statika odpovídají místně ověřenému buildu. Samotná příprava neprokazuje vydání ani produkční nasazení. [Ověření](docs/verification/2026-11-18-pages/README.md).
+
 ## 2026-11-17 — osobnější nabídka a praktické ukázky
 
 - CZ/EN představení zkušeností, fotografie, pilotní program, první měsíc podpory a nové tarify správy.
